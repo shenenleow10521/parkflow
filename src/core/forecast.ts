@@ -64,6 +64,8 @@ export interface ForecastInput {
 
 export interface ForecastSeries {
   arrivals: number[];
+  /** Expected cars leaving a bay each minute: paid cars first, then the dwell-time hazard. */
+  departures: number[];
   occ: number[];
   lo: number[];
   hi: number[];
@@ -109,19 +111,25 @@ export function intentRates(s: ScenarioDef, cm: number, a: ForecastAssumptions, 
   return { history, member, cinema, dining, event, offer };
 }
 
-function project(arr: number[], input: ForecastInput, a: ForecastAssumptions): number[] {
+function projectFull(arr: number[], input: ForecastInput, a: ForecastAssumptions): { occ: number[]; dep: number[] } {
   const occ: number[] = [];
+  const dep: number[] = [];
   let o = input.occupied;
   let paid = input.paidPending;
   for (let k = 0; k < arr.length; k++) {
     const paidOut = k < 6 ? paid / (6 - k) : 0;
     paid -= paidOut;
     const pool = Math.max(0, o - paid - paidOut);
-    const dep = paidOut + pool / a.meanDwellMin;
-    o = Math.min(input.usable, Math.max(0, o + arr[k] - dep));
+    const d = paidOut + pool / a.meanDwellMin;
+    o = Math.min(input.usable, Math.max(0, o + arr[k] - d));
     occ.push(o);
+    dep.push(d);
   }
-  return occ;
+  return { occ, dep };
+}
+
+function project(arr: number[], input: ForecastInput, a: ForecastAssumptions): number[] {
+  return projectFull(arr, input, a).occ;
 }
 
 export function computeForecast(input: ForecastInput, a: ForecastAssumptions, horizon = 60): Forecast {
@@ -147,15 +155,19 @@ export function computeForecast(input: ForecastInput, a: ForecastAssumptions, ho
     intArr.push(r.history + r.member + r.cinema + r.dining + r.event + r.offer + coming);
   }
   const scale = (arr: number[], f: number) => arr.map((x) => x * f);
+  const hp = projectFull(histArr, input, a);
+  const ip = projectFull(intArr, input, a);
   const hist: ForecastSeries = {
     arrivals: histArr,
-    occ: project(histArr, input, a),
+    departures: hp.dep,
+    occ: hp.occ,
     lo: project(scale(histArr, 1 - a.histBand), input, a),
     hi: project(scale(histArr, 1 + a.histBand), input, a)
   };
   const intent: ForecastSeries = {
     arrivals: intArr,
-    occ: project(intArr, input, a),
+    departures: ip.dep,
+    occ: ip.occ,
     lo: project(scale(intArr, 1 - a.intentBand), input, a),
     hi: project(scale(intArr, 1 + a.intentBand), input, a)
   };

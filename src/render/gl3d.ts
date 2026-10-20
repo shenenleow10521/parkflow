@@ -1061,6 +1061,9 @@ export class GLScene {
     // Refit when the viewport box changes size (window resize, panels filling in, layout breakpoints).
     // Until the viewer has moved the camera themselves, any change refits; after that only large ones do.
     const onSize = () => {
+      // ignore the zero-size box while the overview is hidden behind another page
+      const box = this.canvas.getBoundingClientRect();
+      if (box.width < 10 || box.height < 10) return;
       const w0 = this.w, h0 = this.h;
       this.resize();
       const dw = Math.abs(this.w - w0), dh = Math.abs(this.h - h0);

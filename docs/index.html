@@ -58,6 +58,8 @@
   --hold-soft: rgba(181, 144, 255, 0.14);
   --route: #38e1c8;
   --route-soft: rgba(56, 225, 200, 0.12);
+  --flow-in: #3ccf9a;
+  --flow-out: #5f8ff0;
   --zone-a: #2f7cf6;
   --zone-b: #f2c230;
   --zone-c: #f0703c;
@@ -269,7 +271,7 @@ a { color: var(--sign-hi); }
 .ov {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 372px;
-  grid-template-rows: minmax(0, 1fr) 212px;
+  grid-template-rows: minmax(0, 1fr) 232px;
   grid-template-areas: "stage aside" "dock aside";
   gap: 12px;
   flex: 1 0 0;
@@ -625,11 +627,6 @@ input[type="checkbox"] { accent-color: var(--sign); }
 .tbl td.btns .btn + .btn { margin-left: 4px; }
 .cmp .good { color: var(--go); font-weight: 700; }
 .cmp .bad { color: var(--stop); font-weight: 700; }
-.zm td.zcell { font-size: 12.5px; background: var(--go-soft); border-radius: 0; }
-.zm td.zcell b { font-family: var(--font-num); font-size: 16px; }
-.zm td.zcell span { color: var(--fog); font-size: 12px; }
-.zm td.z1 { background: var(--amber-soft); }
-.zm td.z0 { background: var(--stop-soft); }
 .fc-sum { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 10px; border-top: 1px solid var(--grid); padding-top: 10px; }
 .fc-sum > div { display: flex; flex-direction: column; gap: 2px; font-size: 12.5px; color: var(--chalk-2); }
 .fc-sum b { font-family: var(--font-num); font-size: 18px; color: var(--chalk); }
@@ -735,6 +732,56 @@ ul.plain { margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; font-si
 .acc-int .acc-bar i { background: var(--route); }
 @media (max-width: 1080px) { .fc-impact { grid-template-columns: minmax(0, 1fr); } }
 @media (max-width: 760px) { .zone-grid { grid-template-columns: 44px repeat(3, minmax(0, 1fr)); gap: 6px; } .zg { padding: 7px 8px; } .zg b { font-size: 15px; } .fc-head-r { align-items: flex-start; } }
+
+/* ---------- arrivals and departures panel ---------- */
+.flow { display: flex; flex-direction: column; gap: 12px; min-height: 0; }
+.flow-tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.ft { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 10px; background: var(--deck-2); border: 1px solid var(--line); min-width: 0; }
+.ft > div { display: flex; flex-direction: column; min-width: 0; }
+.ft b { font-family: var(--font-num); font-size: 30px; font-weight: 600; line-height: 1.05; }
+.ft span:not(.ft-ic) { font-size: 13px; color: var(--chalk-2); }
+.ft small { font-size: 12px; color: var(--fog); margin-top: 1px; }
+.ft-ic { width: 40px; height: 40px; flex: none; border-radius: 10px; display: grid; place-items: center; }
+.ft-in { border-color: rgba(60, 207, 154, 0.35); background: rgba(60, 207, 154, 0.07); }
+.ft-in .ft-ic { background: rgba(60, 207, 154, 0.16); color: var(--flow-in); }
+.ft-in b { color: var(--flow-in); }
+.ft-out { border-color: rgba(95, 143, 240, 0.4); background: rgba(95, 143, 240, 0.08); }
+.ft-out .ft-ic { background: rgba(95, 143, 240, 0.18); color: var(--flow-out); }
+.ft-out b { color: var(--flow-out); }
+.ft-net .ft-ic { background: var(--deck-3); color: var(--chalk); }
+.ft-net.ft-up b { color: var(--amber); }
+.flow-tiles.compact { gap: 8px; }
+.flow-tiles.compact .ft { padding: 6px 9px; gap: 8px; }
+.flow-tiles.compact .ft b { font-size: 20px; }
+.flow-tiles.compact .ft span:not(.ft-ic) { font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.flow-tiles.compact .ft-ic { width: 28px; height: 28px; border-radius: 8px; }
+.flow-chart-box { min-width: 0; }
+.flow-chart .flow-v { font-size: 11px; fill: var(--chalk-2); }
+.flow-chart .flow-now { fill: var(--chalk); font-weight: 700; }
+.flow-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12.5px; color: var(--chalk-2); }
+.flow-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.fl-sw { width: 12px; height: 10px; border-radius: 2px; display: inline-block; }
+.fl-in { background: var(--flow-in); }
+.fl-out { background: var(--flow-out); }
+.fl-solid { background: var(--chalk-2); }
+.fl-hatch { background: repeating-linear-gradient(135deg, var(--chalk-2) 0 2px, transparent 2px 4.5px); border: 1px solid var(--chalk-2); }
+.flow-call { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 9px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--deck-2); font-size: 13.5px; color: var(--chalk-2); }
+.flow-call b { color: var(--chalk); font-size: 14px; }
+.fc-ic { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; flex: none; }
+.flow-ok .fc-ic { background: var(--go-soft); color: var(--go); }
+.flow-warn { border-color: rgba(255, 178, 46, 0.45); background: rgba(255, 178, 46, 0.08); }
+.flow-warn .fc-ic { background: var(--amber-soft); color: var(--amber); }
+.flow-warn b { color: var(--amber); }
+.flow-crit { border-color: rgba(255, 98, 89, 0.5); background: var(--stop-soft); }
+.flow-crit .fc-ic { background: rgba(255, 98, 89, 0.2); color: var(--stop); }
+.flow-crit b { color: var(--stop); }
+.fc-sum-2 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.flow-dock { gap: 7px; }
+.flow-dock .flow-call { padding: 5px 9px; font-size: 12.5px; gap: 8px; flex-wrap: nowrap; min-width: 0; }
+.flow-dock .flow-call > span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.flow-dock .flow-call b { font-size: 13px; white-space: nowrap; }
+.flow-dock .fc-ic { width: 22px; height: 22px; }
+@media (max-width: 760px) { .flow-tiles { grid-template-columns: minmax(0, 1fr); } .fc-sum-2 { grid-template-columns: minmax(0, 1fr); } }
 
 /* ---------- presentation ---------- */
 .pres {
@@ -981,9 +1028,8 @@ kbd { font-family: var(--font-num); font-size: 12px; background: var(--deck-3); 
 
       <div class="dock">
         <section class="panel" id="card-chart">
-          <div class="card-h"><h3>Occupancy and forecast</h3><span class="tags"><span class="tag tag-now">Live</span><span class="tag tag-fc">Forecast</span></span></div>
-          <div id="chart-legend"></div>
-          <div class="chart-box grow" id="chart-occ"></div>
+          <div class="card-h"><h3>Arrivals and departures</h3><span class="tags"><span class="tag tag-now">Measured</span><span class="tag tag-fc">Forecast</span></span></div>
+          <div class="flow flow-dock grow" id="chart-occ"></div>
         </section>
         <section class="panel" id="card-events">
           <div class="card-h"><h3>What just happened</h3><div class="filters" id="event-filters" role="group" aria-label="Filter events"></div></div>
@@ -1901,19 +1947,24 @@ function intentRates(s, cm, a, offerActive) {
         offer = (s.offer.redeemPerHour / 60) * a.offerCarShare;
     return { history, member, cinema, dining, event, offer };
 }
-function project(arr, input, a) {
+function projectFull(arr, input, a) {
     const occ = [];
+    const dep = [];
     let o = input.occupied;
     let paid = input.paidPending;
     for (let k = 0; k < arr.length; k++) {
         const paidOut = k < 6 ? paid / (6 - k) : 0;
         paid -= paidOut;
         const pool = Math.max(0, o - paid - paidOut);
-        const dep = paidOut + pool / a.meanDwellMin;
-        o = Math.min(input.usable, Math.max(0, o + arr[k] - dep));
+        const d = paidOut + pool / a.meanDwellMin;
+        o = Math.min(input.usable, Math.max(0, o + arr[k] - d));
         occ.push(o);
+        dep.push(d);
     }
-    return occ;
+    return { occ, dep };
+}
+function project(arr, input, a) {
+    return projectFull(arr, input, a).occ;
 }
 function computeForecast(input, a, horizon = 60) {
     const s = input.scn;
@@ -1938,15 +1989,19 @@ function computeForecast(input, a, horizon = 60) {
         intArr.push(r.history + r.member + r.cinema + r.dining + r.event + r.offer + coming);
     }
     const scale = (arr, f) => arr.map((x) => x * f);
+    const hp = projectFull(histArr, input, a);
+    const ip = projectFull(intArr, input, a);
     const hist = {
         arrivals: histArr,
-        occ: project(histArr, input, a),
+        departures: hp.dep,
+        occ: hp.occ,
         lo: project(scale(histArr, 1 - a.histBand), input, a),
         hi: project(scale(histArr, 1 + a.histBand), input, a)
     };
     const intent = {
         arrivals: intArr,
-        occ: project(intArr, input, a),
+        departures: ip.dep,
+        occ: ip.occ,
         lo: project(scale(intArr, 1 - a.intentBand), input, a),
         hi: project(scale(intArr, 1 + a.intentBand), input, a)
     };
@@ -2010,6 +2065,7 @@ class Sim {
         this.nextGateT = 0;
         this.peakQueue = 0;
         this.entriesThisMinute = 0;
+        this.departuresThisMinute = 0;
         this.heading = new Map();
         this.floorBias = [0, 0, 0];
         this.pending = [];
@@ -2427,6 +2483,7 @@ class Sim {
             if (!clear)
                 continue;
             v.state = 'unparking';
+            this.departuresThisMinute++;
             v.edge = b.edge;
             v.s = b.accessS;
             v.man = 0;
@@ -2515,9 +2572,11 @@ class Sim {
             generalFree: c.generalFree,
             searching: this.searchingVehicles().length,
             queue: this.gateQueue.length,
-            entries: this.entriesThisMinute
+            entries: this.entriesThisMinute,
+            departures: this.departuresThisMinute
         });
         this.entriesThisMinute = 0;
+        this.departuresThisMinute = 0;
     }
     updateForecast() {
         const c = this.counts();
@@ -5563,6 +5622,10 @@ class GLScene {
         // Refit when the viewport box changes size (window resize, panels filling in, layout breakpoints).
         // Until the viewer has moved the camera themselves, any change refits; after that only large ones do.
         const onSize = () => {
+            // ignore the zero-size box while the overview is hidden behind another page
+            const box = this.canvas.getBoundingClientRect();
+            if (box.width < 10 || box.height < 10)
+                return;
             const w0 = this.w, h0 = this.h;
             this.resize();
             const dw = Math.abs(this.w - w0), dh = Math.abs(this.h - h0);
@@ -6520,6 +6583,122 @@ function fieldStrip(values, W, H) {
     return svg;
 }
 const CHART_INK = INK;
+function flowSummary(sim, f) {
+    if (!f)
+        return null;
+    const sum = (a, n) => a.slice(0, n).reduce((x, y) => x + y, 0);
+    const arriving = sum(f.intent.arrivals, 30);
+    const leaving = sum(f.intent.departures, 30);
+    return {
+        arriving,
+        arrivingHist: sum(f.hist.arrivals, 30),
+        leaving,
+        net: arriving - leaving,
+        endShare: f.intent.occ[29] / Math.max(1, f.usable),
+        paidPending: sim.paidPending(),
+        fillAt: f.fillMin.intent !== null ? sim.t + f.fillMin.intent * 60 : null
+    };
+}
+const I_ARROWS = '<path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/>';
+const I_IN = '<path d="M14 5h4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4"/><path d="m9 16 4-4-4-4M13 12H3"/>';
+const I_OUT = '<path d="M10 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"/><path d="m15 16 4-4-4-4M19 12H9"/>';
+const svgIc = (p, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+/** Measured flows for the last half hour and forecast flows for the next, side by side, with headline tiles and a call to action. */
+function flowPanel(sim, f, o) {
+    const fs = flowSummary(sim, f);
+    if (!f || !fs)
+        return '<p class="muted">The forecast starts after the first simulated minute.</p>';
+    const s = sim.scn;
+    const wins = [];
+    const pastN = o.compact ? 4 : 6;
+    for (let j = pastN; j >= 1; j--) {
+        const t0 = sim.t - j * 300;
+        const t1 = t0 + 300;
+        if (t0 < 0)
+            continue;
+        const recs = sim.history.filter((r) => r.t > t0 && r.t <= t1);
+        wins.push({ rel: -j * 5, arr: recs.reduce((a, r) => a + r.entries, 0), dep: recs.reduce((a, r) => a + (r.departures || 0), 0), fc: false });
+    }
+    for (let k = 0; k < 6; k++) {
+        const a = f.intent.arrivals.slice(k * 5, k * 5 + 5).reduce((x, y) => x + y, 0);
+        const d = f.intent.departures.slice(k * 5, k * 5 + 5).reduce((x, y) => x + y, 0);
+        wins.push({ rel: k * 5, arr: a, dep: d, fc: true });
+    }
+    const W = o.w, H = o.h;
+    const m = { l: 26, r: 6, t: o.compact ? 10 : 18, b: 20 };
+    const iw = W - m.l - m.r, ih = H - m.t - m.b;
+    const vmax = Math.max(5, ...wins.map((w) => Math.max(w.arr, w.dep)));
+    const ticks = niceTicks(0, vmax, o.compact ? 2 : 4);
+    const ymax = Math.max(vmax, ticks[ticks.length - 1]);
+    const y = (v) => m.t + ih - (v / ymax) * ih;
+    const gw = iw / wins.length;
+    const bw = Math.min(o.compact ? 11 : 20, gw * 0.34);
+    const pin = `hin-${o.id}`, pout = `hout-${o.id}`;
+    let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" class="chart flow-chart" role="img" aria-label="Cars arriving and leaving per five minutes: last half hour measured, next half hour forecast">
+    <defs>
+      <pattern id="${pin}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--flow-in)" opacity=".28"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--flow-in)" stroke-width="2.2"/></pattern>
+      <pattern id="${pout}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--flow-out)" opacity=".28"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--flow-out)" stroke-width="2.2"/></pattern>
+    </defs>`;
+    for (const v of ticks)
+        svg += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="${GRID}"/><text x="${m.l - 6}" y="${y(v) + 3.5}" text-anchor="end" class="ax">${v}</text>`;
+    const firstFc = wins.findIndex((w) => w.fc);
+    if (firstFc > 0) {
+        const nx = m.l + firstFc * gw;
+        svg += `<rect x="${nx}" y="${m.t - 4}" width="${W - m.r - nx}" height="${ih + 4}" fill="var(--route)" opacity=".035"/>`;
+        svg += `<line x1="${nx}" x2="${nx}" y1="${m.t - 6}" y2="${m.t + ih}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>`;
+    }
+    wins.forEach((w, i) => {
+        const cx = m.l + i * gw + gw / 2;
+        const bars = [
+            [w.arr, w.fc ? `url(#${pin})` : 'var(--flow-in)', 'var(--flow-in)'],
+            [w.dep, w.fc ? `url(#${pout})` : 'var(--flow-out)', 'var(--flow-out)']
+        ];
+        bars.forEach(([v, fill, stroke], j) => {
+            const x = cx - bw - 1.5 + j * (bw + 3);
+            const top = y(v);
+            const h = Math.max(v > 0 ? 1.5 : 0, m.t + ih - top);
+            svg += `<rect x="${x.toFixed(1)}" y="${(m.t + ih - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="${fill}" ${w.fc ? `stroke="${stroke}" stroke-width="1.2"` : ''}><title>${j ? 'Leaving' : 'Arriving'} ${w.fc ? 'forecast' : 'measured'}, ${w.rel >= 0 ? `+${w.rel}` : w.rel} to ${w.rel + 5 >= 0 ? `+${w.rel + 5}` : w.rel + 5} min: ${v.toFixed(1)}</title></rect>`;
+            if (!o.compact || w.fc)
+                svg += `<text x="${(x + bw / 2).toFixed(1)}" y="${(m.t + ih - h - 4).toFixed(1)}" text-anchor="middle" class="ax flow-v">${Math.round(v)}</text>`;
+        });
+        const lab = w.rel === 0 ? 'Now' : w.rel > 0 ? `+${w.rel}` : `${w.rel}`;
+        svg += `<text x="${cx}" y="${H - 5}" text-anchor="middle" class="ax${w.rel === 0 ? ' flow-now' : ''}">${lab}</text>`;
+    });
+    svg += '</svg>';
+    // tiles and call to action
+    const endPct = Math.round(fs.endShare * 100);
+    const netR = Math.round(fs.net);
+    let tone = 'ok', title, text, icn = 'check';
+    if (fs.fillAt !== null && fs.fillAt - sim.t <= 30 * 60) {
+        tone = 'crit';
+        title = 'Prepare overflow access';
+        icn = 'alert';
+        text = `Occupancy is forecast to reach 95% by ${clockLabel(s, fs.fillAt, false)}.`;
+    }
+    else if (netR >= 10) {
+        tone = 'warn';
+        title = 'Watch the entry queue';
+        icn = 'alert';
+        text = `More cars arriving than leaving (${netR > 0 ? '+' : ''}${netR} in 30 min), ending about ${endPct}% full.`;
+    }
+    else if (netR <= -5) {
+        title = 'Space is opening up';
+        text = `More cars leaving than arriving (${netR} in 30 min).`;
+    }
+    else {
+        title = 'Arrivals and departures are balanced';
+        text = `About ${endPct}% full in 30 minutes.`;
+    }
+    const callIc = icn === 'alert' ? '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>' : '<path d="m5 12 5 5L20 7"/>';
+    const tiles = `<div class="flow-tiles${o.compact ? ' compact' : ''}">
+      <div class="ft ft-in"><span class="ft-ic">${svgIc(I_IN, o.compact ? 16 : 20)}</span><div><b>${Math.round(fs.arriving)}</b><span>arriving in 30 min</span>${o.compact ? '' : `<small>History alone: ${Math.round(fs.arrivingHist)}</small>`}</div></div>
+      <div class="ft ft-out"><span class="ft-ic">${svgIc(I_OUT, o.compact ? 16 : 20)}</span><div><b>${Math.round(fs.leaving)}</b><span>leaving in 30 min</span>${o.compact ? '' : `<small>${fs.paidPending} already paid</small>`}</div></div>
+      <div class="ft ft-net ft-${netR > 0 ? 'up' : 'down'}"><span class="ft-ic">${svgIc(I_ARROWS, o.compact ? 16 : 20)}</span><div><b>${netR > 0 ? '+' : netR < 0 ? '−' : ''}${Math.abs(netR)}</b><span>net change</span>${o.compact ? '' : `<small>Ends about ${endPct}% full</small>`}</div></div>
+    </div>`;
+    const legend = `<div class="flow-legend"><span><i class="fl-sw fl-in"></i>Arriving (entry)</span><span><i class="fl-sw fl-out"></i>Leaving (pulled out of a bay)</span><span><i class="fl-sw fl-solid"></i>Measured</span><span><i class="fl-sw fl-hatch"></i>Forecast</span></div>`;
+    return `${tiles}<div class="flow-chart-box">${svg}</div>${o.compact ? '' : legend}
+    <div class="flow-call flow-${tone}"><span class="fc-ic">${svgIc(callIc, 18)}</span><b>${esc(title)}</b><span>${esc(text)}</span></div>`;
+}
 
 // ---- ui/panels ----
 // Overview UI: header, KPI strip, right-hand panel, lower cards, event feed and driver preview.
@@ -7009,7 +7188,7 @@ function renderLower() {
     const sim = store.sim;
     const chartEl = $('#chart-occ');
     const w = Math.max(280, chartEl.clientWidth || 420);
-    setHTML(chartEl, occupancyChart(sim, sim.forecast, { w, h: Math.max(150, chartEl.clientHeight || 170) }));
+    setHTML(chartEl, flowPanel(sim, sim.forecast, { w, h: 92, id: 'dock', compact: true }));
     renderFloors();
     renderEvents();
 }
@@ -7078,12 +7257,7 @@ function renderEvents() {
 const KIND_LABEL = { guide: 'Guidance', reroute: 'Route update', park: 'Parked', depart: 'Departure', payment: 'Payment', reservation: 'Reservation', operator: 'Operator', forecast: 'Forecast', alert: 'Alert' };
 function initLowerStatic() {
     setHTML($('#event-filters'), Object.keys(EVENT_GROUPS).map((k) => `<button type="button" data-filter="${k}" aria-pressed="false">${k[0].toUpperCase() + k.slice(1)}</button>`).join(''));
-    setHTML($('#chart-legend'), legendItems([
-        { color: 'var(--ink)', label: 'Measured' },
-        { color: 'var(--ink-3)', label: 'History forecast', dash: true },
-        { color: 'var(--teal)', label: 'History + intent', dash: true },
-        { color: 'var(--teal)', label: 'Assumed range', band: true }
-    ]));
+    // the overview flow panel draws its own tiles and call to action; no separate legend
 }
 // ---------------- driver preview ----------------
 function renderPhone(force = false) {
@@ -7266,7 +7440,6 @@ function renderForecast(force = false) {
         return null;
     };
     const prev5 = before(300);
-    const ghost = before(600);
     if (cur && cur.t !== fcSeen.t) {
         fcSeen.flashUntil = fcSeen.t >= 0 ? performance.now() + 1300 : 0;
         fcSeen.t = cur.t;
@@ -7375,16 +7548,14 @@ function renderForecast(force = false) {
       <div class="zone-grid"><div></div>${zoneHead}${zoneRows}</div>
       <p class="fine">Expected cars for each lift are split evenly across the three levels, the same rule the guidance score uses. Cars already guided to a zone are taken off its free bays.</p>
     </section>
-    <section class="card span2">
-      <div class="card-h"><h3>Occupancy: measured and forecast</h3>${legendItems([{ color: 'var(--ink)', label: 'Measured' }, { color: 'var(--ink-3)', label: 'History only', dash: true }, { color: 'var(--teal)', label: 'History + intent', dash: true }, { color: 'var(--teal)', label: 'Assumed range (not calibrated)', band: true }, { color: 'var(--teal)', label: '30-min checks against what happened', dot: true }])}</div>
-      <div id="fc-occ" class="chart-box">${occupancyChart(sim, f, { w: wBig, h: 250, showHistBand: true, snapshots: true, ghost: ghost ? { t: ghost.t, occ: ghost.occ, usable: sim.usable } : null })}</div>
-      <div class="fc-sum">
-        <div><span class="muted">Next 30 min, history only</span><b>${f ? Math.round(f.arr30.hist) : '–'} arrivals</b></div>
-        <div><span class="muted">Next 30 min, history + intent</span><b class="teal">${f ? Math.round(f.arr30.intent) : '–'} arrivals</b>${f && prev5 ? delta(f.arr30.intent, prev5.arr30) : ''}</div>
-        <div><span class="muted">Peak in the next hour (history + intent)</span><b class="teal">${isFinite(peak) ? Math.round(peak * 100) + '%' : '–'}</b>${cur && prev5 ? delta(cur.peak * 100, prev5.peak * 100, ' pts') : ''}</div>
-        <div><span class="muted">95% full (history + intent)</span><b class="teal">${f && f.fillMin.intent !== null ? clockLabel(s, sim.t + f.fillMin.intent * 60, false) : 'not within 60 min'}</b><span class="delta">history alone: ${f && f.fillMin.hist !== null ? clockLabel(s, sim.t + f.fillMin.hist * 60, false) : 'not within 60 min'}</span></div>
+    <section class="card span2 flow-card">
+      <div class="card-h"><h3>Arrivals and departures</h3><span class="fine">Last half hour measured, next half hour forecast, in 5-minute windows</span></div>
+      <div id="fc-occ" class="flow">${flowPanel(sim, f, { w: wBig, h: 230, id: 'fc' })}</div>
+      <div class="fc-sum fc-sum-2">
+        <div><span class="muted">Peak in the next hour</span><b class="teal">${isFinite(peak) ? Math.round(peak * 100) + '%' : '–'}</b>${cur && prev5 ? delta(cur.peak * 100, prev5.peak * 100, ' pts') : ''}</div>
+        <div><span class="muted">Arrivals in 30 min, change</span><b class="teal">${f ? Math.round(f.arr30.intent) : '–'}</b>${f && prev5 ? delta(f.arr30.intent, prev5.arr30) : ''}</div>
+        <div><span class="muted">95% full (history + intent)</span><b class="teal">${f && f.fillMin.intent !== null ? clockLabel(s, sim.t + f.fillMin.intent * 60, false) : 'Not within 60 min'}</b><span class="delta">History alone: ${f && f.fillMin.hist !== null ? clockLabel(s, sim.t + f.fillMin.hist * 60, false) : 'not within 60 min'}</span></div>
       </div>
-      ${ghost ? `<p class="fine">The dotted teal line is the forecast made at ${clockLabel(s, ghost.t, false)}, so you can see how new information moved it.</p>` : ''}
     </section>
     <section class="card">
       <div class="card-h"><h3>Is it right?</h3>${tag('sim', 'After outcome')}</div>
@@ -7448,18 +7619,8 @@ function renderAllocation(force = false) {
         const v = sim.vehicles[d.vehicle];
         const run = d.ranked[1];
         const on = cur === d;
-        return `<tr class="${on ? 'on' : ''}" data-act="select-vehicle" data-id="${d.vehicle}" role="button" tabindex="0"><td>${clockLabel(sim.scn, d.t, false)}</td><td>${esc(d.vehicleCode)}</td><td>${esc(DEST_BY_ID[d.dest].label)}</td><td><b>${esc(d.chosen ? d.chosen.label : '–')}</b></td><td class="num">${d.chosen ? d.chosen.total.toFixed(2) : '–'}</td><td>${run ? `${esc(run.label)} (${run.total.toFixed(2)})` : '–'}</td><td>${modeChip(d.mode)}</td><td>${esc(v ? shortState(v.state, v.parkT) : '')}</td></tr>`;
+        return `<tr class="${on ? 'on' : ''}" data-act="select-vehicle" data-id="${d.vehicle}" role="button" tabindex="0"><td>${clockLabel(sim.scn, d.t, false)}</td><td>${esc(d.vehicleCode)}</td><td>${esc(DEST_BY_ID[d.dest].label)}</td><td><b>${esc(d.chosen ? d.chosen.label : '–')}</b></td><td class="num">${d.chosen ? d.chosen.total.toFixed(2) : '–'}</td><td>${run ? `${esc(run.label)} (${run.total.toFixed(2)})` : '–'}</td><td>${modeChip(d.mode)}${d.withoutForecast ? `<span class="pill pill-teal" title="Without the forecast term this car would have gone to ${esc(d.withoutForecast.label)}">Forecast steered</span>` : ''}</td><td>${esc(v ? shortState(v.state, v.parkT) : '')}</td></tr>`;
     })
-        .join('');
-    // zone matrix
-    const zm = [0, 1, 2]
-        .map((f) => `<tr><th>${FLOOR_NAMES[f]}</th>${ZONES.map((z) => {
-        const free = sim.L.bays.filter((b) => b.floor === f && b.zone === z && b.type === 'general' && sim.isFree(b.idx)).length;
-        const head = sim.headingCount(f, z, 'general');
-        const dep = sim.expectedDepartures(f, z, 'general');
-        const eff = free - head;
-        return `<td class="zcell ${eff <= 0 ? 'z0' : eff <= 2 ? 'z1' : ''}"><b>${free}</b> free<br><span>${head} heading · ${dep} departing</span></td>`;
-    }).join('')}</tr>`)
         .join('');
     // simultaneous arrivals demo
     const burst = store.demoBurst.map((i) => sim.vehicles[i]).filter(Boolean);
@@ -7469,13 +7630,13 @@ function renderAllocation(force = false) {
     const zonesUsed = new Set(burst.filter((v) => v.alloc && v.alloc.chosen).map((v) => v.alloc.chosen.label));
     const html = `
   <div class="page-head">
-    <div><h2>Allocation</h2><p class="lede">Hard eligibility and capacity constraints first, then a transparent weighted score. Ordinary drivers get zone guidance, never an exclusive general bay.</p></div>
+    <div><h2>Allocation</h2><p class="lede">Every guided car gets a zone, never an exclusive general bay. Select a decision to see why that zone won. Weights can be tuned under Why this bay on the overview.</p></div>
     <div class="tags">${tag('sim', 'Simulated decisions')}</div>
   </div>
   <div class="grid">
     <section class="card span2">
       <div class="card-h"><h3>Recent decisions</h3><span class="fine">Select a row to inspect it and follow the vehicle</span></div>
-      ${rows ? `<div class="tbl-wrap"><table class="tbl tbl-click"><thead><tr><th>Time</th><th>Vehicle</th><th>Destination</th><th>Recommended</th><th class="num">Score</th><th>Runner-up</th><th>Mode</th><th>Now</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="muted">Decisions appear as guided vehicles pass the entrance gate.</p>'}
+      ${rows ? `<div class="tbl-wrap"><table class="tbl tbl-click"><thead><tr><th>Time</th><th>Vehicle</th><th>Destination</th><th>Recommended</th><th class="num">Score</th><th>Runner-up</th><th>Note</th><th>Now</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="muted">Decisions appear as guided vehicles pass the entrance gate.</p>'}
     </section>
     <section class="card">
       <div class="card-h"><h3>Decision detail</h3>${cur ? `<span class="fine">${esc(cur.vehicleCode)} · ${clockLabel(sim.scn, cur.t, false)}</span>` : ''}</div>
@@ -7488,26 +7649,13 @@ function renderAllocation(force = false) {
       <button type="button" class="btn btn-primary btn-sm" data-act="burst">${icon('plus', 14)} Add 4 simultaneous arrivals</button></div>
       ${burst.length ? `<div class="tbl-wrap"><table class="tbl tbl-click"><thead><tr><th>Vehicle</th><th>Gate</th><th>Guided to</th><th>Outcome</th></tr></thead><tbody>${burstRows}</tbody></table></div><p class="fine">${zonesUsed.size} different zone${zonesUsed.size === 1 ? '' : 's'} used for ${burst.filter((v) => v.alloc).length} guided arrivals.</p>` : ''}
     </section>
-    <section class="card">
-      <div class="card-h"><h3>General capacity by zone</h3>${tag('now')}</div>
-      <div class="tbl-wrap"><table class="tbl zm"><thead><tr><th></th>${ZONES.map((z) => `<th>Zone ${z}</th>`).join('')}</tr></thead><tbody>${zm}</tbody></table></div>
-      <p class="fine">“Heading” counts guided drivers on their way; each entry expires after 6 minutes or when the driver parks. “Departing” means payment recorded or due soon; those bays are still occupied.</p>
-    </section>
-    <section class="card">
-      <div class="card-h"><h3>Scoring weights</h3></div>
-      ${weightsDrawer('page')}
-      <p class="fine">Changing weights affects new decisions in the live run and any comparison you run afterwards.</p>
-    </section>
   </div>`;
     setHTML(root, html);
-    const d = document.getElementById('page-drawer');
-    if (d && !d.dataset.init) {
-        d.open = true;
-        d.dataset.init = '1';
-    }
 }
 function modeChip(m) {
-    const map = { normal: ['Capacity', 'pill-teal'], shared: ['Shared', 'pill-warn'], 'expected-departure': ['Await departure', 'pill-warn'], none: ['No space', 'pill-crit'] };
+    if (m === 'normal')
+        return '';
+    const map = { shared: ['Shared zone', 'pill-warn'], 'expected-departure': ['Waiting for a departure', 'pill-warn'], none: ['No space', 'pill-crit'] };
     const [l, c] = map[m] || [m, 'pill-slate'];
     return `<span class="pill ${c}">${l}</span>`;
 }

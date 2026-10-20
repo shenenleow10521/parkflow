@@ -1525,19 +1525,24 @@ function intentRates(s, cm, a, offerActive) {
         offer = (s.offer.redeemPerHour / 60) * a.offerCarShare;
     return { history, member, cinema, dining, event, offer };
 }
-function project(arr, input, a) {
+function projectFull(arr, input, a) {
     const occ = [];
+    const dep = [];
     let o = input.occupied;
     let paid = input.paidPending;
     for (let k = 0; k < arr.length; k++) {
         const paidOut = k < 6 ? paid / (6 - k) : 0;
         paid -= paidOut;
         const pool = Math.max(0, o - paid - paidOut);
-        const dep = paidOut + pool / a.meanDwellMin;
-        o = Math.min(input.usable, Math.max(0, o + arr[k] - dep));
+        const d = paidOut + pool / a.meanDwellMin;
+        o = Math.min(input.usable, Math.max(0, o + arr[k] - d));
         occ.push(o);
+        dep.push(d);
     }
-    return occ;
+    return { occ, dep };
+}
+function project(arr, input, a) {
+    return projectFull(arr, input, a).occ;
 }
 function computeForecast(input, a, horizon = 60) {
     const s = input.scn;
@@ -1562,15 +1567,19 @@ function computeForecast(input, a, horizon = 60) {
         intArr.push(r.history + r.member + r.cinema + r.dining + r.event + r.offer + coming);
     }
     const scale = (arr, f) => arr.map((x) => x * f);
+    const hp = projectFull(histArr, input, a);
+    const ip = projectFull(intArr, input, a);
     const hist = {
         arrivals: histArr,
-        occ: project(histArr, input, a),
+        departures: hp.dep,
+        occ: hp.occ,
         lo: project(scale(histArr, 1 - a.histBand), input, a),
         hi: project(scale(histArr, 1 + a.histBand), input, a)
     };
     const intent = {
         arrivals: intArr,
-        occ: project(intArr, input, a),
+        departures: ip.dep,
+        occ: ip.occ,
         lo: project(scale(intArr, 1 - a.intentBand), input, a),
         hi: project(scale(intArr, 1 + a.intentBand), input, a)
     };
@@ -1634,6 +1643,7 @@ class Sim {
         this.nextGateT = 0;
         this.peakQueue = 0;
         this.entriesThisMinute = 0;
+        this.departuresThisMinute = 0;
         this.heading = new Map();
         this.floorBias = [0, 0, 0];
         this.pending = [];
@@ -2051,6 +2061,7 @@ class Sim {
             if (!clear)
                 continue;
             v.state = 'unparking';
+            this.departuresThisMinute++;
             v.edge = b.edge;
             v.s = b.accessS;
             v.man = 0;
@@ -2139,9 +2150,11 @@ class Sim {
             generalFree: c.generalFree,
             searching: this.searchingVehicles().length,
             queue: this.gateQueue.length,
-            entries: this.entriesThisMinute
+            entries: this.entriesThisMinute,
+            departures: this.departuresThisMinute
         });
         this.entriesThisMinute = 0;
+        this.departuresThisMinute = 0;
     }
     updateForecast() {
         const c = this.counts();

@@ -12,7 +12,7 @@ import { Sim, Vehicle, SimEvent } from '../core/sim';
 import { Allocation, Candidate, WEIGHT_LABELS, AllocWeights, DEFAULT_WEIGHTS } from '../core/allocation';
 import { DESTINATIONS, DEST_BY_ID, BAY_TYPE_LABEL, typeText, FLOOR_NAMES, ZONES, DestId, BayType } from '../core/layout';
 import { clockLabel, SCENARIOS } from '../core/scenarios';
-import { occupancyChart, legendItems } from './charts';
+import { flowPanel } from './charts';
 import { pctChange } from '../core/metrics';
 
 export const STATE_LABEL: Record<string, string> = {
@@ -492,7 +492,7 @@ export function renderLower() {
   const sim = store.sim;
   const chartEl = $('#chart-occ');
   const w = Math.max(280, chartEl.clientWidth || 420);
-  setHTML(chartEl, occupancyChart(sim, sim.forecast, { w, h: Math.max(150, chartEl.clientHeight || 170) }));
+  setHTML(chartEl, flowPanel(sim, sim.forecast, { w, h: 92, id: 'dock', compact: true }));
   renderFloors();
   renderEvents();
 }
@@ -563,12 +563,7 @@ const KIND_LABEL: Record<string, string> = { guide: 'Guidance', reroute: 'Route 
 
 export function initLowerStatic() {
   setHTML($('#event-filters'), Object.keys(EVENT_GROUPS).map((k) => `<button type="button" data-filter="${k}" aria-pressed="false">${k[0].toUpperCase() + k.slice(1)}</button>`).join(''));
-  setHTML($('#chart-legend'), legendItems([
-    { color: 'var(--ink)', label: 'Measured' },
-    { color: 'var(--ink-3)', label: 'History forecast', dash: true },
-    { color: 'var(--teal)', label: 'History + intent', dash: true },
-    { color: 'var(--teal)', label: 'Assumed range', band: true }
-  ]));
+  // the overview flow panel draws its own tiles and call to action; no separate legend
 }
 
 // ---------------- driver preview ----------------

@@ -92,6 +92,8 @@ export interface MinuteRecord {
   searching: number;
   queue: number;
   entries: number;
+  /** Cars that pulled out of a bay during this minute. */
+  departures: number;
 }
 
 export interface ForecastSnapshot {
@@ -163,6 +165,7 @@ export class Sim {
   nextGateT = 0;
   peakQueue = 0;
   entriesThisMinute = 0;
+  departuresThisMinute = 0;
   edgeCount: Float32Array;
   heading = new Map<string, { v: number; exp: number }[]>();
   op: OperatorState;
@@ -546,6 +549,7 @@ export class Sim {
       for (const id of bk) if (Math.abs(this.vehicles[id].s - b.accessS) < GAP) { clear = false; break; }
       if (!clear) continue;
       v.state = 'unparking';
+      this.departuresThisMinute++;
       v.edge = b.edge;
       v.s = b.accessS;
       v.man = 0;
@@ -633,9 +637,11 @@ export class Sim {
       generalFree: c.generalFree,
       searching: this.searchingVehicles().length,
       queue: this.gateQueue.length,
-      entries: this.entriesThisMinute
+      entries: this.entriesThisMinute,
+      departures: this.departuresThisMinute
     });
     this.entriesThisMinute = 0;
+    this.departuresThisMinute = 0;
   }
 
   updateForecast() {

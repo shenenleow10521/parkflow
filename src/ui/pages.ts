@@ -6,7 +6,7 @@ import { Sim } from '../core/sim';
 import { ASSUMPTION_META, DEFAULT_ASSUMPTIONS, ForecastAssumptions } from '../core/forecast';
 import { BAY_TYPE_LABEL, FLOOR_NAMES, ZONES, DEST_BY_ID, DESTINATIONS } from '../core/layout';
 import { clockLabel, clockFromMin, SCENARIO_BY_ID } from '../core/scenarios';
-import { occupancyChart, arrivalsChart, legendItems, COMPONENT_LABELS, g2pHistogram, searchingChart, fieldStrip } from './charts';
+import { occupancyChart, arrivalsChart, legendItems, COMPONENT_LABELS, g2pHistogram, searchingChart, fieldStrip, flowPanel } from './charts';
 import { candidateRows, legendFactors, weightsDrawer, operatorActions } from './panels';
 import { pctChange, RunSummary } from '../core/metrics';
 import { mean, percentile } from '../core/rng';
@@ -86,7 +86,6 @@ export function renderForecast(force = false) {
     return null;
   };
   const prev5 = before(300);
-  const ghost = before(600);
   if (cur && cur.t !== fcSeen.t) {
     fcSeen.flashUntil = fcSeen.t >= 0 ? performance.now() + 1300 : 0;
     fcSeen.t = cur.t;
@@ -195,16 +194,14 @@ export function renderForecast(force = false) {
       <div class="zone-grid"><div></div>${zoneHead}${zoneRows}</div>
       <p class="fine">Expected cars for each lift are split evenly across the three levels, the same rule the guidance score uses. Cars already guided to a zone are taken off its free bays.</p>
     </section>
-    <section class="card span2">
-      <div class="card-h"><h3>Occupancy: measured and forecast</h3>${legendItems([{ color: 'var(--ink)', label: 'Measured' }, { color: 'var(--ink-3)', label: 'History only', dash: true }, { color: 'var(--teal)', label: 'History + intent', dash: true }, { color: 'var(--teal)', label: 'Assumed range (not calibrated)', band: true }, { color: 'var(--teal)', label: '30-min checks against what happened', dot: true }])}</div>
-      <div id="fc-occ" class="chart-box">${occupancyChart(sim, f, { w: wBig, h: 250, showHistBand: true, snapshots: true, ghost: ghost ? { t: ghost.t, occ: ghost.occ, usable: sim.usable } : null })}</div>
-      <div class="fc-sum">
-        <div><span class="muted">Next 30 min, history only</span><b>${f ? Math.round(f.arr30.hist) : '–'} arrivals</b></div>
-        <div><span class="muted">Next 30 min, history + intent</span><b class="teal">${f ? Math.round(f.arr30.intent) : '–'} arrivals</b>${f && prev5 ? delta(f.arr30.intent, prev5.arr30) : ''}</div>
-        <div><span class="muted">Peak in the next hour (history + intent)</span><b class="teal">${isFinite(peak) ? Math.round(peak * 100) + '%' : '–'}</b>${cur && prev5 ? delta(cur.peak * 100, prev5.peak * 100, ' pts') : ''}</div>
-        <div><span class="muted">95% full (history + intent)</span><b class="teal">${f && f.fillMin.intent !== null ? clockLabel(s, sim.t + f.fillMin.intent * 60, false) : 'not within 60 min'}</b><span class="delta">history alone: ${f && f.fillMin.hist !== null ? clockLabel(s, sim.t + f.fillMin.hist * 60, false) : 'not within 60 min'}</span></div>
+    <section class="card span2 flow-card">
+      <div class="card-h"><h3>Arrivals and departures</h3><span class="fine">Last half hour measured, next half hour forecast, in 5-minute windows</span></div>
+      <div id="fc-occ" class="flow">${flowPanel(sim, f, { w: wBig, h: 230, id: 'fc' })}</div>
+      <div class="fc-sum fc-sum-2">
+        <div><span class="muted">Peak in the next hour</span><b class="teal">${isFinite(peak) ? Math.round(peak * 100) + '%' : '–'}</b>${cur && prev5 ? delta(cur.peak * 100, prev5.peak * 100, ' pts') : ''}</div>
+        <div><span class="muted">Arrivals in 30 min, change</span><b class="teal">${f ? Math.round(f.arr30.intent) : '–'}</b>${f && prev5 ? delta(f.arr30.intent, prev5.arr30) : ''}</div>
+        <div><span class="muted">95% full (history + intent)</span><b class="teal">${f && f.fillMin.intent !== null ? clockLabel(s, sim.t + f.fillMin.intent * 60, false) : 'Not within 60 min'}</b><span class="delta">History alone: ${f && f.fillMin.hist !== null ? clockLabel(s, sim.t + f.fillMin.hist * 60, false) : 'not within 60 min'}</span></div>
       </div>
-      ${ghost ? `<p class="fine">The dotted teal line is the forecast made at ${clockLabel(s, ghost.t, false)}, so you can see how new information moved it.</p>` : ''}
     </section>
     <section class="card">
       <div class="card-h"><h3>Is it right?</h3>${tag('sim', 'After outcome')}</div>
@@ -271,18 +268,8 @@ export function renderAllocation(force = false) {
       const v = sim.vehicles[d.vehicle];
       const run = d.ranked[1];
       const on = cur === d;
-      return `<tr class="${on ? 'on' : ''}" data-act="select-vehicle" data-id="${d.vehicle}" role="button" tabindex="0"><td>${clockLabel(sim.scn, d.t, false)}</td><td>${esc(d.vehicleCode)}</td><td>${esc(DEST_BY_ID[d.dest].label)}</td><td><b>${esc(d.chosen ? d.chosen.label : '–')}</b></td><td class="num">${d.chosen ? d.chosen.total.toFixed(2) : '–'}</td><td>${run ? `${esc(run.label)} (${run.total.toFixed(2)})` : '–'}</td><td>${modeChip(d.mode)}</td><td>${esc(v ? shortState(v.state, v.parkT) : '')}</td></tr>`;
+      return `<tr class="${on ? 'on' : ''}" data-act="select-vehicle" data-id="${d.vehicle}" role="button" tabindex="0"><td>${clockLabel(sim.scn, d.t, false)}</td><td>${esc(d.vehicleCode)}</td><td>${esc(DEST_BY_ID[d.dest].label)}</td><td><b>${esc(d.chosen ? d.chosen.label : '–')}</b></td><td class="num">${d.chosen ? d.chosen.total.toFixed(2) : '–'}</td><td>${run ? `${esc(run.label)} (${run.total.toFixed(2)})` : '–'}</td><td>${modeChip(d.mode)}${d.withoutForecast ? `<span class="pill pill-teal" title="Without the forecast term this car would have gone to ${esc(d.withoutForecast.label)}">Forecast steered</span>` : ''}</td><td>${esc(v ? shortState(v.state, v.parkT) : '')}</td></tr>`;
     })
-    .join('');
-  // zone matrix
-  const zm = [0, 1, 2]
-    .map((f) => `<tr><th>${FLOOR_NAMES[f]}</th>${ZONES.map((z) => {
-      const free = sim.L.bays.filter((b) => b.floor === f && b.zone === z && b.type === 'general' && sim.isFree(b.idx)).length;
-      const head = sim.headingCount(f, z, 'general');
-      const dep = sim.expectedDepartures(f, z, 'general');
-      const eff = free - head;
-      return `<td class="zcell ${eff <= 0 ? 'z0' : eff <= 2 ? 'z1' : ''}"><b>${free}</b> free<br><span>${head} heading · ${dep} departing</span></td>`;
-    }).join('')}</tr>`)
     .join('');
   // simultaneous arrivals demo
   const burst = store.demoBurst.map((i) => sim.vehicles[i]).filter(Boolean);
@@ -292,13 +279,13 @@ export function renderAllocation(force = false) {
   const zonesUsed = new Set(burst.filter((v) => v.alloc && v.alloc.chosen).map((v) => v.alloc!.chosen!.label));
   const html = `
   <div class="page-head">
-    <div><h2>Allocation</h2><p class="lede">Hard eligibility and capacity constraints first, then a transparent weighted score. Ordinary drivers get zone guidance, never an exclusive general bay.</p></div>
+    <div><h2>Allocation</h2><p class="lede">Every guided car gets a zone, never an exclusive general bay. Select a decision to see why that zone won. Weights can be tuned under Why this bay on the overview.</p></div>
     <div class="tags">${tag('sim', 'Simulated decisions')}</div>
   </div>
   <div class="grid">
     <section class="card span2">
       <div class="card-h"><h3>Recent decisions</h3><span class="fine">Select a row to inspect it and follow the vehicle</span></div>
-      ${rows ? `<div class="tbl-wrap"><table class="tbl tbl-click"><thead><tr><th>Time</th><th>Vehicle</th><th>Destination</th><th>Recommended</th><th class="num">Score</th><th>Runner-up</th><th>Mode</th><th>Now</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="muted">Decisions appear as guided vehicles pass the entrance gate.</p>'}
+      ${rows ? `<div class="tbl-wrap"><table class="tbl tbl-click"><thead><tr><th>Time</th><th>Vehicle</th><th>Destination</th><th>Recommended</th><th class="num">Score</th><th>Runner-up</th><th>Note</th><th>Now</th></tr></thead><tbody>${rows}</tbody></table></div>` : '<p class="muted">Decisions appear as guided vehicles pass the entrance gate.</p>'}
     </section>
     <section class="card">
       <div class="card-h"><h3>Decision detail</h3>${cur ? `<span class="fine">${esc(cur.vehicleCode)} · ${clockLabel(sim.scn, cur.t, false)}</span>` : ''}</div>
@@ -311,24 +298,13 @@ export function renderAllocation(force = false) {
       <button type="button" class="btn btn-primary btn-sm" data-act="burst">${icon('plus', 14)} Add 4 simultaneous arrivals</button></div>
       ${burst.length ? `<div class="tbl-wrap"><table class="tbl tbl-click"><thead><tr><th>Vehicle</th><th>Gate</th><th>Guided to</th><th>Outcome</th></tr></thead><tbody>${burstRows}</tbody></table></div><p class="fine">${zonesUsed.size} different zone${zonesUsed.size === 1 ? '' : 's'} used for ${burst.filter((v) => v.alloc).length} guided arrivals.</p>` : ''}
     </section>
-    <section class="card">
-      <div class="card-h"><h3>General capacity by zone</h3>${tag('now')}</div>
-      <div class="tbl-wrap"><table class="tbl zm"><thead><tr><th></th>${ZONES.map((z) => `<th>Zone ${z}</th>`).join('')}</tr></thead><tbody>${zm}</tbody></table></div>
-      <p class="fine">“Heading” counts guided drivers on their way; each entry expires after 6 minutes or when the driver parks. “Departing” means payment recorded or due soon; those bays are still occupied.</p>
-    </section>
-    <section class="card">
-      <div class="card-h"><h3>Scoring weights</h3></div>
-      ${weightsDrawer('page')}
-      <p class="fine">Changing weights affects new decisions in the live run and any comparison you run afterwards.</p>
-    </section>
   </div>`;
   setHTML(root, html);
-  const d = document.getElementById('page-drawer') as HTMLDetailsElement | null;
-  if (d && !d.dataset.init) { d.open = true; d.dataset.init = '1'; }
 }
 
 function modeChip(m: string): string {
-  const map: Record<string, [string, string]> = { normal: ['Capacity', 'pill-teal'], shared: ['Shared', 'pill-warn'], 'expected-departure': ['Await departure', 'pill-warn'], none: ['No space', 'pill-crit'] };
+  if (m === 'normal') return '';
+  const map: Record<string, [string, string]> = { shared: ['Shared zone', 'pill-warn'], 'expected-departure': ['Waiting for a departure', 'pill-warn'], none: ['No space', 'pill-crit'] };
   const [l, c] = map[m] || [m, 'pill-slate'];
   return `<span class="pill ${c}">${l}</span>`;
 }

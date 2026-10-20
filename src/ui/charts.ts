@@ -250,3 +250,123 @@ export function fieldStrip(values: number[], W: number, H: number): string {
 }
 
 export const CHART_INK = INK;
+
+// ---------------- arrivals and departures, 5-minute windows ----------------
+export interface FlowSummary {
+  arriving: number;
+  arrivingHist: number;
+  leaving: number;
+  net: number;
+  endShare: number;
+  paidPending: number;
+  fillAt: number | null;
+}
+
+export function flowSummary(sim: Sim, f: Forecast | null): FlowSummary | null {
+  if (!f) return null;
+  const sum = (a: number[], n: number) => a.slice(0, n).reduce((x, y) => x + y, 0);
+  const arriving = sum(f.intent.arrivals, 30);
+  const leaving = sum(f.intent.departures, 30);
+  return {
+    arriving,
+    arrivingHist: sum(f.hist.arrivals, 30),
+    leaving,
+    net: arriving - leaving,
+    endShare: f.intent.occ[29] / Math.max(1, f.usable),
+    paidPending: sim.paidPending(),
+    fillAt: f.fillMin.intent !== null ? sim.t + f.fillMin.intent * 60 : null
+  };
+}
+
+const I_ARROWS = '<path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/>';
+const I_IN = '<path d="M14 5h4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4"/><path d="m9 16 4-4-4-4M13 12H3"/>';
+const I_OUT = '<path d="M10 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"/><path d="m15 16 4-4-4-4M19 12H9"/>';
+const svgIc = (p: string, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+
+/** Measured flows for the last half hour and forecast flows for the next, side by side, with headline tiles and a call to action. */
+export function flowPanel(sim: Sim, f: Forecast | null, o: { w: number; h: number; id: string; compact?: boolean }): string {
+  const fs = flowSummary(sim, f);
+  if (!f || !fs) return '<p class="muted">The forecast starts after the first simulated minute.</p>';
+  const s = sim.scn;
+  // windows: past measured (only those after the run started), then six forecast windows
+  type Win = { rel: number; arr: number; dep: number; fc: boolean };
+  const wins: Win[] = [];
+  const pastN = o.compact ? 4 : 6;
+  for (let j = pastN; j >= 1; j--) {
+    const t0 = sim.t - j * 300;
+    const t1 = t0 + 300;
+    if (t0 < 0) continue;
+    const recs = sim.history.filter((r) => r.t > t0 && r.t <= t1);
+    wins.push({ rel: -j * 5, arr: recs.reduce((a, r) => a + r.entries, 0), dep: recs.reduce((a, r) => a + (r.departures || 0), 0), fc: false });
+  }
+  for (let k = 0; k < 6; k++) {
+    const a = f.intent.arrivals.slice(k * 5, k * 5 + 5).reduce((x, y) => x + y, 0);
+    const d = f.intent.departures.slice(k * 5, k * 5 + 5).reduce((x, y) => x + y, 0);
+    wins.push({ rel: k * 5, arr: a, dep: d, fc: true });
+  }
+  const W = o.w, H = o.h;
+  const m = { l: 26, r: 6, t: o.compact ? 10 : 18, b: 20 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const vmax = Math.max(5, ...wins.map((w) => Math.max(w.arr, w.dep)));
+  const ticks = niceTicks(0, vmax, o.compact ? 2 : 4);
+  const ymax = Math.max(vmax, ticks[ticks.length - 1]);
+  const y = (v: number) => m.t + ih - (v / ymax) * ih;
+  const gw = iw / wins.length;
+  const bw = Math.min(o.compact ? 11 : 20, gw * 0.34);
+  const pin = `hin-${o.id}`, pout = `hout-${o.id}`;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" class="chart flow-chart" role="img" aria-label="Cars arriving and leaving per five minutes: last half hour measured, next half hour forecast">
+    <defs>
+      <pattern id="${pin}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--flow-in)" opacity=".28"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--flow-in)" stroke-width="2.2"/></pattern>
+      <pattern id="${pout}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--flow-out)" opacity=".28"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--flow-out)" stroke-width="2.2"/></pattern>
+    </defs>`;
+  for (const v of ticks) svg += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="${GRID}"/><text x="${m.l - 6}" y="${y(v) + 3.5}" text-anchor="end" class="ax">${v}</text>`;
+  const firstFc = wins.findIndex((w) => w.fc);
+  if (firstFc > 0) {
+    const nx = m.l + firstFc * gw;
+    svg += `<rect x="${nx}" y="${m.t - 4}" width="${W - m.r - nx}" height="${ih + 4}" fill="var(--route)" opacity=".035"/>`;
+    svg += `<line x1="${nx}" x2="${nx}" y1="${m.t - 6}" y2="${m.t + ih}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>`;
+  }
+  wins.forEach((w, i) => {
+    const cx = m.l + i * gw + gw / 2;
+    const bars: [number, string, string][] = [
+      [w.arr, w.fc ? `url(#${pin})` : 'var(--flow-in)', 'var(--flow-in)'],
+      [w.dep, w.fc ? `url(#${pout})` : 'var(--flow-out)', 'var(--flow-out)']
+    ];
+    bars.forEach(([v, fill, stroke], j) => {
+      const x = cx - bw - 1.5 + j * (bw + 3);
+      const top = y(v);
+      const h = Math.max(v > 0 ? 1.5 : 0, m.t + ih - top);
+      svg += `<rect x="${x.toFixed(1)}" y="${(m.t + ih - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="${fill}" ${w.fc ? `stroke="${stroke}" stroke-width="1.2"` : ''}><title>${j ? 'Leaving' : 'Arriving'} ${w.fc ? 'forecast' : 'measured'}, ${w.rel >= 0 ? `+${w.rel}` : w.rel} to ${w.rel + 5 >= 0 ? `+${w.rel + 5}` : w.rel + 5} min: ${v.toFixed(1)}</title></rect>`;
+      if (!o.compact || w.fc) svg += `<text x="${(x + bw / 2).toFixed(1)}" y="${(m.t + ih - h - 4).toFixed(1)}" text-anchor="middle" class="ax flow-v">${Math.round(v)}</text>`;
+    });
+    const lab = w.rel === 0 ? 'Now' : w.rel > 0 ? `+${w.rel}` : `${w.rel}`;
+    svg += `<text x="${cx}" y="${H - 5}" text-anchor="middle" class="ax${w.rel === 0 ? ' flow-now' : ''}">${lab}</text>`;
+  });
+  svg += '</svg>';
+  // tiles and call to action
+  const endPct = Math.round(fs.endShare * 100);
+  const netR = Math.round(fs.net);
+  let tone = 'ok', title: string, text: string, icn = 'check';
+  if (fs.fillAt !== null && fs.fillAt - sim.t <= 30 * 60) {
+    tone = 'crit'; title = 'Prepare overflow access'; icn = 'alert';
+    text = `Occupancy is forecast to reach 95% by ${clockLabel(s, fs.fillAt, false)}.`;
+  } else if (netR >= 10) {
+    tone = 'warn'; title = 'Watch the entry queue'; icn = 'alert';
+    text = `More cars arriving than leaving (${netR > 0 ? '+' : ''}${netR} in 30 min), ending about ${endPct}% full.`;
+  } else if (netR <= -5) {
+    title = 'Space is opening up';
+    text = `More cars leaving than arriving (${netR} in 30 min).`;
+  } else {
+    title = 'Arrivals and departures are balanced';
+    text = `About ${endPct}% full in 30 minutes.`;
+  }
+  const callIc = icn === 'alert' ? '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>' : '<path d="m5 12 5 5L20 7"/>';
+  const tiles = `<div class="flow-tiles${o.compact ? ' compact' : ''}">
+      <div class="ft ft-in"><span class="ft-ic">${svgIc(I_IN, o.compact ? 16 : 20)}</span><div><b>${Math.round(fs.arriving)}</b><span>arriving in 30 min</span>${o.compact ? '' : `<small>History alone: ${Math.round(fs.arrivingHist)}</small>`}</div></div>
+      <div class="ft ft-out"><span class="ft-ic">${svgIc(I_OUT, o.compact ? 16 : 20)}</span><div><b>${Math.round(fs.leaving)}</b><span>leaving in 30 min</span>${o.compact ? '' : `<small>${fs.paidPending} already paid</small>`}</div></div>
+      <div class="ft ft-net ft-${netR > 0 ? 'up' : 'down'}"><span class="ft-ic">${svgIc(I_ARROWS, o.compact ? 16 : 20)}</span><div><b>${netR > 0 ? '+' : netR < 0 ? '−' : ''}${Math.abs(netR)}</b><span>net change</span>${o.compact ? '' : `<small>Ends about ${endPct}% full</small>`}</div></div>
+    </div>`;
+  const legend = `<div class="flow-legend"><span><i class="fl-sw fl-in"></i>Arriving (entry)</span><span><i class="fl-sw fl-out"></i>Leaving (pulled out of a bay)</span><span><i class="fl-sw fl-solid"></i>Measured</span><span><i class="fl-sw fl-hatch"></i>Forecast</span></div>`;
+  return `${tiles}<div class="flow-chart-box">${svg}</div>${o.compact ? '' : legend}
+    <div class="flow-call flow-${tone}"><span class="fc-ic">${svgIc(callIc, 18)}</span><b>${esc(title)}</b><span>${esc(text)}</span></div>`;
+}
