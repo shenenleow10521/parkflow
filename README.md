@@ -5,9 +5,9 @@ KL East Mall pilot concept · illustrative layout · simulated data.
 
 ![Operator command centre](docs/screenshots/operator-overview.png)
 
-| Driver app: home | Guidance | My car |
-|---|---|---|
-| ![Driver home](docs/screenshots/driver-home.png) | ![Guidance](docs/screenshots/driver-guidance.png) | ![My car](docs/screenshots/driver-my-car.png) |
+| Driver app: home | Guidance | My cars | Pay |
+|---|---|---|---|
+| ![Driver home](docs/screenshots/driver-home.png) | ![Guidance](docs/screenshots/driver-guidance.png) | ![My cars](docs/screenshots/driver-my-car.png) | ![Pay](docs/screenshots/driver-pay.png) |
 
 ## Live demo
 
@@ -24,7 +24,8 @@ Two pages, one simulation engine:
 
 - `docs/index.html` is the operator command centre (3D model, allocation, forecasts, impact).
 - `docs/driver.html` is the driver app for shoppers: level board, "I'm on my way" guidance with a
-  live floor map, special-bay booking, parked confirmation, find-my-car and simulated pay-and-leave.
+  live floor map, special-bay booking, parked confirmation, My cars (several cars, where each is parked,
+  how long and how much) with find-my-car, and payment by mall wallet, connected card or member points.
 - `dist/parkflow.html` and `dist/parkflow-driver.html` are the same pages as body fragments, for hosts that
   add their own HTML skeleton.
 
@@ -38,7 +39,7 @@ Requires Node 18+ and TypeScript (`npm i -g typescript`).
 ```
 node tools/build.mjs        # tsc -> bundles -> docs/ (standalone site) and dist/ (fragments + local test pages)
 python3 tools/functional.py # optional: Playwright acceptance checks for the operator view (25 checks)
-python3 tools/driver_flow.py /tmp/drv  # optional: driver app flow test and screenshots (15 checks)
+python3 tools/driver_flow.py /tmp/drv  # optional: driver app flow test and screenshots (21 checks)
 node tools/bundle.mjs /tmp/core.js --core --test tools/core-test.js && node /tmp/core.js   # simulation checks
 ```
 
@@ -78,4 +79,11 @@ node tools/bundle.mjs /tmp/core.js --core --test tools/core-test.js && node /tmp
   the Web Animations API; the about panel on desktop shows which engine is active.
 - "I'm on my way" adds the driver's car to the simulation as an intent signal, so it shapes the forecast and
   is guided by the same allocation engine as every other car. "I'm at the entrance" skips the drive there.
-- Light and dark themes follow the phone setting. Payments are simulated; no card details are collected.
+- Membership comes from the account (KL East Mall Rewards, Gold, points), not a tick box: it sets the member
+  rate (first hour free), unlocks member bays and verifies member bookings.
+- My cars starts with one car already parked (since 12:40) so the stay, fee and Pay button are visible at once.
+  "Park a new car" picks another car from the garage or adds a new plate.
+- Payment: mall wallet (with top-up from a connected card), connected debit or credit card, and member points
+  (100 points = RM 1; members earn 10 points per RM 1). All simulated: no card details are collected, no money
+  moves, and account data stays in the browser.
+- Light and dark themes follow the phone setting.

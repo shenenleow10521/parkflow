@@ -2938,6 +2938,23 @@ class Sim {
         v.durationS = 0;
         return true;
     }
+    /** Driver app demo: treat a car already parked in the simulation as the driver's own, parked some time ago.
+     *  It stays until the driver pays in the app. */
+    adoptParked(vid, parkedAgoS, dest) {
+        const v = this.vehicles[vid];
+        if (!v || v.state !== 'parked' || v.bay < 0)
+            return false;
+        v.parkT = this.t - parkedAgoS;
+        v.gateT = v.parkT - 84;
+        v.paidT = Infinity;
+        v.departT = Infinity;
+        v.durationS = 6 * 3600;
+        v.dest = dest;
+        v.injected = true;
+        if (!v.searchDist)
+            v.searchDist = 132;
+        return true;
+    }
     /** Cancel a trip that has not reached the entrance. */
     cancelDriver(vid) {
         const v = this.vehicles[vid];

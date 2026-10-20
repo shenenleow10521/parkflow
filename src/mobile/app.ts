@@ -12,16 +12,69 @@ import { animate, tweenNumber, SPRING_SHEET, SPRING_PUSH, reducedMotion, motionE
 import { FloorMap, vehiclePose, walkPath } from './map';
 
 type Tab = 'park' | 'reserve' | 'car';
-type SheetKind = '' | 'plan' | 'profile' | 'pay' | 'dest' | 'assist';
+type SheetKind = '' | 'plan' | 'profile' | 'pay' | 'paid' | 'topup' | 'dest' | 'assist';
 type ResType = 'ev' | 'family' | 'member';
 
 interface Profile {
-  plate: string;
-  ev: boolean;
-  family: boolean;
-  member: boolean;
   pace: number;
 }
+
+/** A car in the driver's garage. EV and family pass belong to the car; membership belongs to the account. */
+interface CarProfile {
+  plate: string;
+  name: string;
+  ev: boolean;
+  family: boolean;
+}
+type PayMethod = 'wallet' | 'debit' | 'credit';
+interface Card {
+  id: 'debit' | 'credit';
+  label: string;
+  last4: string;
+}
+/** KL East Mall account: rewards membership, points and the mall wallet. Simulated, stored on this device only. */
+interface Account {
+  member: boolean;
+  tier: string;
+  memberNo: string;
+  points: number;
+  wallet: number;
+  cards: Card[];
+}
+interface Receipt {
+  at: number;
+  fee: number;
+  pointsUsed: number;
+  pointsRM: number;
+  charged: number;
+  method: PayMethod;
+  earned: number;
+}
+/** One parking stay: a car of the driver's in the simulation, from "on my way" until it leaves. */
+interface Stay {
+  plate: string;
+  vid: number;
+  demo: boolean;
+  receipt: Receipt | null;
+}
+
+const POINTS_PER_RM = 100; // redeem: 100 points = RM 1
+const EARN_PER_RM = 10; // earn: 10 points per RM 1 paid in money
+const DEFAULT_GARAGE: CarProfile[] = [
+  { plate: 'VKL 2026', name: 'My car', ev: false, family: false },
+  { plate: 'WXY 8812', name: 'Family car', ev: false, family: true }
+];
+const DEFAULT_ACCOUNT: Account = {
+  member: true,
+  tier: 'Gold',
+  memberNo: '8801 2026 4417',
+  points: 2340,
+  wallet: 12.5,
+  cards: [
+    { id: 'debit', label: 'Debit card', last4: '4821' },
+    { id: 'credit', label: 'Credit card', last4: '1093' }
+  ]
+};
 
 const ZONE_COLOUR: Record<ZoneId, string> = { A: 'blue', B: 'yellow', C: 'orange' };
 const DEST_ICON: Record<DestId, string> = { cinema: 'film', grocer: 'cart', atrium: 'store', family: 'skate' };
@@ -47,6 +100,7 @@ const PX: Record<string, string> = {
   walk: '<circle cx="13" cy="4" r="2"/><path d="m7 22 3-7 3 3v4M10 15l1-5 4 3 3 1M8 9l3-1"/>',
   ticket: '<path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v3a2 2 0 0 0 0 4v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3a2 2 0 0 0 0-4Z"/><path d="M13 5v2M13 17v2M13 11v2"/>',
   back: '<path d="m15 18-6-6 6-6"/>',
+  card: '<rect width="20" height="14" x="2" y="5" rx="2"/><path d="M2 10h20M6 15h4"/>',
   chev: '<path d="m9 18 6-6-6-6"/>'
 };
 function ic(name: string, size = 18): string {
@@ -78,9 +132,15 @@ const app = {
   resMsg: '',
   resErr: false,
   assistMsg: '',
-  resDraft: { type: 'ev' as ResType, inMin: 20, dur: 120, elig: false, touched: false },
-  plan: { dest: 'cinema' as DestId, eta: 10 },
-  profile: loadJSON<Profile>('parkflow.driver', { plate: 'VKL 2026', ev: false, family: false, member: true, pace: 4 }),
+  resDraft: { type: 'ev' as ResType, inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
+  plan: { dest: 'cinema' as DestId, eta: 10, plate: '' },
+  profile: loadJSON<Profile>('parkflow.driver.v2', { pace: 4 }),
+  garage: loadJSON<CarProfile[]>('parkflow.garage', DEFAULT_GARAGE.map((c) => ({ ...c }))),
+  account: loadJSON<Account>('parkflow.account', { ...DEFAULT_ACCOUNT, cards: DEFAULT_ACCOUNT.cards.map((c) => ({ ...c })) }),
+  stays: [] as Stay[],
+  carSel: '',
+  addingCar: false,
+  pay: { plate: '', method: 'wallet' as PayMethod, usePoints: true, topAmt: 50, topFrom: 'debit' as 'debit' | 'credit', back: false, done: null as Receipt | null },
   sheet: '' as SheetKind,
   parkedShown: false,
   lastNotice: '',
@@ -98,13 +158,29 @@ let guideMap: FloorMap;
 let carMap: FloorMap;
 
 function persistProfile() {
-  saveJSON('parkflow.driver', app.profile);
+  saveJSON('parkflow.driver.v2', app.profile);
+  saveJSON('parkflow.garage', app.garage);
+  saveJSON('parkflow.account', app.account);
 }
 
 function newSim(): Sim {
   const s = new Sim(app.L, SCENARIO_BY_ID.surge, { policy: 'guided', live: true, weights: { ...DEFAULT_WEIGHTS }, assumptions: { ...DEFAULT_ASSUMPTIONS } });
   s.runTo(480);
   return s;
+}
+
+/** Demo: the driver's first car has been parked since about 12:40 near Lift B, so My car shows a real stay. */
+function seedParkedCar() {
+  const sim = app.sim;
+  const L = sim.L;
+  const parked = sim.vehicles.filter((v) => v.state === 'parked' && v.bay >= 0 && L.bays[v.bay].type === 'general' && L.bays[v.bay].flag === 'none');
+  const pick = parked.find((v) => L.bays[v.bay].floor === 1 && L.bays[v.bay].zone === 'B') || parked.find((v) => L.bays[v.bay].zone === 'B') || parked[0];
+  app.stays = [];
+  if (!pick || !app.garage.length) return;
+  if (sim.adoptParked(pick.i, 88 * 60, 'atrium')) {
+    app.stays.push({ plate: app.garage[0].plate, vid: pick.i, demo: true, receipt: null });
+    app.carSel = app.garage[0].plate;
+  }
 }
 
 function me(): Vehicle | null {
@@ -115,13 +191,51 @@ function myRes(): Reservation | null {
   return app.resId ? app.sim.reservations.find((r) => r.id === app.resId) || null : null;
 }
 
-function elig(): BayType[] {
-  const p = app.profile;
+function carOf(plate: string): CarProfile {
+  return app.garage.find((c) => c.plate === plate) || app.garage[0];
+}
+
+function eligFor(car: CarProfile): BayType[] {
   const e: BayType[] = ['general'];
-  if (p.ev) e.push('ev');
-  if (p.family) e.push('family');
-  if (p.member) e.push('member');
+  if (car.ev) e.push('ev');
+  if (car.family) e.push('family');
+  if (app.account.member) e.push('member');
   return e;
+}
+
+function vOf(st: Stay | undefined | null): Vehicle | null {
+  return st ? app.sim.vehicles[st.vid] || null : null;
+}
+
+/** Latest stay for a plate. */
+function stayOf(plate: string): Stay | undefined {
+  for (let i = app.stays.length - 1; i >= 0; i--) if (app.stays[i].plate === plate) return app.stays[i];
+  return undefined;
+}
+
+function tripPlate(): string {
+  const st = app.stays.find((x) => x.vid === app.myId);
+  return st ? st.plate : '';
+}
+
+/** A car is busy while it is on the way, in the car park, or held by a booking. */
+function carBusy(plate: string): boolean {
+  const ph = phaseOf(vOf(stayOf(plate)));
+  return ph === 'gate' || ph === 'driving' || ph === 'parked' || ph === 'paid' || ph === 'planned';
+}
+
+function freeCars(): CarProfile[] {
+  return app.garage.filter((c) => !carBusy(c.plate));
+}
+
+function rm(x: number): string {
+  return `RM ${x.toFixed(2)}`;
+}
+
+function methodLabel(m: PayMethod): string {
+  if (m === 'wallet') return 'KL East Mall wallet';
+  const c = app.account.cards.find((x) => x.id === m);
+  return c ? `${c.label} ending ${c.last4}` : 'Card';
 }
 
 function clk(t: number): string {
@@ -130,14 +244,22 @@ function clk(t: number): string {
 
 type Phase = 'none' | 'planned' | 'gate' | 'driving' | 'parked' | 'paid' | 'left' | 'cancelled';
 function phase(): Phase {
-  const v = me();
+  return phaseOf(me());
+}
+
+/** parkT is -1 until a car parks; cars parked before the demo began have a negative time, so test the sentinel. */
+function everParked(v: Vehicle): boolean {
+  return v.parkT !== -1;
+}
+
+function phaseOf(v: Vehicle | null): Phase {
   if (!v) return 'none';
   if (v.state === 'cancelled') return 'cancelled';
   if (v.state === 'pending') return 'planned';
   if (v.state === 'queued') return 'gate';
-  if (v.state === 'driving' || v.state === 'parking') return v.parkT >= 0 ? 'parked' : 'driving';
+  if (v.state === 'driving' || v.state === 'parking') return everParked(v) ? 'parked' : 'driving';
   if (v.state === 'parked') return v.paidT <= app.sim.t ? 'paid' : 'parked';
-  if (v.state === 'unparking' || v.state === 'leaving') return v.parkT >= 0 ? 'paid' : 'driving';
+  if (v.state === 'unparking' || v.state === 'leaving') return everParked(v) ? 'paid' : 'driving';
   return 'left';
 }
 
@@ -291,9 +413,8 @@ function renderTabs() {
     b.setAttribute('aria-selected', String(on));
     b.tabIndex = on ? 0 : -1;
   }
-  const ph = phase();
   const carBadge = $('#tab-car-badge');
-  carBadge.hidden = !(ph === 'parked' || ph === 'paid');
+  carBadge.hidden = !app.stays.some((st) => ['parked', 'paid'].includes(phaseOf(vOf(st))));
 }
 
 // Level board: the same dot-matrix sign that hangs at the mall entrance.
@@ -397,17 +518,30 @@ function renderPark() {
     const g = v ? guidanceFor(v) : null;
     cta = `<button type="button" class="trip-card" data-act="open-guide">
       <span class="trip-ic">${ic('nav', 20)}</span>
-      <span class="trip-t"><b>${ph === 'planned' ? `On your way to ${esc(DEST_BY_ID[v!.dest].label)}` : 'Guidance is on'}</b><span>${g ? esc(g.title) : ''}</span></span>
-      <span class="trip-go">${ic('chev', 20)}</span></button>`;
-  } else if ((ph === 'parked' || ph === 'paid') && v) {
-    const b = sim.L.bays[v.bay];
-    cta = `<button type="button" class="trip-card trip-parked" data-act="tab" data-tab="car">
-      <span class="plate plate-sm">${FLOOR_NAMES[b.floor]}</span>
-      <span class="trip-t"><b>Your car is in ${esc(b.id)}</b><span>Parked ${fmtStay(sim.t - v.parkT)} ago. Tap to find it.</span></span>
+      <span class="trip-t"><b>${esc(tripPlate())} ${ph === 'planned' ? `on the way to ${esc(DEST_BY_ID[v!.dest].label)}` : 'guidance is on'}</b><span>${g ? esc(g.title) : ''}</span></span>
       <span class="trip-go">${ic('chev', 20)}</span></button>`;
   } else {
     cta = `<button type="button" class="cta" data-act="plan">${ic('nav', 20)}<span>I’m on my way</span></button>
       <p class="cta-sub">Tell us where you’re going in the mall. We’ll pick the level and zone nearest your lift.</p>`;
+  }
+  // cars already in the car park: where, how long, how much
+  const parked = app.stays.filter((st) => {
+    const p = phaseOf(vOf(st));
+    return p === 'parked' || p === 'paid';
+  });
+  if (parked.length) {
+    cta += `<div class="parked-list">${parked
+      .map((st) => {
+        const pv = vOf(st)!;
+        const b = sim.L.bays[pv.bay];
+        const paid = pv.paidT <= sim.t;
+        const fee = st.receipt ? st.receipt.fee : feeFor(sim.t - pv.parkT, app.account.member).rm;
+        return `<button type="button" class="trip-card trip-parked" data-act="car-open" data-plate="${esc(st.plate)}">
+          <span class="plate plate-sm">${FLOOR_NAMES[b.floor]}</span>
+          <span class="trip-t"><b>${esc(st.plate)} is in ${esc(b.id)}</b><span>${paid ? `Paid ${rm(fee)}. Exit by ${clk(pv.paidT + 15 * 60)}.` : `Parked ${fmtStay(sim.t - pv.parkT)}, ${rm(fee)} so far`}</span></span>
+          <span class="trip-go">${ic('chev', 20)}</span></button>`;
+      })
+      .join('')}</div>`;
   }
   setHTML($('#park-cta'), cta);
   const sp = (['ev', 'family', 'member'] as ResType[])
@@ -470,6 +604,11 @@ function renderReserve() {
       const ok = (['ev', 'family', 'member'] as ResType[]).find((t) => sim.bookable(t).bookable > 0);
       if (ok) d.type = ok;
     }
+    const freeC = freeCars();
+    if (!d.plate || !freeC.find((c) => c.plate === d.plate)) d.plate = freeC[0]?.plate || '';
+    const car = d.plate ? carOf(d.plate) : null;
+    const verified = resVerified(d.type, car);
+    const memberLocked = d.type === 'member' && !app.account.member;
     const q = sim.bookable(d.type);
     const typeBtns = (['ev', 'family', 'member'] as ResType[])
       .map((t) => {
@@ -479,16 +618,23 @@ function renderReserve() {
       .join('');
     const chips = (vals: number[], cur: number, act: string, fmt: (x: number) => string) =>
       vals.map((x) => `<button type="button" class="chip" data-act="${act}" data-v="${x}" aria-pressed="${cur === x}">${fmt(x)}</button>`).join('');
-    const disabled = q.bookable < 1;
+    const disabled = q.bookable < 1 || memberLocked || !car;
+    const carChips = freeC.map((c) => `<button type="button" class="chip chip-car" data-act="res-car" data-plate="${esc(c.plate)}" aria-pressed="${d.plate === c.plate}"><b>${esc(c.plate)}</b><span>${esc(c.name)}</span></button>`).join('');
+    const eligHTML = memberLocked
+      ? `<p class="note warn">${ic('star', 16)} Member bays are for KL East Mall Rewards members. <button type="button" class="linkbtn" data-act="profile">Join in your account</button></p>`
+      : verified
+      ? `<p class="note ok">${ic('check', 16)} Verified: ${esc(verified)}.</p>`
+      : `<label class="check"><input type="checkbox" id="res-elig" ${d.elig ? 'checked' : ''}><span>${esc(RES_ELIG[d.type])}</span></label>`;
     setHTML(
       $('#res-form'),
       `<form class="form" id="res-form-el" novalidate>
         <fieldset><legend>Bay type</legend><div class="opts" role="radiogroup" aria-label="Bay type">${typeBtns}</div></fieldset>
         <fieldset><legend>Arriving in</legend><div class="chips">${chips([20, 30, 45, 60], d.inMin, 'res-in', (x) => `${x} min`)}</div><p class="fine">Arrival window ${clk(sim.t + d.inMin * 60)}–${clk(sim.t + (d.inMin + 15) * 60)}</p></fieldset>
         <fieldset><legend>Staying for</legend><div class="chips">${chips([60, 120, 180], d.dur, 'res-dur', (x) => `${x / 60} h`)}</div></fieldset>
-        <label class="check"><input type="checkbox" id="res-elig" ${d.elig ? 'checked' : ''}><span>${esc(RES_ELIG[d.type])}</span></label>
+        <fieldset><legend>For which car?</legend><div class="chips">${carChips || '<span class="muted">All your cars are in use. Add one in your account.</span>'}</div></fieldset>
+        ${eligHTML}
         ${app.resMsg ? `<p class="note ${app.resErr ? 'warn' : ''}" role="alert">${esc(app.resMsg)}</p>` : ''}
-        <button type="submit" class="btn btn-primary btn-wide" ${disabled ? 'disabled' : ''}>${disabled ? 'No bay can be guaranteed right now' : `Reserve ${RES_LABEL[d.type].toLowerCase().replace('ev', 'EV')} bay`}</button>
+        <button type="submit" class="btn btn-primary btn-wide" ${disabled ? 'disabled' : ''}>${q.bookable < 1 ? 'No bay can be guaranteed right now' : memberLocked ? 'Members only' : `Reserve ${RES_LABEL[d.type].toLowerCase().replace('ev', 'EV')} bay${car ? ` for ${esc(car.plate)}` : ''}`}</button>
         <p class="fine">One ${typeText(d.type)} bay is always kept for drivers who turn up without booking, so we never overbook. No payment is taken in this demo.</p>
       </form>`
     );
@@ -515,26 +661,60 @@ function findSteps(b: Bay, lift: ZoneId): string {
   </ol>`;
 }
 
+function walletHTML(): string {
+  const a = app.account;
+  return `<div class="w-item"><span>${ic('wallet', 15)} Wallet</span><b>${rm(a.wallet)}</b></div>
+    <div class="w-item">${a.member ? `<span>${ic('star', 15)} ${esc(a.tier)} points</span><b>${a.points.toLocaleString('en-MY')}</b>` : `<span>${ic('star', 15)} Rewards</span><b class="w-off">Not a member</b>`}</div>
+    <button type="button" class="btn btn-sm" data-act="topup">${ic('plus', 15)} Top up</button>`;
+}
+
 function renderCar() {
   const sim = app.sim;
   const host = $('#tab-car');
   if (!host.dataset.built) {
-    host.innerHTML = `<div id="car-top"></div><div class="map-card" id="car-mapwrap" hidden><div class="map-host" id="car-map"></div></div><div id="car-bottom"></div>`;
+    host.innerHTML = `<header class="tab-h tab-h-row"><div><h1>My cars</h1><p id="car-sub"></p></div><button type="button" class="btn btn-sm btn-primary" data-act="plan-new">${ic('plus', 15)} Park a new car</button></header>
+      <div class="wallet" id="car-wallet"></div>
+      <div class="car-tabs" id="car-tabs" role="tablist" aria-label="Your cars"></div>
+      <div id="car-top"></div><div class="map-card" id="car-mapwrap" hidden><div class="map-host" id="car-map"></div></div><div id="car-bottom"></div>
+      <div class="paybar" id="car-paybar" hidden></div>`;
     host.dataset.built = '1';
     carMap = new FloorMap($('#car-map'), 'Map of the level where your car is parked');
   }
-  const v = me();
-  const ph = phase();
+  setHTML($('#car-wallet'), walletHTML());
+  const shown = app.stays.filter((st) => phaseOf(vOf(st)) !== 'cancelled' && phaseOf(vOf(st)) !== 'none');
+  const inside = shown.filter((st) => ['parked', 'paid'].includes(phaseOf(vOf(st)))).length;
+  setHTML($('#car-sub'), shown.length ? `${inside} parked, ${app.garage.length} in your garage` : 'Nothing parked right now');
+  if (!shown.find((st) => st.plate === app.carSel)) app.carSel = shown.length ? shown[0].plate : '';
+  const statusOf = (st: Stay) => {
+    const p = phaseOf(vOf(st));
+    const v = vOf(st)!;
+    if (p === 'parked') return v.bay >= 0 ? sim.L.bays[v.bay].id : 'Parked';
+    if (p === 'paid') return 'Paid, leaving';
+    if (p === 'left') return 'Trip complete';
+    if (p === 'planned') return st.vid === app.myId || !app.resId ? 'Planned' : 'Booked';
+    return 'On the way';
+  };
+  setHTML(
+    $('#car-tabs'),
+    shown.length > 1
+      ? shown.map((st) => `<button type="button" role="tab" class="car-tab" data-act="car-sel" data-plate="${esc(st.plate)}" aria-selected="${st.plate === app.carSel}"><b>${esc(st.plate)}</b><span>${esc(statusOf(st))}</span></button>`).join('')
+      : ''
+  );
+  const st = shown.find((x) => x.plate === app.carSel);
+  const v = vOf(st);
+  const ph = phaseOf(v);
   const wrap = $('#car-mapwrap');
-  if (!v || ph === 'none' || ph === 'cancelled') {
+  const bar = $('#car-paybar');
+  bar.hidden = true;
+  if (!st || !v) {
     wrap.hidden = true;
-    setHTML($('#car-top'), `<div class="empty"><span class="empty-ic">${ic('park', 26)}</span><h1>No car parked yet</h1><p>When you park with guidance, your bay is saved here with directions back from the lift.</p><button type="button" class="btn btn-primary" data-act="plan">${ic('nav', 16)} I’m on my way</button></div>`);
+    setHTML($('#car-top'), `<div class="empty"><span class="empty-ic">${ic('park', 26)}</span><h1>No car parked</h1><p>When you park with guidance, the bay is saved here with directions back from the lift, the time and the fee.</p><button type="button" class="btn btn-primary" data-act="plan-new">${ic('nav', 16)} Park a car</button></div>`);
     setHTML($('#car-bottom'), '');
     return;
   }
   if (ph === 'planned' || ph === 'gate' || ph === 'driving') {
     wrap.hidden = true;
-    setHTML($('#car-top'), `<div class="empty"><span class="empty-ic">${ic('nav', 26)}</span><h1>Not parked yet</h1><p>Your bay is saved here automatically once you park.</p><button type="button" class="btn btn-primary" data-act="open-guide">Open guidance</button></div>`);
+    setHTML($('#car-top'), `<div class="empty"><span class="empty-ic">${ic('nav', 26)}</span><h1>${esc(st.plate)} is on the way</h1><p>Its bay is saved here automatically once it parks.</p>${st.vid === app.myId ? `<button type="button" class="btn btn-primary" data-act="open-guide">Open guidance</button>` : ''}</div>`);
     setHTML($('#car-bottom'), '');
     return;
   }
@@ -542,37 +722,41 @@ function renderCar() {
   const lift = DEST_BY_ID[v.dest].lift;
   if (ph === 'left') {
     wrap.hidden = true;
-    const fee = feeFor((v.paidT < Infinity ? v.paidT : v.exitT) - v.parkT, v.member);
+    const r = st.receipt;
     setHTML(
       $('#car-top'),
-      `<div class="done-card"><span class="done-ic">${ic('check', 26)}</span><h1>Trip complete</h1><p>Thanks for visiting KL East Mall.</p>
-        <dl class="stats3"><div><dt>Gate to parked</dt><dd>${fmtShortS(v.parkT - v.gateT)}</dd></div><div><dt>Driven inside</dt><dd>${fmtDist(v.searchDist)}</dd></div><div><dt>Paid</dt><dd>RM ${fee.rm.toFixed(2)}</dd></div></dl>
-        <button type="button" class="btn btn-primary btn-wide" data-act="new-trip">Plan another visit</button></div>`
+      `<div class="done-card"><span class="done-ic">${ic('check', 26)}</span><h1>${esc(st.plate)} has left</h1><p>Thanks for visiting KL East Mall.</p>
+        <dl class="stats3"><div><dt>Parked for</dt><dd>${fmtStay((r ? r.at : v.exitT) - v.parkT)}</dd></div><div><dt>Paid</dt><dd>${rm(r ? r.fee : 0)}</dd></div><div><dt>Points earned</dt><dd>${r ? `+${r.earned}` : '–'}</dd></div></dl>
+        <button type="button" class="btn btn-wide" data-act="car-clear" data-plate="${esc(st.plate)}">Remove from this list</button></div>`
     );
     setHTML($('#car-bottom'), '');
     return;
   }
   wrap.hidden = false;
-  const parkedS = sim.t - v.parkT;
-  const fee = feeFor(v.paidT <= sim.t ? v.paidT - v.parkT : parkedS, v.member);
+  const paid = v.paidT <= sim.t;
+  const parkedS = (paid ? v.paidT : sim.t) - v.parkT;
+  const fee = st.receipt ? st.receipt.fee : feeFor(parkedS, app.account.member).rm;
   setHTML(
     $('#car-top'),
-    `<header class="tab-h"><h1>Your car</h1><p>${esc(app.profile.plate)}, parked at ${clk(v.parkT)}</p></header>
-     <div class="bay-sign" aria-label="Parked in ${esc(b.id)}">
+    `<div class="bay-sign" aria-label="${esc(st.plate)} parked in ${esc(b.id)}">
        <span class="plate plate-lg">${FLOOR_NAMES[b.floor]}</span>
-       <div class="bay-sign-t"><span class="bs-zone zc-${b.zone.toLowerCase()}"><i></i>Zone ${b.zone}</span><b>Bay ${bayNo(b)}</b><span>${esc(b.id)}</span></div>
+       <div class="bay-sign-t"><span class="bs-zone zc-${b.zone.toLowerCase()}"><i></i>Zone ${b.zone}</span><b>Bay ${bayNo(b)}</b><span>${esc(b.id)}, ${esc(st.plate)}</span></div>
      </div>`
   );
-  const paid = v.paidT <= sim.t;
+  const r = st.receipt;
   setHTML(
     $('#car-bottom'),
-    `<section class="block"><h2 class="h2">Find your car</h2>${findSteps(b, lift)}</section>
-     <section class="block fee">
-       <div class="fee-row"><div><span>Parked for</span><b>${fmtStay(paid ? v.paidT - v.parkT : parkedS)}</b></div><div><span>${paid ? 'Paid' : 'Fee so far'}</span><b>RM ${fee.rm.toFixed(2)}</b></div></div>
-       <p class="fine">Illustrative rates: ${v.member ? 'members park the first hour free, then RM 2 per hour' : 'RM 3 for the first hour, then RM 2 per hour'}.</p>
-       ${paid ? `<p class="note ok">${ic('check', 16)} Paid at ${clk(v.paidT)}. The exit barrier reads your plate (${esc(app.profile.plate)}).</p>` : `<button type="button" class="btn btn-primary btn-wide" data-act="pay">${ic('wallet', 16)} Pay and leave</button>`}
-     </section>`
+    `<section class="block fee">
+       <div class="fee-row fee-3"><div><span>Parked since</span><b>${clk(v.parkT)}</b></div><div><span>Parked for</span><b>${fmtStay(parkedS)}</b></div><div><span>${paid ? 'Paid' : 'Fee so far'}</span><b>${rm(fee)}</b></div></div>
+       <p class="fine">Illustrative rates: ${app.account.member ? 'members park the first hour free, then RM 2 per hour' : 'RM 3 for the first hour, then RM 2 per hour'}.</p>
+       ${paid && r ? `<p class="note ok">${ic('check', 16)} Paid at ${clk(r.at)}${r.pointsUsed ? ` with ${r.pointsUsed.toLocaleString('en-MY')} points` : ''}${r.charged > 0 ? `${r.pointsUsed ? ' and' : ''} ${rm(r.charged)} from your ${esc(methodLabel(r.method))}` : ''}. Exit by ${clk(r.at + 15 * 60)}; the barrier reads ${esc(st.plate)}.</p>` : ''}
+     </section>
+     <section class="block"><h2 class="h2">Find your car</h2>${findSteps(b, lift)}</section>`
   );
+  if (!paid) {
+    bar.hidden = false;
+    setHTML(bar, `<div class="paybar-t"><b>${fee > 0 ? rm(fee) : 'Free so far'}</b><span>${esc(st.plate)}, ${fmtStay(parkedS)}${fee > 0 ? '' : ', first hour'}</span></div><button type="button" class="btn btn-primary" data-act="pay" data-plate="${esc(st.plate)}">${ic('wallet', 17)} Pay</button>`);
+  }
 }
 
 // ---------------------------------------------------------------- push screen: guidance
@@ -737,19 +921,35 @@ function sheetHTML(kind: SheetKind): string {
       (d) => `<button type="button" class="dest" data-act="plan-dest" data-v="${d.id}" aria-pressed="${p.dest === d.id}"><span class="dest-ic">${ic(DEST_ICON[d.id], 20)}</span><b>${esc(d.label)}</b><span>Lift ${d.lift}</span></button>`
     ).join('');
     const etas = [0, 10, 20, 30].map((x) => `<button type="button" class="chip" data-act="plan-eta" data-v="${x}" aria-pressed="${p.eta === x}">${x === 0 ? 'Now' : `${x} min`}</button>`).join('');
-    const pv = sim.previewAllocation(p.dest, elig());
+    const free = freeCars();
+    if (!free.find((c) => c.plate === p.plate)) p.plate = free.length ? free[0].plate : '';
+    const car = p.plate ? carOf(p.plate) : null;
+    const pv = sim.previewAllocation(p.dest, car ? eligFor(car) : ['general']);
     const f = sim.forecast;
     const occAt = f && p.eta > 0 ? f.intent.occ[Math.min(f.intent.occ.length - 1, p.eta)] / f.usable : NaN;
     const ch = pv.chosen;
     const heldRes = myRes();
     const heldBay = heldRes && heldRes.status === 'confirmed' ? sim.L.bays[heldRes.bay] : null;
-    const pref = `<div class="prefs"><span>Your car</span>${(['ev', 'family', 'member'] as const)
-      .map((k) => `<button type="button" class="tog" data-act="pref" data-k="${k}" aria-pressed="${app.profile[k]}">${k === 'ev' ? 'EV' : k === 'family' ? 'Family pass' : 'Member'}</button>`)
-      .join('')}</div>`;
+    const carChips = free
+      .map((c) => `<button type="button" class="chip chip-car" data-act="plan-car" data-plate="${esc(c.plate)}" aria-pressed="${p.plate === c.plate}"><b>${esc(c.plate)}</b><span>${esc(c.name)}</span></button>`)
+      .join('');
+    const pref = car
+      ? `<div class="prefs"><span>This car</span>${(['ev', 'family'] as const)
+          .map((k) => `<button type="button" class="tog" data-act="car-attr" data-k="${k}" data-plate="${esc(car.plate)}" aria-pressed="${car[k]}">${k === 'ev' ? 'Electric' : 'Family pass'}</button>`)
+          .join('')}</div>`
+      : '';
+    const member = app.account.member
+      ? `<div class="member-line">${ic('star', 16)}<span><b>${esc(app.account.tier)} member</b> from your account: first hour free and member bays included.</span></div>`
+      : `<div class="member-line off">${ic('star', 16)}<span>Not a Rewards member. <button type="button" class="linkbtn" data-act="profile">Join to get the first hour free</button></span></div>`;
     return `<h2 class="sheet-t" id="sheet-title">Where are you going?</h2>
       <div class="dests">${dests}</div>
       <h3 class="sheet-s">Arriving in</h3><div class="chips">${etas}</div>
+      <h3 class="sheet-s">Which car?</h3>
+      <div class="chips">${carChips}${app.addingCar ? '' : `<button type="button" class="chip chip-add" data-act="car-add">${ic('plus', 15)} Add a car</button>`}</div>
+      ${app.addingCar ? addCarHTML() : ''}
+      ${free.length ? '' : '<p class="note warn">All your cars are parked or on the way. Add another car to park it.</p>'}
       ${pref}
+      ${member}
       <div class="preview" aria-live="polite">${
         heldBay
           ? `<span class="plate plate-sm">${FLOOR_NAMES[heldBay.floor]}</span><div><b>Bay ${esc(heldBay.id)} is held for you</b><span>Arrive ${clk(heldRes!.windowStart)}–${clk(heldRes!.windowEnd)}. The purple light marks it; we guide you straight there.</span></div>`
@@ -757,7 +957,7 @@ function sheetHTML(kind: SheetKind): string {
           ? `<span class="plate plate-sm">${FLOOR_NAMES[ch.floor]}</span><div><b>Zone ${ch.zone}, about ${Math.round(ch.walk)} m to Lift ${DEST_BY_ID[p.dest].lift}</b><span>${ch.free} suitable bay${ch.free === 1 ? '' : 's'} free there now.${isFinite(occAt) ? ` By ${clk(sim.t + p.eta * 60)} the car park should be about ${Math.round(occAt * 100)}% full, so we check again at the barrier.` : ' We confirm at the barrier.'}</span></div>`
           : `<span class="plate plate-sm plate-warn">!</span><div><b>Nearly full right now</b><span>${esc(pv.message)}</span></div>`
       }</div>
-      <button type="button" class="btn btn-primary btn-wide" data-act="start">${ic('nav', 18)} Start guidance</button>
+      <button type="button" class="btn btn-primary btn-wide" data-act="start" ${car ? '' : 'disabled'}>${ic('nav', 18)} Start guidance${car ? ` for ${esc(car.plate)}` : ''}</button>
       <p class="fine">Your arrival time is shared anonymously so the forecast can plan for you.</p>`;
   }
   if (kind === 'dest') {
@@ -768,14 +968,67 @@ function sheetHTML(kind: SheetKind): string {
     return `<h2 class="sheet-t" id="sheet-title">Change destination</h2><p class="sheet-p">Guidance re-checks the best zone from your next junction.</p><div class="dests">${dests}</div>`;
   }
   if (kind === 'pay') {
-    const v = me();
-    if (!v || v.parkT < 0) return '';
-    const fee = feeFor(sim.t - v.parkT, v.member);
-    return `<h2 class="sheet-t" id="sheet-title">Pay and leave</h2>
-      <dl class="receipt"><div><dt>Car</dt><dd>${esc(app.profile.plate)}</dd></div><div><dt>Parked</dt><dd>${clk(v.parkT)} to ${clk(sim.t)}</dd></div><div><dt>Charged hours</dt><dd>${fee.hours}</dd></div><div class="total"><dt>Total</dt><dd>RM ${fee.rm.toFixed(2)}</dd></div></dl>
-      ${v.member ? '<p class="note ok">Member rate: your first hour is free.</p>' : ''}
-      <p class="fine">Simulated payment: no card details are collected and no money moves. After paying you have 15 minutes to exit; the bay shows as leaving soon to the car park team.</p>
-      <button type="button" class="btn btn-primary btn-wide" data-act="pay-confirm">${ic('wallet', 18)} ${fee.rm > 0 ? `Pay RM ${fee.rm.toFixed(2)}` : 'Nothing to pay, leave now'}</button>`;
+    const q = payQuote();
+    if (!q) return '<p class="sheet-p">Nothing to pay for this car.</p>';
+    const a = app.account;
+    const b = sim.L.bays[q.v.bay];
+    const methods = (['wallet', 'debit', 'credit'] as PayMethod[])
+      .map((m) => {
+        const card = a.cards.find((c) => c.id === m);
+        const sub = m === 'wallet' ? `Balance ${rm(a.wallet)}` : card ? 'Connected' : '';
+        return `<button type="button" role="radio" class="method" data-act="pay-method" data-v="${m}" aria-checked="${app.pay.method === m}">
+          <span class="m-ic m-${m}">${ic(m === 'wallet' ? 'wallet' : 'card', 18)}</span>
+          <span class="m-t"><b>${esc(methodLabel(m))}</b><span>${esc(sub)}</span></span>
+          <span class="radio" aria-hidden="true"></span></button>`;
+      })
+      .join('');
+    const pts = a.member
+      ? `<button type="button" class="tog tog-row tog-pts" data-act="pay-points" aria-pressed="${app.pay.usePoints}"><b>Use member points</b><span>${a.points.toLocaleString('en-MY')} points available. ${POINTS_PER_RM} points = RM 1.</span></button>`
+      : `<p class="fine">Rewards members can pay with points and earn ${EARN_PER_RM} points per RM 1.</p>`;
+    const payLabel = q.remaining > 0 ? `Pay ${rm(q.remaining)}` : q.pointsUsed > 0 ? `Pay with ${q.pointsUsed.toLocaleString('en-MY')} points` : 'Nothing to pay, leave now';
+    return `<h2 class="sheet-t" id="sheet-title">Pay for parking</h2>
+      <div class="pay-sum"><span class="plate plate-sm">${FLOOR_NAMES[b.floor]}</span><div><b>${esc(q.st.plate)}, ${esc(b.id)}</b><span>${clk(q.v.parkT)} to ${clk(sim.t)}, ${fmtStay(q.parkedS)}, ${q.fee.hours} charged hour${q.fee.hours === 1 ? '' : 's'}</span></div><b class="pay-amt">${rm(q.fee.rm)}</b></div>
+      ${a.member ? `<p class="note ok">${ic('star', 16)} ${esc(a.tier)} member rate: your first hour is free.</p>` : ''}
+      <h3 class="sheet-s">Pay with</h3>
+      <div class="methods" role="radiogroup" aria-label="Payment method">${methods}</div>
+      <button type="button" class="linkbtn pay-topup" data-act="topup-from-pay">${ic('plus', 15)} Top up wallet</button>
+      ${pts}
+      <dl class="receipt">
+        <div><dt>Parking fee</dt><dd>${rm(q.fee.rm)}</dd></div>
+        ${q.pointsUsed ? `<div><dt>Points (${q.pointsUsed.toLocaleString('en-MY')})</dt><dd>−${rm(q.pointsRM)}</dd></div>` : ''}
+        <div class="total"><dt>${q.remaining > 0 ? `From ${esc(methodLabel(app.pay.method))}` : 'To pay'}</dt><dd>${rm(q.remaining)}</dd></div>
+      </dl>
+      ${q.short > 0 ? `<div class="note warn"><span>Your wallet is ${rm(q.short)} short. Top up, use points, or pay by card.</span></div><button type="button" class="btn btn-wide" data-act="topup-from-pay">${ic('plus', 16)} Top up wallet</button>` : ''}
+      <button type="button" class="btn btn-primary btn-wide" data-act="pay-confirm" ${q.short > 0 ? 'disabled' : ''}>${ic('wallet', 18)} ${payLabel}</button>
+      <p class="fine">Simulated payment for this prototype: no card details are collected and no money moves. After paying you have 15 minutes to exit.</p>`;
+  }
+  if (kind === 'paid') {
+    const r = app.pay.done;
+    if (!r) return '';
+    const a = app.account;
+    return `<div class="paid-ok"><svg class="paid-check" viewBox="0 0 96 96" aria-hidden="true"><circle cx="48" cy="48" r="44" class="pc-bg"/><path d="M28 50 l13 13 l27 -29" class="pc-tick"/></svg>
+        <h2 class="sheet-t" id="sheet-title">Paid</h2><p class="sheet-p">Exit by ${clk(r.at + 15 * 60)}. The barrier reads ${esc(app.pay.plate)} and opens by itself.</p></div>
+      <dl class="receipt">
+        <div><dt>Parking fee</dt><dd>${rm(r.fee)}</dd></div>
+        ${r.pointsUsed ? `<div><dt>Points used</dt><dd>${r.pointsUsed.toLocaleString('en-MY')} (−${rm(r.pointsRM)})</dd></div>` : ''}
+        ${r.charged > 0 ? `<div><dt>${esc(methodLabel(r.method))}</dt><dd>${rm(r.charged)}</dd></div>` : ''}
+        ${a.member && r.earned > 0 ? `<div><dt>Points earned</dt><dd>+${r.earned}</dd></div>` : ''}
+        <div class="total"><dt>${a.member ? 'Points balance' : 'Wallet balance'}</dt><dd>${a.member ? a.points.toLocaleString('en-MY') : rm(a.wallet)}</dd></div>
+      </dl>
+      <button type="button" class="btn btn-primary btn-wide" data-act="sheet-close">Done</button>`;
+  }
+  if (kind === 'topup') {
+    const a = app.account;
+    const amts = [20, 50, 100].map((x) => `<button type="button" class="chip" data-act="top-amt" data-v="${x}" aria-pressed="${app.pay.topAmt === x}">RM ${x}</button>`).join('');
+    const from = a.cards
+      .map((c) => `<button type="button" role="radio" class="method" data-act="top-from" data-v="${c.id}" aria-checked="${app.pay.topFrom === c.id}"><span class="m-ic m-${c.id}">${ic('card', 18)}</span><span class="m-t"><b>${esc(c.label)} ending ${esc(c.last4)}</b><span>Connected</span></span><span class="radio" aria-hidden="true"></span></button>`)
+      .join('');
+    return `<h2 class="sheet-t" id="sheet-title">Top up wallet</h2>
+      <p class="sheet-p">Balance <b>${rm(a.wallet)}</b>. Wallet payments are one tap at the exit and the pay stations.</p>
+      <h3 class="sheet-s">Amount</h3><div class="chips">${amts}</div>
+      <h3 class="sheet-s">From</h3><div class="methods" role="radiogroup" aria-label="Top up from">${from}</div>
+      <button type="button" class="btn btn-primary btn-wide" data-act="topup-confirm">${ic('plus', 18)} Top up RM ${app.pay.topAmt}</button>
+      <p class="fine">Simulated top-up: no card details are collected and no money moves. Adding new cards is not part of this demo.</p>`;
   }
   if (kind === 'assist') {
     return `<h2 class="sheet-t" id="sheet-title">Help on arrival</h2>
@@ -787,17 +1040,54 @@ function sheetHTML(kind: SheetKind): string {
   }
   if (kind === 'profile') {
     const p = app.profile;
+    const a = app.account;
     const paces = [1, 4, 10].map((x) => `<button type="button" class="chip" data-act="pace" data-v="${x}" aria-pressed="${p.pace === x}">${x === 1 ? 'Real time' : `${x}× faster`}</button>`).join('');
-    return `<h2 class="sheet-t" id="sheet-title">You and your car</h2>
-      <label class="field"><span>Number plate</span><input id="prof-plate" value="${esc(p.plate)}" maxlength="12" autocomplete="off" spellcheck="false"></label>
-      <div class="prefs prefs-col">${(['ev', 'family', 'member'] as const)
-        .map((k) => `<button type="button" class="tog tog-row" data-act="pref" data-k="${k}" aria-pressed="${p[k]}"><b>${k === 'ev' ? 'Electric vehicle' : k === 'family' ? 'Family pass' : 'KL East Mall member'}</b><span>${k === 'ev' ? 'Unlocks EV charging bays' : k === 'family' ? 'Wider bays near Lift A' : 'Designated member bays, first hour free'}</span></button>`)
-        .join('')}</div>
+    const card = a.member
+      ? `<div class="mcard"><div class="mcard-top"><span class="mark mark-sm" aria-hidden="true">P</span><span>KL East Mall Rewards</span><b>${esc(a.tier)}</b></div>
+          <div class="mcard-pts"><b>${a.points.toLocaleString('en-MY')}</b><span>points, worth ${rm(a.points / POINTS_PER_RM)} in parking</span></div>
+          <div class="mcard-no">Member ${esc(a.memberNo)}</div></div>
+         <ul class="perks"><li>First hour of parking free</li><li>Designated member bays near the lifts</li><li>Earn ${EARN_PER_RM} points per RM 1, pay parking with points</li></ul>
+         <button type="button" class="btn btn-ghost btn-wide" data-act="member-toggle">Demo: continue as a non-member</button>`
+      : `<div class="mcard mcard-off"><div class="mcard-top"><span class="mark mark-sm" aria-hidden="true">P</span><span>KL East Mall Rewards</span></div><div class="mcard-pts"><b>Not a member</b><span>Join free for the first hour of parking, member bays and points.</span></div></div>
+         <button type="button" class="btn btn-primary btn-wide" data-act="member-toggle">Join Rewards (demo)</button>`;
+    const cars = app.garage
+      .map((c) => `<div class="gar"><div class="gar-t"><b>${esc(c.plate)}</b><span>${esc(c.name)}${carBusy(c.plate) ? ', in use' : ''}</span></div>${(['ev', 'family'] as const)
+        .map((k) => `<button type="button" class="tog" data-act="car-attr" data-k="${k}" data-plate="${esc(c.plate)}" aria-pressed="${c[k]}">${k === 'ev' ? 'Electric' : 'Family pass'}</button>`)
+        .join('')}</div>`)
+      .join('');
+    return `<h2 class="sheet-t" id="sheet-title">Your account</h2>
+      ${card}
+      <h3 class="sheet-s">Wallet</h3>
+      <div class="wallet wallet-sheet">${walletHTML()}</div>
+      <h3 class="sheet-s">Your cars</h3>
+      <div class="garage">${cars}</div>
+      ${app.addingCar ? addCarHTML() : `<button type="button" class="btn btn-wide" data-act="car-add">${ic('plus', 16)} Add a car</button>`}
       <h3 class="sheet-s">Demo clock</h3><div class="chips">${paces}</div>
-      <p class="fine">This app runs on simulated data for the KL East Mall pilot concept. Reloading the page restarts the demo day at 14:08.</p>
+      <p class="fine">This app runs on simulated data for the KL East Mall pilot concept. Account, wallet and cars are stored on this device only. Reloading restarts the demo day at 14:08.</p>
       <button type="button" class="btn btn-ghost btn-wide" data-act="restart">Restart demo day</button>`;
   }
   return '';
+}
+
+function addCarHTML(): string {
+  return `<div class="addcar"><label class="field"><span>Number plate</span><input id="new-plate" maxlength="10" autocomplete="off" spellcheck="false" placeholder="e.g. BKN 4410"></label>
+    <div class="row2"><button type="button" class="btn btn-primary" data-act="car-add-save">Add car</button><button type="button" class="btn btn-ghost" data-act="car-add-cancel">Cancel</button></div>
+    <p class="note warn" id="addcar-err" hidden>Enter a plate with letters and numbers, for example BKN 4410.</p></div>`;
+}
+
+/** What paying for the selected car costs now, after member points, and whether the wallet covers it. */
+function payQuote() {
+  const st = stayOf(app.pay.plate);
+  const v = vOf(st);
+  if (!st || !v || v.state !== 'parked' || v.paidT <= app.sim.t) return null;
+  const a = app.account;
+  const parkedS = app.sim.t - v.parkT;
+  const fee = feeFor(parkedS, a.member);
+  const pointsRM = a.member && app.pay.usePoints ? Math.min(fee.rm, Math.floor(a.points / POINTS_PER_RM)) : 0;
+  const pointsUsed = pointsRM * POINTS_PER_RM;
+  const remaining = Math.max(0, +(fee.rm - pointsRM).toFixed(2));
+  const short = app.pay.method === 'wallet' ? Math.max(0, +(remaining - a.wallet).toFixed(2)) : 0;
+  return { st, v, fee, parkedS, pointsRM, pointsUsed, remaining, short };
 }
 
 function renderSheet() {
@@ -883,23 +1173,45 @@ function toast(msg: string) {
 // ---------------------------------------------------------------- actions
 function startTrip() {
   const sim = app.sim;
-  const p = app.profile;
+  const car = app.plan.plate ? carOf(app.plan.plate) : null;
+  if (!car) return;
   const etaS = Math.max(1, app.plan.eta * 60);
-  const r = myRes();
-  if (r && r.status === 'confirmed' && r.vehicle >= 0) {
-    app.myId = r.vehicle;
-    const v = sim.vehicles[r.vehicle];
-    v.dest = app.plan.dest;
-    sim.setDriverArrival(r.vehicle, etaS);
+  const existing = stayOf(car.plate);
+  const ev = existing ? vOf(existing) : null;
+  if (existing && ev && ev.state === 'pending') {
+    // the car already has a pending trip (for example a booked bay): just update it
+    ev.dest = app.plan.dest;
+    sim.setDriverArrival(ev.i, etaS);
+    app.myId = ev.i;
   } else {
-    const v = sim.addDriver({ dest: app.plan.dest, etaS, elig: elig(), cls: p.ev ? 'ev' : 'ice', member: p.member });
+    const v = sim.addDriver({ dest: app.plan.dest, etaS, elig: eligFor(car), cls: car.ev ? 'ev' : 'ice', member: app.account.member });
     app.myId = v.i;
+    app.stays.push({ plate: car.plate, vid: v.i, demo: false, receipt: null });
   }
   app.parkedShown = false;
   app.lastGuideKey = '';
   app.lastNotice = '';
   closeSheet();
   openGuide();
+}
+
+function addCarFromInput(): boolean {
+  const inp = document.getElementById('new-plate') as HTMLInputElement | null;
+  const plate = (inp ? inp.value : '').toUpperCase().replace(/[^A-Z0-9 ]/g, '').replace(/\s+/g, ' ').trim();
+  if (!/^[A-Z]{1,3} ?\d{1,4} ?[A-Z]?$/.test(plate)) {
+    const e = document.getElementById('addcar-err');
+    if (e) {
+      e.hidden = false;
+      animate(e, { transform: ['translateX(-6px)', 'translateX(6px)', 'translateX(-3px)', 'translateX(0px)'] }, { duration: 0.3 });
+    }
+    return false;
+  }
+  if (!app.garage.find((c) => c.plate === plate)) app.garage.push({ plate, name: 'New car', ev: false, family: false });
+  app.addingCar = false;
+  app.plan.plate = plate;
+  persistProfile();
+  toast(`${plate} added to your cars`);
+  return true;
 }
 
 function act(el: HTMLElement) {
@@ -911,7 +1223,10 @@ function act(el: HTMLElement) {
       break;
     case 'plan':
       if (phase() === 'planned' || phase() === 'gate' || phase() === 'driving') openGuide();
-      else openSheet('plan');
+      else {
+        if (!app.plan.plate || carBusy(app.plan.plate)) app.plan.plate = freeCars()[0]?.plate || '';
+        openSheet('plan');
+      }
       break;
     case 'plan-dest':
       app.plan.dest = el.dataset.v as DestId;
@@ -921,13 +1236,52 @@ function act(el: HTMLElement) {
       app.plan.eta = Number(el.dataset.v);
       renderSheet();
       break;
-    case 'pref': {
-      const k = el.dataset.k as 'ev' | 'family' | 'member';
-      app.profile[k] = !app.profile[k];
+    case 'car-attr': {
+      const c = carOf(el.dataset.plate || '');
+      const k = el.dataset.k as 'ev' | 'family';
+      c[k] = !c[k];
       persistProfile();
       renderSheet();
       break;
     }
+    case 'plan-car':
+      app.plan.plate = el.dataset.plate || '';
+      renderSheet();
+      break;
+    case 'plan-new':
+      app.plan.plate = freeCars()[0]?.plate || '';
+      if (phase() === 'planned' || phase() === 'gate' || phase() === 'driving') toast(`${tripPlate()} is still on the way; guidance switches to the new car`);
+      openSheet('plan');
+      break;
+    case 'car-add':
+      app.addingCar = true;
+      renderSheet();
+      setTimeout(() => (document.getElementById('new-plate') as HTMLInputElement | null)?.focus(), 30);
+      break;
+    case 'car-add-save':
+      if (addCarFromInput()) renderSheet();
+      break;
+    case 'car-add-cancel':
+      app.addingCar = false;
+      renderSheet();
+      break;
+    case 'car-open':
+      app.carSel = el.dataset.plate || '';
+      goTab('car');
+      break;
+    case 'car-sel':
+      app.carSel = el.dataset.plate || '';
+      animate($('#car-top'), { opacity: [0, 1], transform: ['translateY(6px)', 'translateY(0px)'] }, { duration: 0.22 });
+      break;
+    case 'car-clear':
+      app.stays = app.stays.filter((x) => !(x.plate === el.dataset.plate && phaseOf(vOf(x)) === 'left'));
+      break;
+    case 'member-toggle':
+      app.account.member = !app.account.member;
+      persistProfile();
+      toast(app.account.member ? `Welcome to KL East Mall Rewards (${app.account.tier})` : 'Continuing as a non-member');
+      renderSheet();
+      break;
     case 'pace':
       app.profile.pace = Number(el.dataset.v);
       persistProfile();
@@ -956,6 +1310,7 @@ function act(el: HTMLElement) {
       if (v && sim.cancelDriver(v.i)) {
         const r = myRes();
         if (r && r.vehicle === v.i && r.status === 'confirmed') sim.cancelReservation(r.id);
+        app.stays = app.stays.filter((x) => x.vid !== v.i);
         app.myId = -1;
         toast('Trip cancelled');
         closePush(true);
@@ -972,24 +1327,88 @@ function act(el: HTMLElement) {
       break;
     }
     case 'parked-done':
+      app.carSel = tripPlate() || app.carSel;
       closePush(false);
       goTab('car');
       break;
     case 'pay':
+      app.pay.plate = el.dataset.plate || app.carSel;
+      app.pay.done = null;
+      if (app.pay.method === 'wallet' && !app.account.wallet && !app.account.member) app.pay.method = 'debit';
       openSheet('pay');
       break;
+    case 'pay-method':
+      app.pay.method = el.dataset.v as PayMethod;
+      renderSheet();
+      break;
+    case 'pay-points':
+      app.pay.usePoints = !app.pay.usePoints;
+      renderSheet();
+      break;
     case 'pay-confirm': {
-      const v = me();
-      if (v && sim.driverPay(v.i)) {
-        closeSheet();
-        toast('Paid. Drive safely, the barrier will open for your plate.');
+      const q = payQuote();
+      if (!q || q.short > 0) break;
+      const a = app.account;
+      a.points -= q.pointsUsed;
+      if (app.pay.method === 'wallet') a.wallet = +(a.wallet - q.remaining).toFixed(2);
+      const earned = a.member ? Math.floor(q.remaining) * EARN_PER_RM : 0;
+      a.points += earned;
+      const r: Receipt = { at: sim.t, fee: q.fee.rm, pointsUsed: q.pointsUsed, pointsRM: q.pointsRM, charged: q.remaining, method: app.pay.method, earned };
+      persistProfile();
+      sim.driverPay(q.v.i);
+      q.st.receipt = r;
+      app.pay.done = r;
+      openSheet('paid');
+      const host = $('#sheet-body');
+      animate(host.querySelector('.paid-check'), { transform: ['scale(0.4)', 'scale(1)'], opacity: [0, 1] }, { spring: { stiffness: 380, damping: 18 } });
+      const tick = host.querySelector('.pc-tick') as SVGPathElement | null;
+      if (tick) {
+        tick.style.strokeDasharray = '80';
+        animate(tick, { strokeDashoffset: [80, 0] }, { duration: 0.45, delay: 0.2, ease: [0.4, 0, 0.2, 1] });
       }
       break;
     }
+    case 'topup':
+      app.pay.back = false;
+      openSheet('topup');
+      break;
+    case 'topup-from-pay':
+      app.pay.back = true;
+      openSheet('topup');
+      break;
+    case 'top-amt':
+      app.pay.topAmt = Number(el.dataset.v);
+      renderSheet();
+      break;
+    case 'top-from':
+      app.pay.topFrom = el.dataset.v as 'debit' | 'credit';
+      renderSheet();
+      break;
+    case 'topup-confirm': {
+      const before = app.account.wallet;
+      app.account.wallet = +(app.account.wallet + app.pay.topAmt).toFixed(2);
+      persistProfile();
+      toast(`Wallet topped up: ${rm(app.pay.topAmt)}`);
+      if (app.pay.back) {
+        app.pay.back = false;
+        app.pay.method = 'wallet';
+        openSheet('pay');
+      } else closeSheet();
+      requestAnimationFrame(() => {
+        for (const b of $$('.wallet .w-item:first-child b')) tweenNumber(before, app.account.wallet, 0.7, (x) => (b.textContent = rm(x)));
+      });
+      break;
+    }
+    case 'sheet-close':
+      closeSheet();
+      break;
     case 'new-trip':
       app.myId = -1;
       app.resId = '';
       goTab('park');
+      break;
+    case 'res-car':
+      app.resDraft.plate = el.dataset.plate || '';
       break;
     case 'reserve-type':
       app.resDraft.type = el.dataset.type as ResType;
@@ -1010,16 +1429,21 @@ function act(el: HTMLElement) {
     case 'res-dur':
       app.resDraft.dur = Number(el.dataset.v);
       break;
-    case 'res-go':
-      app.plan.eta = Math.max(0, Math.round(((myRes()?.windowStart ?? sim.t) - sim.t) / 60));
+    case 'res-go': {
+      const r = myRes();
+      app.plan.eta = Math.max(0, Math.round(((r?.windowStart ?? sim.t) - sim.t) / 60));
+      const st = r ? app.stays.find((x) => x.vid === r.vehicle) : undefined;
+      if (st) app.plan.plate = st.plate;
       openSheet('plan');
       break;
+    }
     case 'res-cancel': {
       const r = myRes();
       if (r) {
         app.resMsg = sim.cancelReservation(r.id);
         app.resErr = false;
         if (app.myId === r.vehicle) app.myId = -1;
+        app.stays = app.stays.filter((x) => x.vid !== r.vehicle);
       }
       break;
     }
@@ -1051,6 +1475,7 @@ function act(el: HTMLElement) {
       break;
     case 'restart':
       app.sim = newSim();
+      seedParkedCar();
       app.myId = -1;
       app.resId = '';
       app.resMsg = '';
@@ -1068,11 +1493,30 @@ function act(el: HTMLElement) {
   app.dirty = true;
 }
 
+function resVerified(type: ResType, car: CarProfile | null): string {
+  if (type === 'member') return app.account.member ? `${app.account.tier} member ${app.account.memberNo}` : '';
+  if (type === 'ev') return car && car.ev ? `${car.plate} is registered as electric` : '';
+  return car && car.family ? `${car.plate} has a family pass` : '';
+}
+
 function submitReservation() {
   const sim = app.sim;
   const d = app.resDraft;
+  const car = d.plate ? carOf(d.plate) : null;
+  if (!car) {
+    app.resMsg = 'Add a car first. Every booking is tied to a number plate.';
+    app.resErr = true;
+    renderReserve();
+    return;
+  }
+  if (d.type === 'member' && !app.account.member) {
+    app.resMsg = 'Member bays are for KL East Mall Rewards members. Join in your account to book one.';
+    app.resErr = true;
+    renderReserve();
+    return;
+  }
   const box = document.getElementById('res-elig') as HTMLInputElement | null;
-  d.elig = !!box && box.checked;
+  d.elig = !!resVerified(d.type, car) || (!!box && box.checked);
   if (!d.elig) {
     app.resMsg = 'Confirm that you are eligible for this bay type first. Staff may check at the bay.';
     app.resErr = true;
@@ -1090,12 +1534,12 @@ function submitReservation() {
     app.resId = res.r.id;
     app.resMsg = '';
     app.resErr = false;
-    if (d.type === 'ev') app.profile.ev = true;
-    if (d.type === 'family') app.profile.family = true;
-    if (d.type === 'member') app.profile.member = true;
+    if (d.type === 'ev' && !car.ev) car.ev = true;
+    if (d.type === 'family' && !car.family) car.family = true;
     persistProfile();
-    if (!me() || phase() === 'left' || phase() === 'cancelled') app.myId = res.r.vehicle;
-    toast(`${RES_LABEL[d.type]} bay ${sim.L.bays[res.r.bay].id} held for you`);
+    app.stays.push({ plate: car.plate, vid: res.r.vehicle, demo: false, receipt: null });
+    if (!me() || ['left', 'cancelled', 'parked', 'paid'].includes(phase())) app.myId = res.r.vehicle;
+    toast(`${RES_LABEL[d.type]} bay ${sim.L.bays[res.r.bay].id} held for ${car.plate}`);
   }
   app.dirty = true;
   renderReserve();
@@ -1130,12 +1574,17 @@ function bindEvents() {
   });
   document.addEventListener('input', (e) => {
     const t = e.target as HTMLInputElement;
-    if (t.id === 'prof-plate') {
-      app.profile.plate = t.value.toUpperCase().slice(0, 12) || 'VKL 2026';
-      persistProfile();
+    if (t.id === 'new-plate') {
+      const err = document.getElementById('addcar-err');
+      if (err) err.hidden = true;
     }
   });
   document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.target as HTMLElement).id === 'new-plate') {
+      e.preventDefault();
+      if (addCarFromInput()) renderSheet();
+      return;
+    }
     if (e.key === 'Escape') {
       if (app.sheet) closeSheet();
       else if (app.screen === 'guide') closePush(true);
@@ -1226,16 +1675,18 @@ function frame(now: number) {
     const zone = g.zone && v.parkT < 0 ? { floor: g.floor, zone: g.zone } : null;
     guideMap.update(sim, { floor, me: v, route: true, zone, walk: null, alpha, focus: guideFocus(v, floor, zone ? zone.zone : null, alpha) });
   }
-  if (!app.screen && app.tab === 'car' && v && v.bay >= 0 && v.parkT >= 0 && carMap && !$('#car-mapwrap').hidden) {
-    const b = sim.L.bays[v.bay];
-    const lift = DEST_BY_ID[v.dest].lift;
-    carMap.update(sim, { floor: b.floor, me: v, route: false, zone: null, walk: { bay: v.bay, lift }, alpha, focus: walkPath(sim.L, v.bay, lift) });
+  const cv = vOf(stayOf(app.carSel));
+  if (!app.screen && app.tab === 'car' && cv && cv.bay >= 0 && cv.state === 'parked' && carMap && !$('#car-mapwrap').hidden) {
+    const b = sim.L.bays[cv.bay];
+    const lift = DEST_BY_ID[cv.dest].lift;
+    carMap.update(sim, { floor: b.floor, me: cv, route: false, zone: null, walk: { bay: cv.bay, lift }, alpha, focus: walkPath(sim.L, cv.bay, lift) });
   }
   requestAnimationFrame(frame);
 }
 
 function init() {
   app.sim = newSim();
+  seedParkedCar();
   bindEvents();
   const eng = document.getElementById('engine');
   if (eng) eng.textContent = motionEngine() === 'motion' ? 'Motion' : 'Web Animations';
