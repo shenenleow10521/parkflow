@@ -226,13 +226,16 @@ function durationFor(rng: Rng, dest: DestId): number {
   return Math.max(15, rng.normal(base, sd)) * 60;
 }
 
+/** Share of visiting cars whose driver is an opted-in rewards member. */
+export const MEMBER_SHARE = 0.16;
+
 function eligibility(rng: Rng, dest: DestId): { cls: 'ice' | 'ev'; elig: BayType[]; member: boolean } {
   const cls: 'ice' | 'ev' = rng.chance(0.12) ? 'ev' : 'ice';
   const elig: BayType[] = ['general'];
   if (cls === 'ev') elig.push('ev');
   if (rng.chance(0.03)) elig.push('oku');
   if (rng.chance(dest === 'family' ? 0.14 : 0.04)) elig.push('family');
-  const member = rng.chance(0.16);
+  const member = rng.chance(MEMBER_SHARE);
   if (member) elig.push('member');
   return { cls, elig, member };
 }
@@ -313,12 +316,15 @@ export function generateDemand(s: ScenarioDef, L: Layout): Demand {
     const dest = occRng.pick(DEST_IDS, DEST_IDS.map((d) => s.destMix[d]));
     const elig: BayType[] = ['general'];
     if (bay.type !== 'general') elig.push(bay.type);
+    // Membership of cars already parked comes from a hash, not the generator, so the seeded demand is unchanged.
+    const member = bay.type === 'member' || hash01(`mem${s.seed}:${bay.idx}`) < MEMBER_SHARE;
+    if (member && bay.type !== 'member') elig.push('member');
     initial.push({
       bay: bay.idx,
       remainingS: occRng.range(4, 170) * 60,
       cls: bay.type === 'ev' || occRng.chance(0.1) ? 'ev' : 'ice',
       elig,
-      member: bay.type === 'member',
+      member,
       dest
     });
   }

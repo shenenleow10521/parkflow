@@ -1115,6 +1115,8 @@ function durationFor(rng, dest) {
     const sd = { cinema: 20, grocer: 15, atrium: 35, family: 30 }[dest];
     return Math.max(15, rng.normal(base, sd)) * 60;
 }
+/** Share of visiting cars whose driver is an opted-in rewards member. */
+const MEMBER_SHARE = 0.16;
 function eligibility(rng, dest) {
     const cls = rng.chance(0.12) ? 'ev' : 'ice';
     const elig = ['general'];
@@ -1124,7 +1126,7 @@ function eligibility(rng, dest) {
         elig.push('oku');
     if (rng.chance(dest === 'family' ? 0.14 : 0.04))
         elig.push('family');
-    const member = rng.chance(0.16);
+    const member = rng.chance(MEMBER_SHARE);
     if (member)
         elig.push('member');
     return { cls, elig, member };
@@ -1217,12 +1219,16 @@ function generateDemand(s, L) {
         const elig = ['general'];
         if (bay.type !== 'general')
             elig.push(bay.type);
+        // Membership of cars already parked comes from a hash, not the generator, so the seeded demand is unchanged.
+        const member = bay.type === 'member' || hash01(`mem${s.seed}:${bay.idx}`) < MEMBER_SHARE;
+        if (member && bay.type !== 'member')
+            elig.push('member');
         initial.push({
             bay: bay.idx,
             remainingS: occRng.range(4, 170) * 60,
             cls: bay.type === 'ev' || occRng.chance(0.1) ? 'ev' : 'ice',
             elig,
-            member: bay.type === 'member',
+            member,
             dest
         });
     }
@@ -1651,6 +1657,7 @@ class Sim {
         this.nextGateT = 0;
         this.peakQueue = 0;
         this.entriesThisMinute = 0;
+        this.entriesMemberThisMinute = 0;
         this.departuresThisMinute = 0;
         this.heading = new Map();
         this.floorBias = [0, 0, 0];
@@ -2044,6 +2051,8 @@ class Sim {
             v.pEdge = L.approachEdge;
             v.pS = L.edges[L.approachEdge].len;
             this.entriesThisMinute++;
+            if (v.member)
+                this.entriesMemberThisMinute++;
             minS[L.gateEdge] = 0;
             this.buckets[L.gateEdge].push(v.i);
             this.nextGateT = t + 5;
@@ -2149,19 +2158,53 @@ class Sim {
         }
         return n / this.usable;
     }
+    /** Cars parked in a bay right now, members vs everyone else. Bays with an uncertain sensor are left out. */
+    memberSplit() {
+        const out = { member: 0, other: 0, byFloor: [0, 1, 2].map(() => ({ member: 0, other: 0 })), inMemberBays: 0, memberBays: 0, searchingMember: 0, searchingOther: 0 };
+        for (const b of this.L.bays) {
+            if (b.type === 'member' && b.flag !== 'maintenance')
+                out.memberBays++;
+            const o = this.occ[b.idx];
+            if (o < 0 || b.flag === 'obstructed')
+                continue;
+            const m = this.vehicles[o].member;
+            if (m) {
+                out.member++;
+                out.byFloor[b.floor].member++;
+                if (b.type === 'member')
+                    out.inMemberBays++;
+            }
+            else {
+                out.other++;
+                out.byFloor[b.floor].other++;
+            }
+        }
+        for (const v of this.searchingVehicles()) {
+            if (v.member)
+                out.searchingMember++;
+            else
+                out.searchingOther++;
+        }
+        return out;
+    }
     recordMinute() {
         const c = this.counts();
+        const ms = this.memberSplit();
         this.history.push({
             t: this.t,
             occupied: c.occupied,
             usable: c.usable,
             generalFree: c.generalFree,
-            searching: this.searchingVehicles().length,
+            searching: ms.searchingMember + ms.searchingOther,
             queue: this.gateQueue.length,
             entries: this.entriesThisMinute,
-            departures: this.departuresThisMinute
+            departures: this.departuresThisMinute,
+            parkedMember: ms.member,
+            parkedOther: ms.other,
+            entriesMember: this.entriesMemberThisMinute
         });
         this.entriesThisMinute = 0;
+        this.entriesMemberThisMinute = 0;
         this.departuresThisMinute = 0;
     }
     updateForecast() {

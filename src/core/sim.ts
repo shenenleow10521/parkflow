@@ -94,6 +94,22 @@ export interface MinuteRecord {
   entries: number;
   /** Cars that pulled out of a bay during this minute. */
   departures: number;
+  /** Cars parked in a bay at this minute, split by rewards membership. */
+  parkedMember: number;
+  parkedOther: number;
+  /** Members among this minute's entries. */
+  entriesMember: number;
+}
+
+export interface MemberSplit {
+  member: number;
+  other: number;
+  byFloor: { member: number; other: number }[];
+  /** Members parked in designated member bays, and how many such bays are in service. */
+  inMemberBays: number;
+  memberBays: number;
+  searchingMember: number;
+  searchingOther: number;
 }
 
 export interface ForecastSnapshot {
@@ -165,6 +181,7 @@ export class Sim {
   nextGateT = 0;
   peakQueue = 0;
   entriesThisMinute = 0;
+  entriesMemberThisMinute = 0;
   departuresThisMinute = 0;
   edgeCount: Float32Array;
   heading = new Map<string, { v: number; exp: number }[]>();
@@ -530,6 +547,7 @@ export class Sim {
       v.pEdge = L.approachEdge;
       v.pS = L.edges[L.approachEdge].len;
       this.entriesThisMinute++;
+      if (v.member) this.entriesMemberThisMinute++;
       minS[L.gateEdge] = 0;
       this.buckets[L.gateEdge].push(v.i);
       this.nextGateT = t + 5;
@@ -628,19 +646,42 @@ export class Sim {
     return n / this.usable;
   }
 
+  /** Cars parked in a bay right now, members vs everyone else. Bays with an uncertain sensor are left out. */
+  memberSplit(): MemberSplit {
+    const out: MemberSplit = { member: 0, other: 0, byFloor: [0, 1, 2].map(() => ({ member: 0, other: 0 })), inMemberBays: 0, memberBays: 0, searchingMember: 0, searchingOther: 0 };
+    for (const b of this.L.bays) {
+      if (b.type === 'member' && b.flag !== 'maintenance') out.memberBays++;
+      const o = this.occ[b.idx];
+      if (o < 0 || b.flag === 'obstructed') continue;
+      const m = this.vehicles[o].member;
+      if (m) { out.member++; out.byFloor[b.floor].member++; if (b.type === 'member') out.inMemberBays++; }
+      else { out.other++; out.byFloor[b.floor].other++; }
+    }
+    for (const v of this.searchingVehicles()) {
+      if (v.member) out.searchingMember++;
+      else out.searchingOther++;
+    }
+    return out;
+  }
+
   private recordMinute() {
     const c = this.counts();
+    const ms = this.memberSplit();
     this.history.push({
       t: this.t,
       occupied: c.occupied,
       usable: c.usable,
       generalFree: c.generalFree,
-      searching: this.searchingVehicles().length,
+      searching: ms.searchingMember + ms.searchingOther,
       queue: this.gateQueue.length,
       entries: this.entriesThisMinute,
-      departures: this.departuresThisMinute
+      departures: this.departuresThisMinute,
+      parkedMember: ms.member,
+      parkedOther: ms.other,
+      entriesMember: this.entriesMemberThisMinute
     });
     this.entriesThisMinute = 0;
+    this.entriesMemberThisMinute = 0;
     this.departuresThisMinute = 0;
   }
 

@@ -4,6 +4,7 @@ import { Sim } from '../core/sim';
 import { Forecast } from '../core/forecast';
 import { clockLabel, ScenarioDef } from '../core/scenarios';
 import { RunSummary } from '../core/metrics';
+import { FLOOR_NAMES } from '../core/layout';
 import { esc } from './dom';
 
 const INK = 'var(--ink-3)';
@@ -351,4 +352,154 @@ export function flowPanel(sim: Sim, f: Forecast | null, o: { w: number; h: numbe
   const legend = `<div class="flow-legend"><span><i class="fl-dot fl-in"></i>Arriving (entry)</span><span><i class="fl-dot fl-out"></i>Departing (exit)</span></div>`;
   return `${tiles}<div class="flow-chart-head">${legend}</div><div class="flow-chart-box">${svg}</div>
     <div class="flow-call flow-${tone}"><span class="fc-ic">${svgIc(tone === 'ok' ? I_CAR : I_ALERT, 18)}</span><b>${esc(title)}</b><i class="fc-sep" aria-hidden="true"></i><span>${esc(text)}</span></div>`;
+}
+
+// ---------------- members vs non-members ----------------
+const I_STAR = '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>';
+const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
+
+/** Live: cars parked right now, rewards members vs everyone else, overall and by level. */
+export function memberLivePanel(sim: Sim): string {
+  const ms = sim.memberSplit();
+  const total = ms.member + ms.other;
+  const pM = total ? Math.round((ms.member / total) * 100) : 0;
+  const pO = total ? 100 - pM : 0;
+  let eAll = sim.entriesThisMinute;
+  let eMem = sim.entriesMemberThisMinute;
+  for (const h of sim.history) if (h.t > sim.t - 900) { eAll += h.entries; eMem += h.entriesMember; }
+  const sAll = ms.searchingMember + ms.searchingOther;
+  const pf = sim.counts().perFloor;
+
+  const tiles = `<div class="flow-tiles two">
+      <div class="ft ft-mem"><span class="ft-ic">${svgIc(I_STAR, 24)}</span><div><b>${ms.member}</b><span>${plural(ms.member, 'member', 'members')} parked</span><small>${pM}% of parked cars</small></div></div>
+      <div class="ft ft-non"><span class="ft-ic">${svgIc(I_CAR, 24)}</span><div><b>${ms.other}</b><span>${plural(ms.other, 'non-member', 'non-members')} parked</span><small>${pO}% of parked cars</small></div></div>
+    </div>`;
+  const seg = (cls: string, p: number, label: string) => `<i class="${cls}" style="width:${p}%">${p >= 9 ? `<span>${label}</span>` : ''}</i>`;
+  const split = `<div class="mem-split" role="img" aria-label="${ms.member} members and ${ms.other} non-members parked">${seg('ms-m', pM, `${pM}% members`)}${seg('ms-o', pO, `${pO}% non-members`)}</div>`;
+
+  const levels = [0, 1, 2]
+    .map((f) => {
+      const x = ms.byFloor[f];
+      const u = Math.max(1, pf[f].usable);
+      const wm = (x.member / u) * 100;
+      const wo = (x.other / u) * 100;
+      return `<div class="ml"><span class="plate-sm">${FLOOR_NAMES[f]}</span>
+        <div class="ml-bar" role="img" aria-label="${FLOOR_NAMES[f]}: ${x.member} members, ${x.other} non-members, ${pf[f].usable} usable bays"><i class="ms-m" style="width:${wm.toFixed(1)}%"></i><i class="ms-o" style="width:${wo.toFixed(1)}%"></i></div>
+        <span class="ml-n"><b class="ml-m">${x.member}</b> + <b>${x.other}</b><small> of ${pf[f].usable} bays</small></span></div>`;
+    })
+    .join('');
+
+  const facts = `<div class="mem-facts">
+      <div><span>Came in, last 15 min</span><b>${eMem} <small>of ${eAll}</small></b><small>${plural(eMem, 'was a member', 'were members')}</small></div>
+      <div><span>Looking for a bay</span><b>${ms.searchingMember} <small>of ${sAll}</small></b><small>${plural(ms.searchingMember, 'is a member', 'are members')}</small></div>
+    </div>`;
+
+  const q = sim.bookable('member');
+  const elsewhere = ms.member - ms.inMemberBays;
+  const full = q.free === 0;
+  const call = `<div class="flow-call flow-${full ? 'warn' : 'ok'}"><span class="fc-ic">${svgIc(I_STAR, 18)}</span><b>${full ? 'Member bays full' : 'Member bays available'}</b><i class="fc-sep" aria-hidden="true"></i><span>${full ? `All ${q.total} are taken or held. ` : `${q.free} of ${q.total} free. `}${elsewhere} ${plural(elsewhere, 'member is', 'members are')} parked in general bays.</span></div>`;
+
+  return `${tiles}${split}<div class="mem-levels" aria-label="Parked cars by level">${levels}</div>${facts}${call}`;
+}
+
+/** Past: cars parked every 10 minutes since the window opened, members stacked under non-members. */
+export function memberHistoryPanel(sim: Sim, o: { w: number; h: number }): string {
+  const s = sim.scn;
+  const H = sim.history;
+  if (!H.length) return '<p class="muted">History starts after the first simulated minute.</p>';
+  const live = sim.memberSplit();
+  const STEP = 600;
+  const n = Math.floor(sim.tEnd / STEP) + 1;
+  type Col = { t: number; m: number; o: number; kind: 'past' | 'now' | 'future' };
+  const cols: Col[] = [];
+  let nowPlaced = false;
+  for (let k = 0; k < n; k++) {
+    const tk = k * STEP;
+    const rec = tk <= sim.t ? H.find((h) => h.t >= tk) : undefined;
+    if (rec) cols.push({ t: tk, m: rec.parkedMember, o: rec.parkedOther, kind: 'past' });
+    else if (!nowPlaced && sim.t < sim.tEnd) { cols.push({ t: sim.t, m: live.member, o: live.other, kind: 'now' }); nowPlaced = true; }
+    else cols.push({ t: tk, m: 0, o: 0, kind: 'future' });
+  }
+
+  // headline numbers, minute by minute
+  let peak = H[0], shareSum = 0, shareN = 0, eAll = sim.entriesThisMinute, eMem = sim.entriesMemberThisMinute;
+  for (const h of H) {
+    if (h.parkedMember > peak.parkedMember) peak = h;
+    const tot = h.parkedMember + h.parkedOther;
+    if (tot) { shareSum += h.parkedMember / tot; shareN++; }
+    eAll += h.entries;
+    eMem += h.entriesMember;
+  }
+  const peakNow = live.member > peak.parkedMember;
+  const peakN = peakNow ? live.member : peak.parkedMember;
+  const peakT = peakNow ? sim.t : peak.t;
+  const start = clockLabel(s, 0, false);
+  const avgShare = shareN ? Math.round((shareSum / shareN) * 100) : 0;
+  const stats = `<div class="mem-stats">
+      <div><span>Most members parked</span><b>${peakN}</b><small>${peakNow ? 'right now' : `at ${clockLabel(s, peakT, false)}`}</small></div>
+      <div><span>Average member share</span><b>${avgShare}%</b><small>of parked cars since ${start}</small></div>
+      <div><span>Members who came in</span><b>${eMem} <small>of ${eAll}</small></b><small>${eAll ? Math.round((eMem / eAll) * 100) : 0}% of entries since ${start}</small></div>
+    </div>`;
+
+  // chart
+  const W = o.w, Ht = o.h;
+  const mg = { l: 30, r: 6, t: 16, b: 26 };
+  const iw = W - mg.l - mg.r, ih = Ht - mg.t - mg.b;
+  const cap = sim.usable;
+  const ticks = niceTicks(0, cap, 4).filter((v) => v < cap - 8);
+  const y = (v: number) => mg.t + ih - (v / cap) * ih;
+  const base = mg.t + ih;
+  const gw = iw / n;
+  const bw = Math.min(36, gw * 0.62);
+  const every = gw < 30 ? 3 : 2;
+  let svg = `<svg viewBox="0 0 ${W} ${Ht}" width="100%" height="${Ht}" class="chart mem-chart" role="img" aria-label="Members and non-members parked every 10 minutes since ${start}">`;
+  for (const v of ticks) svg += `<line x1="${mg.l}" x2="${W - mg.r}" y1="${y(v)}" y2="${y(v)}" stroke="${GRID}"/><text x="${mg.l - 6}" y="${y(v) + 3.5}" text-anchor="end" class="ax">${v}</text>`;
+  svg += `<line x1="${mg.l}" x2="${W - mg.r}" y1="${y(cap)}" y2="${y(cap)}" class="mem-cap"/><text x="${W - mg.r}" y="${y(cap) - 4}" text-anchor="end" class="ax">${cap} bays</text>`;
+  cols.forEach((c, i) => {
+    const cx = mg.l + i * gw + gw / 2;
+    const x = cx - bw / 2;
+    const clock = clockLabel(s, c.t, false);
+    if (c.kind !== 'future') {
+      const hm = (c.m / cap) * ih;
+      const ho = (c.o / cap) * ih;
+      const tot = c.m + c.o;
+      const share = tot ? Math.round((c.m / tot) * 100) : 0;
+      svg += `<g class="mem-col${c.kind === 'now' ? ' mem-now' : ''}"><title>${c.kind === 'now' ? `Now (${clock})` : clock}: ${c.m} members, ${c.o} non-members (${share}% members)</title>`;
+      svg += `<rect x="${x.toFixed(1)}" y="${(base - hm - ho).toFixed(1)}" width="${bw.toFixed(1)}" height="${ho.toFixed(1)}" rx="3" class="mb-o"/>`;
+      svg += `<rect x="${x.toFixed(1)}" y="${(base - hm).toFixed(1)}" width="${bw.toFixed(1)}" height="${hm.toFixed(1)}" rx="2" class="mb-m"/>`;
+      if (ho >= 15) svg += `<text x="${cx.toFixed(1)}" y="${(base - hm - ho / 2 + 4).toFixed(1)}" text-anchor="middle" class="mv-o">${c.o}</text>`;
+      if (hm >= 15) svg += `<text x="${cx.toFixed(1)}" y="${(base - hm / 2 + 4).toFixed(1)}" text-anchor="middle" class="mv-m">${c.m}</text>`;
+      else svg += `<text x="${cx.toFixed(1)}" y="${(base - hm - ho - 5).toFixed(1)}" text-anchor="middle" class="mv-m-out">${c.m}</text>`;
+      svg += '</g>';
+    } else {
+      svg += `<line x1="${x.toFixed(1)}" x2="${(x + bw).toFixed(1)}" y1="${base - 0.5}" y2="${base - 0.5}" class="mem-future"/>`;
+    }
+    const showLabel = c.kind === 'now' || i % every === 0;
+    if (showLabel) svg += `<text x="${cx.toFixed(1)}" y="${base + 16}" text-anchor="middle" class="ax${c.kind === 'now' ? ' flow-now' : c.kind === 'future' ? ' mem-fut-l' : ''}">${c.kind === 'now' ? 'Now' : clock}</text>`;
+  });
+  svg += '</svg>';
+
+  const legend = `<div class="flow-legend"><span><i class="fl-dot fl-mem"></i>Members</span><span><i class="fl-dot fl-non"></i>Non-members</span></div>`;
+
+  // what changed since the window opened
+  const first = H[0];
+  const share0 = first.parkedMember + first.parkedOther ? Math.round((first.parkedMember / (first.parkedMember + first.parkedOther)) * 100) : 0;
+  const liveTot = live.member + live.other;
+  const shareNow = liveTot ? Math.round((live.member / liveTot) * 100) : 0;
+  const d = shareNow - share0;
+  const dm = live.member - first.parkedMember;
+  let title: string, text: string;
+  if (sim.t < 300) {
+    title = 'Just started';
+    text = `Members are ${shareNow}% of parked cars. The picture builds every simulated minute.`;
+  } else if (Math.abs(d) < 3) {
+    title = 'Member share steady';
+    text = `About ${shareNow}% of parked cars since ${start} (${dm >= 0 ? '+' : '−'}${Math.abs(dm)} ${plural(Math.abs(dm), 'member', 'members')}).`;
+  } else {
+    title = d > 0 ? 'Member share rising' : 'Member share falling';
+    text = `${shareNow}% of parked cars now, ${d > 0 ? 'up' : 'down'} from ${share0}% at ${start}.`;
+  }
+  const call = `<div class="flow-call flow-ok"><span class="fc-ic">${svgIc(I_STAR, 18)}</span><b>${esc(title)}</b><i class="fc-sep" aria-hidden="true"></i><span>${esc(text)}</span></div>`;
+
+  return `${stats}<div class="flow-chart-head">${legend}</div><div class="flow-chart-box">${svg}</div>${call}`;
 }

@@ -66,6 +66,14 @@ with sync_playwright() as p:
     check('review shows confirm button', pg.locator('[data-act="confirm-action"]').count() == 1)
     pg.click('[data-act="confirm-action"]'); pg.wait_for_timeout(400)
     check('action applied after confirm', 'Applied' in pg.inner_text('#side-body'))
+    # forecast: members vs non-members, live and past (sim is paused here, so the numbers are stable)
+    pg.click('#rail [data-section="forecast"]'); pg.wait_for_timeout(900)
+    live = pg.locator('.mem-card').first
+    mem = int(live.locator('.ft-mem b').inner_text()); non = int(live.locator('.ft-non b').inner_text())
+    lv = [int(x) for x in re.findall(r'(\d+) \+ (\d+)', live.locator('.mem-levels').inner_text()) for x in x]
+    check('member panel levels add up to the live totals', sum(lv[0::2]) == mem and sum(lv[1::2]) == non, f'{mem}+{non} vs {lv}')
+    past = pg.locator('.mem-card').nth(1)
+    check('member history shows a live bar and past bars', past.locator('.mem-now').count() == 1 and past.locator('.mem-col').count() >= 2)
     # reservations: create, quota
     pg.click('#rail [data-section="reservations"]'); pg.wait_for_timeout(500)
     pg.select_option('#res-type', 'member'); pg.wait_for_timeout(100)

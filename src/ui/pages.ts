@@ -6,7 +6,7 @@ import { Sim } from '../core/sim';
 import { ASSUMPTION_META, DEFAULT_ASSUMPTIONS, ForecastAssumptions } from '../core/forecast';
 import { BAY_TYPE_LABEL, FLOOR_NAMES, ZONES, DEST_BY_ID, DESTINATIONS } from '../core/layout';
 import { clockLabel, clockFromMin, SCENARIO_BY_ID } from '../core/scenarios';
-import { arrivalsChart, legendItems, COMPONENT_LABELS, g2pHistogram, searchingChart, fieldStrip, flowPanel } from './charts';
+import { arrivalsChart, legendItems, COMPONENT_LABELS, g2pHistogram, searchingChart, fieldStrip, flowPanel, memberLivePanel, memberHistoryPanel } from './charts';
 import { candidateRows, legendFactors, weightsDrawer, operatorActions } from './panels';
 import { pctChange, RunSummary } from '../core/metrics';
 import { mean, percentile } from '../core/rng';
@@ -35,6 +35,7 @@ export function renderForecast(force = false) {
   const a = store.assumptions;
   const wHalf = chartWidth('fc-occ', 1200);
   const wArr = chartWidth('fc-arr', 520);
+  const wMem = chartWidth('fc-mem', 560);
   const signals: [string, string][] = [];
   signals.push(['Cinema attendance', s.cinema ? `${clockFromMin(s.cinema.showtimeMin)} screening · ${s.cinema.tickets} tickets sold` : 'No major screening in this window']);
   signals.push(['Restaurant bookings', s.dining ? s.dining.slots.map((x) => `${clockFromMin(x.min)} · ${x.covers} covers`).join('; ') : 'No large bookings in this window']);
@@ -197,6 +198,14 @@ export function renderForecast(force = false) {
     <section class="card span2 flow-card">
       <div class="card-h"><h3>Parking occupancy</h3><span class="fine">Vehicle movement in 5-minute windows, next 30 minutes</span></div>
       <div id="fc-occ" class="flow">${flowPanel(sim, f, { w: wHalf, h: 230, id: 'fc' })}</div>
+    </section>
+    <section class="card mem-card" aria-labelledby="mem-live-h">
+      <div class="card-h"><h3 id="mem-live-h">Members parked now</h3>${tag('now', 'Live')}</div>
+      <div class="flow">${memberLivePanel(sim)}</div>
+    </section>
+    <section class="card mem-card" aria-labelledby="mem-past-h">
+      <div class="card-h"><h3 id="mem-past-h">Members vs non-members since ${clockLabel(s, 0, false)}</h3><span class="fine">Cars parked, every 10 minutes</span></div>
+      <div id="fc-mem" class="flow">${memberHistoryPanel(sim, { w: wMem, h: 230 })}</div>
     </section>
     <section class="card">
       <div class="card-h"><h3>Is it right?</h3>${tag('sim', 'After outcome')}</div>
