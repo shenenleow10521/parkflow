@@ -30,6 +30,8 @@ export interface OccChartOpts {
   snapshots?: boolean;
   /** An earlier intent forecast, drawn faintly so viewers can see how the forecast moved. */
   ghost?: { t: number; occ: number[]; usable: number } | null;
+  /** Measured, one forecast and the 95% line only: for the occupancy panel. */
+  simple?: boolean;
 }
 
 /** Occupancy (share of usable bays): measured so far, then both forecasts with the intent range. */
@@ -49,7 +51,7 @@ export function occupancyChart(sim: Sim, f: Forecast | null, o: OccChartOpts): s
   const y = (v: number) => m.t + (1 - (v - lo) / (hi - lo)) * ih;
   let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Occupancy and forecast chart" preserveAspectRatio="none" class="chart">`;
   // grid
-  for (const v of niceTicks(lo, hi, 4)) {
+  for (const v of niceTicks(lo, hi, H < 120 ? 2 : 4)) {
     svg += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="${GRID}"/>`;
     svg += `<text x="${m.l - 6}" y="${y(v) + 3.5}" text-anchor="end" class="ax">${Math.round(v * 100)}%</text>`;
   }
@@ -58,7 +60,7 @@ export function occupancyChart(sim: Sim, f: Forecast | null, o: OccChartOpts): s
   }
   // window end marker
   svg += `<line x1="${x(sim.tWindowEnd)}" x2="${x(sim.tWindowEnd)}" y1="${m.t}" y2="${m.t + ih}" stroke="${GRID}" stroke-dasharray="2 3"/>`;
-  svg += `<text x="${x(sim.tWindowEnd) - 4}" y="${m.t + 10}" text-anchor="end" class="ax">arrivals end</text>`;
+  if (!o.simple) svg += `<text x="${x(sim.tWindowEnd) - 4}" y="${m.t + 10}" text-anchor="end" class="ax">arrivals end</text>`;
   // 95% threshold
   if (0.95 > lo) {
     svg += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(0.95)}" y2="${y(0.95)}" stroke="var(--amber)" stroke-dasharray="4 4" opacity=".7"/>`;
@@ -76,7 +78,7 @@ export function occupancyChart(sim: Sim, f: Forecast | null, o: OccChartOpts): s
       const hl = [start, ...pts(f.hist.lo)].reverse();
       if (hh.length > 1) svg += `<path d="${path([...hh, ...hl])}Z" fill="var(--ink-3)" opacity=".08"/>`;
     }
-    svg += `<path d="${path([start, ...pts(f.hist.occ)])}" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 4"/>`;
+    if (!o.simple) svg += `<path d="${path([start, ...pts(f.hist.occ)])}" fill="none" stroke="var(--ink-3)" stroke-width="2" stroke-dasharray="5 4"/>`;
     svg += `<path d="${path([start, ...pts(f.intent.occ)])}" fill="none" stroke="var(--teal)" stroke-width="2.4" stroke-dasharray="7 4"/>`;
   }
   // an earlier forecast, for comparison
@@ -278,95 +280,75 @@ export function flowSummary(sim: Sim, f: Forecast | null): FlowSummary | null {
   };
 }
 
+const I_CAR = '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/>';
 const I_ARROWS = '<path d="M8 3 4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4"/>';
-const I_IN = '<path d="M14 5h4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-4"/><path d="m9 16 4-4-4-4M13 12H3"/>';
-const I_OUT = '<path d="M10 5H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h4"/><path d="m15 16 4-4-4-4M19 12H9"/>';
+const I_ALERT = '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>';
 const svgIc = (p: string, s = 20) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 
-/** Measured flows for the last half hour and forecast flows for the next, side by side, with headline tiles and a call to action. */
+/** Parking occupancy, shown as vehicle movement: who arrives and who leaves in each of the next six 5-minute windows. */
 export function flowPanel(sim: Sim, f: Forecast | null, o: { w: number; h: number; id: string; compact?: boolean }): string {
   const fs = flowSummary(sim, f);
   if (!f || !fs) return '<p class="muted">The forecast starts after the first simulated minute.</p>';
   const s = sim.scn;
-  // windows: past measured (only those after the run started), then six forecast windows
-  type Win = { rel: number; arr: number; dep: number; fc: boolean };
-  const wins: Win[] = [];
-  const pastN = o.compact ? 4 : 6;
-  for (let j = pastN; j >= 1; j--) {
-    const t0 = sim.t - j * 300;
-    const t1 = t0 + 300;
-    if (t0 < 0) continue;
-    const recs = sim.history.filter((r) => r.t > t0 && r.t <= t1);
-    wins.push({ rel: -j * 5, arr: recs.reduce((a, r) => a + r.entries, 0), dep: recs.reduce((a, r) => a + (r.departures || 0), 0), fc: false });
-  }
-  for (let k = 0; k < 6; k++) {
-    const a = f.intent.arrivals.slice(k * 5, k * 5 + 5).reduce((x, y) => x + y, 0);
-    const d = f.intent.departures.slice(k * 5, k * 5 + 5).reduce((x, y) => x + y, 0);
-    wins.push({ rel: k * 5, arr: a, dep: d, fc: true });
-  }
+  const labels = ['Now', '5–10', '10–15', '15–20', '20–25', '25–30'];
+  const wins = labels.map((label, k) => ({
+    label,
+    arr: Math.round(f.intent.arrivals.slice(k * 5, k * 5 + 5).reduce((x, y) => x + y, 0)),
+    dep: Math.round(f.intent.departures.slice(k * 5, k * 5 + 5).reduce((x, y) => x + y, 0))
+  }));
+  const arriving = wins.reduce((a, w) => a + w.arr, 0);
+  const leaving = wins.reduce((a, w) => a + w.dep, 0);
+  const net = arriving - leaving;
+  const c = sim.counts();
+  const nowPct = Math.round((c.occupied / c.usable) * 100);
+  const endPct = Math.round(fs.endShare * 100);
+
+  // chart
   const W = o.w, H = o.h;
-  const m = { l: 26, r: 6, t: o.compact ? 10 : 18, b: 20 };
+  const m = { l: 26, r: 4, t: 16, b: o.compact ? 18 : 32 };
   const iw = W - m.l - m.r, ih = H - m.t - m.b;
   const vmax = Math.max(5, ...wins.map((w) => Math.max(w.arr, w.dep)));
   const ticks = niceTicks(0, vmax, o.compact ? 2 : 4);
   const ymax = Math.max(vmax, ticks[ticks.length - 1]);
   const y = (v: number) => m.t + ih - (v / ymax) * ih;
   const gw = iw / wins.length;
-  const bw = Math.min(o.compact ? 11 : 20, gw * 0.34);
-  const pin = `hin-${o.id}`, pout = `hout-${o.id}`;
-  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" class="chart flow-chart" role="img" aria-label="Cars arriving and leaving per five minutes: last half hour measured, next half hour forecast">
-    <defs>
-      <pattern id="${pin}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--flow-in)" opacity=".28"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--flow-in)" stroke-width="2.2"/></pattern>
-      <pattern id="${pout}" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" fill="var(--flow-out)" opacity=".28"/><line x1="0" y1="0" x2="0" y2="5" stroke="var(--flow-out)" stroke-width="2.2"/></pattern>
-    </defs>`;
+  const bw = Math.min(o.compact ? 16 : 30, gw * 0.3);
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" class="chart flow-chart" role="img" aria-label="Vehicles arriving and leaving in each 5-minute window for the next 30 minutes">`;
   for (const v of ticks) svg += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="${GRID}"/><text x="${m.l - 6}" y="${y(v) + 3.5}" text-anchor="end" class="ax">${v}</text>`;
-  const firstFc = wins.findIndex((w) => w.fc);
-  if (firstFc > 0) {
-    const nx = m.l + firstFc * gw;
-    svg += `<rect x="${nx}" y="${m.t - 4}" width="${W - m.r - nx}" height="${ih + 4}" fill="var(--route)" opacity=".035"/>`;
-    svg += `<line x1="${nx}" x2="${nx}" y1="${m.t - 6}" y2="${m.t + ih}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="3 3" opacity=".5"/>`;
-  }
   wins.forEach((w, i) => {
     const cx = m.l + i * gw + gw / 2;
-    const bars: [number, string, string][] = [
-      [w.arr, w.fc ? `url(#${pin})` : 'var(--flow-in)', 'var(--flow-in)'],
-      [w.dep, w.fc ? `url(#${pout})` : 'var(--flow-out)', 'var(--flow-out)']
-    ];
-    bars.forEach(([v, fill, stroke], j) => {
-      const x = cx - bw - 1.5 + j * (bw + 3);
-      const top = y(v);
-      const h = Math.max(v > 0 ? 1.5 : 0, m.t + ih - top);
-      svg += `<rect x="${x.toFixed(1)}" y="${(m.t + ih - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="2" fill="${fill}" ${w.fc ? `stroke="${stroke}" stroke-width="1.2"` : ''}><title>${j ? 'Leaving' : 'Arriving'} ${w.fc ? 'forecast' : 'measured'}, ${w.rel >= 0 ? `+${w.rel}` : w.rel} to ${w.rel + 5 >= 0 ? `+${w.rel + 5}` : w.rel + 5} min: ${v.toFixed(1)}</title></rect>`;
-      if (!o.compact || w.fc) svg += `<text x="${(x + bw / 2).toFixed(1)}" y="${(m.t + ih - h - 4).toFixed(1)}" text-anchor="middle" class="ax flow-v">${Math.round(v)}</text>`;
+    ([[w.arr, 'var(--flow-in)'], [w.dep, 'var(--flow-out)']] as [number, string][]).forEach(([v, col], j) => {
+      const x = cx - bw - 2 + j * (bw + 4);
+      const h = Math.max(v > 0 ? 2 : 0, m.t + ih - y(v));
+      svg += `<rect x="${x.toFixed(1)}" y="${(m.t + ih - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${col}"><title>${j ? 'Departing' : 'Arriving'}, ${w.label === 'Now' ? 'next 5 minutes' : `${w.label} minutes from now`}: ${v}</title></rect>`;
+      svg += `<text x="${(x + bw / 2).toFixed(1)}" y="${(m.t + ih - h - 4).toFixed(1)}" text-anchor="middle" class="ax flow-v">${v}</text>`;
     });
-    const lab = w.rel === 0 ? 'Now' : w.rel > 0 ? `+${w.rel}` : `${w.rel}`;
-    svg += `<text x="${cx}" y="${H - 5}" text-anchor="middle" class="ax${w.rel === 0 ? ' flow-now' : ''}">${lab}</text>`;
+    svg += `<text x="${cx}" y="${m.t + ih + 14}" text-anchor="middle" class="ax${i === 0 ? ' flow-now' : ''}">${w.label}</text>`;
   });
+  if (!o.compact) svg += `<text x="${m.l + iw / 2}" y="${H - 3}" text-anchor="middle" class="ax">Minutes from now</text>`;
   svg += '</svg>';
-  // tiles and call to action
-  const endPct = Math.round(fs.endShare * 100);
-  const netR = Math.round(fs.net);
-  let tone = 'ok', title: string, text: string, icn = 'check';
+
+  // call to action
+  let tone = 'ok', title: string, text: string;
   if (fs.fillAt !== null && fs.fillAt - sim.t <= 30 * 60) {
-    tone = 'crit'; title = 'Prepare overflow access'; icn = 'alert';
-    text = `Occupancy is forecast to reach 95% by ${clockLabel(s, fs.fillAt, false)}.`;
-  } else if (netR >= 10) {
-    tone = 'warn'; title = 'Watch the entry queue'; icn = 'alert';
-    text = `More cars arriving than leaving (${netR > 0 ? '+' : ''}${netR} in 30 min), ending about ${endPct}% full.`;
-  } else if (netR <= -5) {
-    title = 'Space is opening up';
-    text = `More cars leaving than arriving (${netR} in 30 min).`;
+    tone = 'crit'; title = 'Prepare overflow access';
+    text = `Occupancy forecast to reach 95% by ${clockLabel(s, fs.fillAt, false)}.`;
+  } else if (net >= 3) {
+    tone = 'warn'; title = 'Watch entry queue';
+    text = `More vehicles arriving than leaving (+${net} net).`;
+  } else if (net <= -3) {
+    title = 'Space opening up';
+    text = `More vehicles leaving than arriving (${net} net).`;
   } else {
-    title = 'Arrivals and departures are balanced';
-    text = `About ${endPct}% full in 30 minutes.`;
+    title = 'Flow is balanced';
+    text = 'Arrivals and departures are roughly even.';
   }
-  const callIc = icn === 'alert' ? '<path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/>' : '<path d="m5 12 5 5L20 7"/>';
   const tiles = `<div class="flow-tiles${o.compact ? ' compact' : ''}">
-      <div class="ft ft-in"><span class="ft-ic">${svgIc(I_IN, o.compact ? 16 : 20)}</span><div><b>${Math.round(fs.arriving)}</b><span>arriving in 30 min</span>${o.compact ? '' : `<small>History alone: ${Math.round(fs.arrivingHist)}</small>`}</div></div>
-      <div class="ft ft-out"><span class="ft-ic">${svgIc(I_OUT, o.compact ? 16 : 20)}</span><div><b>${Math.round(fs.leaving)}</b><span>leaving in 30 min</span>${o.compact ? '' : `<small>${fs.paidPending} already paid</small>`}</div></div>
-      <div class="ft ft-net ft-${netR > 0 ? 'up' : 'down'}"><span class="ft-ic">${svgIc(I_ARROWS, o.compact ? 16 : 20)}</span><div><b>${netR > 0 ? '+' : netR < 0 ? '−' : ''}${Math.abs(netR)}</b><span>net change</span>${o.compact ? '' : `<small>Ends about ${endPct}% full</small>`}</div></div>
+      <div class="ft ft-in"><span class="ft-ic">${svgIc(I_CAR, o.compact ? 17 : 24)}</span><div><b>${arriving}</b><span>arriving</span><small>in the next 30 minutes</small></div></div>
+      <div class="ft ft-out"><span class="ft-ic">${svgIc(I_CAR, o.compact ? 17 : 24)}</span><div><b>${leaving}</b><span>leaving</span><small>in the next 30 minutes</small></div></div>
+      <div class="ft ft-net ft-${net > 0 ? 'up' : 'down'}"><span class="ft-ic">${svgIc(I_ARROWS, o.compact ? 17 : 24)}</span><div><b>${net > 0 ? '+' : net < 0 ? '−' : ''}${Math.abs(net)}</b><span>net vehicles</span><small>${nowPct}% full now, ${endPct}% in 30 min</small></div></div>
     </div>`;
-  const legend = `<div class="flow-legend"><span><i class="fl-sw fl-in"></i>Arriving (entry)</span><span><i class="fl-sw fl-out"></i>Leaving (pulled out of a bay)</span><span><i class="fl-sw fl-solid"></i>Measured</span><span><i class="fl-sw fl-hatch"></i>Forecast</span></div>`;
-  return `${tiles}<div class="flow-chart-box">${svg}</div>${o.compact ? '' : legend}
-    <div class="flow-call flow-${tone}"><span class="fc-ic">${svgIc(callIc, 18)}</span><b>${esc(title)}</b><span>${esc(text)}</span></div>`;
+  const legend = `<div class="flow-legend"><span><i class="fl-dot fl-in"></i>Arriving (entry)</span><span><i class="fl-dot fl-out"></i>Departing (exit)</span></div>`;
+  return `${tiles}<div class="flow-chart-head">${legend}</div><div class="flow-chart-box">${svg}</div>
+    <div class="flow-call flow-${tone}"><span class="fc-ic">${svgIc(tone === 'ok' ? I_CAR : I_ALERT, 18)}</span><b>${esc(title)}</b><i class="fc-sep" aria-hidden="true"></i><span>${esc(text)}</span></div>`;
 }

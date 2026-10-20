@@ -492,7 +492,7 @@ export function renderLower() {
   const sim = store.sim;
   const chartEl = $('#chart-occ');
   const w = Math.max(280, chartEl.clientWidth || 420);
-  setHTML(chartEl, flowPanel(sim, sim.forecast, { w, h: 92, id: 'dock', compact: true }));
+  setHTML(chartEl, flowPanel(sim, sim.forecast, { w, h: 96, id: 'dock', compact: true }));
   renderFloors();
   renderEvents();
 }

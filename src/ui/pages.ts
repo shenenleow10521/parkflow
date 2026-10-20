@@ -6,7 +6,7 @@ import { Sim } from '../core/sim';
 import { ASSUMPTION_META, DEFAULT_ASSUMPTIONS, ForecastAssumptions } from '../core/forecast';
 import { BAY_TYPE_LABEL, FLOOR_NAMES, ZONES, DEST_BY_ID, DESTINATIONS } from '../core/layout';
 import { clockLabel, clockFromMin, SCENARIO_BY_ID } from '../core/scenarios';
-import { occupancyChart, arrivalsChart, legendItems, COMPONENT_LABELS, g2pHistogram, searchingChart, fieldStrip, flowPanel } from './charts';
+import { arrivalsChart, legendItems, COMPONENT_LABELS, g2pHistogram, searchingChart, fieldStrip, flowPanel } from './charts';
 import { candidateRows, legendFactors, weightsDrawer, operatorActions } from './panels';
 import { pctChange, RunSummary } from '../core/metrics';
 import { mean, percentile } from '../core/rng';
@@ -33,7 +33,7 @@ export function renderForecast(force = false) {
   const s = sim.scn;
   const f = sim.forecast;
   const a = store.assumptions;
-  const wBig = chartWidth('fc-occ', 760);
+  const wHalf = chartWidth('fc-occ', 1200);
   const wArr = chartWidth('fc-arr', 520);
   const signals: [string, string][] = [];
   signals.push(['Cinema attendance', s.cinema ? `${clockFromMin(s.cinema.showtimeMin)} screening · ${s.cinema.tickets} tickets sold` : 'No major screening in this window']);
@@ -195,13 +195,8 @@ export function renderForecast(force = false) {
       <p class="fine">Expected cars for each lift are split evenly across the three levels, the same rule the guidance score uses. Cars already guided to a zone are taken off its free bays.</p>
     </section>
     <section class="card span2 flow-card">
-      <div class="card-h"><h3>Arrivals and departures</h3><span class="fine">Last half hour measured, next half hour forecast, in 5-minute windows</span></div>
-      <div id="fc-occ" class="flow">${flowPanel(sim, f, { w: wBig, h: 230, id: 'fc' })}</div>
-      <div class="fc-sum fc-sum-2">
-        <div><span class="muted">Peak in the next hour</span><b class="teal">${isFinite(peak) ? Math.round(peak * 100) + '%' : '–'}</b>${cur && prev5 ? delta(cur.peak * 100, prev5.peak * 100, ' pts') : ''}</div>
-        <div><span class="muted">Arrivals in 30 min, change</span><b class="teal">${f ? Math.round(f.arr30.intent) : '–'}</b>${f && prev5 ? delta(f.arr30.intent, prev5.arr30) : ''}</div>
-        <div><span class="muted">95% full (history + intent)</span><b class="teal">${f && f.fillMin.intent !== null ? clockLabel(s, sim.t + f.fillMin.intent * 60, false) : 'Not within 60 min'}</b><span class="delta">History alone: ${f && f.fillMin.hist !== null ? clockLabel(s, sim.t + f.fillMin.hist * 60, false) : 'not within 60 min'}</span></div>
-      </div>
+      <div class="card-h"><h3>Parking occupancy</h3><span class="fine">Vehicle movement in 5-minute windows, next 30 minutes</span></div>
+      <div id="fc-occ" class="flow">${flowPanel(sim, f, { w: wHalf, h: 230, id: 'fc' })}</div>
     </section>
     <section class="card">
       <div class="card-h"><h3>Is it right?</h3>${tag('sim', 'After outcome')}</div>
