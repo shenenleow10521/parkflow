@@ -1,0 +1,157 @@
+<title>ParkFlow Command Centre</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Predictive parking command centre prototype. KL East Mall pilot concept, illustrative layout, simulated data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+<style>
+/*__CSS__*/
+</style>
+<div class="app" id="app">
+  <header class="hdr">
+    <div class="brand">
+      <svg class="mark" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="7" fill="#2f6fe0"/><rect x="3.5" y="3.5" width="29" height="29" rx="5" fill="none" stroke="#fff" stroke-width="1.6" opacity=".9"/><path d="M13 27V9.5h6.4a5.4 5.4 0 0 1 0 10.8H13" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/></svg>
+      <div class="brand-t">
+        <div class="wordmark">ParkFlow <span class="brand-sub">Command centre</span></div>
+        <div class="pilot" title="Not the real floor plan, not an approved partnership and not a deployed system.">KL East Mall pilot concept · Illustrative layout · Simulated data</div>
+      </div>
+    </div>
+    <div class="hdr-clock">
+      <span class="simbadge" id="simbadge" title="Everything on this screen comes from a simulation, not live sensors."><i class="pulse" aria-hidden="true"></i>Simulation</span>
+      <span class="clock"><span id="clock">–</span><small>MYT</small></span>
+      <span class="phase" id="phase"></span>
+    </div>
+    <div class="hdr-ctl">
+      <label class="sel"><span class="sr">Scenario</span><select id="scenario" aria-label="Scenario"></select></label>
+      <div class="transport" role="group" aria-label="Simulation playback">
+        <button type="button" class="btn btn-play" id="play" aria-label="Pause simulation"></button>
+        <button type="button" class="icon-btn" id="reset" aria-label="Reset scenario" title="Reset scenario">
+          <svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+        <div class="seg seg-speed" id="speed" role="group" aria-label="Simulation speed"></div>
+      </div>
+      <button type="button" class="btn" id="run-compare"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><path d="M11 18H8a2 2 0 0 1-2-2V9"/></svg><span>Run comparison</span></button>
+      <button type="button" class="btn btn-primary" id="present" title="Presentation mode: a 90-second guided walkthrough"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><polygon points="10 7 15 10 10 13"/></svg><span>Present</span></button>
+    </div>
+  </header>
+  <nav class="rail" id="rail" aria-label="Sections"></nav>
+  <main class="main" id="main">
+    <section class="kpis" id="kpis" aria-label="Key indicators"></section>
+
+    <section class="view ov" id="view-overview" aria-label="Overview">
+      <div class="stage">
+        <div class="viewport" id="viewport">
+          <canvas id="scene" aria-label="Interactive 3D model of the car park. Drag to orbit, shift-drag to pan, scroll to zoom, click a vehicle or bay to select it."></canvas>
+          <div class="vp-labels" id="vp-labels" aria-hidden="true"></div>
+          <div class="vp-tip" id="vp-tip" hidden></div>
+          <div class="vp-tl">
+            <div class="seg seg-glass" id="floor-seg" role="group" aria-label="Floors">
+              <button type="button" data-floorview="all">All floors</button><button type="button" data-floorview="0">B1</button><button type="button" data-floorview="1">B2</button><button type="button" data-floorview="2">B3</button>
+            </div>
+            <button type="button" class="chip-btn" id="plan-toggle" aria-pressed="false" title="Top-down 2D plan of one floor"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><path d="M9 3v15M15 6v15"/></svg>2D plan</button>
+            <div class="layers">
+              <button type="button" class="chip-btn" id="layers-btn" aria-expanded="false" aria-controls="layers-pop"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>Layers</button>
+              <div class="layers-pop" id="layers-pop" hidden>
+                <label class="sw-row"><input type="checkbox" data-layer="lights"><span class="sw-ui" aria-hidden="true"></span><span><b>Bay lights</b><small>Indicator above every bay and ceiling lighting</small></span></label>
+                <label class="sw-row"><input type="checkbox" data-layer="route"><span class="sw-ui" aria-hidden="true"></span><span><b>Guidance route</b><small>Path for the selected car</small></span></label>
+                <label class="sw-row"><input type="checkbox" data-layer="cctv"><span class="sw-ui" aria-hidden="true"></span><span><b>Camera coverage</b><small>Illustrative bay-sensing cameras</small></span></label>
+                <label class="sw-row"><input type="checkbox" data-layer="autoRotate"><span class="sw-ui" aria-hidden="true"></span><span><b>Slow orbit</b><small>Rotates the model when idle</small></span></label>
+              </div>
+            </div>
+          </div>
+          <div class="vp-tr">
+            <button type="button" class="chip-btn" id="focus-btn"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M22 12h-4M6 12H2M12 6V2M12 22v-4"/></svg><span id="focus-label">Follow selected</span></button>
+            <button type="button" class="chip-btn" id="reset-cam" title="Reset camera"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/></svg><span class="lbl-wide">Reset view</span></button>
+          </div>
+          <div class="vp-legend" id="legend">
+            <button type="button" class="legend-toggle" id="legend-toggle" aria-expanded="false" aria-controls="legend-body"><span class="lg-dots" aria-hidden="true"><i style="--c:var(--led-free)"></i><i style="--c:var(--led-taken)"></i><i style="--c:var(--led-leaving)"></i><i style="--c:var(--led-held)"></i></span>Legend</button>
+            <div class="legend-body" id="legend-body">
+              <div class="lg-col">
+                <span class="lg-h">Light above each bay</span>
+                <span><i class="led-dot" style="--c:var(--led-free)"></i>Free</span>
+                <span><i class="led-dot" style="--c:var(--led-taken)"></i>Taken</span>
+                <span><i class="led-dot blink" style="--c:var(--led-leaving)"></i>Likely leaving soon</span>
+                <span><i class="led-dot" style="--c:var(--led-held)"></i>Held for a booking</span>
+                <span><i class="led-dot" style="--c:var(--led-oku)"></i>Accessible, free</span>
+                <span><i class="led-dot" style="--c:var(--led-ev)"></i>EV charging, free</span>
+              </div>
+              <div class="lg-col">
+                <span class="lg-h">Painted stripe at the bay end</span>
+                <span><i class="bt" style="background:#4cc3ea"></i>EV charging</span>
+                <span><i class="bt" style="background:#6aa8ff"></i>Accessible (OKU)</span>
+                <span><i class="bt" style="background:#f19bbb"></i>Family</span>
+                <span><i class="bt" style="background:#e9d27c"></i>Designated member</span>
+                <span><i class="bt hatch"></i>Hatched: closed or camera unsure</span>
+              </div>
+              <div class="lg-col">
+                <span class="lg-h">Ring under a moving car</span>
+                <span><i class="vr" style="--c:#2dd4bf"></i>Guided, searching</span>
+                <span><i class="vr" style="--c:#f5a524"></i>Searching over 5 min</span>
+                <span><i class="vr" style="--c:#a78bfa"></i>Heading to a booked bay</span>
+                <span><i class="vr" style="--c:#ffffff"></i>Selected</span>
+                <span class="lg-h lg-h2">Pillar bands</span>
+                <span class="lg-zones"><i style="background:var(--zone-a)"></i>A <i style="background:var(--zone-b)"></i>B <i style="background:var(--zone-c)"></i>C</span>
+              </div>
+            </div>
+          </div>
+          <div class="vp-hint" aria-hidden="true">Click a car or bay for details. Drag to rotate, shift-drag to move, scroll to zoom.</div>
+          <div class="fallback" id="fallback" hidden></div>
+        </div>
+        <aside class="phone" id="phone" aria-label="Driver app preview">
+          <button type="button" class="chip-btn phone-toggle" id="phone-toggle" aria-expanded="true" aria-controls="phone-screen">
+            <svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            <span>Driver app</span>
+            <svg class="ic chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="phone-frame">
+            <div class="phone-bar"><span class="ph-app"><i aria-hidden="true">P</i>Mall app parking</span><span class="ph-sim">Simulated</span></div>
+            <div class="phone-screen" id="phone-screen"></div>
+          </div>
+        </aside>
+      </div>
+
+      <aside class="aside">
+        <section class="board" id="board" aria-labelledby="board-title">
+          <div class="board-h">
+            <h2 id="board-title">Bays free by level</h2>
+            <span class="board-total" id="board-total"></span>
+          </div>
+          <div class="board-rows" id="floors-body"></div>
+          <div class="board-key" aria-label="Bar key"><span><i class="s-occ"></i>Taken</span><span><i class="s-dep"></i>Leaving</span><span><i class="s-res"></i>Held</span><span><i class="s-spf"></i>Special</span><span><i class="s-gen"></i>Free</span></div>
+        </section>
+        <div class="status" id="banner" role="status" aria-live="polite"></div>
+        <section class="inspector" id="side">
+          <div class="tabs" id="side-tabs" role="tablist" aria-label="Details">
+            <button type="button" role="tab" data-tab="vehicle" aria-selected="true">Selected vehicle</button>
+            <button type="button" role="tab" data-tab="reasoning" aria-selected="false">Why this bay</button>
+            <button type="button" role="tab" data-tab="actions" aria-selected="false">Operator actions</button>
+          </div>
+          <div class="side-body" id="side-body" role="tabpanel"></div>
+        </section>
+      </aside>
+
+      <div class="dock">
+        <section class="panel" id="card-chart">
+          <div class="card-h"><h3>Occupancy and forecast</h3><span class="tags"><span class="tag tag-now">Live</span><span class="tag tag-fc">Forecast</span></span></div>
+          <div id="chart-legend"></div>
+          <div class="chart-box grow" id="chart-occ"></div>
+        </section>
+        <section class="panel" id="card-events">
+          <div class="card-h"><h3>What just happened</h3><div class="filters" id="event-filters" role="group" aria-label="Filter events"></div></div>
+          <ul class="events" id="events-list" aria-live="off"></ul>
+        </section>
+      </div>
+    </section>
+
+    <section class="view page" id="view-forecast" aria-label="Forecast" hidden></section>
+    <section class="view page" id="view-allocation" aria-label="Allocation" hidden></section>
+    <section class="view page" id="view-reservations" aria-label="Reservations" hidden></section>
+    <section class="view page" id="view-impact" aria-label="Impact" hidden></section>
+  </main>
+  <div class="pres" id="pres" hidden role="dialog" aria-label="Presentation walkthrough"><div id="pres-body"></div></div>
+  <div class="modal" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="welcome-title"><div class="modal-card" id="welcome-card"></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+<script>
+/*__JS__*/
+</script>

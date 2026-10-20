@@ -1,0 +1,14 @@
+{
+  "name": "parkflow",
+  "version": "1.0.0",
+  "description": "ParkFlow: predictive mall parking command centre and driver app (KL East Mall pilot concept, simulated data)",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "test:operator": "python3 tools/functional.py",
+    "test:driver": "python3 tools/driver_flow.py /tmp/parkflow-driver-shots"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true
+}

@@ -1,0 +1,9 @@
+# build output (regenerate with: node tools/build.mjs)
+build/
+dist/app.js
+dist/driver.js
+dist/test.html
+dist/test-driver.html
+node_modules/
+__pycache__/
+.DS_Store
