@@ -97,8 +97,11 @@ with sync_playwright() as p:
     while time.time() - t0 < 60 and 'has left' not in pg.inner_text('#tab-car'):
         pg.wait_for_timeout(800)
     check('car leaves after paying', 'has left' in pg.inner_text('#tab-car'))
-    # reserve: member bay is locked for non-members; EV needs a declaration unless the car is electric
+    # reserve: Ladies' parking needs a declaration unless it is on in the account; member bays are locked for non-members
     pg.click('#tabbar [data-tab="reserve"]'); pg.wait_for_timeout(700)
+    pg.click('[data-act="res-type"][data-type="ladies"]'); pg.wait_for_timeout(400)
+    check("Ladies' parking asks for a declaration", 'I am a woman driver' in pg.inner_text('#tab-reserve'))
+    pg.screenshot(path=str(out / '13-ladies.png'))
     pg.click('[data-act="res-type"][data-type="member"]'); pg.wait_for_timeout(400)
     check('member bay locked for non-members', 'Members only' in pg.inner_text('#tab-reserve'))
     pg.click('[data-act="profile"]'); pg.wait_for_timeout(400); pg.click('[data-act="member-toggle"]'); pg.wait_for_timeout(200); pg.keyboard.press('Escape'); pg.wait_for_timeout(500)

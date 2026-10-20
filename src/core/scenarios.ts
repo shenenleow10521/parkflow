@@ -3,14 +3,14 @@
 // the forecast never reads them directly and relies on its own editable assumptions instead.
 
 import { Rng, hash01 } from './rng';
-import { Layout, BayType, DestId, DESTINATIONS } from './layout';
+import { Layout, BayType, BookableType, DestId, DESTINATIONS } from './layout';
 
 export type Source = 'routine' | 'cinema' | 'dining' | 'event' | 'offer';
 export type ScenarioId = 'normal' | 'surge' | 'cinema' | 'noshow' | 'pressure';
 
 export interface ReservationDef {
   id: string;
-  type: 'ev' | 'family' | 'member';
+  type: BookableType;
   windowStartMin: number; // minutes after scenario start
   windowLenMin: number;
   durationMin: number;
@@ -61,8 +61,8 @@ export const SCENARIOS: ScenarioDef[] = [
     destMix: { cinema: 0.15, grocer: 0.35, atrium: 0.35, family: 0.15 },
     offer: { name: 'Weekday 2 free hours after 2 pm', outstanding: 180, redeemPerHour: 14, trueCarShare: 0.9 },
     reservations: [
-      { id: 'R-11', type: 'ev', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 4 },
-      { id: 'R-12', type: 'family', windowStartMin: 30, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 6 }
+      { id: 'R-11', type: 'member', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 4 },
+      { id: 'R-12', type: 'ladies', windowStartMin: 30, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 6 }
     ],
     comingShare: 0.2
   },
@@ -86,9 +86,8 @@ export const SCENARIOS: ScenarioDef[] = [
     offer: { name: 'Weekend dining: 2 hours free parking', outstanding: 240, redeemPerHour: 12, trueCarShare: 0.9 },
     reservations: [
       { id: 'R-01', type: 'member', windowStartMin: 5, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 3 },
-      { id: 'R-02', type: 'ev', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 },
-      { id: 'R-03', type: 'family', windowStartMin: 20, windowLenMin: 15, durationMin: 150, noShow: false, arriveOffsetMin: 7 },
-      { id: 'R-04', type: 'ev', windowStartMin: 30, windowLenMin: 15, durationMin: 75, noShow: false, arriveOffsetMin: 2 }
+      { id: 'R-02', type: 'member', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 },
+      { id: 'R-03', type: 'ladies', windowStartMin: 20, windowLenMin: 15, durationMin: 150, noShow: false, arriveOffsetMin: 7 }
     ],
     comingShare: 0.24
   },
@@ -112,7 +111,7 @@ export const SCENARIOS: ScenarioDef[] = [
     dining: { slots: [{ min: 19 * 60, covers: 70 }, { min: 19 * 60 + 30, covers: 60 }], trueCarShare: 0.55, trueParty: 2.7 },
     reservations: [
       { id: 'R-21', type: 'member', windowStartMin: 25, windowLenMin: 15, durationMin: 180, noShow: false, arriveOffsetMin: 5 },
-      { id: 'R-22', type: 'ev', windowStartMin: 40, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 }
+      { id: 'R-22', type: 'ladies', windowStartMin: 40, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 }
     ],
     comingShare: 0.24
   },
@@ -133,10 +132,10 @@ export const SCENARIOS: ScenarioDef[] = [
     memberIndexSignal: 1.0,
     destMix: { cinema: 0.08, grocer: 0.4, atrium: 0.37, family: 0.15 },
     reservations: [
-      { id: 'R-31', type: 'ev', windowStartMin: 5, windowLenMin: 15, durationMin: 60, noShow: true, arriveOffsetMin: 0 },
-      { id: 'R-32', type: 'family', windowStartMin: 10, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 5 },
+      { id: 'R-31', type: 'ladies', windowStartMin: 5, windowLenMin: 15, durationMin: 60, noShow: true, arriveOffsetMin: 0 },
+      { id: 'R-32', type: 'ladies', windowStartMin: 10, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 5 },
       { id: 'R-33', type: 'member', windowStartMin: 20, windowLenMin: 15, durationMin: 120, noShow: true, arriveOffsetMin: 0 },
-      { id: 'R-34', type: 'ev', windowStartMin: 35, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 3 }
+      { id: 'R-34', type: 'member', windowStartMin: 35, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 3 }
     ],
     comingShare: 0.2
   },
@@ -160,7 +159,7 @@ export const SCENARIOS: ScenarioDef[] = [
     offer: { name: 'Weekend dining: 2 hours free parking', outstanding: 260, redeemPerHour: 20, trueCarShare: 0.9 },
     reservations: [
       { id: 'R-41', type: 'member', windowStartMin: 10, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 },
-      { id: 'R-42', type: 'ev', windowStartMin: 25, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 }
+      { id: 'R-42', type: 'ladies', windowStartMin: 25, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 }
     ],
     comingShare: 0.26
   }
@@ -228,13 +227,14 @@ function durationFor(rng: Rng, dest: DestId): number {
 
 /** Share of visiting cars whose driver is an opted-in rewards member. */
 export const MEMBER_SHARE = 0.16;
+/** Share of visiting cars driven by a woman who has Ladies' parking switched on (illustrative assumption). */
+export const LADIES_SHARE = 0.2;
 
 function eligibility(rng: Rng, dest: DestId): { cls: 'ice' | 'ev'; elig: BayType[]; member: boolean } {
   const cls: 'ice' | 'ev' = rng.chance(0.12) ? 'ev' : 'ice';
   const elig: BayType[] = ['general'];
-  if (cls === 'ev') elig.push('ev');
   if (rng.chance(0.03)) elig.push('oku');
-  if (rng.chance(dest === 'family' ? 0.14 : 0.04)) elig.push('family');
+  if (rng.chance(LADIES_SHARE)) elig.push('ladies');
   const member = rng.chance(MEMBER_SHARE);
   if (member) elig.push('member');
   return { cls, elig, member };
@@ -283,8 +283,8 @@ export function generateDemand(s: ScenarioDef, L: Layout): Demand {
     arrivals.push({
       key: `res-${r.id}`,
       arrivalT: (r.windowStartMin + r.arriveOffsetMin) * 60,
-      dest: r.type === 'family' ? 'family' : r.type === 'member' ? 'atrium' : 'grocer',
-      cls: r.type === 'ev' ? 'ev' : 'ice',
+      dest: r.type === 'member' ? 'atrium' : 'grocer',
+      cls: 'ice',
       elig,
       member: r.type === 'member',
       source: 'routine',
@@ -308,7 +308,7 @@ export function generateDemand(s: ScenarioDef, L: Layout): Demand {
     }
     let p = s.initialOcc;
     if (bay.type === 'oku') p = Math.min(0.75, s.initialOcc);
-    if (bay.type !== 'general' && bay.type !== 'oku') p = s.initialOcc * 0.8;
+    if (bay.type !== 'general' && bay.type !== 'oku') p = s.initialOcc * 0.6;
     // Bays nearest the lifts on B1 fill first in reality
     if (bay.floor === 0) p = Math.min(0.97, p + 0.1);
     if (bay.floor === 2) p = Math.max(0.05, p - 0.12);
@@ -322,7 +322,7 @@ export function generateDemand(s: ScenarioDef, L: Layout): Demand {
     initial.push({
       bay: bay.idx,
       remainingS: occRng.range(4, 170) * 60,
-      cls: bay.type === 'ev' || occRng.chance(0.1) ? 'ev' : 'ice',
+      cls: occRng.chance(0.1) ? 'ev' : 'ice',
       elig,
       member,
       dest

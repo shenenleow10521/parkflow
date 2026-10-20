@@ -4,7 +4,7 @@ import { store, persist, FieldObs } from './store';
 import { $, esc, setHTML, fmtPct, fmtSecs, fmtDist, fmtNum, icon, tag, signed } from './dom';
 import { Sim } from '../core/sim';
 import { ASSUMPTION_META, DEFAULT_ASSUMPTIONS, ForecastAssumptions } from '../core/forecast';
-import { BAY_TYPE_LABEL, FLOOR_NAMES, ZONES, DEST_BY_ID, DESTINATIONS } from '../core/layout';
+import { BAY_TYPE_LABEL, FLOOR_NAMES, ZONES, DEST_BY_ID, DESTINATIONS, BOOKABLE_TYPES } from '../core/layout';
 import { clockLabel, clockFromMin, SCENARIO_BY_ID } from '../core/scenarios';
 import { arrivalsChart, legendItems, COMPONENT_LABELS, g2pHistogram, searchingChart, fieldStrip, flowPanel, memberLivePanel, memberHistoryPanel } from './charts';
 import { candidateRows, legendFactors, weightsDrawer, operatorActions } from './panels';
@@ -136,7 +136,7 @@ export function renderForecast(force = false) {
   if (f && f.fillMin.intent !== null) {
     const fillAt = sim.t + f.fillMin.intent * 60;
     dHead = `“Nearly full by ${clockLabel(s, fillAt, false)}”`;
-    dBody = f.fillMin.intent > 20 ? `Drivers are told to come before ${clockLabel(s, fillAt - 15 * 60, false)} or book an EV, family or member bay.` : 'Drivers are told to expect a short wait; guidance sends them to the next free zone.';
+    dBody = f.fillMin.intent > 20 ? `Drivers are told to come before ${clockLabel(s, fillAt - 15 * 60, false)} or book a Ladies' parking or designated member bay.` : 'Drivers are told to expect a short wait; guidance sends them to the next free zone.';
   } else if (peak >= 0.85) {
     dHead = '“Getting busy”';
     dBody = `The app shows about ${Math.round(peak * 100)}% full at the busiest point in the next hour.`;
@@ -324,13 +324,14 @@ export function renderReservations(force = false) {
   if (!force && pageFocused(root)) return;
   const sim = store.sim;
   const s = sim.scn;
-  const types = ['ev', 'family', 'member'] as const;
+  const types = BOOKABLE_TYPES;
+  const who: Record<string, string> = { ladies: 'For women drivers, next to the lift.', member: 'For opted-in rewards members.' };
   const inv = types
     .map((t) => {
       const q = sim.bookable(t);
-      return `<div class="inv"><div class="inv-h">${icon(t === 'ev' ? 'zap' : t === 'family' ? 'family' : 'star', 16)} ${esc(BAY_TYPE_LABEL[t])}</div>
+      return `<div class="inv inv-${t}"><div class="inv-h">${icon(t === 'ladies' ? 'ladies' : 'star', 16)} ${esc(BAY_TYPE_LABEL[t])}</div>
         <div class="inv-n"><b>${q.bookable}</b><span>bookable now</span></div>
-        <div class="inv-s">${q.total} bays · ${q.occupied} occupied · ${q.held} held · ${q.free} free${q.outOfService ? ` · ${q.outOfService} charger out of service` : ''}</div></div>`;
+        <div class="inv-s">${q.total} bays, ${q.occupied} occupied, ${q.held} held, ${q.free} free. ${who[t]}</div></div>`;
     })
     .join('');
   const oku = sim.L.bays.filter((b) => b.type === 'oku');
@@ -349,25 +350,24 @@ export function renderReservations(force = false) {
       return `<tr><td><b>${esc(r.id)}</b>${r.userCreated ? ' <span class="fine">(you)</span>' : ''}</td><td>${esc(BAY_TYPE_LABEL[r.type])}</td><td><button type="button" class="linkbtn" data-act="select-bay" data-id="${r.bay}">${esc(b.id)}</button></td><td>${clockLabel(s, r.windowStart, false)}–${clockLabel(s, r.windowEnd, false)}</td><td>${Math.round(r.durationS / 60)} min</td><td>${graceTxt}</td><td>${statusChip(r.status)}</td><td class="btns">${btns}</td></tr>`;
     })
     .join('');
-  const evBays = sim.L.bays.filter((b) => b.type === 'ev');
-  const evRows = evBays
+  const ladiesBays = sim.L.bays.filter((b) => b.type === 'ladies');
+  const ladiesRows = ladiesBays
     .map((b) => {
-      const o = sim.occ[b.idx] >= 0 ? sim.vehicles[sim.occ[b.idx]] : null;
-      let ch = '<span class="pill pill-teal">Available</span>';
-      if (b.charger === 'out') ch = '<span class="pill pill-crit">Out of service</span>';
-      else if (o) {
-        const end = Math.min(o.departT, o.parkT + 3600);
-        ch = end > sim.t ? `<span class="pill pill-slate">In use · ends ≈ ${clockLabel(s, end, false)}</span>` : '<span class="pill pill-warn">Session done · still parked</span>';
-      } else if (sim.hold[b.idx]) ch = `<span class="pill pill-res">Held for ${esc(sim.hold[b.idx] as string)}</span>`;
-      const parking = o ? 'Occupied' : sim.hold[b.idx] ? 'Reserved' : 'Vacant';
-      return `<tr><td><button type="button" class="linkbtn" data-act="select-bay" data-id="${b.idx}">${esc(b.id)}</button></td><td>${parking}</td><td>${ch}</td></tr>`;
+      const st = sim.bayStatus(b.idx);
+      const ch =
+        st === 'available' ? '<span class="pill pill-teal">Free</span>'
+        : st === 'reserved' ? `<span class="pill pill-res">Held for ${esc(sim.hold[b.idx] as string)}</span>`
+        : st === 'departing' ? '<span class="pill pill-warn">Paid, leaving soon</span>'
+        : st === 'unavailable' ? '<span class="pill pill-crit">Closed</span>'
+        : '<span class="pill pill-slate">Taken</span>';
+      return `<tr><td><button type="button" class="linkbtn" data-act="select-bay" data-id="${b.idx}">${esc(b.id)}</button></td><td>${FLOOR_NAMES[b.floor]}, Zone ${b.zone}</td><td>${ch}</td><td class="num">${b.walk[b.zone]} m</td></tr>`;
     })
     .join('');
   const confirmed = sim.reservations.filter((r) => r.status === 'confirmed').length;
   const ns = store.noShowRate;
   const html = `
   <div class="page-head">
-    <div><h2>Special-bay reservations</h2><p class="lede">General parking stays guidance-only. EV, family and designated member bays can be reserved within capacity. Accessible bays are protected, not sold.</p></div>
+    <div><h2>Special-bay reservations</h2><p class="lede">General parking stays guidance-only. Ladies' parking and designated member bays can be reserved within capacity. Accessible (OKU) bays are protected, not sold.</p></div>
     <div class="tags">${tag('now')} ${tag('sim', 'Simulated bookings')}</div>
   </div>
   <div class="inv-row">${inv}${invOku}</div>
@@ -380,10 +380,10 @@ export function renderReservations(force = false) {
     <section class="card">
       <div class="card-h"><h3>New reservation</h3>${tag('sim', 'Simulated')}</div>
       <form class="form" id="res-form" novalidate>
-        <label><span>Bay type</span><select id="res-type" data-draft="resType">${types.map((t) => `<option value="${t}" ${(store.drafts.resType || 'ev') === t ? 'selected' : ''}>${esc(BAY_TYPE_LABEL[t])}</option>`).join('')}</select></label>
+        <label><span>Bay type</span><select id="res-type" data-draft="resType">${types.map((t) => `<option value="${t}" ${(store.drafts.resType || 'ladies') === t ? 'selected' : ''}>${esc(BAY_TYPE_LABEL[t])}</option>`).join('')}</select></label>
         <label><span>Arrival window starts in</span><select id="res-start" data-draft="resStart">${[10, 20, 30, 45].map((m) => `<option value="${m}" ${(store.drafts.resStart || '20') === String(m) ? 'selected' : ''}>${m} min (${clockLabel(s, sim.t + m * 60, false)})</option>`).join('')}</select></label>
         <label><span>Expected duration</span><select id="res-dur" data-draft="resDur">${[60, 90, 120, 180].map((m) => `<option value="${m}" ${(store.drafts.resDur || '90') === String(m) ? 'selected' : ''}>${m} min</option>`).join('')}</select></label>
-        <label class="check"><input type="checkbox" id="res-elig" data-draft="resElig" ${store.drafts.resElig === '1' ? 'checked' : ''}> <span>The driver is eligible for this bay type (EV, registered family pass, or opted-in member)</span></label>
+        <label class="check"><input type="checkbox" id="res-elig" data-draft="resElig" ${store.drafts.resElig === '1' ? 'checked' : ''}> <span>The driver is eligible for this bay type (a woman driver for Ladies' parking, an opted-in member for designated member bays)</span></label>
         <p class="fine">Window length 15 minutes · grace period 10 minutes · overbooking disabled.</p>
         <button type="submit" class="btn btn-primary btn-sm">${icon('check', 14)} Reserve</button>
       </form>
@@ -394,13 +394,13 @@ export function renderReservations(force = false) {
       <ul class="plain">
         <li>Guaranteed reservations never exceed free bays of the type, and one bay per type is kept for eligible walk-in drivers.</li>
         <li>The no-show rate is not used to overbook. It sets expectations: of ${confirmed} open holds, about ${fmtNum(confirmed * (1 - ns), 1)} are expected to check in and ${fmtNum(confirmed * ns, 1)} to be released at expiry.</li>
-        <li>Expired holds return to their own inventory (EV to EV, family to family, member to member), never to general parking.</li>
+        <li>Expired holds return to their own inventory (Ladies' parking to Ladies' parking, member to member), never to general parking.</li>
       </ul>
     </section>
     <section class="card">
-      <div class="card-h"><h3>EV chargers</h3>${tag('now')}</div>
-      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Bay</th><th>Parking</th><th>Charger</th></tr></thead><tbody>${evRows}</tbody></table></div>
-      <p class="fine">A vacant EV bay does not guarantee charging: one charger is out of service, and finished sessions can still block a charger.</p>
+      <div class="card-h"><h3>Ladies' parking</h3>${tag('now')}</div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Bay</th><th>Where</th><th>Status</th><th class="num">Walk to lift</th></tr></thead><tbody>${ladiesRows}</tbody></table></div>
+      <p class="fine">For women drivers. The bays sit beside the lift so the walk is short and in view. Eligibility is self-declared in the app; staff may check at the bay.</p>
     </section>
     <section class="card">
       <div class="card-h"><h3>Accessible-bay assistance</h3></div>

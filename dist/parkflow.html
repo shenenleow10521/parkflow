@@ -41,7 +41,7 @@
   --led-leaving: #ffb21f;
   --led-held: #b48cff;
   --led-oku: #4d94ff;
-  --led-ev: #3fd6ff;
+  --led-ladies: #ff6fb8;
   --go: #3ddc84;
   --go-soft: rgba(61, 220, 132, 0.12);
   --amber: #ffb22e;
@@ -636,7 +636,7 @@ input[type="checkbox"] { accent-color: var(--sign); }
 .rec-list { margin: 0 0 10px; padding: 0; list-style: none; display: grid; gap: 5px; font-size: 13px; }
 .rec-list li { display: flex; gap: 6px; align-items: flex-start; }
 .rec-list .ic { color: var(--amber); margin-top: 2px; }
-.inv-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.inv-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
 .inv { background: var(--deck); padding: 11px 14px; }
 .inv-h { font-weight: 600; font-size: 13.5px; display: flex; align-items: center; gap: 6px; }
 .inv-n { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; }
@@ -644,6 +644,8 @@ input[type="checkbox"] { accent-color: var(--sign); }
 .inv-n span { font-size: 12.5px; color: var(--fog); }
 .inv-s { font-size: 12px; color: var(--fog); margin-top: 2px; }
 .inv-oku { background: repeating-linear-gradient(135deg, #172234 0 8px, #152030 8px 16px); }
+.inv-ladies .inv-h .ic { color: #f19bbb; }
+.inv-member .inv-h .ic { color: var(--mem); }
 .form { display: flex; flex-direction: column; gap: 9px; }
 .form label { display: flex; flex-direction: column; gap: 3px; font-size: 12.5px; color: var(--fog); font-weight: 600; min-width: 0; }
 .form input:not([type="checkbox"]):not([type="file"]), .form select, .form textarea {
@@ -883,7 +885,7 @@ kbd { font-family: var(--font-num); font-size: 12px; background: var(--deck-3); 
 }
 @media (max-width: 1180px) {
   .lbl-wide { display: none; }
-  .inv-row, .big-cmp { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .big-cmp { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (max-width: 1080px) {
   .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1011,13 +1013,12 @@ kbd { font-family: var(--font-num); font-size: 12px; background: var(--deck-3); 
                 <span><i class="led-dot blink" style="--c:var(--led-leaving)"></i>Likely leaving soon</span>
                 <span><i class="led-dot" style="--c:var(--led-held)"></i>Held for a booking</span>
                 <span><i class="led-dot" style="--c:var(--led-oku)"></i>Accessible, free</span>
-                <span><i class="led-dot" style="--c:var(--led-ev)"></i>EV charging, free</span>
+                <span><i class="led-dot" style="--c:var(--led-ladies)"></i>Ladies' parking, free</span>
               </div>
               <div class="lg-col">
                 <span class="lg-h">Painted stripe at the bay end</span>
-                <span><i class="bt" style="background:#4cc3ea"></i>EV charging</span>
                 <span><i class="bt" style="background:#6aa8ff"></i>Accessible (OKU)</span>
-                <span><i class="bt" style="background:#f19bbb"></i>Family</span>
+                <span><i class="bt" style="background:#f19bbb"></i>Ladies' parking</span>
                 <span><i class="bt" style="background:#e9d27c"></i>Designated member</span>
                 <span><i class="bt hatch"></i>Hatched: closed or camera unsure</span>
               </div>
@@ -1167,6 +1168,7 @@ function mean(values) {
 // Illustrative three-level car park layout (not the real KL East Mall plan).
 // World units are metres. x runs along the building, z across it, floors are stacked below ground.
 
+const BOOKABLE_TYPES = ['ladies', 'member'];
 const FLOOR_NAMES = ['B1', 'B2', 'B3'];
 const FLOORS = [0, 1, 2];
 const ZONES = ['A', 'B', 'C'];
@@ -1187,7 +1189,7 @@ const DESTINATIONS = [
     { id: 'cinema', label: 'Cinema', lift: 'C' },
     { id: 'grocer', label: 'Supermarket', lift: 'A' },
     { id: 'atrium', label: 'Main atrium', lift: 'B' },
-    { id: 'family', label: 'Ice rink & family', lift: 'A' }
+    { id: 'family', label: 'Ice rink', lift: 'A' }
 ];
 const DEST_BY_ID = {
     cinema: DESTINATIONS[0],
@@ -1197,35 +1199,34 @@ const DEST_BY_ID = {
 };
 const BAY_TYPE_LABEL = {
     general: 'General',
-    ev: 'EV charging',
     oku: 'Accessible (OKU)',
-    family: 'Family',
-    member: 'Designated member'
+    member: 'Designated member',
+    ladies: "Ladies' parking"
 };
-/** Lower-case form for running text that keeps acronyms (EV, OKU) intact. */
+/** How a zone's special inventory is named after the zone, e.g. "B1 Zone A Ladies' parking". */
+const BAY_ZONE_SUFFIX = { general: '', oku: 'accessible (OKU) bays', member: 'member bays', ladies: "Ladies' parking" };
+/** Lower-case form for running text that keeps acronyms (OKU) and proper terms intact. */
 function typeText(t) {
-    return { general: 'general', ev: 'EV charging', oku: 'accessible (OKU)', family: 'family', member: 'designated member' }[t];
+    return { general: 'general', oku: 'accessible (OKU)', member: 'designated member', ladies: "Ladies' parking" }[t];
 }
 function specialType(floor, zone, row, col) {
     if (floor === 0) {
         if (row === 1 && ((zone === 'A' && col === 3) || (zone === 'B' && (col === 2 || col === 3)) || (zone === 'C' && col === 3)))
             return 'oku';
         if (zone === 'A' && row === 0 && col >= 2 && col <= 4)
-            return 'family';
+            return 'ladies';
         if (zone === 'C' && row === 2 && col >= 2 && col <= 4)
             return 'member';
     }
     if (floor === 1) {
         if (zone === 'A' && row === 1 && col >= 2 && col <= 4)
-            return 'family';
+            return 'ladies';
         if (zone === 'C' && row === 1 && col >= 2 && col <= 4)
             return 'member';
-        if (zone === 'B' && row === 2 && col >= 1 && col <= 4)
-            return 'ev';
     }
     if (floor === 2) {
-        if (zone === 'B' && row === 1 && (col === 2 || col === 3))
-            return 'ev';
+        if (zone === 'A' && row === 1 && col >= 2 && col <= 4)
+            return 'ladies';
     }
     return 'general';
 }
@@ -1341,8 +1342,7 @@ function buildLayout() {
                     const flag = bayFlag(f, zone, row, col);
                     const h = hash01(id);
                     const confidence = flag === 'obstructed' ? 0.42 + h * 0.12 : flag === 'maintenance' ? 1 : 0.93 + h * 0.06;
-                    const charger = type === 'ev' ? (f === 2 && col === 3 ? 'out' : 'ok') : null;
-                    const bay = { idx: bays.length, id, floor: f, zone, row, col, x, z, type, edge, accessS, walk, flag, confidence, charger };
+                    const bay = { idx: bays.length, id, floor: f, zone, row, col, x, z, type, edge, accessS, walk, flag, confidence };
                     bays.push(bay);
                     e.bays.push(bay.idx);
                 }
@@ -1436,8 +1436,8 @@ const SCENARIOS = [
         destMix: { cinema: 0.15, grocer: 0.35, atrium: 0.35, family: 0.15 },
         offer: { name: 'Weekday 2 free hours after 2 pm', outstanding: 180, redeemPerHour: 14, trueCarShare: 0.9 },
         reservations: [
-            { id: 'R-11', type: 'ev', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 4 },
-            { id: 'R-12', type: 'family', windowStartMin: 30, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 6 }
+            { id: 'R-11', type: 'member', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 4 },
+            { id: 'R-12', type: 'ladies', windowStartMin: 30, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 6 }
         ],
         comingShare: 0.2
     },
@@ -1461,9 +1461,8 @@ const SCENARIOS = [
         offer: { name: 'Weekend dining: 2 hours free parking', outstanding: 240, redeemPerHour: 12, trueCarShare: 0.9 },
         reservations: [
             { id: 'R-01', type: 'member', windowStartMin: 5, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 3 },
-            { id: 'R-02', type: 'ev', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 },
-            { id: 'R-03', type: 'family', windowStartMin: 20, windowLenMin: 15, durationMin: 150, noShow: false, arriveOffsetMin: 7 },
-            { id: 'R-04', type: 'ev', windowStartMin: 30, windowLenMin: 15, durationMin: 75, noShow: false, arriveOffsetMin: 2 }
+            { id: 'R-02', type: 'member', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 },
+            { id: 'R-03', type: 'ladies', windowStartMin: 20, windowLenMin: 15, durationMin: 150, noShow: false, arriveOffsetMin: 7 }
         ],
         comingShare: 0.24
     },
@@ -1487,7 +1486,7 @@ const SCENARIOS = [
         dining: { slots: [{ min: 19 * 60, covers: 70 }, { min: 19 * 60 + 30, covers: 60 }], trueCarShare: 0.55, trueParty: 2.7 },
         reservations: [
             { id: 'R-21', type: 'member', windowStartMin: 25, windowLenMin: 15, durationMin: 180, noShow: false, arriveOffsetMin: 5 },
-            { id: 'R-22', type: 'ev', windowStartMin: 40, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 }
+            { id: 'R-22', type: 'ladies', windowStartMin: 40, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 }
         ],
         comingShare: 0.24
     },
@@ -1508,10 +1507,10 @@ const SCENARIOS = [
         memberIndexSignal: 1.0,
         destMix: { cinema: 0.08, grocer: 0.4, atrium: 0.37, family: 0.15 },
         reservations: [
-            { id: 'R-31', type: 'ev', windowStartMin: 5, windowLenMin: 15, durationMin: 60, noShow: true, arriveOffsetMin: 0 },
-            { id: 'R-32', type: 'family', windowStartMin: 10, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 5 },
+            { id: 'R-31', type: 'ladies', windowStartMin: 5, windowLenMin: 15, durationMin: 60, noShow: true, arriveOffsetMin: 0 },
+            { id: 'R-32', type: 'ladies', windowStartMin: 10, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 5 },
             { id: 'R-33', type: 'member', windowStartMin: 20, windowLenMin: 15, durationMin: 120, noShow: true, arriveOffsetMin: 0 },
-            { id: 'R-34', type: 'ev', windowStartMin: 35, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 3 }
+            { id: 'R-34', type: 'member', windowStartMin: 35, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 3 }
         ],
         comingShare: 0.2
     },
@@ -1535,7 +1534,7 @@ const SCENARIOS = [
         offer: { name: 'Weekend dining: 2 hours free parking', outstanding: 260, redeemPerHour: 20, trueCarShare: 0.9 },
         reservations: [
             { id: 'R-41', type: 'member', windowStartMin: 10, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 },
-            { id: 'R-42', type: 'ev', windowStartMin: 25, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 }
+            { id: 'R-42', type: 'ladies', windowStartMin: 25, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 }
         ],
         comingShare: 0.26
     }
@@ -1573,15 +1572,15 @@ function durationFor(rng, dest) {
 }
 /** Share of visiting cars whose driver is an opted-in rewards member. */
 const MEMBER_SHARE = 0.16;
+/** Share of visiting cars driven by a woman who has Ladies' parking switched on (illustrative assumption). */
+const LADIES_SHARE = 0.2;
 function eligibility(rng, dest) {
     const cls = rng.chance(0.12) ? 'ev' : 'ice';
     const elig = ['general'];
-    if (cls === 'ev')
-        elig.push('ev');
     if (rng.chance(0.03))
         elig.push('oku');
-    if (rng.chance(dest === 'family' ? 0.14 : 0.04))
-        elig.push('family');
+    if (rng.chance(LADIES_SHARE))
+        elig.push('ladies');
     const member = rng.chance(MEMBER_SHARE);
     if (member)
         elig.push('member');
@@ -1636,8 +1635,8 @@ function generateDemand(s, L) {
         arrivals.push({
             key: `res-${r.id}`,
             arrivalT: (r.windowStartMin + r.arriveOffsetMin) * 60,
-            dest: r.type === 'family' ? 'family' : r.type === 'member' ? 'atrium' : 'grocer',
-            cls: r.type === 'ev' ? 'ev' : 'ice',
+            dest: r.type === 'member' ? 'atrium' : 'grocer',
+            cls: 'ice',
             elig,
             member: r.type === 'member',
             source: 'routine',
@@ -1663,7 +1662,7 @@ function generateDemand(s, L) {
         if (bay.type === 'oku')
             p = Math.min(0.75, s.initialOcc);
         if (bay.type !== 'general' && bay.type !== 'oku')
-            p = s.initialOcc * 0.8;
+            p = s.initialOcc * 0.6;
         // Bays nearest the lifts on B1 fill first in reality
         if (bay.floor === 0)
             p = Math.min(0.97, p + 0.1);
@@ -1682,7 +1681,7 @@ function generateDemand(s, L) {
         initial.push({
             bay: bay.idx,
             remainingS: occRng.range(4, 170) * 60,
-            cls: bay.type === 'ev' || occRng.chance(0.1) ? 'ev' : 'ice',
+            cls: occRng.chance(0.1) ? 'ev' : 'ice',
             elig,
             member,
             dest
@@ -1722,7 +1721,7 @@ function zoneLabel(floor, zone, inv) {
     const base = `${FLOOR_NAMES[floor]} Zone ${zone}`;
     if (!inv || inv === 'general')
         return base;
-    return `${base} ${BAY_TYPE_LABEL[inv].replace(' charging', '').replace('Designated ', '')} bays`;
+    return `${base} ${BAY_ZONE_SUFFIX[inv]}`;
 }
 function dijkstraFrom(L, from, weight) {
     const n = L.nodes.length;
@@ -1882,7 +1881,7 @@ function allocate(ctx, v, fromNode, fromLabel) {
     };
 }
 function driverMessage(c, lift, mode) {
-    const where = c.inv === 'general' ? `Zone ${c.zone}` : `Zone ${c.zone} ${BAY_TYPE_LABEL[c.inv].replace(' charging', '').replace('Designated ', '').toLowerCase()} bays`;
+    const where = c.inv === 'general' ? `Zone ${c.zone}` : `Zone ${c.zone} ${BAY_ZONE_SUFFIX[c.inv]}`;
     const base = `Proceed to ${FLOOR_NAMES[c.floor]} · ${where} · Follow signs to Lift ${lift}.`;
     if (mode === 'expected-departure')
         return `${base} No bay is free yet; departures are expected there.`;
@@ -1923,7 +1922,7 @@ function explain(c, pool, lift, mode, ctx) {
                 parts.push(`${alt.label} scores slightly lower overall (${alt.total.toFixed(2)} vs ${c.total.toFixed(2)})`);
         }
         else if (c.inv !== 'general') {
-            parts.push(`it uses the ${BAY_TYPE_LABEL[c.inv].toLowerCase()} inventory this driver is eligible for`);
+            parts.push(`it uses the ${typeText(c.inv)} inventory this driver is eligible for`);
         }
         else if (alt.congestion > c.congestion + 1) {
             parts.push(`its approach is clearer than ${alt.label} (${Math.round(c.congestion)} vs ${Math.round(alt.congestion)} vehicles)`);
@@ -2206,7 +2205,7 @@ class Sim {
             initialByBay.set(s.bay, s);
         for (const r of this.scn.reservations) {
             const candidates = L.bays
-                .filter((b) => b.type === r.type && b.flag === 'none' && (b.type !== 'ev' || b.charger === 'ok') && !this.hold[b.idx])
+                .filter((b) => b.type === r.type && b.flag === 'none' && !this.hold[b.idx])
                 .sort((a, b) => (initialByBay.has(a.idx) ? 1 : 0) - (initialByBay.has(b.idx) ? 1 : 0) || hash01(r.id + a.id) - hash01(r.id + b.id));
             const bay = candidates[0];
             if (!bay)
@@ -3119,7 +3118,6 @@ class Sim {
     }
     bookable(type) {
         const bays = this.L.bays.filter((b) => b.type === type && b.flag !== 'maintenance');
-        const outOfService = bays.filter((b) => b.charger === 'out').length;
         let occupied = 0;
         let held = 0;
         let free = 0;
@@ -3128,17 +3126,17 @@ class Sim {
                 occupied++;
             else if (this.hold[b.idx])
                 held++;
-            else if (b.charger !== 'out')
+            else
                 free++;
         }
         const buffer = 1; // protected walk-in buffer: never book the last free bay of a type
-        return { total: bays.length, outOfService, occupied, held, free, buffer, bookable: Math.max(0, free - buffer) };
+        return { total: bays.length, occupied, held, free, buffer, bookable: Math.max(0, free - buffer) };
     }
     createReservation(type, startInMin, durationMin) {
         const q = this.bookable(type);
         if (q.bookable < 1)
             return { ok: false, error: `No ${typeText(type)} bay can be guaranteed: ${q.free} free, ${q.buffer} kept for walk-in eligible drivers. Overbooking is disabled.` };
-        const bay = this.L.bays.find((b) => b.type === type && this.isFree(b.idx) && b.charger !== 'out');
+        const bay = this.L.bays.find((b) => b.type === type && this.isFree(b.idx));
         if (!bay)
             return { ok: false, error: 'No suitable bay is free.' };
         const n = this.reservations.filter((r) => r.userCreated).length + 1;
@@ -3162,8 +3160,8 @@ class Sim {
         const v = this.newVehicle({
             key: `user-${r.id}`,
             arrivalT: r.windowStart + 180,
-            dest: type === 'family' ? 'family' : 'atrium',
-            cls: type === 'ev' ? 'ev' : 'ice',
+            dest: 'atrium',
+            cls: 'ice',
             elig: ['general', type],
             member: type === 'member',
             durationS: r.durationS,
@@ -3184,7 +3182,7 @@ class Sim {
             return 'This reservation can no longer be checked in.';
         let v = r.vehicle >= 0 ? this.vehicles[r.vehicle] : null;
         if (!v) {
-            v = this.newVehicle({ key: `walkup-${r.id}`, dest: 'atrium', elig: ['general', r.type], cls: r.type === 'ev' ? 'ev' : 'ice', member: r.type === 'member', durationS: r.durationS, resId: r.id, source: 'demo', injected: true });
+            v = this.newVehicle({ key: `walkup-${r.id}`, dest: 'atrium', elig: ['general', r.type], cls: 'ice', member: r.type === 'member', durationS: r.durationS, resId: r.id, source: 'demo', injected: true });
             r.vehicle = v.i;
         }
         if (v.state !== 'pending')
@@ -3441,6 +3439,7 @@ const P = {
     zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
     oku: '<circle cx="16" cy="4" r="1"/><path d="m18 19 1-7-6 1"/><path d="m5 8 3-3 5.5 3-2.36 3.5"/><path d="M4.24 14.5a5 5 0 0 0 6.88 6"/><path d="M13.76 17.5a5 5 0 0 0-6.88-6"/>',
     family: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+    ladies: '<circle cx="12" cy="8.5" r="5.5"/><path d="M12 14v8M8.5 18.5h7"/>',
     star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
     clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
     phone: '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>',
@@ -3558,7 +3557,7 @@ const store = {
     emission: loadJSON('parkflow.emission', { factorKgPerKm: 0.18, peakPeriodsPerYear: 104, offPeakPeriodsPerYear: 520 }),
     noShowRate: loadJSON('parkflow.noshow', { v: 0.15 }).v,
     field: loadArray('parkflow.field'),
-    driver: { collapsed: true, autoOpen: true, dest: 'atrium', ev: false, family: false, member: false },
+    driver: { collapsed: true, autoOpen: true, dest: 'atrium', ladies: false, member: false },
     eventFilter: 'all',
     layers: loadJSON('parkflow.layers', { lights: true, cctv: false, route: true, autoRotate: false }),
     pendingAction: null,
@@ -3658,14 +3657,13 @@ const C = {
     route: '#5eead4',
     label: '#e8eef6',
     labelDim: 'rgba(214, 226, 240, 0.65)',
-    typeEv: '#4cc3ea',
     typeOku: '#6aa8ff',
-    typeFamily: '#f19bbb',
+    typeLadies: '#f19bbb',
     typeMember: '#e9d27c',
     zoneHi: 'rgba(94, 234, 212, 0.16)',
     zoneHiLine: 'rgba(94, 234, 212, 0.75)'
 };
-const TYPE_COLOR = { ev: C.typeEv, oku: C.typeOku, family: C.typeFamily, member: C.typeMember };
+const TYPE_COLOR = { oku: C.typeOku, ladies: C.typeLadies, member: C.typeMember };
 function hexToRgb(hex) {
     const h = hex.replace('#', '');
     return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
@@ -4553,18 +4551,7 @@ class Scene3D {
 function drawTypeGlyph(ctx, type, s) {
     ctx.fillStyle = 'rgba(255,255,255,0.95)';
     ctx.strokeStyle = 'rgba(255,255,255,0.95)';
-    if (type === 'ev') {
-        ctx.beginPath();
-        ctx.moveTo(s * 0.15, -s * 0.6);
-        ctx.lineTo(-s * 0.35, s * 0.08);
-        ctx.lineTo(-s * 0.02, s * 0.08);
-        ctx.lineTo(-s * 0.15, s * 0.6);
-        ctx.lineTo(s * 0.35, -s * 0.08);
-        ctx.lineTo(s * 0.02, -s * 0.08);
-        ctx.closePath();
-        ctx.fill();
-    }
-    else if (type === 'oku') {
+    if (type === 'oku') {
         ctx.beginPath();
         ctx.arc(s * 0.05, -s * 0.5, s * 0.14, 0, Math.PI * 2);
         ctx.fill();
@@ -4578,15 +4565,18 @@ function drawTypeGlyph(ctx, type, s) {
         ctx.lineTo(s * 0.5, s * 0.45);
         ctx.stroke();
     }
-    else if (type === 'family') {
+    else if (type === 'ladies') {
+        // female sign: ring with a cross below
+        ctx.lineWidth = Math.max(1.5, s * 0.12);
         ctx.beginPath();
-        ctx.arc(-s * 0.25, -s * 0.25, s * 0.18, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.arc(0, -s * 0.18, s * 0.3, 0, Math.PI * 2);
+        ctx.stroke();
         ctx.beginPath();
-        ctx.arc(s * 0.28, -s * 0.05, s * 0.13, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillRect(-s * 0.4, -s * 0.02, s * 0.3, s * 0.55);
-        ctx.fillRect(s * 0.18, s * 0.12, s * 0.2, s * 0.4);
+        ctx.moveTo(0, s * 0.12);
+        ctx.lineTo(0, s * 0.62);
+        ctx.moveTo(-s * 0.2, s * 0.4);
+        ctx.lineTo(s * 0.2, s * 0.4);
+        ctx.stroke();
     }
     else if (type === 'member') {
         ctx.beginPath();
@@ -5009,16 +4999,15 @@ const GC = {
     reserved: rgbOf('#6a54bd'),
     departing: rgbOf('#b97c27'),
     hatch: rgbOf('#555c67'),
-    typeEv: rgbOf('#2bb7e6'),
     typeOku: rgbOf('#3d7cf0'),
-    typeFamily: rgbOf('#ef7fa9'),
+    typeLadies: rgbOf('#ef7fa9'),
     typeMember: rgbOf('#e3c35a'),
     ledFree: rgbOf('#2bff88'),
     ledTaken: rgbOf('#ff3344'),
     ledLeaving: rgbOf('#ffae1a'),
     ledHeld: rgbOf('#a77bff'),
     ledOku: rgbOf('#3d8bff'),
-    ledEv: rgbOf('#38d6ff'),
+    ledLadies: rgbOf('#ff6fb8'),
     ringSearch: rgbOf('#2dd4bf'),
     ringSlow: rgbOf('#f5a524'),
     ringRes: rgbOf('#a78bfa'),
@@ -5026,7 +5015,7 @@ const GC = {
     route: rgbOf('#38e1c8'),
     fog: rgbOf('#121a26')
 };
-const GL_TYPE_COL = { ev: GC.typeEv, oku: GC.typeOku, family: GC.typeFamily, member: GC.typeMember };
+const GL_TYPE_COL = { oku: GC.typeOku, ladies: GC.typeLadies, member: GC.typeMember };
 class GLScene {
     constructor(canvas, labels, tip) {
         this.ok = true;
@@ -6054,7 +6043,7 @@ class GLScene {
             if (store.layers.lights && st !== 'unavailable') {
                 let lc;
                 if (st === 'available')
-                    lc = b.type === 'oku' ? GC.ledOku : b.type === 'ev' ? GC.ledEv : b.type === 'member' ? GC.ledHeld : GC.ledFree;
+                    lc = b.type === 'oku' ? GC.ledOku : b.type === 'ladies' ? GC.ledLadies : b.type === 'member' ? GC.ledHeld : GC.ledFree;
                 else if (st === 'reserved')
                     lc = GC.ledHeld;
                 else if (st === 'departing') {
@@ -6715,7 +6704,7 @@ function flowPanel(sim, f, o) {
     const iw = W - m.l - m.r, ih = H - m.t - m.b;
     const vmax = Math.max(5, ...wins.map((w) => Math.max(w.arr, w.dep)));
     const ticks = niceTicks(0, vmax, o.compact ? 2 : 4);
-    const ymax = Math.max(vmax, ticks[ticks.length - 1]);
+    const ymax = Math.max(o.compact ? vmax * 1.3 : vmax, ticks[ticks.length - 1]);
     const y = (v) => m.t + ih - (v / ymax) * ih;
     const gw = iw / wins.length;
     const bw = Math.min(o.compact ? 16 : 30, gw * 0.3);
@@ -7181,19 +7170,6 @@ function bayDetail(idx) {
         resTxt = `${res.id} · ${res.status}${res.status === 'confirmed' ? ` · window ${window}, held until ${clockLabel(sim.scn, res.windowEnd + res.grace, false)}` : res.status === 'expired' ? ` at ${clockLabel(sim.scn, res.closedT, false)} · released to ${typeText(res.type)} inventory` : ''}`;
     }
     const conf = b.flag === 'obstructed' ? `${Math.round(b.confidence * 100)}% · camera view obstructed, status uncertain` : b.flag === 'maintenance' ? 'Manually flagged out of use' : `${Math.round(b.confidence * 100)}% · clear view (simulated)`;
-    let charger = '';
-    if (b.type === 'ev') {
-        let cs = 'Charger available';
-        if (b.charger === 'out')
-            cs = 'Charger out of service: parking possible, charging not available';
-        else if (o && sim.occ[idx] >= 0) {
-            const end = Math.min(o.departT, o.parkT + 3600);
-            cs = end > sim.t ? `Charging session in use · expected end ${clockLabel(sim.scn, end, false)}` : 'Session complete · vehicle still parked (charger idle but blocked)';
-        }
-        else if (st === 'reserved')
-            cs = 'Held for an EV reservation';
-        charger = `<div class="wide"><dt>EV charger</dt><dd>${esc(cs)}</dd></div>`;
-    }
     const walks = ZONES.map((z) => `Lift ${z}: ${b.walk[z]} m`).join(' · ');
     return `<div class="sel-head"><span class="code">${esc(b.id)}</span><span class="pill pill-${st}">${esc(stLabel[st])}</span>${tag('now')}</div>
     <dl class="facts">
@@ -7202,7 +7178,6 @@ function bayDetail(idx) {
       <div><dt>Occupancy</dt><dd>${o ? `${esc(o.code)}${o.initial ? ' (parked before scenario start)' : ''}` : 'Empty'}</dd></div>
       <div><dt>Observation confidence</dt><dd>${esc(conf)}</dd></div>
       <div class="wide"><dt>Reservation</dt><dd>${esc(resTxt)}</dd></div>
-      ${charger}
       <div class="wide"><dt>Walking distance</dt><dd>${walks}</dd></div>
     </dl>
     ${st === 'departing' ? `<p class="notice">${icon('clock', 14)} A payment signals a likely departure. The bay stays occupied until the vehicle has actually left.</p>` : ''}
@@ -7540,10 +7515,8 @@ function phoneForVehicle(sim, v) {
 function phonePlan(sim) {
     const d = store.driver;
     const elig = ['general'];
-    if (d.ev)
-        elig.push('ev');
-    if (d.family)
-        elig.push('family');
+    if (d.ladies)
+        elig.push('ladies');
     if (d.member)
         elig.push('member');
     const c = sim.counts();
@@ -7551,8 +7524,8 @@ function phonePlan(sim) {
     const lift = DEST_BY_ID[d.dest].lift;
     const f = sim.forecast;
     const dist = a.chosen ? a.chosen.drive + 20 : NaN;
-    const resOpts = ['ev', 'family', 'member']
-        .filter((t) => (t === 'ev' && d.ev) || (t === 'family' && d.family) || (t === 'member' && d.member))
+    const resOpts = BOOKABLE_TYPES
+        .filter((t) => d[t])
         .map((t) => {
         const q = sim.bookable(t);
         return `<li>${esc(BAY_TYPE_LABEL[t])}: <b>${q.bookable}</b> bookable now <button type="button" class="linkbtn" data-go="reservations">Reserve</button></li>`;
@@ -7562,8 +7535,7 @@ function phonePlan(sim) {
     return `<div class="ph-who">Plan a visit</div>
     <label class="ph-field"><span>Going to</span><select data-act="driver-dest" id="driver-dest">${DESTINATIONS.map((x) => `<option value="${x.id}" ${x.id === d.dest ? 'selected' : ''}>${esc(x.label)}</option>`).join('')}</select></label>
     <div class="ph-toggles">
-      <label><input type="checkbox" data-act="driver-flag" data-flag="ev" id="drv-ev" ${d.ev ? 'checked' : ''}> EV</label>
-      <label><input type="checkbox" data-act="driver-flag" data-flag="family" id="drv-family" ${d.family ? 'checked' : ''}> Family pass</label>
+      <label><input type="checkbox" data-act="driver-flag" data-flag="ladies" id="drv-ladies" ${d.ladies ? 'checked' : ''}> Ladies' parking</label>
       <label><input type="checkbox" data-act="driver-flag" data-flag="member" id="drv-member" ${d.member ? 'checked' : ''}> Member</label>
     </div>
     <div class="ph-cap"><b>${c.generalFree}</b> general bays free now <span class="muted">(B1 ${c.perFloor[0].generalFree} · B2 ${c.perFloor[1].generalFree} · B3 ${c.perFloor[2].generalFree})</span></div>
@@ -7715,7 +7687,7 @@ function renderForecast(force = false) {
     if (f && f.fillMin.intent !== null) {
         const fillAt = sim.t + f.fillMin.intent * 60;
         dHead = `“Nearly full by ${clockLabel(s, fillAt, false)}”`;
-        dBody = f.fillMin.intent > 20 ? `Drivers are told to come before ${clockLabel(s, fillAt - 15 * 60, false)} or book an EV, family or member bay.` : 'Drivers are told to expect a short wait; guidance sends them to the next free zone.';
+        dBody = f.fillMin.intent > 20 ? `Drivers are told to come before ${clockLabel(s, fillAt - 15 * 60, false)} or book a Ladies' parking or designated member bay.` : 'Drivers are told to expect a short wait; guidance sends them to the next free zone.';
     }
     else if (peak >= 0.85) {
         dHead = '“Getting busy”';
@@ -7898,13 +7870,14 @@ function renderReservations(force = false) {
         return;
     const sim = store.sim;
     const s = sim.scn;
-    const types = ['ev', 'family', 'member'];
+    const types = BOOKABLE_TYPES;
+    const who = { ladies: 'For women drivers, next to the lift.', member: 'For opted-in rewards members.' };
     const inv = types
         .map((t) => {
         const q = sim.bookable(t);
-        return `<div class="inv"><div class="inv-h">${icon(t === 'ev' ? 'zap' : t === 'family' ? 'family' : 'star', 16)} ${esc(BAY_TYPE_LABEL[t])}</div>
+        return `<div class="inv inv-${t}"><div class="inv-h">${icon(t === 'ladies' ? 'ladies' : 'star', 16)} ${esc(BAY_TYPE_LABEL[t])}</div>
         <div class="inv-n"><b>${q.bookable}</b><span>bookable now</span></div>
-        <div class="inv-s">${q.total} bays · ${q.occupied} occupied · ${q.held} held · ${q.free} free${q.outOfService ? ` · ${q.outOfService} charger out of service` : ''}</div></div>`;
+        <div class="inv-s">${q.total} bays, ${q.occupied} occupied, ${q.held} held, ${q.free} free. ${who[t]}</div></div>`;
     })
         .join('');
     const oku = sim.L.bays.filter((b) => b.type === 'oku');
@@ -7923,28 +7896,23 @@ function renderReservations(force = false) {
         return `<tr><td><b>${esc(r.id)}</b>${r.userCreated ? ' <span class="fine">(you)</span>' : ''}</td><td>${esc(BAY_TYPE_LABEL[r.type])}</td><td><button type="button" class="linkbtn" data-act="select-bay" data-id="${r.bay}">${esc(b.id)}</button></td><td>${clockLabel(s, r.windowStart, false)}–${clockLabel(s, r.windowEnd, false)}</td><td>${Math.round(r.durationS / 60)} min</td><td>${graceTxt}</td><td>${statusChip(r.status)}</td><td class="btns">${btns}</td></tr>`;
     })
         .join('');
-    const evBays = sim.L.bays.filter((b) => b.type === 'ev');
-    const evRows = evBays
+    const ladiesBays = sim.L.bays.filter((b) => b.type === 'ladies');
+    const ladiesRows = ladiesBays
         .map((b) => {
-        const o = sim.occ[b.idx] >= 0 ? sim.vehicles[sim.occ[b.idx]] : null;
-        let ch = '<span class="pill pill-teal">Available</span>';
-        if (b.charger === 'out')
-            ch = '<span class="pill pill-crit">Out of service</span>';
-        else if (o) {
-            const end = Math.min(o.departT, o.parkT + 3600);
-            ch = end > sim.t ? `<span class="pill pill-slate">In use · ends ≈ ${clockLabel(s, end, false)}</span>` : '<span class="pill pill-warn">Session done · still parked</span>';
-        }
-        else if (sim.hold[b.idx])
-            ch = `<span class="pill pill-res">Held for ${esc(sim.hold[b.idx])}</span>`;
-        const parking = o ? 'Occupied' : sim.hold[b.idx] ? 'Reserved' : 'Vacant';
-        return `<tr><td><button type="button" class="linkbtn" data-act="select-bay" data-id="${b.idx}">${esc(b.id)}</button></td><td>${parking}</td><td>${ch}</td></tr>`;
+        const st = sim.bayStatus(b.idx);
+        const ch = st === 'available' ? '<span class="pill pill-teal">Free</span>'
+            : st === 'reserved' ? `<span class="pill pill-res">Held for ${esc(sim.hold[b.idx])}</span>`
+                : st === 'departing' ? '<span class="pill pill-warn">Paid, leaving soon</span>'
+                    : st === 'unavailable' ? '<span class="pill pill-crit">Closed</span>'
+                        : '<span class="pill pill-slate">Taken</span>';
+        return `<tr><td><button type="button" class="linkbtn" data-act="select-bay" data-id="${b.idx}">${esc(b.id)}</button></td><td>${FLOOR_NAMES[b.floor]}, Zone ${b.zone}</td><td>${ch}</td><td class="num">${b.walk[b.zone]} m</td></tr>`;
     })
         .join('');
     const confirmed = sim.reservations.filter((r) => r.status === 'confirmed').length;
     const ns = store.noShowRate;
     const html = `
   <div class="page-head">
-    <div><h2>Special-bay reservations</h2><p class="lede">General parking stays guidance-only. EV, family and designated member bays can be reserved within capacity. Accessible bays are protected, not sold.</p></div>
+    <div><h2>Special-bay reservations</h2><p class="lede">General parking stays guidance-only. Ladies' parking and designated member bays can be reserved within capacity. Accessible (OKU) bays are protected, not sold.</p></div>
     <div class="tags">${tag('now')} ${tag('sim', 'Simulated bookings')}</div>
   </div>
   <div class="inv-row">${inv}${invOku}</div>
@@ -7957,10 +7925,10 @@ function renderReservations(force = false) {
     <section class="card">
       <div class="card-h"><h3>New reservation</h3>${tag('sim', 'Simulated')}</div>
       <form class="form" id="res-form" novalidate>
-        <label><span>Bay type</span><select id="res-type" data-draft="resType">${types.map((t) => `<option value="${t}" ${(store.drafts.resType || 'ev') === t ? 'selected' : ''}>${esc(BAY_TYPE_LABEL[t])}</option>`).join('')}</select></label>
+        <label><span>Bay type</span><select id="res-type" data-draft="resType">${types.map((t) => `<option value="${t}" ${(store.drafts.resType || 'ladies') === t ? 'selected' : ''}>${esc(BAY_TYPE_LABEL[t])}</option>`).join('')}</select></label>
         <label><span>Arrival window starts in</span><select id="res-start" data-draft="resStart">${[10, 20, 30, 45].map((m) => `<option value="${m}" ${(store.drafts.resStart || '20') === String(m) ? 'selected' : ''}>${m} min (${clockLabel(s, sim.t + m * 60, false)})</option>`).join('')}</select></label>
         <label><span>Expected duration</span><select id="res-dur" data-draft="resDur">${[60, 90, 120, 180].map((m) => `<option value="${m}" ${(store.drafts.resDur || '90') === String(m) ? 'selected' : ''}>${m} min</option>`).join('')}</select></label>
-        <label class="check"><input type="checkbox" id="res-elig" data-draft="resElig" ${store.drafts.resElig === '1' ? 'checked' : ''}> <span>The driver is eligible for this bay type (EV, registered family pass, or opted-in member)</span></label>
+        <label class="check"><input type="checkbox" id="res-elig" data-draft="resElig" ${store.drafts.resElig === '1' ? 'checked' : ''}> <span>The driver is eligible for this bay type (a woman driver for Ladies' parking, an opted-in member for designated member bays)</span></label>
         <p class="fine">Window length 15 minutes · grace period 10 minutes · overbooking disabled.</p>
         <button type="submit" class="btn btn-primary btn-sm">${icon('check', 14)} Reserve</button>
       </form>
@@ -7971,13 +7939,13 @@ function renderReservations(force = false) {
       <ul class="plain">
         <li>Guaranteed reservations never exceed free bays of the type, and one bay per type is kept for eligible walk-in drivers.</li>
         <li>The no-show rate is not used to overbook. It sets expectations: of ${confirmed} open holds, about ${fmtNum(confirmed * (1 - ns), 1)} are expected to check in and ${fmtNum(confirmed * ns, 1)} to be released at expiry.</li>
-        <li>Expired holds return to their own inventory (EV to EV, family to family, member to member), never to general parking.</li>
+        <li>Expired holds return to their own inventory (Ladies' parking to Ladies' parking, member to member), never to general parking.</li>
       </ul>
     </section>
     <section class="card">
-      <div class="card-h"><h3>EV chargers</h3>${tag('now')}</div>
-      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Bay</th><th>Parking</th><th>Charger</th></tr></thead><tbody>${evRows}</tbody></table></div>
-      <p class="fine">A vacant EV bay does not guarantee charging: one charger is out of service, and finished sessions can still block a charger.</p>
+      <div class="card-h"><h3>Ladies' parking</h3>${tag('now')}</div>
+      <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Bay</th><th>Where</th><th>Status</th><th class="num">Walk to lift</th></tr></thead><tbody>${ladiesRows}</tbody></table></div>
+      <p class="fine">For women drivers. The bays sit beside the lift so the walk is short and in view. Eligibility is self-declared in the app; staff may check at the bay.</p>
     </section>
     <section class="card">
       <div class="card-h"><h3>Accessible-bay assistance</h3></div>
@@ -8970,7 +8938,7 @@ function bindEvents() {
                 pageDirty = true;
                 return;
             }
-            const type = (store.drafts.resType || 'ev');
+            const type = (store.drafts.resType || 'ladies');
             const r = sim.createReservation(type, Number(store.drafts.resStart || 20), Number(store.drafts.resDur || 90));
             store.resMsg = r.ok ? `${r.r.id} confirmed. Bay ${sim.L.bays[r.r.bay].id} is held until ${clockOf(r.r.windowEnd + r.r.grace)}.` : r.error;
             if (r.ok)

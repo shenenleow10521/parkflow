@@ -58,8 +58,7 @@
   --zone-a: #2f7cf6;
   --zone-b: #e2b21c;
   --zone-c: #ef6a33;
-  --t-ev: #1fb5d6;
-  --t-family: #e9709c;
+  --t-ladies: #e9709c;
   --t-member: #d9b23a;
   --t-oku: #3d7cf0;
   --map-bg: #e8ecf1;
@@ -239,8 +238,7 @@ b { font-weight: 600; }
 .sp-t { display: flex; flex-direction: column; min-width: 0; }
 .sp-t span { font-size: 13px; color: var(--muted); }
 .sp-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; flex: none; }
-.sp-ev { background: var(--t-ev); }
-.sp-family { background: var(--t-family); }
+.sp-ladies { background: var(--t-ladies); }
 .sp-member { background: var(--t-member); }
 .sp-oku { background: var(--t-oku); }
 
@@ -371,8 +369,7 @@ legend { font-family: var(--font-num); font-size: 17px; font-weight: 600; paddin
 .m-uncertain, .m-unavailable { fill: var(--map-off); }
 .m-mine { stroke: var(--sign); stroke-width: 0.55; }
 .m-type { opacity: 0.95; }
-.m-type-ev { fill: var(--t-ev); }
-.m-type-family { fill: var(--t-family); }
+.m-type-ladies { fill: var(--t-ladies); }
 .m-type-member { fill: var(--t-member); }
 .m-type-oku { fill: var(--t-oku); }
 .m-pcar { fill: var(--map-pcar); }
@@ -703,6 +700,7 @@ function mean(values) {
 // Illustrative three-level car park layout (not the real KL East Mall plan).
 // World units are metres. x runs along the building, z across it, floors are stacked below ground.
 
+const BOOKABLE_TYPES = ['ladies', 'member'];
 const FLOOR_NAMES = ['B1', 'B2', 'B3'];
 const FLOORS = [0, 1, 2];
 const ZONES = ['A', 'B', 'C'];
@@ -723,7 +721,7 @@ const DESTINATIONS = [
     { id: 'cinema', label: 'Cinema', lift: 'C' },
     { id: 'grocer', label: 'Supermarket', lift: 'A' },
     { id: 'atrium', label: 'Main atrium', lift: 'B' },
-    { id: 'family', label: 'Ice rink & family', lift: 'A' }
+    { id: 'family', label: 'Ice rink', lift: 'A' }
 ];
 const DEST_BY_ID = {
     cinema: DESTINATIONS[0],
@@ -733,35 +731,34 @@ const DEST_BY_ID = {
 };
 const BAY_TYPE_LABEL = {
     general: 'General',
-    ev: 'EV charging',
     oku: 'Accessible (OKU)',
-    family: 'Family',
-    member: 'Designated member'
+    member: 'Designated member',
+    ladies: "Ladies' parking"
 };
-/** Lower-case form for running text that keeps acronyms (EV, OKU) intact. */
+/** How a zone's special inventory is named after the zone, e.g. "B1 Zone A Ladies' parking". */
+const BAY_ZONE_SUFFIX = { general: '', oku: 'accessible (OKU) bays', member: 'member bays', ladies: "Ladies' parking" };
+/** Lower-case form for running text that keeps acronyms (OKU) and proper terms intact. */
 function typeText(t) {
-    return { general: 'general', ev: 'EV charging', oku: 'accessible (OKU)', family: 'family', member: 'designated member' }[t];
+    return { general: 'general', oku: 'accessible (OKU)', member: 'designated member', ladies: "Ladies' parking" }[t];
 }
 function specialType(floor, zone, row, col) {
     if (floor === 0) {
         if (row === 1 && ((zone === 'A' && col === 3) || (zone === 'B' && (col === 2 || col === 3)) || (zone === 'C' && col === 3)))
             return 'oku';
         if (zone === 'A' && row === 0 && col >= 2 && col <= 4)
-            return 'family';
+            return 'ladies';
         if (zone === 'C' && row === 2 && col >= 2 && col <= 4)
             return 'member';
     }
     if (floor === 1) {
         if (zone === 'A' && row === 1 && col >= 2 && col <= 4)
-            return 'family';
+            return 'ladies';
         if (zone === 'C' && row === 1 && col >= 2 && col <= 4)
             return 'member';
-        if (zone === 'B' && row === 2 && col >= 1 && col <= 4)
-            return 'ev';
     }
     if (floor === 2) {
-        if (zone === 'B' && row === 1 && (col === 2 || col === 3))
-            return 'ev';
+        if (zone === 'A' && row === 1 && col >= 2 && col <= 4)
+            return 'ladies';
     }
     return 'general';
 }
@@ -877,8 +874,7 @@ function buildLayout() {
                     const flag = bayFlag(f, zone, row, col);
                     const h = hash01(id);
                     const confidence = flag === 'obstructed' ? 0.42 + h * 0.12 : flag === 'maintenance' ? 1 : 0.93 + h * 0.06;
-                    const charger = type === 'ev' ? (f === 2 && col === 3 ? 'out' : 'ok') : null;
-                    const bay = { idx: bays.length, id, floor: f, zone, row, col, x, z, type, edge, accessS, walk, flag, confidence, charger };
+                    const bay = { idx: bays.length, id, floor: f, zone, row, col, x, z, type, edge, accessS, walk, flag, confidence };
                     bays.push(bay);
                     e.bays.push(bay.idx);
                 }
@@ -972,8 +968,8 @@ const SCENARIOS = [
         destMix: { cinema: 0.15, grocer: 0.35, atrium: 0.35, family: 0.15 },
         offer: { name: 'Weekday 2 free hours after 2 pm', outstanding: 180, redeemPerHour: 14, trueCarShare: 0.9 },
         reservations: [
-            { id: 'R-11', type: 'ev', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 4 },
-            { id: 'R-12', type: 'family', windowStartMin: 30, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 6 }
+            { id: 'R-11', type: 'member', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 4 },
+            { id: 'R-12', type: 'ladies', windowStartMin: 30, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 6 }
         ],
         comingShare: 0.2
     },
@@ -997,9 +993,8 @@ const SCENARIOS = [
         offer: { name: 'Weekend dining: 2 hours free parking', outstanding: 240, redeemPerHour: 12, trueCarShare: 0.9 },
         reservations: [
             { id: 'R-01', type: 'member', windowStartMin: 5, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 3 },
-            { id: 'R-02', type: 'ev', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 },
-            { id: 'R-03', type: 'family', windowStartMin: 20, windowLenMin: 15, durationMin: 150, noShow: false, arriveOffsetMin: 7 },
-            { id: 'R-04', type: 'ev', windowStartMin: 30, windowLenMin: 15, durationMin: 75, noShow: false, arriveOffsetMin: 2 }
+            { id: 'R-02', type: 'member', windowStartMin: 15, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 },
+            { id: 'R-03', type: 'ladies', windowStartMin: 20, windowLenMin: 15, durationMin: 150, noShow: false, arriveOffsetMin: 7 }
         ],
         comingShare: 0.24
     },
@@ -1023,7 +1018,7 @@ const SCENARIOS = [
         dining: { slots: [{ min: 19 * 60, covers: 70 }, { min: 19 * 60 + 30, covers: 60 }], trueCarShare: 0.55, trueParty: 2.7 },
         reservations: [
             { id: 'R-21', type: 'member', windowStartMin: 25, windowLenMin: 15, durationMin: 180, noShow: false, arriveOffsetMin: 5 },
-            { id: 'R-22', type: 'ev', windowStartMin: 40, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 }
+            { id: 'R-22', type: 'ladies', windowStartMin: 40, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 }
         ],
         comingShare: 0.24
     },
@@ -1044,10 +1039,10 @@ const SCENARIOS = [
         memberIndexSignal: 1.0,
         destMix: { cinema: 0.08, grocer: 0.4, atrium: 0.37, family: 0.15 },
         reservations: [
-            { id: 'R-31', type: 'ev', windowStartMin: 5, windowLenMin: 15, durationMin: 60, noShow: true, arriveOffsetMin: 0 },
-            { id: 'R-32', type: 'family', windowStartMin: 10, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 5 },
+            { id: 'R-31', type: 'ladies', windowStartMin: 5, windowLenMin: 15, durationMin: 60, noShow: true, arriveOffsetMin: 0 },
+            { id: 'R-32', type: 'ladies', windowStartMin: 10, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 5 },
             { id: 'R-33', type: 'member', windowStartMin: 20, windowLenMin: 15, durationMin: 120, noShow: true, arriveOffsetMin: 0 },
-            { id: 'R-34', type: 'ev', windowStartMin: 35, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 3 }
+            { id: 'R-34', type: 'member', windowStartMin: 35, windowLenMin: 15, durationMin: 90, noShow: false, arriveOffsetMin: 3 }
         ],
         comingShare: 0.2
     },
@@ -1071,7 +1066,7 @@ const SCENARIOS = [
         offer: { name: 'Weekend dining: 2 hours free parking', outstanding: 260, redeemPerHour: 20, trueCarShare: 0.9 },
         reservations: [
             { id: 'R-41', type: 'member', windowStartMin: 10, windowLenMin: 15, durationMin: 120, noShow: false, arriveOffsetMin: 4 },
-            { id: 'R-42', type: 'ev', windowStartMin: 25, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 }
+            { id: 'R-42', type: 'ladies', windowStartMin: 25, windowLenMin: 15, durationMin: 90, noShow: true, arriveOffsetMin: 0 }
         ],
         comingShare: 0.26
     }
@@ -1109,15 +1104,15 @@ function durationFor(rng, dest) {
 }
 /** Share of visiting cars whose driver is an opted-in rewards member. */
 const MEMBER_SHARE = 0.16;
+/** Share of visiting cars driven by a woman who has Ladies' parking switched on (illustrative assumption). */
+const LADIES_SHARE = 0.2;
 function eligibility(rng, dest) {
     const cls = rng.chance(0.12) ? 'ev' : 'ice';
     const elig = ['general'];
-    if (cls === 'ev')
-        elig.push('ev');
     if (rng.chance(0.03))
         elig.push('oku');
-    if (rng.chance(dest === 'family' ? 0.14 : 0.04))
-        elig.push('family');
+    if (rng.chance(LADIES_SHARE))
+        elig.push('ladies');
     const member = rng.chance(MEMBER_SHARE);
     if (member)
         elig.push('member');
@@ -1172,8 +1167,8 @@ function generateDemand(s, L) {
         arrivals.push({
             key: `res-${r.id}`,
             arrivalT: (r.windowStartMin + r.arriveOffsetMin) * 60,
-            dest: r.type === 'family' ? 'family' : r.type === 'member' ? 'atrium' : 'grocer',
-            cls: r.type === 'ev' ? 'ev' : 'ice',
+            dest: r.type === 'member' ? 'atrium' : 'grocer',
+            cls: 'ice',
             elig,
             member: r.type === 'member',
             source: 'routine',
@@ -1199,7 +1194,7 @@ function generateDemand(s, L) {
         if (bay.type === 'oku')
             p = Math.min(0.75, s.initialOcc);
         if (bay.type !== 'general' && bay.type !== 'oku')
-            p = s.initialOcc * 0.8;
+            p = s.initialOcc * 0.6;
         // Bays nearest the lifts on B1 fill first in reality
         if (bay.floor === 0)
             p = Math.min(0.97, p + 0.1);
@@ -1218,7 +1213,7 @@ function generateDemand(s, L) {
         initial.push({
             bay: bay.idx,
             remainingS: occRng.range(4, 170) * 60,
-            cls: bay.type === 'ev' || occRng.chance(0.1) ? 'ev' : 'ice',
+            cls: occRng.chance(0.1) ? 'ev' : 'ice',
             elig,
             member,
             dest
@@ -1258,7 +1253,7 @@ function zoneLabel(floor, zone, inv) {
     const base = `${FLOOR_NAMES[floor]} Zone ${zone}`;
     if (!inv || inv === 'general')
         return base;
-    return `${base} ${BAY_TYPE_LABEL[inv].replace(' charging', '').replace('Designated ', '')} bays`;
+    return `${base} ${BAY_ZONE_SUFFIX[inv]}`;
 }
 function dijkstraFrom(L, from, weight) {
     const n = L.nodes.length;
@@ -1418,7 +1413,7 @@ function allocate(ctx, v, fromNode, fromLabel) {
     };
 }
 function driverMessage(c, lift, mode) {
-    const where = c.inv === 'general' ? `Zone ${c.zone}` : `Zone ${c.zone} ${BAY_TYPE_LABEL[c.inv].replace(' charging', '').replace('Designated ', '').toLowerCase()} bays`;
+    const where = c.inv === 'general' ? `Zone ${c.zone}` : `Zone ${c.zone} ${BAY_ZONE_SUFFIX[c.inv]}`;
     const base = `Proceed to ${FLOOR_NAMES[c.floor]} · ${where} · Follow signs to Lift ${lift}.`;
     if (mode === 'expected-departure')
         return `${base} No bay is free yet; departures are expected there.`;
@@ -1459,7 +1454,7 @@ function explain(c, pool, lift, mode, ctx) {
                 parts.push(`${alt.label} scores slightly lower overall (${alt.total.toFixed(2)} vs ${c.total.toFixed(2)})`);
         }
         else if (c.inv !== 'general') {
-            parts.push(`it uses the ${BAY_TYPE_LABEL[c.inv].toLowerCase()} inventory this driver is eligible for`);
+            parts.push(`it uses the ${typeText(c.inv)} inventory this driver is eligible for`);
         }
         else if (alt.congestion > c.congestion + 1) {
             parts.push(`its approach is clearer than ${alt.label} (${Math.round(c.congestion)} vs ${Math.round(alt.congestion)} vehicles)`);
@@ -1742,7 +1737,7 @@ class Sim {
             initialByBay.set(s.bay, s);
         for (const r of this.scn.reservations) {
             const candidates = L.bays
-                .filter((b) => b.type === r.type && b.flag === 'none' && (b.type !== 'ev' || b.charger === 'ok') && !this.hold[b.idx])
+                .filter((b) => b.type === r.type && b.flag === 'none' && !this.hold[b.idx])
                 .sort((a, b) => (initialByBay.has(a.idx) ? 1 : 0) - (initialByBay.has(b.idx) ? 1 : 0) || hash01(r.id + a.id) - hash01(r.id + b.id));
             const bay = candidates[0];
             if (!bay)
@@ -2655,7 +2650,6 @@ class Sim {
     }
     bookable(type) {
         const bays = this.L.bays.filter((b) => b.type === type && b.flag !== 'maintenance');
-        const outOfService = bays.filter((b) => b.charger === 'out').length;
         let occupied = 0;
         let held = 0;
         let free = 0;
@@ -2664,17 +2658,17 @@ class Sim {
                 occupied++;
             else if (this.hold[b.idx])
                 held++;
-            else if (b.charger !== 'out')
+            else
                 free++;
         }
         const buffer = 1; // protected walk-in buffer: never book the last free bay of a type
-        return { total: bays.length, outOfService, occupied, held, free, buffer, bookable: Math.max(0, free - buffer) };
+        return { total: bays.length, occupied, held, free, buffer, bookable: Math.max(0, free - buffer) };
     }
     createReservation(type, startInMin, durationMin) {
         const q = this.bookable(type);
         if (q.bookable < 1)
             return { ok: false, error: `No ${typeText(type)} bay can be guaranteed: ${q.free} free, ${q.buffer} kept for walk-in eligible drivers. Overbooking is disabled.` };
-        const bay = this.L.bays.find((b) => b.type === type && this.isFree(b.idx) && b.charger !== 'out');
+        const bay = this.L.bays.find((b) => b.type === type && this.isFree(b.idx));
         if (!bay)
             return { ok: false, error: 'No suitable bay is free.' };
         const n = this.reservations.filter((r) => r.userCreated).length + 1;
@@ -2698,8 +2692,8 @@ class Sim {
         const v = this.newVehicle({
             key: `user-${r.id}`,
             arrivalT: r.windowStart + 180,
-            dest: type === 'family' ? 'family' : 'atrium',
-            cls: type === 'ev' ? 'ev' : 'ice',
+            dest: 'atrium',
+            cls: 'ice',
             elig: ['general', type],
             member: type === 'member',
             durationS: r.durationS,
@@ -2720,7 +2714,7 @@ class Sim {
             return 'This reservation can no longer be checked in.';
         let v = r.vehicle >= 0 ? this.vehicles[r.vehicle] : null;
         if (!v) {
-            v = this.newVehicle({ key: `walkup-${r.id}`, dest: 'atrium', elig: ['general', r.type], cls: r.type === 'ev' ? 'ev' : 'ice', member: r.type === 'member', durationS: r.durationS, resId: r.id, source: 'demo', injected: true });
+            v = this.newVehicle({ key: `walkup-${r.id}`, dest: 'atrium', elig: ['general', r.type], cls: 'ice', member: r.type === 'member', durationS: r.durationS, resId: r.id, source: 'demo', injected: true });
             r.vehicle = v.i;
         }
         if (v.state !== 'pending')
@@ -2914,6 +2908,7 @@ const P = {
     zap: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
     oku: '<circle cx="16" cy="4" r="1"/><path d="m18 19 1-7-6 1"/><path d="m5 8 3-3 5.5 3-2.36 3.5"/><path d="M4.24 14.5a5 5 0 0 0 6.88 6"/><path d="M13.76 17.5a5 5 0 0 0-6.88-6"/>',
     family: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
+    ladies: '<circle cx="12" cy="8.5" r="5.5"/><path d="M12 14v8M8.5 18.5h7"/>',
     star: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
     clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
     phone: '<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>',
@@ -3530,8 +3525,8 @@ class FloorMap {
 const POINTS_PER_RM = 100; // redeem: 100 points = RM 1
 const EARN_PER_RM = 10; // earn: 10 points per RM 1 paid in money
 const DEFAULT_GARAGE = [
-    { plate: 'VKL 2026', name: 'My car', ev: false, family: false },
-    { plate: 'WXY 8812', name: 'Family car', ev: false, family: true }
+    { plate: 'VKL 2026', name: 'My car' },
+    { plate: 'WXY 8812', name: 'Second car' }
 ];
 const DEFAULT_ACCOUNT = {
     member: true,
@@ -3546,10 +3541,10 @@ const DEFAULT_ACCOUNT = {
 };
 const ZONE_COLOUR = { A: 'blue', B: 'yellow', C: 'orange' };
 const DEST_ICON = { cinema: 'film', grocer: 'cart', atrium: 'store', family: 'skate' };
-const RES_LABEL = { ev: 'EV charging', family: 'Family', member: 'Member' };
+const RES_LABEL = { ladies: "Ladies' parking", member: 'Designated member' };
+const RES_ICON = { ladies: 'ladies', member: 'star' };
 const RES_ELIG = {
-    ev: 'My car is an electric vehicle and I will charge while parked.',
-    family: 'I have the KL East Mall family pass (child under 12 or a pram).',
+    ladies: "I am a woman driver. Staff may check at the bay.",
     member: 'I am a KL East Mall member with designated parking.'
 };
 // Extra pictograms for the driver app (Lucide-style strokes, 24×24).
@@ -3598,7 +3593,7 @@ const app = {
     resMsg: '',
     resErr: false,
     assistMsg: '',
-    resDraft: { type: 'ev', inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
+    resDraft: { type: 'ladies', inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
     plan: { dest: 'cinema', eta: 10, plate: '' },
     profile: loadJSON('parkflow.driver.v2', { pace: 4 }),
     garage: loadJSON('parkflow.garage', DEFAULT_GARAGE.map((c) => ({ ...c }))),
@@ -3654,12 +3649,10 @@ function myRes() {
 function carOf(plate) {
     return app.garage.find((c) => c.plate === plate) || app.garage[0];
 }
-function eligFor(car) {
+function eligFor(_car) {
     const e = ['general'];
-    if (car.ev)
-        e.push('ev');
-    if (car.family)
-        e.push('family');
+    if (app.account.ladies)
+        e.push('ladies');
     if (app.account.member)
         e.push('member');
     return e;
@@ -3910,7 +3903,7 @@ function busyHTML() {
         tone = 'crit';
         head = `Nearly full by ${clk(sim.t + fill * 60)}`;
         const before = sim.t + Math.max(0, fill - 15) * 60;
-        advice = fill > 20 ? `Come before ${clk(before)}, or book an EV, family or member bay.` : 'Expect a short wait. Guidance sends you to the next free zone.';
+        advice = fill > 20 ? `Come before ${clk(before)}, or book a Ladies' parking or designated member bay.` : 'Expect a short wait. Guidance sends you to the next free zone.';
     }
     else if (peak >= 0.85) {
         tone = 'warn';
@@ -3985,10 +3978,10 @@ function renderPark() {
             .join('')}</div>`;
     }
     setHTML($('#park-cta'), cta);
-    const sp = ['ev', 'family', 'member']
+    const sp = BOOKABLE_TYPES
         .map((t) => {
         const q = sim.bookable(t);
-        const ico = t === 'ev' ? 'zap' : t === 'family' ? 'family' : 'star';
+        const ico = RES_ICON[t];
         return `<button type="button" class="sp" data-act="reserve-type" data-type="${t}"><span class="sp-ic sp-${t}">${ic(ico, 18)}</span><span class="sp-t"><b>${RES_LABEL[t]}</b><span>${q.bookable ? `${q.bookable} bookable now` : 'Fully booked'}</span></span>${ic('chev', 18)}</button>`;
     })
         .join('');
@@ -4008,7 +4001,7 @@ function renderReserve() {
     const sim = app.sim;
     const host = $('#tab-reserve');
     if (!host.dataset.built) {
-        host.innerHTML = `<header class="tab-h"><h1>Reserve a bay</h1><p>General parking needs no booking: the app guides you to a free zone. Book only an EV, family or member bay.</p></header>
+        host.innerHTML = `<header class="tab-h"><h1>Reserve a bay</h1><p>General parking needs no booking: the app guides you to a free zone. Book only Ladies' parking or a designated member bay.</p></header>
       <div id="res-active"></div><div id="res-form"></div><div id="res-list"></div>`;
         host.dataset.built = '1';
     }
@@ -4022,7 +4015,7 @@ function renderReserve() {
         const k = Math.max(0, Math.min(1, left / Math.max(1, total)));
         const C = 2 * Math.PI * 26;
         setHTML($('#res-active'), `<article class="ticket" aria-label="Your reservation">
-        <div class="ticket-top"><span class="ticket-ic sp-${r.type}">${ic(r.type === 'ev' ? 'zap' : r.type === 'family' ? 'family' : 'star', 18)}</span><div><b>${RES_LABEL[r.type]} bay held</b><span>${esc(r.id)}, ${r.status === 'checked-in' ? 'checked in' : 'confirmed'}</span></div></div>
+        <div class="ticket-top"><span class="ticket-ic sp-${r.type}">${ic(RES_ICON[r.type], 18)}</span><div><b>${RES_LABEL[r.type]} bay held</b><span>${esc(r.id)}, ${r.status === 'checked-in' ? 'checked in' : 'confirmed'}</span></div></div>
         <div class="ticket-mid">
           <div class="ticket-bay"><span class="plate">${FLOOR_NAMES[b.floor]}</span><div><b>${esc(b.id)}</b><span>Zone ${b.zone}, near Lift ${b.zone}</span></div></div>
           <div class="ring" role="img" aria-label="Hold time left"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" class="ring-bg"/><circle cx="32" cy="32" r="26" class="ring-fg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - k)).toFixed(1)}"/></svg><span><b>${Math.max(0, Math.ceil(left / 60))}</b>min</span></div>
@@ -4037,7 +4030,7 @@ function renderReserve() {
     if (!active) {
         const d = app.resDraft;
         if (!d.touched && sim.bookable(d.type).bookable < 1) {
-            const ok = ['ev', 'family', 'member'].find((t) => sim.bookable(t).bookable > 0);
+            const ok = BOOKABLE_TYPES.find((t) => sim.bookable(t).bookable > 0 && (t !== 'member' || app.account.member));
             if (ok)
                 d.type = ok;
         }
@@ -4048,10 +4041,10 @@ function renderReserve() {
         const verified = resVerified(d.type, car);
         const memberLocked = d.type === 'member' && !app.account.member;
         const q = sim.bookable(d.type);
-        const typeBtns = ['ev', 'family', 'member']
+        const typeBtns = BOOKABLE_TYPES
             .map((t) => {
             const qq = sim.bookable(t);
-            return `<button type="button" role="radio" aria-checked="${d.type === t}" data-act="res-type" data-type="${t}" class="opt"><span class="opt-ic sp-${t}">${ic(t === 'ev' ? 'zap' : t === 'family' ? 'family' : 'star', 18)}</span><b>${RES_LABEL[t]}</b><span>${qq.bookable ? `${qq.bookable} bookable` : 'Full'}</span></button>`;
+            return `<button type="button" role="radio" aria-checked="${d.type === t}" data-act="res-type" data-type="${t}" class="opt"><span class="opt-ic sp-${t}">${ic(RES_ICON[t], 18)}</span><b>${RES_LABEL[t]}</b><span>${qq.bookable ? `${qq.bookable} bookable` : 'Full'}</span></button>`;
         })
             .join('');
         const chips = (vals, cur, act, fmt) => vals.map((x) => `<button type="button" class="chip" data-act="${act}" data-v="${x}" aria-pressed="${cur === x}">${fmt(x)}</button>`).join('');
@@ -4069,7 +4062,7 @@ function renderReserve() {
         <fieldset><legend>For which car?</legend><div class="chips">${carChips || '<span class="muted">All your cars are in use. Add one in your account.</span>'}</div></fieldset>
         ${eligHTML}
         ${app.resMsg ? `<p class="note ${app.resErr ? 'warn' : ''}" role="alert">${esc(app.resMsg)}</p>` : ''}
-        <button type="submit" class="btn btn-primary btn-wide" ${disabled ? 'disabled' : ''}>${q.bookable < 1 ? 'No bay can be guaranteed right now' : memberLocked ? 'Members only' : `Reserve ${RES_LABEL[d.type].toLowerCase().replace('ev', 'EV')} bay${car ? ` for ${esc(car.plate)}` : ''}`}</button>
+        <button type="submit" class="btn btn-primary btn-wide" ${disabled ? 'disabled' : ''}>${q.bookable < 1 ? 'No bay can be guaranteed right now' : memberLocked ? 'Members only' : `Reserve ${d.type === 'ladies' ? "Ladies' parking" : 'a member bay'}${car ? ` for ${esc(car.plate)}` : ''}`}</button>
         <p class="fine">One ${typeText(d.type)} bay is always kept for drivers who turn up without booking, so we never overbook. No payment is taken in this demo.</p>
       </form>`);
     }
@@ -4356,11 +4349,7 @@ function sheetHTML(kind) {
         const carChips = free
             .map((c) => `<button type="button" class="chip chip-car" data-act="plan-car" data-plate="${esc(c.plate)}" aria-pressed="${p.plate === c.plate}"><b>${esc(c.plate)}</b><span>${esc(c.name)}</span></button>`)
             .join('');
-        const pref = car
-            ? `<div class="prefs"><span>This car</span>${['ev', 'family']
-                .map((k) => `<button type="button" class="tog" data-act="car-attr" data-k="${k}" data-plate="${esc(car.plate)}" aria-pressed="${car[k]}">${k === 'ev' ? 'Electric' : 'Family pass'}</button>`)
-                .join('')}</div>`
-            : '';
+        const pref = ladiesPref();
         const member = app.account.member
             ? `<div class="member-line">${ic('star', 16)}<span><b>${esc(app.account.tier)} member</b> from your account: first hour free and member bays included.</span></div>`
             : `<div class="member-line off">${ic('star', 16)}<span>Not a Rewards member. <button type="button" class="linkbtn" data-act="profile">Join to get the first hour free</button></span></div>`;
@@ -4472,12 +4461,12 @@ function sheetHTML(kind) {
             : `<div class="mcard mcard-off"><div class="mcard-top"><span class="mark mark-sm" aria-hidden="true">P</span><span>KL East Mall Rewards</span></div><div class="mcard-pts"><b>Not a member</b><span>Join free for the first hour of parking, member bays and points.</span></div></div>
          <button type="button" class="btn btn-primary btn-wide" data-act="member-toggle">Join Rewards (demo)</button>`;
         const cars = app.garage
-            .map((c) => `<div class="gar"><div class="gar-t"><b>${esc(c.plate)}</b><span>${esc(c.name)}${carBusy(c.plate) ? ', in use' : ''}</span></div>${['ev', 'family']
-            .map((k) => `<button type="button" class="tog" data-act="car-attr" data-k="${k}" data-plate="${esc(c.plate)}" aria-pressed="${c[k]}">${k === 'ev' ? 'Electric' : 'Family pass'}</button>`)
-            .join('')}</div>`)
+            .map((c) => `<div class="gar"><div class="gar-t"><b>${esc(c.plate)}</b><span>${esc(c.name)}${carBusy(c.plate) ? ', in use' : ''}</span></div></div>`)
             .join('');
         return `<h2 class="sheet-t" id="sheet-title">Your account</h2>
       ${card}
+      <h3 class="sheet-s">Ladies' parking</h3>
+      ${ladiesPref()}
       <h3 class="sheet-s">Wallet</h3>
       <div class="wallet wallet-sheet">${walletHTML()}</div>
       <h3 class="sheet-s">Your cars</h3>
@@ -4488,6 +4477,11 @@ function sheetHTML(kind) {
       <button type="button" class="btn btn-ghost btn-wide" data-act="restart">Restart demo day</button>`;
     }
     return '';
+}
+/** Ladies' parking eligibility toggle, shared by the trip sheet and the account sheet. */
+function ladiesPref() {
+    const on = !!app.account.ladies;
+    return `<div class="prefs"><span>${on ? "Bays beside the lift are included in your guidance and bookings." : "Bays beside the lift, for women drivers."}</span><button type="button" class="tog" data-act="ladies-toggle" aria-pressed="${on}">I'm a woman driver</button></div>`;
 }
 function addCarHTML() {
     return `<div class="addcar"><label class="field"><span>Number plate</span><input id="new-plate" maxlength="10" autocomplete="off" spellcheck="false" placeholder="e.g. BKN 4410"></label>
@@ -4610,7 +4604,7 @@ function startTrip() {
         app.myId = ev.i;
     }
     else {
-        const v = sim.addDriver({ dest: app.plan.dest, etaS, elig: eligFor(car), cls: car.ev ? 'ev' : 'ice', member: app.account.member });
+        const v = sim.addDriver({ dest: app.plan.dest, etaS, elig: eligFor(car), cls: 'ice', member: app.account.member });
         app.myId = v.i;
         app.stays.push({ plate: car.plate, vid: v.i, demo: false, receipt: null });
     }
@@ -4632,7 +4626,7 @@ function addCarFromInput() {
         return false;
     }
     if (!app.garage.find((c) => c.plate === plate))
-        app.garage.push({ plate, name: 'New car', ev: false, family: false });
+        app.garage.push({ plate, name: 'New car' });
     app.addingCar = false;
     app.plan.plate = plate;
     persistProfile();
@@ -4663,14 +4657,12 @@ function act(el) {
             app.plan.eta = Number(el.dataset.v);
             renderSheet();
             break;
-        case 'car-attr': {
-            const c = carOf(el.dataset.plate || '');
-            const k = el.dataset.k;
-            c[k] = !c[k];
+        case 'ladies-toggle':
+            app.account.ladies = !app.account.ladies;
             persistProfile();
+            app.dirty = true;
             renderSheet();
             break;
-        }
         case 'plan-car':
             app.plan.plate = el.dataset.plate || '';
             renderSheet();
@@ -4937,9 +4929,7 @@ function act(el) {
 function resVerified(type, car) {
     if (type === 'member')
         return app.account.member ? `${app.account.tier} member ${app.account.memberNo}` : '';
-    if (type === 'ev')
-        return car && car.ev ? `${car.plate} is registered as electric` : '';
-    return car && car.family ? `${car.plate} has a family pass` : '';
+    return app.account.ladies ? "Ladies' parking is on in your account" : '';
 }
 function submitReservation() {
     const sim = app.sim;
@@ -4977,10 +4967,8 @@ function submitReservation() {
         app.resId = res.r.id;
         app.resMsg = '';
         app.resErr = false;
-        if (d.type === 'ev' && !car.ev)
-            car.ev = true;
-        if (d.type === 'family' && !car.family)
-            car.family = true;
+        if (d.type === 'ladies' && !app.account.ladies)
+            app.account.ladies = true;
         persistProfile();
         app.stays.push({ plate: car.plate, vid: res.r.vehicle, demo: false, receipt: null });
         if (!me() || ['left', 'cancelled', 'parked', 'paid'].includes(phase()))

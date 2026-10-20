@@ -49,8 +49,7 @@
   --zone-a: #2f7cf6;
   --zone-b: #e2b21c;
   --zone-c: #ef6a33;
-  --t-ev: #1fb5d6;
-  --t-family: #e9709c;
+  --t-ladies: #e9709c;
   --t-member: #d9b23a;
   --t-oku: #3d7cf0;
   --map-bg: #e8ecf1;
@@ -230,8 +229,7 @@ b { font-weight: 600; }
 .sp-t { display: flex; flex-direction: column; min-width: 0; }
 .sp-t span { font-size: 13px; color: var(--muted); }
 .sp-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: #fff; flex: none; }
-.sp-ev { background: var(--t-ev); }
-.sp-family { background: var(--t-family); }
+.sp-ladies { background: var(--t-ladies); }
 .sp-member { background: var(--t-member); }
 .sp-oku { background: var(--t-oku); }
 
@@ -362,8 +360,7 @@ legend { font-family: var(--font-num); font-size: 17px; font-weight: 600; paddin
 .m-uncertain, .m-unavailable { fill: var(--map-off); }
 .m-mine { stroke: var(--sign); stroke-width: 0.55; }
 .m-type { opacity: 0.95; }
-.m-type-ev { fill: var(--t-ev); }
-.m-type-family { fill: var(--t-family); }
+.m-type-ladies { fill: var(--t-ladies); }
 .m-type-member { fill: var(--t-member); }
 .m-type-oku { fill: var(--t-oku); }
 .m-pcar { fill: var(--map-pcar); }

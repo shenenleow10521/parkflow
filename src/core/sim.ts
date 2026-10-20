@@ -1,7 +1,7 @@
 // Discrete-time (1 s) simulation engine. Single source of truth for vehicles, bays, reservations,
 // allocation decisions, events and the per-minute history that feeds every chart and metric.
 
-import { Layout, Bay, BayType, DestId, ZoneId, FLOOR_NAMES, DEST_BY_ID, BAY_TYPE_LABEL, typeText, shortestPath } from './layout';
+import { Layout, Bay, BayType, BookableType, DestId, ZoneId, FLOOR_NAMES, DEST_BY_ID, BAY_TYPE_LABEL, typeText, shortestPath } from './layout';
 import { ScenarioDef, Demand, generateDemand, Source, clockLabel, stableUnit } from './scenarios';
 import { allocate, Allocation, AllocContext, AllocWeights, zoneLabel } from './allocation';
 import { computeForecast, Forecast, ForecastAssumptions, forecastByLift } from './forecast';
@@ -59,7 +59,7 @@ export interface Vehicle {
 
 export interface Reservation {
   id: string;
-  type: 'ev' | 'family' | 'member';
+  type: BookableType;
   bay: number;
   windowStart: number;
   windowEnd: number;
@@ -281,7 +281,7 @@ export class Sim {
     for (const s of d.initial) initialByBay.set(s.bay, s);
     for (const r of this.scn.reservations) {
       const candidates = L.bays
-        .filter((b) => b.type === r.type && b.flag === 'none' && (b.type !== 'ev' || b.charger === 'ok') && !this.hold[b.idx])
+        .filter((b) => b.type === r.type && b.flag === 'none' && !this.hold[b.idx])
         .sort((a, b) => (initialByBay.has(a.idx) ? 1 : 0) - (initialByBay.has(b.idx) ? 1 : 0) || hash01(r.id + a.id) - hash01(r.id + b.id));
       const bay = candidates[0];
       if (!bay) continue;
@@ -1102,25 +1102,24 @@ export class Sim {
     return true;
   }
 
-  bookable(type: 'ev' | 'family' | 'member'): { total: number; outOfService: number; occupied: number; held: number; free: number; buffer: number; bookable: number } {
+  bookable(type: BookableType): { total: number; occupied: number; held: number; free: number; buffer: number; bookable: number } {
     const bays = this.L.bays.filter((b) => b.type === type && b.flag !== 'maintenance');
-    const outOfService = bays.filter((b) => b.charger === 'out').length;
     let occupied = 0;
     let held = 0;
     let free = 0;
     for (const b of bays) {
       if (this.occ[b.idx] >= 0 || this.claim[b.idx] >= 0) occupied++;
       else if (this.hold[b.idx]) held++;
-      else if (b.charger !== 'out') free++;
+      else free++;
     }
     const buffer = 1; // protected walk-in buffer: never book the last free bay of a type
-    return { total: bays.length, outOfService, occupied, held, free, buffer, bookable: Math.max(0, free - buffer) };
+    return { total: bays.length, occupied, held, free, buffer, bookable: Math.max(0, free - buffer) };
   }
 
-  createReservation(type: 'ev' | 'family' | 'member', startInMin: number, durationMin: number): { ok: true; r: Reservation } | { ok: false; error: string } {
+  createReservation(type: BookableType, startInMin: number, durationMin: number): { ok: true; r: Reservation } | { ok: false; error: string } {
     const q = this.bookable(type);
     if (q.bookable < 1) return { ok: false, error: `No ${typeText(type)} bay can be guaranteed: ${q.free} free, ${q.buffer} kept for walk-in eligible drivers. Overbooking is disabled.` };
-    const bay = this.L.bays.find((b) => b.type === type && this.isFree(b.idx) && b.charger !== 'out');
+    const bay = this.L.bays.find((b) => b.type === type && this.isFree(b.idx));
     if (!bay) return { ok: false, error: 'No suitable bay is free.' };
     const n = this.reservations.filter((r) => r.userCreated).length + 1;
     const r: Reservation = {
@@ -1143,8 +1142,8 @@ export class Sim {
     const v = this.newVehicle({
       key: `user-${r.id}`,
       arrivalT: r.windowStart + 180,
-      dest: type === 'family' ? 'family' : 'atrium',
-      cls: type === 'ev' ? 'ev' : 'ice',
+      dest: 'atrium',
+      cls: 'ice',
       elig: ['general', type],
       member: type === 'member',
       durationS: r.durationS,
@@ -1165,7 +1164,7 @@ export class Sim {
     if (!r || r.status !== 'confirmed') return 'This reservation can no longer be checked in.';
     let v = r.vehicle >= 0 ? this.vehicles[r.vehicle] : null;
     if (!v) {
-      v = this.newVehicle({ key: `walkup-${r.id}`, dest: 'atrium', elig: ['general', r.type], cls: r.type === 'ev' ? 'ev' : 'ice', member: r.type === 'member', durationS: r.durationS, resId: r.id, source: 'demo', injected: true });
+      v = this.newVehicle({ key: `walkup-${r.id}`, dest: 'atrium', elig: ['general', r.type], cls: 'ice', member: r.type === 'member', durationS: r.durationS, resId: r.id, source: 'demo', injected: true });
       r.vehicle = v.i;
     }
     if (v.state !== 'pending') return 'The driver is already on site.';

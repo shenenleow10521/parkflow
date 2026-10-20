@@ -22,9 +22,9 @@ Or open `docs/index.html` and `docs/driver.html` straight from a clone.
 
 Two pages, one simulation engine:
 
-- `docs/index.html` is the operator command centre (3D model, allocation, forecasts, impact).
+- `docs/index.html` is the operator command centre (3D model, allocation, forecasts with members vs non-members live and since the window opened, impact).
 - `docs/driver.html` is the driver app for shoppers: level board, "I'm on my way" guidance with a
-  live floor map, special-bay booking, parked confirmation, My cars (several cars, where each is parked,
+  live floor map, Ladies' parking and designated member bookings, parked confirmation, My cars (several cars, where each is parked,
   how long and how much) with find-my-car, and payment by mall wallet, connected card or member points.
 - `dist/parkflow.html` and `dist/parkflow-driver.html` are the same pages as body fragments, for hosts that
   add their own HTML skeleton.
@@ -65,7 +65,7 @@ node tools/bundle.mjs /tmp/core.js --core --test tools/core-test.js && node /tmp
 
 - Dark operations-room theme so the lit 3D model and indicator colours read on a projector.
 - Parking-sign blue is the only interface accent. Status colours match the bay lights in the model
-  (green free, red taken, blinking amber leaving soon, purple held, blue accessible, cyan EV) and the
+  (green free, red taken, blinking amber leaving soon, purple held, blue accessible, pink Ladies' parking) and the
   zone colours match the painted pillar bands (A blue, B yellow, C orange).
 - The level board is drawn like the dot-matrix availability sign at a mall entrance; clicking a
   level isolates that floor in the model.
@@ -79,8 +79,11 @@ node tools/bundle.mjs /tmp/core.js --core --test tools/core-test.js && node /tmp
   the Web Animations API; the about panel on desktop shows which engine is active.
 - "I'm on my way" adds the driver's car to the simulation as an intent signal, so it shapes the forecast and
   is guided by the same allocation engine as every other car. "I'm at the entrance" skips the drive there.
+- Special bays are Accessible (OKU), Designated member and Ladies' parking. OKU bays are protected and never booked;
+  member and Ladies' parking bays can be booked within capacity, always keeping one free for drivers who turn up.
 - Membership comes from the account (KL East Mall Rewards, Gold, points), not a tick box: it sets the member
-  rate (first hour free), unlocks member bays and verifies member bookings.
+  rate (first hour free), unlocks member bays and verifies member bookings. Ladies' parking is switched on in the
+  account ("I'm a woman driver", self-declared; staff may check at the bay).
 - My cars starts with one car already parked (since 12:40) so the stay, fee and Pay button are visible at once.
   "Park a new car" picks another car from the garage or adds a new plate.
 - Payment: mall wallet (with top-up from a connected card), connected debit or credit card, and member points

@@ -37,8 +37,7 @@ export interface DriverPrefs {
   collapsed: boolean;
   autoOpen: boolean;
   dest: DestId;
-  ev: boolean;
-  family: boolean;
+  ladies: boolean;
   member: boolean;
 }
 
@@ -60,7 +59,7 @@ export const store = {
   emission: loadJSON<EmissionSettings>('parkflow.emission', { factorKgPerKm: 0.18, peakPeriodsPerYear: 104, offPeakPeriodsPerYear: 520 }),
   noShowRate: loadJSON<{ v: number }>('parkflow.noshow', { v: 0.15 }).v,
   field: loadArray<FieldObs>('parkflow.field'),
-  driver: { collapsed: true, autoOpen: true, dest: 'atrium', ev: false, family: false, member: false } as DriverPrefs,
+  driver: { collapsed: true, autoOpen: true, dest: 'atrium', ladies: false, member: false } as DriverPrefs,
   eventFilter: 'all' as string,
   layers: loadJSON<Layers>('parkflow.layers', { lights: true, cctv: false, route: true, autoRotate: false }),
   pendingAction: null as string | null,

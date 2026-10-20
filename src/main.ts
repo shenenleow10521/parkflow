@@ -10,7 +10,7 @@ import { initPresentation, startPresentation, presNext, presBack, presToggle, pr
 import { ScenarioId, clockLabel } from './core/scenarios';
 import { AllocWeights } from './core/allocation';
 import { ForecastAssumptions } from './core/forecast';
-import { DestId, FLOOR_NAMES } from './core/layout';
+import { DestId, FLOOR_NAMES, BookableType } from './core/layout';
 import { FieldObs, EmissionSettings } from './ui/store';
 
 const NAV: { id: Section; label: string; icon: string }[] = [
@@ -315,7 +315,7 @@ function bindEvents() {
       t.blur();
     }
     if (t.dataset.act === 'driver-dest') { store.driver.dest = t.value as DestId; t.blur(); }
-    if (t.dataset.act === 'driver-flag') { const f = t.dataset.flag as 'ev' | 'family' | 'member'; store.driver[f] = t.checked; t.blur(); }
+    if (t.dataset.act === 'driver-flag') { const f = t.dataset.flag as 'ladies' | 'member'; store.driver[f] = t.checked; t.blur(); }
     if (t.dataset.weight || t.dataset.assume || t.dataset.resp || t.dataset.emission || t.dataset.act === 'noshow') { t.blur(); pageDirty = true; }
     if (t.id === 'f-file' && t.files && t.files[0]) {
       const file = t.files[0];
@@ -336,7 +336,7 @@ function bindEvents() {
     const sim = store.sim;
     if (f.id === 'res-form') {
       if (store.drafts.resElig !== '1') { store.resMsg = 'Confirm the driver is eligible for this bay type before reserving.'; pageDirty = true; return; }
-      const type = (store.drafts.resType || 'ev') as 'ev' | 'family' | 'member';
+      const type = (store.drafts.resType || 'ladies') as BookableType;
       const r = sim.createReservation(type, Number(store.drafts.resStart || 20), Number(store.drafts.resDur || 90));
       store.resMsg = r.ok ? `${r.r.id} confirmed. Bay ${sim.L.bays[r.r.bay].id} is held until ${clockOf(r.r.windowEnd + r.r.grace)}.` : r.error;
       if (r.ok) store.drafts.resElig = '';

@@ -358,16 +358,15 @@ const GC = {
   reserved: rgbOf('#6a54bd'),
   departing: rgbOf('#b97c27'),
   hatch: rgbOf('#555c67'),
-  typeEv: rgbOf('#2bb7e6'),
   typeOku: rgbOf('#3d7cf0'),
-  typeFamily: rgbOf('#ef7fa9'),
+  typeLadies: rgbOf('#ef7fa9'),
   typeMember: rgbOf('#e3c35a'),
   ledFree: rgbOf('#2bff88'),
   ledTaken: rgbOf('#ff3344'),
   ledLeaving: rgbOf('#ffae1a'),
   ledHeld: rgbOf('#a77bff'),
   ledOku: rgbOf('#3d8bff'),
-  ledEv: rgbOf('#38d6ff'),
+  ledLadies: rgbOf('#ff6fb8'),
   ringSearch: rgbOf('#2dd4bf'),
   ringSlow: rgbOf('#f5a524'),
   ringRes: rgbOf('#a78bfa'),
@@ -375,7 +374,7 @@ const GC = {
   route: rgbOf('#38e1c8'),
   fog: rgbOf('#121a26')
 };
-const GL_TYPE_COL: Record<string, number[]> = { ev: GC.typeEv, oku: GC.typeOku, family: GC.typeFamily, member: GC.typeMember };
+const GL_TYPE_COL: Record<string, number[]> = { oku: GC.typeOku, ladies: GC.typeLadies, member: GC.typeMember };
 
 interface GlPick { kind: 'vehicle' | 'bay'; id: number }
 
@@ -1355,7 +1354,7 @@ export class GLScene {
       }
       if (store.layers.lights && st !== 'unavailable') {
         let lc: number[];
-        if (st === 'available') lc = b.type === 'oku' ? GC.ledOku : b.type === 'ev' ? GC.ledEv : b.type === 'member' ? GC.ledHeld : GC.ledFree;
+        if (st === 'available') lc = b.type === 'oku' ? GC.ledOku : b.type === 'ladies' ? GC.ledLadies : b.type === 'member' ? GC.ledHeld : GC.ledFree;
         else if (st === 'reserved') lc = GC.ledHeld;
         else if (st === 'departing') { lc = GC.ledLeaving.map((v) => v * blink); blinkSeen = true; }
         else if (st === 'uncertain') lc = [0.25, 0.27, 0.3];

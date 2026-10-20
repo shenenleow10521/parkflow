@@ -2,7 +2,7 @@
 // It runs the same seeded simulation as the operator view. "I'm on my way" adds the driver's own car to the
 // arrivals; the allocation engine guides it, and the app turns that guidance into sign-style instructions.
 
-import { buildLayout, DESTINATIONS, DEST_BY_ID, DestId, FLOOR_NAMES, ZONES, ZoneId, BayType, Bay, typeText, ZONE_X0, ZONE_COUNTS, BAY_W } from '../core/layout';
+import { buildLayout, DESTINATIONS, DEST_BY_ID, DestId, FLOOR_NAMES, ZONES, ZoneId, BayType, BookableType, BOOKABLE_TYPES, Bay, typeText, ZONE_X0, ZONE_COUNTS, BAY_W } from '../core/layout';
 import { SCENARIO_BY_ID, clockLabel } from '../core/scenarios';
 import { Sim, Vehicle, Reservation } from '../core/sim';
 import { DEFAULT_WEIGHTS } from '../core/allocation';
@@ -13,18 +13,16 @@ import { FloorMap, vehiclePose, walkPath } from './map';
 
 type Tab = 'park' | 'reserve' | 'car';
 type SheetKind = '' | 'plan' | 'profile' | 'pay' | 'paid' | 'topup' | 'dest' | 'assist';
-type ResType = 'ev' | 'family' | 'member';
+type ResType = BookableType;
 
 interface Profile {
   pace: number;
 }
 
-/** A car in the driver's garage. EV and family pass belong to the car; membership belongs to the account. */
+/** A car in the driver's garage. Membership and Ladies' parking belong to the driver's account, not the car. */
 interface CarProfile {
   plate: string;
   name: string;
-  ev: boolean;
-  family: boolean;
 }
 type PayMethod = 'wallet' | 'debit' | 'credit';
 interface Card {
@@ -35,6 +33,8 @@ interface Card {
 /** KL East Mall account: rewards membership, points and the mall wallet. Simulated, stored on this device only. */
 interface Account {
   member: boolean;
+  /** Self-declared woman driver: may be guided to and book Ladies' parking. */
+  ladies?: boolean;
   tier: string;
   memberNo: string;
   points: number;
@@ -61,8 +61,8 @@ interface Stay {
 const POINTS_PER_RM = 100; // redeem: 100 points = RM 1
 const EARN_PER_RM = 10; // earn: 10 points per RM 1 paid in money
 const DEFAULT_GARAGE: CarProfile[] = [
-  { plate: 'VKL 2026', name: 'My car', ev: false, family: false },
-  { plate: 'WXY 8812', name: 'Family car', ev: false, family: true }
+  { plate: 'VKL 2026', name: 'My car' },
+  { plate: 'WXY 8812', name: 'Second car' }
 ];
 const DEFAULT_ACCOUNT: Account = {
   member: true,
@@ -78,10 +78,10 @@ const DEFAULT_ACCOUNT: Account = {
 
 const ZONE_COLOUR: Record<ZoneId, string> = { A: 'blue', B: 'yellow', C: 'orange' };
 const DEST_ICON: Record<DestId, string> = { cinema: 'film', grocer: 'cart', atrium: 'store', family: 'skate' };
-const RES_LABEL: Record<ResType, string> = { ev: 'EV charging', family: 'Family', member: 'Member' };
+const RES_LABEL: Record<ResType, string> = { ladies: "Ladies' parking", member: 'Designated member' };
+const RES_ICON: Record<ResType, string> = { ladies: 'ladies', member: 'star' };
 const RES_ELIG: Record<ResType, string> = {
-  ev: 'My car is an electric vehicle and I will charge while parked.',
-  family: 'I have the KL East Mall family pass (child under 12 or a pram).',
+  ladies: "I am a woman driver. Staff may check at the bay.",
   member: 'I am a KL East Mall member with designated parking.'
 };
 
@@ -132,7 +132,7 @@ const app = {
   resMsg: '',
   resErr: false,
   assistMsg: '',
-  resDraft: { type: 'ev' as ResType, inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
+  resDraft: { type: 'ladies' as ResType, inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
   plan: { dest: 'cinema' as DestId, eta: 10, plate: '' },
   profile: loadJSON<Profile>('parkflow.driver.v2', { pace: 4 }),
   garage: loadJSON<CarProfile[]>('parkflow.garage', DEFAULT_GARAGE.map((c) => ({ ...c }))),
@@ -195,10 +195,9 @@ function carOf(plate: string): CarProfile {
   return app.garage.find((c) => c.plate === plate) || app.garage[0];
 }
 
-function eligFor(car: CarProfile): BayType[] {
+function eligFor(_car: CarProfile): BayType[] {
   const e: BayType[] = ['general'];
-  if (car.ev) e.push('ev');
-  if (car.family) e.push('family');
+  if (app.account.ladies) e.push('ladies');
   if (app.account.member) e.push('member');
   return e;
 }
@@ -471,7 +470,7 @@ function busyHTML(): string {
     tone = 'crit';
     head = `Nearly full by ${clk(sim.t + fill * 60)}`;
     const before = sim.t + Math.max(0, fill - 15) * 60;
-    advice = fill > 20 ? `Come before ${clk(before)}, or book an EV, family or member bay.` : 'Expect a short wait. Guidance sends you to the next free zone.';
+    advice = fill > 20 ? `Come before ${clk(before)}, or book a Ladies' parking or designated member bay.` : 'Expect a short wait. Guidance sends you to the next free zone.';
   } else if (peak >= 0.85) {
     tone = 'warn';
     head = 'Getting busy';
@@ -544,10 +543,10 @@ function renderPark() {
       .join('')}</div>`;
   }
   setHTML($('#park-cta'), cta);
-  const sp = (['ev', 'family', 'member'] as ResType[])
+  const sp = BOOKABLE_TYPES
     .map((t) => {
       const q = sim.bookable(t);
-      const ico = t === 'ev' ? 'zap' : t === 'family' ? 'family' : 'star';
+      const ico = RES_ICON[t];
       return `<button type="button" class="sp" data-act="reserve-type" data-type="${t}"><span class="sp-ic sp-${t}">${ic(ico, 18)}</span><span class="sp-t"><b>${RES_LABEL[t]}</b><span>${q.bookable ? `${q.bookable} bookable now` : 'Fully booked'}</span></span>${ic('chev', 18)}</button>`;
     })
     .join('');
@@ -570,7 +569,7 @@ function renderReserve() {
   const sim = app.sim;
   const host = $('#tab-reserve');
   if (!host.dataset.built) {
-    host.innerHTML = `<header class="tab-h"><h1>Reserve a bay</h1><p>General parking needs no booking: the app guides you to a free zone. Book only an EV, family or member bay.</p></header>
+    host.innerHTML = `<header class="tab-h"><h1>Reserve a bay</h1><p>General parking needs no booking: the app guides you to a free zone. Book only Ladies' parking or a designated member bay.</p></header>
       <div id="res-active"></div><div id="res-form"></div><div id="res-list"></div>`;
     host.dataset.built = '1';
   }
@@ -586,7 +585,7 @@ function renderReserve() {
     setHTML(
       $('#res-active'),
       `<article class="ticket" aria-label="Your reservation">
-        <div class="ticket-top"><span class="ticket-ic sp-${r.type}">${ic(r.type === 'ev' ? 'zap' : r.type === 'family' ? 'family' : 'star', 18)}</span><div><b>${RES_LABEL[r.type]} bay held</b><span>${esc(r.id)}, ${r.status === 'checked-in' ? 'checked in' : 'confirmed'}</span></div></div>
+        <div class="ticket-top"><span class="ticket-ic sp-${r.type}">${ic(RES_ICON[r.type], 18)}</span><div><b>${RES_LABEL[r.type]} bay held</b><span>${esc(r.id)}, ${r.status === 'checked-in' ? 'checked in' : 'confirmed'}</span></div></div>
         <div class="ticket-mid">
           <div class="ticket-bay"><span class="plate">${FLOOR_NAMES[b.floor]}</span><div><b>${esc(b.id)}</b><span>Zone ${b.zone}, near Lift ${b.zone}</span></div></div>
           <div class="ring" role="img" aria-label="Hold time left"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" class="ring-bg"/><circle cx="32" cy="32" r="26" class="ring-fg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - k)).toFixed(1)}"/></svg><span><b>${Math.max(0, Math.ceil(left / 60))}</b>min</span></div>
@@ -601,7 +600,7 @@ function renderReserve() {
   if (!active) {
     const d = app.resDraft;
     if (!d.touched && sim.bookable(d.type).bookable < 1) {
-      const ok = (['ev', 'family', 'member'] as ResType[]).find((t) => sim.bookable(t).bookable > 0);
+      const ok = BOOKABLE_TYPES.find((t) => sim.bookable(t).bookable > 0 && (t !== 'member' || app.account.member));
       if (ok) d.type = ok;
     }
     const freeC = freeCars();
@@ -610,10 +609,10 @@ function renderReserve() {
     const verified = resVerified(d.type, car);
     const memberLocked = d.type === 'member' && !app.account.member;
     const q = sim.bookable(d.type);
-    const typeBtns = (['ev', 'family', 'member'] as ResType[])
+    const typeBtns = BOOKABLE_TYPES
       .map((t) => {
         const qq = sim.bookable(t);
-        return `<button type="button" role="radio" aria-checked="${d.type === t}" data-act="res-type" data-type="${t}" class="opt"><span class="opt-ic sp-${t}">${ic(t === 'ev' ? 'zap' : t === 'family' ? 'family' : 'star', 18)}</span><b>${RES_LABEL[t]}</b><span>${qq.bookable ? `${qq.bookable} bookable` : 'Full'}</span></button>`;
+        return `<button type="button" role="radio" aria-checked="${d.type === t}" data-act="res-type" data-type="${t}" class="opt"><span class="opt-ic sp-${t}">${ic(RES_ICON[t], 18)}</span><b>${RES_LABEL[t]}</b><span>${qq.bookable ? `${qq.bookable} bookable` : 'Full'}</span></button>`;
       })
       .join('');
     const chips = (vals: number[], cur: number, act: string, fmt: (x: number) => string) =>
@@ -634,7 +633,7 @@ function renderReserve() {
         <fieldset><legend>For which car?</legend><div class="chips">${carChips || '<span class="muted">All your cars are in use. Add one in your account.</span>'}</div></fieldset>
         ${eligHTML}
         ${app.resMsg ? `<p class="note ${app.resErr ? 'warn' : ''}" role="alert">${esc(app.resMsg)}</p>` : ''}
-        <button type="submit" class="btn btn-primary btn-wide" ${disabled ? 'disabled' : ''}>${q.bookable < 1 ? 'No bay can be guaranteed right now' : memberLocked ? 'Members only' : `Reserve ${RES_LABEL[d.type].toLowerCase().replace('ev', 'EV')} bay${car ? ` for ${esc(car.plate)}` : ''}`}</button>
+        <button type="submit" class="btn btn-primary btn-wide" ${disabled ? 'disabled' : ''}>${q.bookable < 1 ? 'No bay can be guaranteed right now' : memberLocked ? 'Members only' : `Reserve ${d.type === 'ladies' ? "Ladies' parking" : 'a member bay'}${car ? ` for ${esc(car.plate)}` : ''}`}</button>
         <p class="fine">One ${typeText(d.type)} bay is always kept for drivers who turn up without booking, so we never overbook. No payment is taken in this demo.</p>
       </form>`
     );
@@ -933,11 +932,7 @@ function sheetHTML(kind: SheetKind): string {
     const carChips = free
       .map((c) => `<button type="button" class="chip chip-car" data-act="plan-car" data-plate="${esc(c.plate)}" aria-pressed="${p.plate === c.plate}"><b>${esc(c.plate)}</b><span>${esc(c.name)}</span></button>`)
       .join('');
-    const pref = car
-      ? `<div class="prefs"><span>This car</span>${(['ev', 'family'] as const)
-          .map((k) => `<button type="button" class="tog" data-act="car-attr" data-k="${k}" data-plate="${esc(car.plate)}" aria-pressed="${car[k]}">${k === 'ev' ? 'Electric' : 'Family pass'}</button>`)
-          .join('')}</div>`
-      : '';
+    const pref = ladiesPref();
     const member = app.account.member
       ? `<div class="member-line">${ic('star', 16)}<span><b>${esc(app.account.tier)} member</b> from your account: first hour free and member bays included.</span></div>`
       : `<div class="member-line off">${ic('star', 16)}<span>Not a Rewards member. <button type="button" class="linkbtn" data-act="profile">Join to get the first hour free</button></span></div>`;
@@ -1051,12 +1046,12 @@ function sheetHTML(kind: SheetKind): string {
       : `<div class="mcard mcard-off"><div class="mcard-top"><span class="mark mark-sm" aria-hidden="true">P</span><span>KL East Mall Rewards</span></div><div class="mcard-pts"><b>Not a member</b><span>Join free for the first hour of parking, member bays and points.</span></div></div>
          <button type="button" class="btn btn-primary btn-wide" data-act="member-toggle">Join Rewards (demo)</button>`;
     const cars = app.garage
-      .map((c) => `<div class="gar"><div class="gar-t"><b>${esc(c.plate)}</b><span>${esc(c.name)}${carBusy(c.plate) ? ', in use' : ''}</span></div>${(['ev', 'family'] as const)
-        .map((k) => `<button type="button" class="tog" data-act="car-attr" data-k="${k}" data-plate="${esc(c.plate)}" aria-pressed="${c[k]}">${k === 'ev' ? 'Electric' : 'Family pass'}</button>`)
-        .join('')}</div>`)
+      .map((c) => `<div class="gar"><div class="gar-t"><b>${esc(c.plate)}</b><span>${esc(c.name)}${carBusy(c.plate) ? ', in use' : ''}</span></div></div>`)
       .join('');
     return `<h2 class="sheet-t" id="sheet-title">Your account</h2>
       ${card}
+      <h3 class="sheet-s">Ladies' parking</h3>
+      ${ladiesPref()}
       <h3 class="sheet-s">Wallet</h3>
       <div class="wallet wallet-sheet">${walletHTML()}</div>
       <h3 class="sheet-s">Your cars</h3>
@@ -1067,6 +1062,12 @@ function sheetHTML(kind: SheetKind): string {
       <button type="button" class="btn btn-ghost btn-wide" data-act="restart">Restart demo day</button>`;
   }
   return '';
+}
+
+/** Ladies' parking eligibility toggle, shared by the trip sheet and the account sheet. */
+function ladiesPref(): string {
+  const on = !!app.account.ladies;
+  return `<div class="prefs"><span>${on ? "Bays beside the lift are included in your guidance and bookings." : "Bays beside the lift, for women drivers."}</span><button type="button" class="tog" data-act="ladies-toggle" aria-pressed="${on}">I'm a woman driver</button></div>`;
 }
 
 function addCarHTML(): string {
@@ -1184,7 +1185,7 @@ function startTrip() {
     sim.setDriverArrival(ev.i, etaS);
     app.myId = ev.i;
   } else {
-    const v = sim.addDriver({ dest: app.plan.dest, etaS, elig: eligFor(car), cls: car.ev ? 'ev' : 'ice', member: app.account.member });
+    const v = sim.addDriver({ dest: app.plan.dest, etaS, elig: eligFor(car), cls: 'ice', member: app.account.member });
     app.myId = v.i;
     app.stays.push({ plate: car.plate, vid: v.i, demo: false, receipt: null });
   }
@@ -1206,7 +1207,7 @@ function addCarFromInput(): boolean {
     }
     return false;
   }
-  if (!app.garage.find((c) => c.plate === plate)) app.garage.push({ plate, name: 'New car', ev: false, family: false });
+  if (!app.garage.find((c) => c.plate === plate)) app.garage.push({ plate, name: 'New car' });
   app.addingCar = false;
   app.plan.plate = plate;
   persistProfile();
@@ -1236,14 +1237,12 @@ function act(el: HTMLElement) {
       app.plan.eta = Number(el.dataset.v);
       renderSheet();
       break;
-    case 'car-attr': {
-      const c = carOf(el.dataset.plate || '');
-      const k = el.dataset.k as 'ev' | 'family';
-      c[k] = !c[k];
+    case 'ladies-toggle':
+      app.account.ladies = !app.account.ladies;
       persistProfile();
+      app.dirty = true;
       renderSheet();
       break;
-    }
     case 'plan-car':
       app.plan.plate = el.dataset.plate || '';
       renderSheet();
@@ -1495,8 +1494,7 @@ function act(el: HTMLElement) {
 
 function resVerified(type: ResType, car: CarProfile | null): string {
   if (type === 'member') return app.account.member ? `${app.account.tier} member ${app.account.memberNo}` : '';
-  if (type === 'ev') return car && car.ev ? `${car.plate} is registered as electric` : '';
-  return car && car.family ? `${car.plate} has a family pass` : '';
+  return app.account.ladies ? "Ladies' parking is on in your account" : '';
 }
 
 function submitReservation() {
@@ -1534,8 +1532,7 @@ function submitReservation() {
     app.resId = res.r.id;
     app.resMsg = '';
     app.resErr = false;
-    if (d.type === 'ev' && !car.ev) car.ev = true;
-    if (d.type === 'family' && !car.family) car.family = true;
+    if (d.type === 'ladies' && !app.account.ladies) app.account.ladies = true;
     persistProfile();
     app.stays.push({ plate: car.plate, vid: res.r.vehicle, demo: false, receipt: null });
     if (!me() || ['left', 'cancelled', 'parked', 'paid'].includes(phase())) app.myId = res.r.vehicle;

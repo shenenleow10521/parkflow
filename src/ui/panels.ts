@@ -10,7 +10,7 @@ function fmtShort(secs: number): string {
 }
 import { Sim, Vehicle, SimEvent } from '../core/sim';
 import { Allocation, Candidate, WEIGHT_LABELS, AllocWeights, DEFAULT_WEIGHTS } from '../core/allocation';
-import { DESTINATIONS, DEST_BY_ID, BAY_TYPE_LABEL, typeText, FLOOR_NAMES, ZONES, DestId, BayType } from '../core/layout';
+import { DESTINATIONS, DEST_BY_ID, BAY_TYPE_LABEL, typeText, FLOOR_NAMES, ZONES, DestId, BayType, BOOKABLE_TYPES } from '../core/layout';
 import { clockLabel, SCENARIOS } from '../core/scenarios';
 import { flowPanel } from './charts';
 import { pctChange } from '../core/metrics';
@@ -251,16 +251,6 @@ function bayDetail(idx: number): string {
     resTxt = `${res.id} · ${res.status}${res.status === 'confirmed' ? ` · window ${window}, held until ${clockLabel(sim.scn, res.windowEnd + res.grace, false)}` : res.status === 'expired' ? ` at ${clockLabel(sim.scn, res.closedT, false)} · released to ${typeText(res.type)} inventory` : ''}`;
   }
   const conf = b.flag === 'obstructed' ? `${Math.round(b.confidence * 100)}% · camera view obstructed, status uncertain` : b.flag === 'maintenance' ? 'Manually flagged out of use' : `${Math.round(b.confidence * 100)}% · clear view (simulated)`;
-  let charger = '';
-  if (b.type === 'ev') {
-    let cs = 'Charger available';
-    if (b.charger === 'out') cs = 'Charger out of service: parking possible, charging not available';
-    else if (o && sim.occ[idx] >= 0) {
-      const end = Math.min(o.departT, o.parkT + 3600);
-      cs = end > sim.t ? `Charging session in use · expected end ${clockLabel(sim.scn, end, false)}` : 'Session complete · vehicle still parked (charger idle but blocked)';
-    } else if (st === 'reserved') cs = 'Held for an EV reservation';
-    charger = `<div class="wide"><dt>EV charger</dt><dd>${esc(cs)}</dd></div>`;
-  }
   const walks = ZONES.map((z) => `Lift ${z}: ${b.walk[z]} m`).join(' · ');
   return `<div class="sel-head"><span class="code">${esc(b.id)}</span><span class="pill pill-${st}">${esc(stLabel[st])}</span>${tag('now')}</div>
     <dl class="facts">
@@ -269,7 +259,6 @@ function bayDetail(idx: number): string {
       <div><dt>Occupancy</dt><dd>${o ? `${esc(o.code)}${o.initial ? ' (parked before scenario start)' : ''}` : 'Empty'}</dd></div>
       <div><dt>Observation confidence</dt><dd>${esc(conf)}</dd></div>
       <div class="wide"><dt>Reservation</dt><dd>${esc(resTxt)}</dd></div>
-      ${charger}
       <div class="wide"><dt>Walking distance</dt><dd>${walks}</dd></div>
     </dl>
     ${st === 'departing' ? `<p class="notice">${icon('clock', 14)} A payment signals a likely departure. The bay stays occupied until the vehicle has actually left.</p>` : ''}
@@ -623,16 +612,15 @@ function phoneForVehicle(sim: Sim, v: Vehicle): string {
 function phonePlan(sim: Sim): string {
   const d = store.driver;
   const elig: BayType[] = ['general'];
-  if (d.ev) elig.push('ev');
-  if (d.family) elig.push('family');
+  if (d.ladies) elig.push('ladies');
   if (d.member) elig.push('member');
   const c = sim.counts();
   const a = sim.previewAllocation(d.dest, elig);
   const lift = DEST_BY_ID[d.dest].lift;
   const f = sim.forecast;
   const dist = a.chosen ? a.chosen.drive + 20 : NaN;
-  const resOpts = (['ev', 'family', 'member'] as const)
-    .filter((t) => (t === 'ev' && d.ev) || (t === 'family' && d.family) || (t === 'member' && d.member))
+  const resOpts = BOOKABLE_TYPES
+    .filter((t) => d[t])
     .map((t) => {
       const q = sim.bookable(t);
       return `<li>${esc(BAY_TYPE_LABEL[t])}: <b>${q.bookable}</b> bookable now <button type="button" class="linkbtn" data-go="reservations">Reserve</button></li>`;
@@ -642,8 +630,7 @@ function phonePlan(sim: Sim): string {
   return `<div class="ph-who">Plan a visit</div>
     <label class="ph-field"><span>Going to</span><select data-act="driver-dest" id="driver-dest">${DESTINATIONS.map((x) => `<option value="${x.id}" ${x.id === d.dest ? 'selected' : ''}>${esc(x.label)}</option>`).join('')}</select></label>
     <div class="ph-toggles">
-      <label><input type="checkbox" data-act="driver-flag" data-flag="ev" id="drv-ev" ${d.ev ? 'checked' : ''}> EV</label>
-      <label><input type="checkbox" data-act="driver-flag" data-flag="family" id="drv-family" ${d.family ? 'checked' : ''}> Family pass</label>
+      <label><input type="checkbox" data-act="driver-flag" data-flag="ladies" id="drv-ladies" ${d.ladies ? 'checked' : ''}> Ladies' parking</label>
       <label><input type="checkbox" data-act="driver-flag" data-flag="member" id="drv-member" ${d.member ? 'checked' : ''}> Member</label>
     </div>
     <div class="ph-cap"><b>${c.generalFree}</b> general bays free now <span class="muted">(B1 ${c.perFloor[0].generalFree} · B2 ${c.perFloor[1].generalFree} · B3 ${c.perFloor[2].generalFree})</span></div>

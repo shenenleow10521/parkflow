@@ -1,7 +1,7 @@
 // Explainable zone allocation. Hard eligibility and capacity constraints first, then a transparent
 // weighted score over min-max normalised inputs. Guidance is zone-level, never an exclusive general bay.
 
-import { Layout, BayType, DestId, ZoneId, FLOORS, ZONES, FLOOR_NAMES, DEST_BY_ID, BAY_TYPE_LABEL, GEdge } from './layout';
+import { Layout, BayType, DestId, ZoneId, FLOORS, ZONES, FLOOR_NAMES, DEST_BY_ID, BAY_TYPE_LABEL, BAY_ZONE_SUFFIX, typeText, GEdge } from './layout';
 
 export interface AllocWeights {
   drive: number;
@@ -71,7 +71,7 @@ export interface AllocContext {
 export function zoneLabel(floor: number, zone: ZoneId, inv?: BayType): string {
   const base = `${FLOOR_NAMES[floor]} Zone ${zone}`;
   if (!inv || inv === 'general') return base;
-  return `${base} ${BAY_TYPE_LABEL[inv].replace(' charging', '').replace('Designated ', '')} bays`;
+  return `${base} ${BAY_ZONE_SUFFIX[inv]}`;
 }
 
 function dijkstraFrom(L: Layout, from: number, weight: (e: GEdge) => number) {
@@ -221,7 +221,7 @@ export function allocate(ctx: AllocContext, v: { code: string; index: number; el
 }
 
 export function driverMessage(c: Candidate, lift: ZoneId, mode: Allocation['mode']): string {
-  const where = c.inv === 'general' ? `Zone ${c.zone}` : `Zone ${c.zone} ${BAY_TYPE_LABEL[c.inv].replace(' charging', '').replace('Designated ', '').toLowerCase()} bays`;
+  const where = c.inv === 'general' ? `Zone ${c.zone}` : `Zone ${c.zone} ${BAY_ZONE_SUFFIX[c.inv]}`;
   const base = `Proceed to ${FLOOR_NAMES[c.floor]} · ${where} · Follow signs to Lift ${lift}.`;
   if (mode === 'expected-departure') return `${base} No bay is free yet; departures are expected there.`;
   if (mode === 'none') return `No suitable bay is free. ${base}`;
@@ -255,7 +255,7 @@ function explain(c: Candidate, pool: Candidate[], lift: ZoneId, mode: Allocation
       else if (alt.drive > c.drive + 30) parts.push(`${alt.label} is closer on foot but needs about ${Math.round(alt.drive - c.drive)} m more driving`);
       else parts.push(`${alt.label} scores slightly lower overall (${alt.total.toFixed(2)} vs ${c.total.toFixed(2)})`);
     } else if (c.inv !== 'general') {
-      parts.push(`it uses the ${BAY_TYPE_LABEL[c.inv].toLowerCase()} inventory this driver is eligible for`);
+      parts.push(`it uses the ${typeText(c.inv)} inventory this driver is eligible for`);
     } else if (alt.congestion > c.congestion + 1) {
       parts.push(`its approach is clearer than ${alt.label} (${Math.round(c.congestion)} vs ${Math.round(alt.congestion)} vehicles)`);
     }

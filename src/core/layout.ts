@@ -4,7 +4,10 @@
 import { hash01 } from './rng';
 
 export type ZoneId = 'A' | 'B' | 'C';
-export type BayType = 'general' | 'ev' | 'oku' | 'family' | 'member';
+export type BayType = 'general' | 'oku' | 'member' | 'ladies';
+/** Special bays a driver can book. Accessible (OKU) bays are protected and never booked. */
+export type BookableType = 'member' | 'ladies';
+export const BOOKABLE_TYPES: BookableType[] = ['ladies', 'member'];
 export type DestId = 'cinema' | 'grocer' | 'atrium' | 'family';
 
 export const FLOOR_NAMES = ['B1', 'B2', 'B3'];
@@ -28,7 +31,7 @@ export const DESTINATIONS: { id: DestId; label: string; lift: ZoneId }[] = [
   { id: 'cinema', label: 'Cinema', lift: 'C' },
   { id: 'grocer', label: 'Supermarket', lift: 'A' },
   { id: 'atrium', label: 'Main atrium', lift: 'B' },
-  { id: 'family', label: 'Ice rink & family', lift: 'A' }
+  { id: 'family', label: 'Ice rink', lift: 'A' }
 ];
 export const DEST_BY_ID: Record<DestId, { id: DestId; label: string; lift: ZoneId }> = {
   cinema: DESTINATIONS[0],
@@ -39,15 +42,17 @@ export const DEST_BY_ID: Record<DestId, { id: DestId; label: string; lift: ZoneI
 
 export const BAY_TYPE_LABEL: Record<BayType, string> = {
   general: 'General',
-  ev: 'EV charging',
   oku: 'Accessible (OKU)',
-  family: 'Family',
-  member: 'Designated member'
+  member: 'Designated member',
+  ladies: "Ladies' parking"
 };
 
-/** Lower-case form for running text that keeps acronyms (EV, OKU) intact. */
+/** How a zone's special inventory is named after the zone, e.g. "B1 Zone A Ladies' parking". */
+export const BAY_ZONE_SUFFIX: Record<BayType, string> = { general: '', oku: 'accessible (OKU) bays', member: 'member bays', ladies: "Ladies' parking" };
+
+/** Lower-case form for running text that keeps acronyms (OKU) and proper terms intact. */
 export function typeText(t: BayType): string {
-  return ({ general: 'general', ev: 'EV charging', oku: 'accessible (OKU)', family: 'family', member: 'designated member' } as Record<BayType, string>)[t];
+  return ({ general: 'general', oku: 'accessible (OKU)', member: 'designated member', ladies: "Ladies' parking" } as Record<BayType, string>)[t];
 }
 
 export interface GNode {
@@ -88,7 +93,6 @@ export interface Bay {
   walk: Record<ZoneId, number>;
   flag: 'none' | 'maintenance' | 'obstructed';
   confidence: number;
-  charger: 'ok' | 'out' | null;
 }
 
 export interface Layout {
@@ -107,16 +111,15 @@ export interface Layout {
 function specialType(floor: number, zone: ZoneId, row: number, col: number): BayType {
   if (floor === 0) {
     if (row === 1 && ((zone === 'A' && col === 3) || (zone === 'B' && (col === 2 || col === 3)) || (zone === 'C' && col === 3))) return 'oku';
-    if (zone === 'A' && row === 0 && col >= 2 && col <= 4) return 'family';
+    if (zone === 'A' && row === 0 && col >= 2 && col <= 4) return 'ladies';
     if (zone === 'C' && row === 2 && col >= 2 && col <= 4) return 'member';
   }
   if (floor === 1) {
-    if (zone === 'A' && row === 1 && col >= 2 && col <= 4) return 'family';
+    if (zone === 'A' && row === 1 && col >= 2 && col <= 4) return 'ladies';
     if (zone === 'C' && row === 1 && col >= 2 && col <= 4) return 'member';
-    if (zone === 'B' && row === 2 && col >= 1 && col <= 4) return 'ev';
   }
   if (floor === 2) {
-    if (zone === 'B' && row === 1 && (col === 2 || col === 3)) return 'ev';
+    if (zone === 'A' && row === 1 && col >= 2 && col <= 4) return 'ladies';
   }
   return 'general';
 }
@@ -232,8 +235,7 @@ export function buildLayout(): Layout {
           const flag = bayFlag(f, zone, row, col);
           const h = hash01(id);
           const confidence = flag === 'obstructed' ? 0.42 + h * 0.12 : flag === 'maintenance' ? 1 : 0.93 + h * 0.06;
-          const charger = type === 'ev' ? (f === 2 && col === 3 ? 'out' : 'ok') : null;
-          const bay: Bay = { idx: bays.length, id, floor: f, zone, row, col, x, z, type, edge, accessS, walk, flag, confidence, charger };
+          const bay: Bay = { idx: bays.length, id, floor: f, zone, row, col, x, z, type, edge, accessS, walk, flag, confidence };
           bays.push(bay);
           e.bays.push(bay.idx);
         }

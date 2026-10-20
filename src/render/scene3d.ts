@@ -41,15 +41,14 @@ const C = {
   route: '#5eead4',
   label: '#e8eef6',
   labelDim: 'rgba(214, 226, 240, 0.65)',
-  typeEv: '#4cc3ea',
   typeOku: '#6aa8ff',
-  typeFamily: '#f19bbb',
+  typeLadies: '#f19bbb',
   typeMember: '#e9d27c',
   zoneHi: 'rgba(94, 234, 212, 0.16)',
   zoneHiLine: 'rgba(94, 234, 212, 0.75)'
 };
 
-const TYPE_COLOR: Record<string, string> = { ev: C.typeEv, oku: C.typeOku, family: C.typeFamily, member: C.typeMember };
+const TYPE_COLOR: Record<string, string> = { oku: C.typeOku, ladies: C.typeLadies, member: C.typeMember };
 
 function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace('#', '');
@@ -844,19 +843,15 @@ export class Scene3D {
 function drawTypeGlyph(ctx: CanvasRenderingContext2D, type: string, s: number) {
   ctx.fillStyle = 'rgba(255,255,255,0.95)';
   ctx.strokeStyle = 'rgba(255,255,255,0.95)';
-  if (type === 'ev') {
-    ctx.beginPath();
-    ctx.moveTo(s * 0.15, -s * 0.6); ctx.lineTo(-s * 0.35, s * 0.08); ctx.lineTo(-s * 0.02, s * 0.08); ctx.lineTo(-s * 0.15, s * 0.6); ctx.lineTo(s * 0.35, -s * 0.08); ctx.lineTo(s * 0.02, -s * 0.08);
-    ctx.closePath(); ctx.fill();
-  } else if (type === 'oku') {
+  if (type === 'oku') {
     ctx.beginPath(); ctx.arc(s * 0.05, -s * 0.5, s * 0.14, 0, Math.PI * 2); ctx.fill();
     ctx.beginPath(); ctx.arc(-s * 0.05, s * 0.18, s * 0.36, 0.3, Math.PI * 1.6); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(s * 0.05, -s * 0.32); ctx.lineTo(s * 0.05, 0.02 * s); ctx.lineTo(s * 0.4, 0.02 * s); ctx.lineTo(s * 0.5, s * 0.45); ctx.stroke();
-  } else if (type === 'family') {
-    ctx.beginPath(); ctx.arc(-s * 0.25, -s * 0.25, s * 0.18, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.arc(s * 0.28, -s * 0.05, s * 0.13, 0, Math.PI * 2); ctx.fill();
-    ctx.fillRect(-s * 0.4, -s * 0.02, s * 0.3, s * 0.55);
-    ctx.fillRect(s * 0.18, s * 0.12, s * 0.2, s * 0.4);
+  } else if (type === 'ladies') {
+    // female sign: ring with a cross below
+    ctx.lineWidth = Math.max(1.5, s * 0.12);
+    ctx.beginPath(); ctx.arc(0, -s * 0.18, s * 0.3, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, s * 0.12); ctx.lineTo(0, s * 0.62); ctx.moveTo(-s * 0.2, s * 0.4); ctx.lineTo(s * 0.2, s * 0.4); ctx.stroke();
   } else if (type === 'member') {
     ctx.beginPath();
     for (let i = 0; i < 10; i++) {

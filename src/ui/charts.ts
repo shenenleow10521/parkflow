@@ -310,7 +310,7 @@ export function flowPanel(sim: Sim, f: Forecast | null, o: { w: number; h: numbe
   const iw = W - m.l - m.r, ih = H - m.t - m.b;
   const vmax = Math.max(5, ...wins.map((w) => Math.max(w.arr, w.dep)));
   const ticks = niceTicks(0, vmax, o.compact ? 2 : 4);
-  const ymax = Math.max(vmax, ticks[ticks.length - 1]);
+  const ymax = Math.max(o.compact ? vmax * 1.3 : vmax, ticks[ticks.length - 1]);
   const y = (v: number) => m.t + ih - (v / ymax) * ih;
   const gw = iw / wins.length;
   const bw = Math.min(o.compact ? 16 : 30, gw * 0.3);
