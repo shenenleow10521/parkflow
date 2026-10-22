@@ -44,7 +44,7 @@ fs.writeFileSync('dist/test-driver.html', `<!doctype html><html lang="en"><head>
 console.log('driver page', (fs.statSync('dist/parkflow-driver.html').size / 1024).toFixed(1), 'KB');
 
 // Standalone site for GitHub Pages (or any static host): full HTML documents in docs/.
-// index.html is the operator command centre, driver.html the driver app.
+// index.html is the landing page, command.html the operator command centre, driver.html the driver app.
 function standalone(fragment, title) {
   const cut = fragment.search(/^<div /m);
   const head = fragment.slice(0, cut);
@@ -62,7 +62,34 @@ ${body}</body>
 `;
 }
 fs.mkdirSync('docs', { recursive: true });
-fs.writeFileSync('docs/index.html', standalone(page, 'ParkFlow Command Centre'));
+fs.writeFileSync('docs/command.html', standalone(page, 'ParkFlow Command Centre'));
 fs.writeFileSync('docs/driver.html', standalone(dpage, 'ParkFlow Driver'));
 fs.writeFileSync('docs/.nojekyll', '');
-console.log('site docs/index.html + docs/driver.html');
+
+// Landing page: a hand-written page fragment (head part, then <!--page-->, then the body part).
+const landing = fs.readFileSync('src/landing/index.html', 'utf8');
+const [lhead, lbody] = landing.split('<!--page-->');
+if (!lbody) throw new Error('src/landing/index.html needs a <!--page--> marker between head and body');
+fs.writeFileSync('docs/index.html', `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+${lhead.trim()}
+</head>
+<body>
+${lbody.trim()}
+</body>
+</html>
+`);
+fs.writeFileSync('dist/landing.html', lhead.trim() + '\n' + lbody.trim() + '\n');
+for (const dir of ['docs/assets', 'dist/assets']) {
+  fs.mkdirSync(dir, { recursive: true });
+  for (const f of fs.readdirSync('src/landing/assets')) fs.copyFileSync(path.join('src/landing/assets', f), path.join(dir, f));
+}
+// local copies so the landing page's links work from dist/ too
+fs.copyFileSync('docs/command.html', 'dist/command.html');
+fs.copyFileSync('docs/driver.html', 'dist/driver.html');
+fs.copyFileSync('docs/index.html', 'dist/test-landing.html');
+console.log('site docs/index.html (landing) + docs/command.html + docs/driver.html');

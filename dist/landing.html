@@ -1,0 +1,1275 @@
+<title>ParkFlow</title>
+<meta name="description" content="ParkFlow gives mall members priority parking without locking a single bay: members reserve a share of a zone's capacity and the entrance gate decides, live.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="theme-color" content="#0a111c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=swap">
+<style>
+/* ParkFlow landing page.
+   Subject: member-priority parking for shopping malls, run by a rule at the entrance gate.
+   The page lives in the car park at night: deep blue-slate concrete, painted bay lines, the parking-sign
+   blue of the product, member gold, and the gate's LED colours (green open, amber members only, red full).
+   One bold element: the dot-matrix gate sign and the live zone beneath it. Everything else stays quiet.
+   Type: Barlow Condensed for headlines (road signage), Barlow for reading, Barlow Semi Condensed for numbers.
+   A deliberate single dark look, with every colour set explicitly. */
+:root {
+  color-scheme: dark;
+  --night: #0a111c;
+  --night-2: #0d1624;
+  --deck: #121c2b;
+  --deck-2: #172334;
+  --deck-3: #1e2c41;
+  --line: #22324a;
+  --line-2: #30435f;
+  --chalk: #ebf0f6;
+  --chalk-2: #b8c5d6;
+  --fog: #8696ad;
+  --sign: #2f6fe0;
+  --sign-hi: #7ea8ff;
+  --gold: #e3c35a;
+  --gold-hi: #f5dd8f;
+  --go: #34e58a;
+  --amber: #ffb21f;
+  --stop: #ff4d5e;
+  --ladies: #ef7fa9;
+  --oku: #4d94ff;
+  --f-disp: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+  --f-body: "Barlow", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --f-num: "Barlow Semi Condensed", "Arial Narrow", system-ui, sans-serif;
+  --state: var(--go);
+  --state-glow: rgba(52, 229, 138, 0.28);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body { margin: 0; background: var(--night); color: var(--chalk); font: 400 17px/1.62 var(--f-body); -webkit-font-smoothing: antialiased; font-variant-numeric: tabular-nums; overflow-x: hidden; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+::selection { background: rgba(126, 168, 255, 0.35); }
+:focus-visible { outline: 2px solid var(--sign-hi); outline-offset: 3px; border-radius: 6px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+a.sr:focus { position: fixed; left: 16px; top: calc(env(safe-area-inset-top, 0px) + 12px); width: auto; height: auto; clip: auto; z-index: 100; padding: 10px 14px; border-radius: 10px; background: var(--sign); color: #fff; }
+h1, h2, h3 { margin: 0; text-wrap: balance; font-weight: 600; }
+p { margin: 0; }
+.wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+.h2 { font: 600 clamp(38px, 5.2vw, 68px)/0.98 var(--f-disp); letter-spacing: -0.005em; max-width: 18ch; }
+.lede { font-size: clamp(18px, 1.6vw, 21px); line-height: 1.55; color: var(--chalk-2); max-width: 60ch; }
+.fine { font-size: 14px; color: var(--fog); line-height: 1.5; }
+.sec { padding-block: clamp(84px, 11vw, 150px); position: relative; }
+.sec-h { display: grid; gap: 18px; margin-bottom: clamp(36px, 5vw, 64px); }
+
+/* ---------- buttons ---------- */
+.btn { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 22px; border-radius: 12px; font: 600 17px/1 var(--f-body); text-decoration: none; border: 1px solid transparent; transition: background 0.2s, border-color 0.2s, transform 0.2s; white-space: nowrap; }
+.btn svg { flex: none; }
+.btn-sign { background: var(--sign); color: #fff; box-shadow: 0 10px 30px rgba(47, 111, 224, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18); }
+.btn-sign:hover { background: #3a7cf0; transform: translateY(-1px); }
+.btn-line { border-color: var(--line-2); color: var(--chalk); background: rgba(255, 255, 255, 0.02); }
+.btn-line:hover { border-color: var(--chalk-2); background: rgba(255, 255, 255, 0.05); }
+.btn-sm { height: 40px; padding: 0 16px; font-size: 15px; border-radius: 10px; }
+
+/* ---------- nav ---------- */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); background: var(--night); z-index: 60; }
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; transition: background 0.3s, border-color 0.3s; border-bottom: 1px solid transparent; }
+.nav.solid { background: rgba(10, 17, 28, 0.82); backdrop-filter: blur(14px) saturate(1.3); -webkit-backdrop-filter: blur(14px) saturate(1.3); border-bottom-color: rgba(255, 255, 255, 0.06); }
+.nav-in { display: flex; align-items: center; gap: 28px; height: 68px; }
+.brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; font: 700 24px/1 var(--f-disp); letter-spacing: 0.01em; }
+.psign { width: 34px; height: 34px; border-radius: 8px; background: var(--sign); color: #fff; display: grid; place-items: center; font: 700 22px/1 var(--f-disp); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9), inset 0 0 0 4px var(--sign); }
+.nav-links { display: flex; gap: 22px; margin-left: auto; }
+.nav-links a { text-decoration: none; color: var(--chalk-2); font-size: 15px; font-weight: 500; }
+.nav-links a:hover { color: var(--chalk); }
+@media (max-width: 980px) { .nav-links { display: none; } .nav .btn { margin-left: auto; } }
+
+/* ---------- hero ---------- */
+.hero { position: relative; padding-top: clamp(28px, 5vw, 64px); padding-bottom: clamp(56px, 7vw, 96px); overflow: hidden; isolation: isolate; }
+.hero::before { content: ""; position: absolute; inset: -20% -10% 0; z-index: -2; background:
+  radial-gradient(60% 50% at 78% 18%, rgba(47, 111, 224, 0.20), transparent 70%),
+  radial-gradient(45% 40% at 70% 40%, var(--state-glow), transparent 70%),
+  radial-gradient(70% 60% at 50% 105%, rgba(227, 195, 90, 0.10), transparent 70%); transition: background 0.8s; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0.5; background-image: linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(80% 70% at 50% 30%, #000, transparent); -webkit-mask-image: radial-gradient(80% 70% at 50% 30%, #000, transparent); }
+.hero-top { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(28px, 4vw, 64px); align-items: center; }
+.h1 { font: 700 clamp(52px, 6.6vw, 100px)/0.9 var(--f-disp); letter-spacing: -0.012em; }
+.h1 .ln { display: block; overflow: hidden; padding-bottom: 0.06em; }
+.h1 .ln > span { display: inline-block; }
+.hero .lede { margin-top: 26px; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.built { margin-top: 26px; display: flex; gap: 12px; align-items: center; color: var(--fog); font-size: 14px; max-width: 52ch; }
+.built i { width: 30px; height: 1px; background: var(--line-2); flex: none; }
+
+/* gate sign */
+.gate { display: grid; gap: 16px; }
+.sign { position: relative; padding: 18px 18px 16px; border-radius: 16px; background: linear-gradient(180deg, #0b0f15, #05070b); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07), inset 0 2px 0 rgba(255, 255, 255, 0.05), 0 40px 90px rgba(0, 0, 0, 0.6), 0 0 70px var(--state-glow); transition: box-shadow 0.8s; }
+.sign::before, .sign::after { content: ""; position: absolute; top: 9px; width: 6px; height: 6px; border-radius: 50%; background: #2a313c; box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15); }
+.sign::before { left: 9px; }
+.sign::after { right: 9px; }
+.sign canvas { display: block; width: 100%; height: auto; }
+.sign-cap { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; font: 600 12.5px/1 var(--f-num); color: #6f7b8c; letter-spacing: 0.04em; }
+.states { display: grid; gap: 6px; }
+.st { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--fog); transition: color 0.3s; }
+.st i { width: 10px; height: 10px; border-radius: 50%; background: currentColor; opacity: 0.35; flex: none; transition: opacity 0.3s, box-shadow 0.3s; }
+.st b { font-weight: 600; color: inherit; }
+.st-go { color: #7fd8aa; } .st-amber { color: #e9c27a; } .st-red { color: #f0939b; }
+.st:not(.on) { color: var(--fog); }
+.st.on i { opacity: 1; box-shadow: 0 0 12px currentColor; }
+.st.on { font-weight: 500; }
+.st-go.on { color: var(--go); } .st-amber.on { color: var(--amber); } .st-red.on { color: var(--stop); }
+
+/* live zone */
+.stage { margin-top: clamp(40px, 6vw, 72px); position: relative; }
+.floor-wrap { position: relative; perspective: 1700px; perspective-origin: 50% 0%; margin-inline: auto; max-width: 1240px; }
+.floor { display: block; width: 100%; height: auto; transform: rotateX(38deg); transform-origin: 50% 0%; border-radius: 18px; box-shadow: 0 60px 120px rgba(0, 0, 0, 0.55); }
+.hud { position: relative; z-index: 2; margin-top: 8px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 420px); gap: 14px 32px; align-items: start; }
+.hud .formula { grid-column: 1 / -1; justify-content: center; }
+.formula { display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px; }
+.term { display: grid; align-content: center; gap: 2px; padding: 12px 16px; min-width: 96px; border-radius: 12px; background: rgba(18, 28, 43, 0.88); border: 1px solid var(--line); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.term b { font: 700 34px/1 var(--f-num); letter-spacing: -0.01em; }
+.term span { font-size: 13px; color: var(--fog); line-height: 1.25; }
+.op { display: grid; place-items: center; font: 500 30px/1 var(--f-num); color: var(--fog); padding-inline: 2px; }
+.term-res { border-color: rgba(227, 195, 90, 0.45); }
+.term-res b { color: var(--gold); }
+.term-out { background: color-mix(in srgb, var(--state) 16%, rgba(18, 28, 43, 0.9)); border-color: color-mix(in srgb, var(--state) 60%, transparent); transition: background 0.5s, border-color 0.5s; }
+.term-out b { color: var(--state); transition: color 0.5s; }
+.pool { display: flex; gap: 4px; margin-top: 6px; flex-wrap: wrap; max-width: 150px; }
+.pool i { width: 9px; height: 9px; border-radius: 3px; border: 1px solid rgba(227, 195, 90, 0.45); transition: background 0.3s; }
+.pool i.on { background: var(--gold); border-color: var(--gold); }
+.ticker { display: grid; gap: 6px; font-size: 14px; align-content: start; min-height: 84px; }
+.ticker div { display: grid; grid-template-columns: 44px 1fr; gap: 10px; color: var(--chalk-2); line-height: 1.35; }
+.ticker time { font: 600 13px/1.35 var(--f-num); color: var(--fog); }
+.ticker .k-m b { color: var(--gold); }
+.ticker .k-r b { color: var(--amber); }
+.ticker .k-x b { color: var(--sign-hi); }
+.ticker .k-o b { color: var(--go); }
+.stage-cap { margin-top: 4px; font-size: 13.5px; color: var(--fog); display: flex; gap: 18px; flex-wrap: wrap; }
+.stage-cap span { display: inline-flex; align-items: center; gap: 7px; }
+.stage-cap i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+
+/* ---------- problem ---------- */
+.problem { background: linear-gradient(180deg, var(--night), var(--night-2)); }
+.probs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(24px, 3vw, 44px); }
+.prob { border-top: 1px solid var(--line-2); padding-top: 22px; display: grid; gap: 12px; align-content: start; }
+.prob svg { color: var(--fog); }
+.prob h3 { font: 600 26px/1.1 var(--f-disp); }
+.prob p { color: var(--chalk-2); font-size: 16.5px; }
+.opp { margin-top: clamp(48px, 6vw, 80px); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: start; padding: clamp(24px, 3.4vw, 40px); border-radius: 20px; background: linear-gradient(120deg, rgba(227, 195, 90, 0.12), rgba(47, 111, 224, 0.08)); border: 1px solid rgba(227, 195, 90, 0.25); }
+.opp b { font: 600 15px/1 var(--f-num); color: var(--gold); padding-top: 9px; white-space: nowrap; }
+.opp p { font: 600 clamp(26px, 3vw, 38px)/1.12 var(--f-disp); }
+
+/* ---------- three approaches ---------- */
+.cmp { display: grid; gap: 22px; }
+.tabs { display: inline-flex; padding: 5px; gap: 4px; border-radius: 14px; background: var(--deck); border: 1px solid var(--line); flex-wrap: wrap; width: fit-content; max-width: 100%; }
+.tab { appearance: none; border: 0; background: transparent; color: var(--chalk-2); font: 600 15.5px/1 var(--f-body); padding: 12px 16px; border-radius: 10px; cursor: pointer; transition: background 0.25s, color 0.25s; }
+.tab:hover { color: var(--chalk); }
+.tab[aria-selected="true"] { background: var(--deck-3); color: var(--chalk); box-shadow: inset 0 0 0 1px var(--line-2); }
+.tab[aria-selected="true"][data-mode="pool"] { background: var(--sign); box-shadow: none; color: #fff; }
+.cmp-body { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(20px, 3vw, 40px); align-items: stretch; }
+.lot { position: relative; border-radius: 20px; padding: clamp(18px, 2.4vw, 28px); background: radial-gradient(120% 90% at 30% 0%, #1a2638, #111a28); border: 1px solid var(--line); display: grid; grid-template-columns: 74px minmax(0, 1fr); gap: 16px; overflow: hidden; }
+.queue { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; border-right: 2px dashed rgba(255, 255, 255, 0.12); padding-right: 14px; }
+.queue small { font-size: 12px; color: var(--fog); text-align: center; line-height: 1.25; }
+.qcars { display: grid; gap: 8px; min-height: 40px; }
+.bays { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 0; align-content: center; }
+.bay { position: relative; aspect-ratio: 0.55; border-left: 2px solid rgba(235, 240, 246, 0.42); display: grid; place-items: center; transition: background 0.4s; }
+.bay:nth-child(10n) { border-right: 2px solid rgba(235, 240, 246, 0.42); }
+.bay:nth-child(-n + 10) { border-bottom: 2px solid rgba(235, 240, 246, 0.42); align-items: end; padding-bottom: 8%; }
+.bay:nth-child(n + 11) { align-items: start; padding-top: 8%; }
+.bay.vip { background: repeating-linear-gradient(135deg, rgba(227, 195, 90, 0.20) 0 7px, rgba(227, 195, 90, 0.08) 7px 14px); }
+.bay .lock { position: absolute; left: 50%; width: 22%; aspect-ratio: 1; border-radius: 50%; background: #c9d2de; box-shadow: 0 0 0 3px rgba(201, 210, 222, 0.25); transform: translateX(-50%); opacity: 0; transition: opacity 0.3s; }
+.bay:nth-child(-n + 10) .lock { bottom: 6%; }
+.bay:nth-child(n + 11) .lock { top: 6%; }
+.bay.locked .lock { opacity: 1; }
+.car { width: 60%; aspect-ratio: 0.5; border-radius: 22% / 12%; position: relative; background: var(--c, #cfd6e0); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.45); }
+.car::before { content: ""; position: absolute; left: 12%; right: 12%; top: 18%; height: 18%; border-radius: 3px 3px 1px 1px; background: rgba(10, 16, 26, 0.75); }
+.car::after { content: ""; position: absolute; left: 14%; right: 14%; bottom: 14%; height: 12%; border-radius: 1px 1px 3px 3px; background: rgba(10, 16, 26, 0.6); }
+.car.m { --c: var(--gold); box-shadow: 0 0 0 2px rgba(245, 221, 143, 0.5), 0 0 18px rgba(227, 195, 90, 0.45), 0 6px 12px rgba(0, 0, 0, 0.45); }
+.bay:nth-child(n + 11) .car { transform: rotate(180deg); }
+.qcars .car { width: 26px; transform: rotate(90deg); margin-block: -6px; }
+.pooltag { position: absolute; right: clamp(18px, 2.4vw, 28px); top: 12px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--gold); opacity: 0; transition: opacity 0.4s; }
+.pooltag i { width: 12px; height: 12px; border-radius: 3px; background: var(--gold); box-shadow: 0 0 10px rgba(227, 195, 90, 0.6); }
+.cmp[data-mode="pool"] .pooltag { opacity: 1; }
+.cmp-side { display: grid; gap: 12px; align-content: start; }
+.metric { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 12px; padding: 16px 18px; border-radius: 14px; background: var(--deck); border: 1px solid var(--line); }
+.metric span { color: var(--chalk-2); font-size: 15.5px; }
+.metric b { font: 700 34px/1 var(--f-num); }
+.metric b.small { font: 600 18px/1.2 var(--f-num); text-align: right; }
+.metric .bad { color: var(--amber); }
+.metric .good { color: var(--go); }
+.cmp-cap { font: 600 clamp(22px, 2.2vw, 28px)/1.2 var(--f-disp); min-height: 2.4em; }
+.cmp-cap small { display: block; font: 400 15px/1.5 var(--f-body); color: var(--fog); margin-top: 6px; }
+
+/* ---------- gate rule ---------- */
+.rule { background: radial-gradient(70% 60% at 15% 10%, rgba(47, 111, 224, 0.12), transparent 70%), var(--night-2); }
+.eq { font: 600 clamp(24px, 2.8vw, 36px)/1.25 var(--f-disp); color: var(--chalk-2); max-width: 30ch; }
+.eq b { color: var(--chalk); font-weight: 700; }
+.calc { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); margin-top: clamp(32px, 4vw, 52px); align-items: start; }
+.sliders { display: grid; gap: 18px; }
+.sl { display: grid; gap: 8px; }
+.sl-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.sl label { font-size: 16px; color: var(--chalk-2); }
+.sl output { font: 700 26px/1 var(--f-num); }
+.sl.res output { color: var(--gold); }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 28px; background: transparent; cursor: pointer; }
+input[type="range"]::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--tc, var(--sign)) var(--v, 50%), var(--deck-3) var(--v, 50%)); }
+input[type="range"]::-moz-range-track { height: 6px; border-radius: 3px; background: var(--deck-3); }
+input[type="range"]::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--tc, var(--sign)); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; margin-top: -8px; border-radius: 50%; background: #fff; border: 0; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5), 0 0 0 5px rgba(255, 255, 255, 0.08); }
+input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 0; }
+.sl.res input { --tc: var(--gold); }
+.calc-out { display: grid; gap: 18px; }
+.result { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; padding: 20px 22px; border-radius: 16px; background: color-mix(in srgb, var(--cstate, var(--go)) 12%, var(--deck)); border: 1px solid color-mix(in srgb, var(--cstate, var(--go)) 50%, transparent); transition: background 0.4s, border-color 0.4s; }
+.result b { font: 700 64px/0.9 var(--f-num); color: var(--cstate, var(--go)); min-width: 1.4ch; text-align: center; transition: color 0.4s; }
+.result p { font-size: 16px; color: var(--chalk-2); }
+.result p strong { display: block; color: var(--chalk); font: 600 21px/1.2 var(--f-disp); margin-bottom: 4px; }
+.calc .linkbtn { justify-self: start; }
+.linkbtn { appearance: none; background: none; border: 0; padding: 0; color: var(--sign-hi); font: 500 15px/1.4 var(--f-body); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+
+/* ---------- how it works ---------- */
+.how-grid { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(32px, 6vw, 96px); }
+.how-side { position: sticky; top: 110px; align-self: start; display: grid; gap: 22px; }
+.note { padding: 16px 18px; border-radius: 14px; background: var(--deck); border: 1px solid var(--line); color: var(--chalk-2); font-size: 15.5px; }
+.note b { color: var(--chalk); }
+.steps { list-style: none; margin: 0; padding: 0 0 0 46px; position: relative; display: grid; gap: clamp(36px, 5vw, 64px); }
+.steps::before { content: ""; position: absolute; left: 15px; top: 6px; bottom: 6px; width: 2px; background: var(--line); border-radius: 1px; }
+.rail { position: absolute; left: 15px; top: 6px; width: 2px; height: calc((100% - 12px) * var(--p, 0)); background: linear-gradient(var(--sign-hi), var(--go)); border-radius: 1px; box-shadow: 0 0 12px rgba(52, 229, 138, 0.45); }
+.step { position: relative; display: grid; gap: 10px; }
+.step .dot { position: absolute; left: -46px; top: 2px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font: 700 15px/1 var(--f-num); background: var(--deck-2); border: 2px solid var(--line-2); color: var(--fog); transition: background 0.35s, border-color 0.35s, color 0.35s, box-shadow 0.35s; }
+.step.on .dot { background: var(--go); border-color: var(--go); color: #062012; box-shadow: 0 0 18px rgba(52, 229, 138, 0.55); }
+.step h3 { font: 600 clamp(26px, 2.6vw, 32px)/1.1 var(--f-disp); }
+.step p { color: var(--chalk-2); max-width: 54ch; }
+.step ul { margin: 2px 0 0; padding-left: 20px; color: var(--chalk-2); display: grid; gap: 4px; }
+.formula-inline { display: inline-block; margin-top: 4px; padding: 10px 14px; border-radius: 10px; background: var(--deck); border: 1px solid var(--line); font: 600 16px/1.4 var(--f-num); color: var(--chalk); }
+
+/* ---------- beneficiaries ---------- */
+.who { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 2.4vw, 32px); }
+.role { display: grid; gap: 14px; align-content: start; padding-top: 22px; border-top: 2px solid var(--line-2); }
+.role.op { border-top-color: var(--sign); }
+.role.mem { border-top-color: var(--gold); }
+.role.gen { border-top-color: var(--go); }
+.role small { font: 600 13px/1 var(--f-num); color: var(--fog); letter-spacing: 0.02em; }
+.role h3 { font: 600 30px/1.05 var(--f-disp); }
+.role ul { margin: 0; padding-left: 20px; color: var(--chalk-2); display: grid; gap: 6px; }
+
+/* ---------- prototype ---------- */
+.proto { background: linear-gradient(180deg, var(--night), #0c1523 40%, var(--night)); overflow: hidden; }
+.devices { position: relative; margin-top: 12px; padding-bottom: clamp(40px, 6vw, 90px); }
+.laptop { position: relative; width: min(100%, 1060px); border-radius: 18px; padding: 12px 12px 0; background: linear-gradient(180deg, #2a3341, #1a212c); box-shadow: 0 50px 120px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+.laptop img { border-radius: 8px 8px 0 0; width: 100%; height: auto; aspect-ratio: 1.6; object-fit: cover; object-position: top left; background: var(--deck); }
+.laptop::after { content: ""; position: absolute; left: -4%; right: -4%; bottom: -16px; height: 16px; border-radius: 0 0 18px 18px; background: linear-gradient(180deg, #3a4454, #222a36); box-shadow: 0 18px 30px rgba(0, 0, 0, 0.5); }
+.phones { position: absolute; right: 0; bottom: 0; display: flex; gap: 18px; align-items: flex-end; }
+.phone { width: clamp(150px, 17vw, 236px); border-radius: 32px; padding: 9px; background: #0b0f15; box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6), inset 0 0 0 1.5px rgba(255, 255, 255, 0.12); will-change: transform; }
+.phone img { border-radius: 24px; width: 100%; height: auto; aspect-ratio: 390 / 844; object-fit: cover; object-position: top; background: #f1f3f7; }
+.phone:nth-child(1) { margin-bottom: 70px; }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: clamp(40px, 5vw, 64px); }
+.stat { padding: 22px 22px 20px; border-radius: 18px; background: var(--deck); border: 1px solid var(--line); display: grid; gap: 8px; }
+.stat b { font: 700 clamp(48px, 5.4vw, 72px)/0.9 var(--f-num); letter-spacing: -0.02em; }
+.stat b.g { color: var(--go); }
+.stat > span { color: var(--chalk-2); font-size: 16px; }
+.stat small { color: var(--fog); font-size: 13.5px; }
+.features { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); margin-top: clamp(40px, 5vw, 64px); align-items: start; }
+.flist { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.flist li { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--line); color: var(--chalk-2); }
+.flist li b { color: var(--chalk); font-weight: 600; }
+.flist svg { color: var(--go); margin-top: 3px; }
+.tryit { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 22px; align-items: center; padding: 24px; border-radius: 20px; background: linear-gradient(140deg, rgba(47, 111, 224, 0.22), rgba(47, 111, 224, 0.06)); border: 1px solid rgba(126, 168, 255, 0.3); }
+.tryit h3 { font: 600 28px/1.05 var(--f-disp); margin-bottom: 8px; }
+.tryit p { color: var(--chalk-2); font-size: 15.5px; }
+.tryit .cta { margin-top: 16px; }
+.qr { width: 132px; padding: 10px; border-radius: 14px; background: #fff; display: grid; gap: 6px; justify-items: center; }
+.qr svg { width: 112px; height: 112px; display: block; }
+.qr span { font: 600 11.5px/1.2 var(--f-num); color: #24324a; text-align: center; }
+.member-shot { margin-top: clamp(28px, 4vw, 44px); border-radius: 16px; overflow: hidden; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45); }
+.member-shot img { width: 100%; height: auto; }
+.cap { margin-top: 12px; font-size: 14px; color: var(--fog); }
+
+/* ---------- impact ---------- */
+.quad { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+.q { background: var(--night-2); padding: clamp(22px, 3vw, 36px); display: grid; gap: 12px; align-content: start; }
+.q h3 { font: 600 clamp(30px, 3vw, 40px)/1 var(--f-disp); display: flex; align-items: center; gap: 12px; }
+.q h3 i { width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.q ul { margin: 0; padding-left: 20px; color: var(--chalk-2); display: grid; gap: 6px; }
+.sdg { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; align-items: center; }
+.sdg-b { display: inline-flex; align-items: center; gap: 12px; padding: 8px 16px 8px 8px; border-radius: 12px; background: var(--deck); border: 1px solid var(--line); }
+.sdg-b b { width: 44px; height: 44px; border-radius: 8px; display: grid; place-items: center; font: 700 22px/1 var(--f-num); color: #fff; }
+.sdg-b span { font-size: 15px; line-height: 1.25; }
+.kpi { width: 100%; border-collapse: collapse; margin-top: clamp(36px, 4vw, 52px); font-size: 16px; }
+.kpi caption { text-align: left; font: 600 24px/1.1 var(--f-disp); margin-bottom: 14px; }
+.kpi th, .kpi td { text-align: left; padding: 14px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.kpi th { color: var(--chalk); font-weight: 600; width: 32%; }
+.kpi td { color: var(--chalk-2); }
+.kpi thead th { color: var(--fog); font-weight: 500; font-size: 14px; }
+.tbl-wrap { overflow-x: auto; }
+
+/* ---------- business ---------- */
+.biz { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 72px); align-items: start; }
+.streams { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.streams li { display: grid; grid-template-columns: 48px minmax(0, 1fr); gap: 16px; align-items: start; padding: 18px; border-radius: 16px; background: var(--deck); border: 1px solid var(--line); }
+.streams svg { color: var(--gold); }
+.streams b { display: block; font: 600 21px/1.2 var(--f-disp); margin-bottom: 2px; }
+.streams span { color: var(--chalk-2); font-size: 15.5px; }
+.rev { padding: clamp(22px, 3vw, 32px); border-radius: 20px; background: linear-gradient(160deg, rgba(227, 195, 90, 0.12), rgba(227, 195, 90, 0.02)); border: 1px solid rgba(227, 195, 90, 0.28); display: grid; gap: 14px; }
+.rev h3 { font: 600 24px/1.1 var(--f-disp); }
+.rev .line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font: 600 18px/1.3 var(--f-num); }
+.rev .line span { padding: 6px 10px; border-radius: 8px; background: rgba(0, 0, 0, 0.25); }
+.rev .line em { font-style: normal; color: var(--fog); }
+.market { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: center; padding-top: 14px; border-top: 1px solid rgba(227, 195, 90, 0.2); }
+.market b { font: 700 52px/0.9 var(--f-num); color: var(--gold); }
+.market span { color: var(--chalk-2); font-size: 15px; }
+
+/* ---------- roadmap ---------- */
+.road { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; padding-top: 44px; }
+.road::before { content: ""; position: absolute; left: 0; right: 0; top: 14px; height: 4px; border-radius: 2px; background: repeating-linear-gradient(90deg, rgba(235, 240, 246, 0.35) 0 22px, transparent 22px 40px); }
+.road .runner { position: absolute; top: 3px; left: 0; width: 46px; height: 26px; transform: translateX(-50%); }
+.ph { display: grid; gap: 10px; align-content: start; padding: 20px; border-radius: 16px; background: var(--deck); border: 1px solid var(--line); position: relative; }
+.ph::before { content: ""; position: absolute; top: -36px; left: 20px; width: 14px; height: 14px; border-radius: 50%; background: var(--deck-3); border: 2px solid var(--line-2); }
+.ph.done { border-color: rgba(52, 229, 138, 0.45); background: linear-gradient(180deg, rgba(52, 229, 138, 0.10), var(--deck)); }
+.ph.done::before { background: var(--go); border-color: var(--go); box-shadow: 0 0 14px rgba(52, 229, 138, 0.7); }
+.ph small { font: 600 13px/1 var(--f-num); color: var(--fog); }
+.ph.done small { color: var(--go); }
+.ph h3 { font: 600 24px/1.1 var(--f-disp); }
+.ph ul { margin: 0; padding-left: 18px; color: var(--chalk-2); font-size: 15px; display: grid; gap: 4px; }
+
+/* ---------- feasibility ---------- */
+.feas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(20px, 3vw, 40px); }
+.feas h3 { font: 600 24px/1.1 var(--f-disp); margin-bottom: 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips span { padding: 8px 12px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 15px; color: var(--chalk-2); background: var(--deck); }
+.feas ul { margin: 0; padding-left: 20px; color: var(--chalk-2); display: grid; gap: 6px; }
+
+/* ---------- closing ---------- */
+.close { text-align: left; overflow: hidden; }
+.close-in { position: relative; padding: clamp(36px, 6vw, 80px); border-radius: 28px; background: radial-gradient(90% 120% at 100% 0%, rgba(47, 111, 224, 0.35), transparent 60%), radial-gradient(80% 120% at 0% 100%, rgba(227, 195, 90, 0.18), transparent 60%), var(--deck); border: 1px solid var(--line-2); overflow: hidden; }
+.close h2 { font: 700 clamp(40px, 5.4vw, 78px)/0.95 var(--f-disp); max-width: 16ch; }
+.close-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); gap: clamp(28px, 4vw, 56px); align-items: center; }
+.close .sign { --state-glow: rgba(52, 229, 138, 0.26); }
+@media (max-width: 1080px) { .close-grid { grid-template-columns: minmax(0, 1fr); } }
+.close .cta { margin-top: 30px; }
+footer { padding-block: 40px 56px; color: var(--fog); font-size: 14px; }
+.foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 18px 40px; border-top: 1px solid var(--line); padding-top: 28px; }
+.foot p { max-width: 60ch; }
+.foot a { color: var(--chalk-2); }
+
+/* ---------- reveal (only once the script has started) ---------- */
+.js [data-rv] { opacity: 0; transform: translateY(18px); }
+.js .rv-done[data-rv] { opacity: 1; transform: none; transition: opacity 0.8s cubic-bezier(.2,.7,.2,1), transform 0.8s cubic-bezier(.2,.7,.2,1); }
+.js [data-intro] { opacity: 0; }
+.js.intro-done [data-intro], .js.no-anim [data-intro] { opacity: 1; }
+.js.no-anim [data-rv] { opacity: 1; transform: none; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 1080px) {
+  .hero-top { grid-template-columns: minmax(0, 1fr); }
+  .gate { max-width: 560px; }
+  .hud { grid-template-columns: minmax(0, 1fr); }
+  .hud .formula { justify-content: flex-start; }
+  .cmp-body, .calc, .how-grid, .biz, .features { grid-template-columns: minmax(0, 1fr); }
+  .how-side { position: static; }
+  .phones { position: relative; justify-content: flex-end; margin-top: -14%; padding-right: 4%; }
+  .feas { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  body { font-size: 16.5px; }
+  .probs, .who, .stats, .quad { grid-template-columns: minmax(0, 1fr); }
+  .road { grid-template-columns: minmax(0, 1fr); padding-top: 0; padding-left: 34px; }
+  .road::before { left: 10px; right: auto; top: 0; bottom: 0; width: 4px; height: auto; background: repeating-linear-gradient(180deg, rgba(235, 240, 246, 0.35) 0 22px, transparent 22px 40px); }
+  .road .runner { display: none; }
+  .ph::before { top: 22px; left: -31px; }
+  .formula { gap: 4px 6px; align-items: flex-start; }
+  .term { min-width: 0; padding: 0 2px; border: 0; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .term b { font-size: 26px; }
+  .term span { font-size: 11px; max-width: 66px; }
+  .term-out { padding: 4px 10px; border: 1px solid color-mix(in srgb, var(--state) 60%, transparent); border-radius: 10px; }
+  .pool { display: none; }
+  .op { font-size: 18px; padding-inline: 0; }
+  .ticker { min-height: 0; }
+  .floor { transform: rotateX(30deg); }
+  .phones { margin-top: 18px; justify-content: center; padding-right: 0; }
+  .phone { width: 42vw; border-radius: 24px; padding: 6px; }
+  .phone img { border-radius: 18px; }
+  .phone:nth-child(1) { margin-bottom: 0; }
+  .phones { gap: 10px; }
+  .tryit { grid-template-columns: minmax(0, 1fr); }
+  .lot { grid-template-columns: minmax(0, 1fr); }
+  .queue { flex-direction: row; border-right: 0; border-bottom: 2px dashed rgba(255, 255, 255, 0.12); padding: 0 0 12px; justify-content: flex-start; }
+  .qcars { display: flex; gap: 8px; }
+  .qcars .car { transform: none; margin: 0; width: 16px; }
+  .opp { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .opp b { padding-top: 0; }
+  .result b { font-size: 52px; }
+  .tabs { width: 100%; }
+  .tab { flex: 1 1 auto; padding: 11px 10px; font-size: 14.5px; }
+}
+</style>
+<script>document.documentElement.classList.add('js');setTimeout(function(){if(!window.__pf)document.documentElement.classList.add('no-anim','intro-done');},4000);</script>
+<a class="sr" href="#main">Skip to content</a>
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="#top" aria-label="ParkFlow, back to top"><span class="psign" aria-hidden="true">P</span>ParkFlow</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#idea">The idea</a>
+      <a href="#gate-rule">Gate rule</a>
+      <a href="#how">How it works</a>
+      <a href="#prototype">Prototype</a>
+      <a href="#impact">Impact</a>
+      <a href="#roadmap">Roadmap</a>
+    </nav>
+    <a class="btn btn-sign btn-sm" href="command.html">Open the demo</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero" id="top" aria-labelledby="hero-h">
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <h1 class="h1" id="hero-h"><span class="ln"><span data-intro>Reserve capacity,</span></span><span class="ln"><span data-intro>not parking bays.</span></span></h1>
+        <p class="lede" data-intro>ParkFlow gives mall members priority parking without locking a single bay. Members reserve a share of a zone's capacity, every uncommitted space stays open to all shoppers, and the entrance gate decides who comes in, live.</p>
+        <div class="cta" data-intro>
+          <a class="btn btn-sign" href="command.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Open the command centre</a>
+          <a class="btn btn-line" href="driver.html"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>Try the driver app</a>
+        </div>
+        <p class="built" data-intro><i aria-hidden="true"></i>Built for the Sime Darby Property University Hackathon 2026, theme People: Smart Mobility and Digital Living.</p>
+      </div>
+      <div class="gate" data-intro>
+        <div class="sign">
+          <canvas id="hero-sign" width="960" height="150" role="img" aria-label="Entrance gate display for Zone A"></canvas>
+          <div class="sign-cap"><span>ZONE A ENTRANCE</span><span id="sign-clock">13:00</span></div>
+        </div>
+        <div class="states" aria-live="polite">
+          <div class="st st-go" data-st="go"><i></i><span><b>Green:</b> open to all shoppers</span></div>
+          <div class="st st-amber" data-st="amber"><i></i><span><b>Amber:</b> priority entry for confirmed members only</span></div>
+          <div class="st st-red" data-st="red"><i></i><span><b>Red:</b> zone unavailable, use another zone</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage" data-intro>
+      <div class="floor-wrap">
+        <canvas class="floor" id="floor" width="1200" height="470" role="img" aria-label="Live simulation of a 100-space shared zone: cars arrive at the gate, members with reservations are let in, other shoppers are let in only while uncommitted space remains."></canvas>
+      </div>
+      <div class="hud">
+          <div class="formula" aria-label="Public entry capacity, live">
+            <div class="term"><b id="f-total">100</b><span>Total capacity</span></div>
+            <div class="op" aria-hidden="true">−</div>
+            <div class="term"><b id="f-occ">0</b><span>Parked or arriving</span></div>
+            <div class="op" aria-hidden="true">−</div>
+            <div class="term term-res"><b id="f-res">0</b><span>Members on the way</span><div class="pool" id="pool" aria-hidden="true"></div></div>
+            <div class="op" aria-hidden="true">−</div>
+            <div class="term"><b id="f-margin">5</b><span>Safety margin</span></div>
+            <div class="op" aria-hidden="true">=</div>
+            <div class="term term-out"><b id="f-out">0</b><span>Open to everyone</span></div>
+          </div>
+          <div class="stage-cap">
+            <span><i style="background:var(--gold)"></i>Member with a confirmed reservation</span>
+            <span><i style="background:#cfd6e0"></i>General shopper</span>
+            <span>Live simulation of the gate rule, illustrative zone.</span>
+          </div>
+        <div class="ticker" id="ticker" aria-live="off"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec problem" id="problem" aria-labelledby="prob-h">
+  <div class="wrap">
+    <div class="sec-h">
+      <h2 class="h2" id="prob-h" data-rv>Why should parking privileges cost parking efficiency?</h2>
+      <p class="lede" data-rv>Malls want to give members something they feel on every visit. Today that usually means taking bays away from everyone else.</p>
+    </div>
+    <div class="probs">
+      <article class="prob" data-rv>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <h3>Membership feels thin</h3>
+        <p>Members collect shopping rewards, but parking, the first thing they do at the mall, gives them nothing reliable.</p>
+      </article>
+      <article class="prob" data-rv>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
+        <h3>VIP bays sit empty</h3>
+        <p>Permanent member-only bays stay unused off-peak, while ordinary shoppers circle the floor below looking for a space.</p>
+      </article>
+      <article class="prob" data-rv>
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <h3>Hardware on every bay</h3>
+        <p>Bay locks and per-bay sensors add installation and maintenance cost to every single space a mall wants to reserve.</p>
+      </article>
+    </div>
+    <div class="opp" data-rv>
+      <b>The opportunity</b>
+      <p>Give members priority parking without permanently removing capacity from general shoppers.</p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="idea" aria-labelledby="idea-h">
+  <div class="wrap">
+    <div class="sec-h">
+      <h2 class="h2" id="idea-h" data-rv>Three ways to give members priority. One wastes no space.</h2>
+      <p class="lede" data-rv>The same 20 bays, 2 members already parked, 2 members on the way and 16 shoppers who want to park. Switch between the approaches.</p>
+    </div>
+    <div class="cmp" id="cmp" data-mode="locks" data-rv>
+      <div class="tabs" role="tablist" aria-label="Approach">
+        <button class="tab" role="tab" id="tab-locks" aria-controls="cmp-panel" aria-selected="true" data-mode="locks">Individual bay locks</button>
+        <button class="tab" role="tab" id="tab-vip" aria-controls="cmp-panel" aria-selected="false" data-mode="vip" tabindex="-1">Permanent VIP zone</button>
+        <button class="tab" role="tab" id="tab-pool" aria-controls="cmp-panel" aria-selected="false" data-mode="pool" tabindex="-1">ParkFlow shared zone</button>
+      </div>
+      <div class="cmp-body" id="cmp-panel" role="tabpanel" aria-labelledby="tab-locks">
+        <div class="lot">
+          <div class="queue"><div class="qcars" id="qcars"></div><small>Shoppers waiting</small></div>
+          <div class="bays" id="bays" aria-hidden="true"></div>
+          <div class="pooltag"><i></i><i></i>2 spaces protected for members on the way</div>
+        </div>
+        <div class="cmp-side">
+          <div class="metric"><span>Shoppers left waiting</span><b id="m-wait">2</b></div>
+          <div class="metric"><span>Empty bays no shopper may use</span><b id="m-idle">4</b></div>
+          <div class="metric"><span>Members on the way guaranteed a space</span><b class="small good">Yes</b></div>
+          <div class="metric"><span>Hardware in the bays</span><b class="small" id="m-hw">6 bay locks</b></div>
+        </div>
+      </div>
+      <p class="cmp-cap" id="cmp-cap"></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec rule" id="gate-rule" aria-labelledby="rule-h">
+  <div class="wrap">
+    <div class="sec-h">
+      <h2 class="h2" id="rule-h" data-rv>One rule runs the gate.</h2>
+      <p class="eq" data-rv><b>Public entry capacity</b> = total capacity − current occupancy − outstanding reservations − safety margin</p>
+    </div>
+    <div class="calc" data-rv>
+      <div class="sliders">
+        <div class="sl"><div class="sl-top"><label for="c-total">Total capacity of the zone</label><output for="c-total" id="o-total">100</output></div><input type="range" id="c-total" min="20" max="300" step="5" value="100"></div>
+        <div class="sl"><div class="sl-top"><label for="c-occ">Currently occupied</label><output for="c-occ" id="o-occ">75</output></div><input type="range" id="c-occ" min="0" max="100" step="1" value="75"></div>
+        <div class="sl res"><div class="sl-top"><label for="c-res">Confirmed members yet to arrive</label><output for="c-res" id="o-res">20</output></div><input type="range" id="c-res" min="0" max="60" step="1" value="20"></div>
+        <div class="sl"><div class="sl-top"><label for="c-mar">Safety margin</label><output for="c-mar" id="o-mar">5</output></div><input type="range" id="c-mar" min="0" max="20" step="1" value="5"></div>
+        <button type="button" class="linkbtn" id="c-reset">Back to the example from our proposal (100, 75, 20, 5)</button>
+      </div>
+      <div class="calc-out">
+        <div class="sign">
+          <canvas id="calc-sign" width="960" height="150" role="img" aria-label="Gate display for the values you chose"></canvas>
+          <div class="sign-cap"><span>ZONE A ENTRANCE</span><span>YOUR NUMBERS</span></div>
+        </div>
+        <div class="result" id="result" aria-live="polite"><b id="r-num">0</b><p id="r-txt"></p></div>
+        <p class="fine">Members never get a specific bay, only a guaranteed share of the zone. Bookings are confirmed only when that share can be protected; forecasts help planning but never replace this check at the gate.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="how" aria-labelledby="how-h">
+  <div class="wrap how-grid">
+    <div class="how-side">
+      <h2 class="h2" id="how-h" data-rv>The reservation engine, in five steps.</h2>
+      <p class="lede" data-rv>Built from parts most malls already own: CCTV, an entry gate and an app.</p>
+      <p class="note" data-rv><b>Important:</b> ParkFlow only confirms a reservation when it can protect the capacity. AI forecasts inform planning; they never replace the real-time admission check.</p>
+    </div>
+    <ol class="steps" id="steps">
+      <span class="rail" id="rail" aria-hidden="true"></span>
+      <li class="step"><span class="dot">1</span><h3>Detect occupancy</h3><p>Existing CCTV feeds estimate occupied spaces with computer vision. Number-plate (ANPR) entry and exit records give a second, independent count. No sensor in each bay.</p></li>
+      <li class="step"><span class="dot">2</span><h3>Set member-priority capacity</h3><p>The operator sets the most priority reservations a zone may hold at the same time. For example, a 100-space zone supports up to 20 overlapping member reservations.</p></li>
+      <li class="step"><span class="dot">3</span><h3>Accept reservations</h3><p>Members give their arrival time and expected stay. Before confirming, ParkFlow checks:</p><ul><li>membership and the registered number plate</li><li>overlapping reservations</li><li>physical capacity available</li><li>the protected quota and safety margin</li></ul></li>
+      <li class="step"><span class="dot">4</span><h3>Control shared-zone access</h3><p>Every arriving car meets the gate rule. While public capacity remains, the sign is green and everyone enters. At zero it turns amber: other shoppers are sent to another zone and confirmed members enter after the plate check.</p><span class="formula-inline">100 − 75 − 20 − 5 = 0 open to new non-member cars</span></li>
+      <li class="step"><span class="dot">5</span><h3>Release and reallocate</h3><p>Each reservation has a grace period the operator can set. No-shows release their protected capacity automatically, departures update occupancy, and overstays or detection errors raise an alert and can pause new bookings.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec" id="who" aria-labelledby="who-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-h"><h2 class="h2" id="who-h" data-rv>One system, three beneficiaries.</h2></div>
+    <div class="who">
+      <article class="role op" data-rv>
+        <small>Primary customer</small>
+        <h3>Mall operators</h3>
+        <ul><li>Stronger membership programmes and loyalty</li><li>Better use of the car park they already have</li><li>New revenue without major infrastructure spending</li><li>Live occupancy, reservations and demand forecasts in one place</li></ul>
+      </article>
+      <article class="role mem" data-rv>
+        <small>Primary end users</small>
+        <h3>Mall members</h3>
+        <ul><li>Reserve 30 to 60 minutes before arriving</li><li>Say how long they plan to stay</li><li>Enter through number-plate check, no ticket</li><li>Park in any free bay inside the reserved zone</li></ul>
+      </article>
+      <article class="role gen" data-rv>
+        <small>Secondary users</small>
+        <h3>General shoppers</h3>
+        <ul><li>See availability by floor and zone before arriving: general, Ladies' parking and member-priority</li><li>Still use the member-priority zone whenever uncommitted space remains</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec proto" id="prototype" aria-labelledby="proto-h">
+  <div class="wrap">
+    <div class="sec-h">
+      <h2 class="h2" id="proto-h" data-rv>A working prototype, running today.</h2>
+      <p class="lede" data-rv>A command centre for the operator and a phone app for drivers, both driven by one seeded simulation of a three-level mall car park.</p>
+    </div>
+    <div class="devices" data-rv>
+      <div class="laptop"><img src="assets/op-overview.webp" width="1800" height="1125" alt="ParkFlow command centre: a 3D model of the car park with live bay lights, a level board, the parking occupancy forecast and the guidance a driver sees." loading="lazy" decoding="async"></div>
+      <div class="phones" id="phones">
+        <div class="phone" data-par="0.10"><img src="assets/app-home.webp" width="780" height="1688" alt="Driver app home: free bays by level, the car already parked and a busy-time forecast." loading="lazy" decoding="async"></div>
+        <div class="phone" data-par="0.18"><img src="assets/app-reserve.webp" width="780" height="1688" alt="Driver app booking: Ladies' parking or a designated member bay, arrival time, stay and car." loading="lazy" decoding="async"></div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat" data-rv><b class="g"><i data-count="44" style="font-style:normal">44</i>%</b><span>less time from gate to bay</span><small>145 s to 81 s on average</small></div>
+      <div class="stat" data-rv><b class="g"><i data-count="32" style="font-style:normal">32</i>%</b><span>less driving while searching</span><small>44 km to 30 km in total</small></div>
+      <div class="stat" data-rv><b><i data-count="136" style="font-style:normal">136</i></b><span>cars in a weekend surge</span><small>Same seeded demand with and without guidance. Simulation, not field data.</small></div>
+    </div>
+    <div class="features">
+      <ul class="flist" data-rv>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg><span><b>Live 3D twin</b> of a three-level car park with bay lights, guidance routes and camera coverage</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg><span><b>30-minute demand forecast</b> from history plus cinema, dining, events and drivers who share their ETA</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg><span><b>Members vs non-members</b>, live and since opening, for the membership team</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg><span><b>Fair special bays:</b> Ladies' parking and designated member bays bookable within capacity, accessible (OKU) bays protected and never sold</span></li>
+        <li><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 5 5L20 7"/></svg><span><b>Driver app</b> with turn-by-turn guidance to a zone, booking with a grace period, find my car, and payment by wallet, card or member points</span></li>
+      </ul>
+      <div class="tryit" data-rv>
+        <div>
+          <h3>Try it yourself</h3>
+          <p>Open the command centre on a laptop and the driver app on your phone. Both run in the browser with simulated data; nothing to install.</p>
+          <div class="cta">
+            <a class="btn btn-sign btn-sm" href="command.html">Command centre</a>
+            <a class="btn btn-line btn-sm" href="driver.html">Driver app</a>
+          </div>
+        </div>
+        <div class="qr" id="qr" hidden><div id="qr-svg"></div><span>Scan for the driver app</span></div>
+      </div>
+    </div>
+    <figure class="member-shot" data-rv style="margin-inline:0">
+      <img src="assets/op-members.webp" width="1600" height="600" alt="Command centre panels: members parked now by level, and members versus non-members every 10 minutes since 14:00." loading="lazy" decoding="async">
+    </figure>
+    <p class="cap">Membership analytics in the command centre: who is parked right now, and how the member share has moved since the car park opened.</p>
+  </div>
+</section>
+
+<section class="sec" id="impact" aria-labelledby="impact-h">
+  <div class="wrap">
+    <div class="sec-h">
+      <h2 class="h2" id="impact-h" data-rv>Making existing car parks work smarter.</h2>
+    </div>
+    <div class="quad" data-rv>
+      <div class="q"><h3><i style="background:var(--go)"></i>People</h3><ul><li>More convenient, predictable parking for members</li><li>Less uncertainty when searching for a space</li><li>Availability information for every shopper</li></ul></div>
+      <div class="q"><h3><i style="background:var(--gold)"></i>Business</h3><ul><li>A premium membership benefit people feel on every visit</li><li>Potential revenue from paid reservations</li><li>Clear view of how parking privileges affect the mall</li></ul></div>
+      <div class="q"><h3><i style="background:var(--sign-hi)"></i>Infrastructure</h3><ul><li>General shoppers use any capacity not committed to reservations</li><li>No dependence on bay-level reservation hardware</li><li>Data-driven decisions about parking allocation</li></ul></div>
+      <div class="q"><h3><i style="background:#7fd8aa"></i>Planet</h3><ul><li>Better guidance can reduce unnecessary circulation in the car park</li><li>Reusing existing CCTV avoids extra hardware where coverage is good enough</li></ul></div>
+    </div>
+    <div class="sdg" data-rv>
+      <span class="sdg-b"><b style="background:#fd9d24">11</b><span>SDG 11<br>Sustainable cities and communities</span></span>
+      <span class="sdg-b"><b style="background:#fd6925">9</b><span>SDG 9<br>Industry, innovation and infrastructure</span></span>
+      <span class="fine" style="max-width:44ch">SDG 11 first, supported by digital infrastructure innovation under SDG 9.</span>
+    </div>
+    <div class="tbl-wrap" data-rv>
+      <table class="kpi">
+        <caption>What a pilot would measure</caption>
+        <thead><tr><th scope="col">Impact area</th><th scope="col">Measurement</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Reservation reliability</th><td>Share of confirmed reservations successfully fulfilled</td></tr>
+          <tr><th scope="row">Parking efficiency</th><td>Occupied space-hours and unused protected capacity</td></tr>
+          <tr><th scope="row">Customer convenience</th><td>Average parking search time</td></tr>
+          <tr><th scope="row">Membership value</th><td>Reservation adoption and member satisfaction</td></tr>
+          <tr><th scope="row">Environmental impact</th><td>Estimated reduction in search time and the emissions that come with it</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="business" aria-labelledby="biz-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-h"><h2 class="h2" id="biz-h" data-rv>How it pays for itself.</h2></div>
+    <div class="biz">
+      <ul class="streams" data-rv>
+        <li><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><div><b>Software for mall operators</b><span>Subscription or licence for the reservation engine, gate control and dashboard.</span></div></li>
+        <li><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><div><b>Premium membership upgrades</b><span>Reservation privileges as a reason to join or move up a tier.</span></div></li>
+        <li><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h3"/></svg><div><b>Pay-per-reservation</b><span>An optional fee for a guaranteed space at busy times.</span></div></li>
+      </ul>
+      <div class="rev" data-rv>
+        <h3>Incremental revenue</h3>
+        <div class="line"><span>membership upgrades × upgrade fee</span><em>+</em><span>paid reservations × reservation fee</span><em>−</em><span>operating and implementation costs</span></div>
+        <div class="market"><b>988</b><span>shopping complexes in Malaysia (NAPIC, end of June 2025). The first pilot is one zone in one mall; the same software runs in any of them.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="roadmap" aria-labelledby="road-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-h"><h2 class="h2" id="road-h" data-rv>From simulation to a real township.</h2></div>
+    <div class="road" id="road" data-rv>
+      <svg class="runner" id="runner" viewBox="0 0 46 26" aria-hidden="true"><rect x="3" y="4" width="40" height="18" rx="6" fill="#e3c35a"/><rect x="27" y="7" width="9" height="12" rx="2" fill="#0a111c" opacity=".7"/><rect x="8" y="7" width="6" height="12" rx="2" fill="#0a111c" opacity=".55"/><rect x="41" y="6" width="3" height="4" rx="1" fill="#fff6d6"/><rect x="41" y="16" width="3" height="4" rx="1" fill="#fff6d6"/></svg>
+      <article class="ph done"><small>Phase 1, done: this prototype</small><h3>Hackathon prototype</h3><ul><li>Sample car park with simulated occupancy</li><li>Member booking app</li><li>Capacity allocation engine</li><li>Operator dashboard</li></ul></article>
+      <article class="ph"><small>Phase 2</small><h3>Controlled pilot</h3><ul><li>One suitable zone, with operator approval</li><li>Check existing CCTV coverage</li><li>Connect camera feeds and ANPR</li><li>Test bookings, gate decisions and expiry</li></ul></article>
+      <article class="ph"><small>Phase 3</small><h3>Measure and improve</h3><ul><li>Reservation fulfilment</li><li>Occupancy accuracy</li><li>Unused protected capacity</li><li>User satisfaction and running costs</li></ul></article>
+      <article class="ph"><small>Phase 4</small><h3>Scale</h3><ul><li>More zones and malls</li><li>Mixed-use commercial developments</li><li>Managed township car parks</li></ul></article>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="feasibility" aria-labelledby="feas-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-h"><h2 class="h2" id="feas-h" data-rv>Proven parts, new logic.</h2><p class="lede" data-rv>The innovation is in how established technologies are combined, and in the capacity rule that connects them.</p></div>
+    <div class="feas">
+      <div data-rv><h3>Technology</h3><div class="chips"><span>CCTV vehicle detection</span><span>ANPR plate recognition</span><span>Rule-based reservations</span><span>Web and mobile apps</span><span>Historical-data forecasting</span></div></div>
+      <div data-rv><h3>What a site needs</h3><ul><li>CCTV coverage good enough to estimate occupancy</li><li>ANPR cameras at the zone entrance and exit</li><li>A compatible boom gate and access controller</li><li>Cloud or on-site processing</li><li>The driver app and the operator dashboard</li></ul></div>
+      <div data-rv><h3>What we will test openly</h3><ul><li>Camera blind spots and occupancy accuracy</li><li>Access to existing infrastructure and footage</li><li>Vehicle data privacy and security</li><li>Overstays, booking conflicts and gate exceptions</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec close" aria-labelledby="close-h" style="padding-top:0">
+  <div class="wrap">
+    <div class="close-in" data-rv>
+      <div class="close-grid">
+        <div>
+          <h2 id="close-h">Better parking privileges. Smarter space utilisation. Stronger membership value.</h2>
+          <div class="cta">
+            <a class="btn btn-sign" href="command.html">Open the command centre</a>
+            <a class="btn btn-line" href="driver.html">Try the driver app</a>
+          </div>
+        </div>
+        <div class="sign"><canvas id="close-sign" width="960" height="150" role="img" aria-label="Gate display: ParkFlow, open to all"></canvas><div class="sign-cap"><span>PARKFLOW</span><span>READY FOR A PILOT</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p><b style="color:var(--chalk)">ParkFlow</b>, smart membership parking through capacity sharing. Built for the Sime Darby Property University Hackathon 2026. The prototype runs on simulated data and an illustrative car park layout.</p>
+    <p><a href="https://github.com/shenenleow10521/parkflow">Source on GitHub</a></p>
+  </div>
+</footer>
+
+<script defer src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  'use strict';
+  window.__pf = true;
+  var root = document.documentElement;
+  var RM = false;
+  try { RM = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  if (RM) root.classList.add('no-anim');
+  var M = window.Motion && typeof window.Motion.animate === 'function' ? window.Motion : null;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  // ------------------------------------------------------------ animation helper
+  // Motion (motion.dev) when it loaded, otherwise the Web Animations API. Reduced motion jumps to the end.
+  function anim(el, kf, o) {
+    o = o || {};
+    if (!el) return null;
+    var keys = Object.keys(kf);
+    if (RM) { keys.forEach(function (k) { el.style[k] = kf[k][kf[k].length - 1]; }); return null; }
+    if (M) {
+      var mo = { duration: o.duration == null ? 0.7 : o.duration, delay: o.delay || 0 };
+      if (o.spring) { mo.type = 'spring'; mo.stiffness = o.spring[0]; mo.damping = o.spring[1]; delete mo.duration; }
+      else mo.ease = o.ease || [0.2, 0.7, 0.2, 1];
+      try { return M.animate(el, kf, mo); } catch (e) { /* fall through */ }
+    }
+    var n = Math.max.apply(null, keys.map(function (k) { return kf[k].length; }));
+    var frames = [];
+    for (var i = 0; i < n; i++) { var f = {}; keys.forEach(function (k) { var a = kf[k]; f[k] = a[Math.min(i, a.length - 1)]; }); frames.push(f); }
+    var e = o.ease || [0.2, 0.7, 0.2, 1];
+    var a = el.animate(frames, { duration: (o.duration == null ? 0.7 : o.duration) * 1000, delay: (o.delay || 0) * 1000, easing: o.spring ? 'cubic-bezier(.34,1.4,.5,1)' : 'cubic-bezier(' + e.join(',') + ')', fill: 'both' });
+    a.onfinish = function () { keys.forEach(function (k) { el.style[k] = kf[k][kf[k].length - 1]; }); try { a.cancel(); } catch (x) {} };
+    return a;
+  }
+
+  // ------------------------------------------------------------ dot-matrix sign
+  var B32 = '0123456789ABCDEFGHIJKLMNOPQRSTUV';
+  var FONT = { A: 'EHHVHHH', B: 'UHHUHHU', C: 'EHGGGHE', D: 'SIHHHIS', E: 'VGGUGGV', F: 'VGGUGGG', G: 'EHGNHHF', H: 'HHHVHHH', I: 'E44444E', J: '72222IC', K: 'HIKOKIH', L: 'GGGGGGV', M: 'HRLLHHH', N: 'HHPLJHH', O: 'EHHHHHE', P: 'UHHUGGG', Q: 'EHHHLID', R: 'UHHUKIH', S: 'FGGE11U', T: 'V444444', U: 'HHHHHHE', V: 'HHHHHA4', W: 'HHHLLLA', X: 'HHA4AHH', Y: 'HHHA444', Z: 'V1248GV', '0': 'EHJLPHE', '1': '4C4444E', '2': 'EH1248V', '3': 'V2421HE', '4': '26AIV22', '5': 'VGU11HE', '6': '68GUHHE', '7': 'V124888', '8': 'EHHEHHE', '9': 'EHHF12C', ' ': '0000000', '-': '000V000', '.': '00000CC', '>': '8421248', '<': '248G842', ':': '0CC0CC0', '+': '044V440', '/': '11248GG' };
+  var COLORS = { go: '#34e58a', amber: '#ffb21f', red: '#ff4d5e', gold: '#e3c35a', white: '#e9f0ff' };
+
+  function Sign(canvas) {
+    this.c = canvas; this.cols = 96; this.rows = 15; this.cur = null; this.next = null; this.p = 1; this.color = COLORS.go; this.prevColor = COLORS.go;
+    var self = this;
+    this.fit = function () {
+      var w = canvas.clientWidth || 480; var dpr = Math.min(2, window.devicePixelRatio || 1);
+      var h = Math.round(w * self.rows / self.cols);
+      canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr); canvas.style.height = h + 'px';
+      self.draw();
+    };
+    try { new ResizeObserver(function () { self.fit(); }).observe(canvas); } catch (e) { window.addEventListener('resize', this.fit); }
+  }
+  Sign.prototype.bitmap = function (lines) {
+    var bm = new Uint8Array(this.cols * this.rows);
+    for (var li = 0; li < lines.length && li < 2; li++) {
+      var t = String(lines[li]).toUpperCase(); var w = t.length * 6 - 1; var x0 = Math.max(0, Math.floor((this.cols - w) / 2)); var y0 = li * 8;
+      for (var ci = 0; ci < t.length; ci++) {
+        var g = FONT[t[ci]] || FONT[' '];
+        for (var r = 0; r < 7; r++) {
+          var v = B32.indexOf(g[r]);
+          for (var b = 0; b < 5; b++) if (v & (16 >> b)) { var x = x0 + ci * 6 + b; if (x < this.cols) bm[(y0 + r) * this.cols + x] = 1; }
+        }
+      }
+    }
+    return bm;
+  };
+  Sign.prototype.set = function (lines, color, instant) {
+    var key = lines.join('|') + color;
+    if (key === this.key) return;
+    this.key = key;
+    var bm = this.bitmap(lines);
+    if (!this.cur || RM || (instant && color === this.color)) { this.cur = bm; this.color = color; if (this.p >= 1) this.prev = null; this.draw(); return; }
+    this.prev = this.cur; this.prevColor = this.color; this.cur = bm; this.color = color;
+    this.run();
+  };
+  Sign.prototype.run = function () {
+    var self = this, t0 = performance.now(), D = 560; this.p = 0;
+    if (this.raf) cancelAnimationFrame(this.raf);
+    var tick = function (now) { self.p = Math.min(1, (now - t0) / D); self.draw(); if (self.p < 1) self.raf = requestAnimationFrame(tick); else self.raf = 0; };
+    this.raf = requestAnimationFrame(tick);
+  };
+  Sign.prototype.powerOn = function () { if (!this.cur || RM) return; this.prev = new Uint8Array(this.cols * this.rows); this.prevColor = this.color; this.run(); };
+  Sign.prototype.draw = function () {
+    var c = this.c, ctx = c.getContext('2d'); if (!ctx || !this.cur) return;
+    var W = c.width, H = c.height, pitch = W / this.cols, r = pitch * 0.34;
+    ctx.clearRect(0, 0, W, H);
+    var edge = this.p * (this.cols + 6) - 3;
+    // unlit dots
+    ctx.fillStyle = 'rgba(160,180,210,0.07)';
+    for (var y = 0; y < this.rows; y++) for (var x = 0; x < this.cols; x++) { ctx.beginPath(); ctx.arc((x + 0.5) * pitch, (y + 0.5) * pitch, r, 0, 6.2832); ctx.fill(); }
+    // lit dots: glow pass then core
+    for (var pass = 0; pass < 2; pass++) {
+      for (var y2 = 0; y2 < this.rows; y2++) for (var x2 = 0; x2 < this.cols; x2++) {
+        var useNew = x2 < edge; var bm = useNew || !this.prev ? this.cur : this.prev; var col = useNew || !this.prev ? this.color : this.prevColor;
+        if (!bm[y2 * this.cols + x2]) continue;
+        var scan = Math.abs(x2 - edge) < 1.5 && this.p < 1;
+        ctx.fillStyle = pass === 0 ? col : (scan ? '#ffffff' : col);
+        ctx.globalAlpha = pass === 0 ? 0.22 : 1;
+        ctx.beginPath(); ctx.arc((x2 + 0.5) * pitch, (y2 + 0.5) * pitch, pass === 0 ? r * 2.1 : r, 0, 6.2832); ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+  };
+
+  // ------------------------------------------------------------ hero: a live 100-space shared zone
+  var floor = $('#floor');
+  var heroSign = new Sign($('#hero-sign'));
+  var W = 1200, H = 470, TOTAL = 100, MARGIN = 5, CAP = 20;
+  var BW = 38, BD = 72, X0 = 190, GATE_X = 112, ROAD_Y = 238, CONN_X = 152;
+  var ROWS = [{ top: 22, aisle: 128, face: 1 }, { top: 162, aisle: 128, face: -1 }, { top: 246, aisle: 352, face: 1 }, { top: 386, aisle: 352, face: -1 }];
+  var bays = [];
+  ROWS.forEach(function (row, ri) { for (var c = 0; c < 25; c++) bays.push({ i: bays.length, row: ri, x: X0 + c * BW + BW / 2, cy: row.top + BD / 2, aisle: row.aisle, face: row.face, occ: null }); });
+  var PAINT = ['#e9edf2', '#c4ccd6', '#8d97a5', '#2c3440', '#1d232c', '#6b7685', '#a8232f', '#2d4f8f', '#5a6a7a', '#d9dde3', '#3a4350'];
+  var LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXY';
+  function plate() {
+    var pre = 'WVBJPANMKTRSDCQ'[Math.floor(Math.random() * 15)];
+    var two = LETTERS[Math.floor(Math.random() * LETTERS.length)] + (Math.random() < 0.6 ? LETTERS[Math.floor(Math.random() * LETTERS.length)] : '');
+    return pre + two + ' ' + (1 + Math.floor(Math.random() * 9998));
+  }
+  var cars = [], res = [], gateQ = [], events = [];
+  var simT = 0, arrAcc = 0, resAcc = 0, barrier = 0, barrierTarget = 0, gateBusy = 0, gateFlash = 0, lastState = '';
+  function committed() { var n = 0; for (var i = 0; i < bays.length; i++) if (bays[i].occ) n++; return n; }
+  function outstanding() { var n = 0; for (var i = 0; i < res.length; i++) if (!res[i].done) n++; return n; }
+  function publicCap() { return TOTAL - committed() - outstanding() - MARGIN; }
+  function gateState() { var p = publicCap(); if (p > 0) return 'go'; return TOTAL - committed() > 0 ? 'amber' : 'red'; }
+  function clock(t) { var m = 13 * 60 + Math.floor(t * 0.2); return String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0'); }
+  function log(kind, html) {
+    events.unshift({ kind: kind, html: html, t: clock(simT) }); events.length = Math.min(events.length, 3);
+    var tk = $('#ticker'); if (!tk) return;
+    tk.innerHTML = events.map(function (e) { return '<div class="k-' + e.kind + '"><time>' + e.t + '</time><span>' + e.html + '</span></div>'; }).join('');
+    var first = tk.firstElementChild; if (first) anim(first, { opacity: [0, 1], transform: ['translateY(8px)', 'translateY(0px)'] }, { duration: 0.45 });
+  }
+  function freeBay() {
+    var free = bays.filter(function (b) { return !b.occ; }); if (!free.length) return null;
+    free.sort(function (a, b) { return (a.x + (a.row % 2 ? 6 : 0)) - (b.x + (b.row % 2 ? 6 : 0)) + (Math.random() - 0.5) * 520; });
+    return free[0];
+  }
+  function newCar(member, r) { return { member: member, res: r || null, plate: r ? r.plate : plate(), color: member ? '#e3c35a' : PAINT[Math.floor(Math.random() * PAINT.length)], x: -70, y: ROAD_Y, ang: 0, v: 0, st: 'approach', path: null, s: 0, wait: 0, bay: null, stay: 0, fade: 1 }; }
+  function makePath(pts, revFirst) {
+    var segs = [], L = 0;
+    for (var i = 1; i < pts.length; i++) { var dx = pts[i][0] - pts[i - 1][0], dy = pts[i][1] - pts[i - 1][1], l = Math.hypot(dx, dy); segs.push({ a: pts[i - 1], l: l, dx: dx / (l || 1), dy: dy / (l || 1), rev: !!(revFirst && i === 1) }); L += l; }
+    return { segs: segs, L: L };
+  }
+  function at(path, s) {
+    var acc = 0;
+    for (var i = 0; i < path.segs.length; i++) { var g = path.segs[i]; if (s <= acc + g.l || i === path.segs.length - 1) { var k = Math.min(g.l, Math.max(0, s - acc)); return { x: g.a[0] + g.dx * k, y: g.a[1] + g.dy * k, ang: Math.atan2(g.dy, g.dx) + (g.rev ? Math.PI : 0) }; } acc += g.l; }
+    return { x: 0, y: 0, ang: 0 };
+  }
+  function admit(car) {
+    var b = freeBay(); if (!b) return false;
+    b.occ = car; car.bay = b; car.st = 'drive'; car.s = 0;
+    car.path = makePath([[car.x, car.y], [CONN_X, ROAD_Y], [CONN_X, b.aisle], [b.x, b.aisle], [b.x, b.cy]]);
+    car.stay = 26 + Math.random() * 46;
+    barrierTarget = 1; gateBusy = 0.9;
+    return true;
+  }
+  function reject(car) {
+    car.st = 'reject'; car.s = 0; gateFlash = 1;
+    car.path = makePath([[car.x, car.y], [car.x - 30, ROAD_Y + 50], [car.x - 44, H + 80]]);
+    gateBusy = 0.55;
+  }
+  function seed() {
+    var idx = bays.map(function (b) { return b.i; }).sort(function () { return Math.random() - 0.5; });
+    for (var k = 0; k < 64; k++) {
+      var b = bays[idx[k]]; var m = Math.random() < 0.22;
+      var c = newCar(m, null); c.st = 'parked'; c.bay = b; c.x = b.x; c.y = b.cy; c.ang = b.face > 0 ? -Math.PI / 2 : Math.PI / 2; c.stay = 4 + Math.random() * 50; b.occ = c; cars.push(c);
+    }
+    for (var j = 0; j < 7; j++) res.push({ plate: plate(), due: 2 + Math.random() * 12, show: Math.random() < 0.86, done: false, spawned: false });
+  }
+  seed();
+
+  function step(dt) {
+    simT += dt;
+    var tt = simT;
+    // demand: arrivals and new bookings rise and fall in a 52-second cycle
+    var wave = Math.sin((tt / 52) * 6.2832 - 1.2);
+    arrAcc += dt * (0.95 + 0.8 * wave);
+    resAcc += dt * (0.34 + 0.24 * Math.sin((tt / 52) * 6.2832 - 0.4));
+    while (arrAcc > 1) { arrAcc -= 1 + (Math.random() - 0.5) * 0.6; var c = newCar(false); cars.push(c); gateQ.push(c); }
+    while (resAcc > 1) {
+      resAcc -= 1 + (Math.random() - 0.5) * 0.6;
+      if (outstanding() < CAP && publicCap() >= 1) { var r = { plate: plate(), due: tt + 5 + Math.random() * 8, show: Math.random() < 0.86, done: false, spawned: false }; res.push(r); log('m', '<b>' + r.plate + '</b> reserved a space for ' + clock(r.due) + '.'); }
+    }
+    // members due, and no-shows that expire after the grace period
+    res.forEach(function (r) {
+      if (r.done) return;
+      if (r.show && !r.spawned && tt >= r.due - 2.2) { r.spawned = true; var c = newCar(true, r); cars.push(c); gateQ.push(c); }
+      if (!r.show && tt > r.due + 5) { r.done = true; log('o', 'Reservation <b>' + r.plate + '</b> expired after the grace period. 1 space released.'); }
+    });
+    res = res.filter(function (r) { return !r.done || tt - r.due < 30; });
+    // gate queue: cars line up, the head car is read by ANPR and the rule decides
+    gateBusy = Math.max(0, gateBusy - dt);
+    gateQ = gateQ.filter(function (c) { return c.st === 'approach'; });
+    gateQ.forEach(function (c, qi) {
+      var stopX = GATE_X - 26 - qi * 44;
+      if (c.x < stopX) { c.v = Math.min(260, c.v + 520 * dt); c.x = Math.min(stopX, c.x + Math.min(c.v, (stopX - c.x) * 5 + 30) * dt); }
+      else c.v = 0;
+      c.ang = 0;
+      if (qi === 0 && c.x >= stopX - 0.5 && gateBusy <= 0) {
+        c.wait += dt;
+        if (c.wait > 0.45) {
+          if (c.member) {
+            if (TOTAL - committed() > 0) { c.res.done = true; admit(c); log('m', 'ANPR verified <b>' + c.plate + '</b>. Member entry with a confirmed reservation.'); }
+            else { c.res.done = true; reject(c); log('r', 'Zone full. <b>' + c.plate + '</b> offered another eligible zone.'); }
+          } else if (publicCap() > 0) admit(c);
+          else { reject(c); log('r', '<b>' + c.plate + '</b> sent to Zone B. Remaining space is protected for members on the way.'); }
+        }
+      }
+    });
+    // moving cars
+    cars.forEach(function (c) {
+      if (c.st === 'drive' || c.st === 'leave' || c.st === 'reject') {
+        var remain = c.path.L - c.s;
+        var vmax = c.st === 'reject' ? 230 : 300;
+        c.v = Math.min(vmax, c.v + 480 * dt, Math.max(36, remain * 3.2));
+        c.s = Math.min(c.path.L, c.s + c.v * dt);
+        var p = at(c.path, c.s); c.x = p.x; c.y = p.y;
+        var d = p.ang - c.ang; while (d > Math.PI) d -= 6.2832; while (d < -Math.PI) d += 6.2832; c.ang += d * Math.min(1, dt * 11);
+        if (c.s >= c.path.L - 0.5) {
+          if (c.st === 'drive') { c.st = 'parked'; c.v = 0; }
+          else c.st = 'gone';
+        }
+      } else if (c.st === 'parked') {
+        c.stay -= dt;
+        if (c.stay <= 0) {
+          var b = c.bay; c.st = 'leave'; c.s = 0; c.v = 0;
+          c.path = makePath([[b.x, b.cy], [b.x, b.aisle], [W + 80, b.aisle]], true);
+          b.occ = null;
+        }
+      }
+    });
+    cars = cars.filter(function (c) { return c.st !== 'gone'; });
+    if (barrierTarget === 1 && gateBusy <= 0.1) barrierTarget = 0;
+    barrier += (barrierTarget - barrier) * Math.min(1, dt * 9);
+    gateFlash = Math.max(0, gateFlash - dt * 1.6);
+  }
+
+  // ----- drawing
+  var fctx = floor.getContext('2d');
+  function ledSprite(col) {
+    var c = document.createElement('canvas'); c.width = c.height = 40; var g = c.getContext('2d');
+    var lg = g.createRadialGradient(20, 20, 0, 20, 20, 20); lg.addColorStop(0, col); lg.addColorStop(0.25, col); lg.addColorStop(0.3, 'rgba(255,255,255,0.0)');
+    var halo = g.createRadialGradient(20, 20, 0, 20, 20, 20); halo.addColorStop(0, col.replace('rgb', 'rgba').replace(')', ',0.55)')); halo.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = halo; g.fillRect(0, 0, 40, 40); g.fillStyle = col; g.beginPath(); g.arc(20, 20, 5, 0, 6.2832); g.fill();
+    return c;
+  }
+  var LED = { green: ledSprite('rgb(52,229,138)'), red: ledSprite('rgb(255,77,94)') };
+  var base = document.createElement('canvas');
+  var scale = 1, dprF = 1;
+  function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+  function drawBase() {
+    base.width = floor.width; base.height = floor.height;
+    var g = base.getContext('2d'); g.setTransform(scale * dprF, 0, 0, scale * dprF, 0, 0);
+    var grd = g.createLinearGradient(0, 0, 0, H); grd.addColorStop(0, '#1b2535'); grd.addColorStop(1, '#141d2b');
+    g.fillStyle = grd; rr(g, 0, 0, W, H, 22); g.fill();
+    // light pools from ceiling lamps
+    for (var lx = 260; lx < W; lx += 220) for (var ly of [128, 352]) { var rg = g.createRadialGradient(lx, ly, 0, lx, ly, 170); rg.addColorStop(0, 'rgba(210,225,255,0.10)'); rg.addColorStop(1, 'rgba(210,225,255,0)'); g.fillStyle = rg; g.fillRect(lx - 180, ly - 180, 360, 360); }
+    // aisles
+    g.fillStyle = 'rgba(8,12,20,0.35)';
+    g.fillRect(X0 - 40, 94, W - X0 + 40, 68); g.fillRect(X0 - 40, 318, W - X0 + 40, 68);
+    g.fillRect(CONN_X - 26, 94, 52, 292); g.fillRect(0, ROAD_Y - 26, CONN_X + 20, 52);
+    // bay lines
+    g.strokeStyle = 'rgba(235,240,246,0.55)'; g.lineWidth = 2;
+    ROWS.forEach(function (row) {
+      for (var c = 0; c <= 25; c++) { var x = X0 + c * BW; g.beginPath(); g.moveTo(x, row.top); g.lineTo(x, row.top + BD); g.stroke(); }
+      g.beginPath(); var yb = row.face > 0 ? row.top : row.top + BD; g.moveTo(X0, yb); g.lineTo(X0 + 25 * BW, yb); g.stroke();
+    });
+    // central wall and pillars
+    g.fillStyle = '#273347'; g.fillRect(X0, 236, 25 * BW, 8);
+    for (var px = X0; px <= X0 + 25 * BW; px += 5 * BW) { g.fillStyle = '#334259'; g.fillRect(px - 7, 232, 14, 16); g.fillRect(px - 7, 14, 14, 10); g.fillRect(px - 7, H - 24, 14, 10); }
+    // lane arrows
+    g.fillStyle = 'rgba(235,240,246,0.35)';
+    function arrow(x, y, a) { g.save(); g.translate(x, y); g.rotate(a); g.beginPath(); g.moveTo(14, 0); g.lineTo(-6, -9); g.lineTo(-6, -4); g.lineTo(-16, -4); g.lineTo(-16, 4); g.lineTo(-6, 4); g.lineTo(-6, 9); g.closePath(); g.fill(); g.restore(); }
+    [300, 560, 820, 1080].forEach(function (x) { arrow(x, 128, 0); arrow(x, 352, 0); });
+    arrow(60, ROAD_Y, 0); arrow(CONN_X, 180, -Math.PI / 2); arrow(CONN_X, 300, Math.PI / 2);
+    // painted zone name and labels
+    g.save(); g.fillStyle = 'rgba(235,240,246,0.10)'; g.font = '700 54px "Barlow Condensed", "Arial Narrow", sans-serif'; g.textBaseline = 'middle'; g.fillText('ZONE A', 640, 132); g.fillText('ZONE A', 640, 356); g.restore();
+    g.fillStyle = 'rgba(184,197,214,0.75)'; g.font = '600 15px "Barlow Semi Condensed", "Arial Narrow", sans-serif';
+    g.fillText('ENTRANCE', 14, ROAD_Y - 36); g.fillText('TO ZONE B', 20, H - 14);
+    g.textAlign = 'right'; g.fillText('EXIT', W - 14, 86); g.fillText('EXIT', W - 14, 310); g.textAlign = 'left';
+    // gate island
+    g.fillStyle = '#2a3446'; rr(g, GATE_X - 6, ROAD_Y - 44, 22, 16, 4); g.fill();
+  }
+  function drawCar(g, c) {
+    g.save(); g.translate(c.x, c.y); g.rotate(c.ang); g.globalAlpha = c.fade;
+    if (c.member) { var mg = g.createRadialGradient(0, 0, 4, 0, 0, 34); mg.addColorStop(0, 'rgba(227,195,90,0.55)'); mg.addColorStop(1, 'rgba(227,195,90,0)'); g.fillStyle = mg; g.beginPath(); g.ellipse(0, 0, 34, 24, 0, 0, 6.2832); g.fill(); }
+    g.fillStyle = 'rgba(0,0,0,0.45)'; rr(g, -17, -8, 36, 20, 6); g.fill();
+    if (c.v > 5) { var hl = g.createLinearGradient(17, 0, 70, 0); hl.addColorStop(0, 'rgba(255,244,214,0.35)'); hl.addColorStop(1, 'rgba(255,244,214,0)'); g.fillStyle = hl; g.beginPath(); g.moveTo(17, -6); g.lineTo(70, -18); g.lineTo(70, 18); g.lineTo(17, 6); g.closePath(); g.fill(); }
+    g.fillStyle = c.color; rr(g, -17, -9, 34, 18, 5); g.fill();
+    g.fillStyle = 'rgba(10,16,26,0.78)'; rr(g, 3, -7, 7, 14, 2); g.fill();
+    g.fillStyle = 'rgba(10,16,26,0.6)'; rr(g, -13, -6, 5, 12, 2); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.12)'; rr(g, -7, -7, 9, 14, 2); g.fill();
+    g.fillStyle = c.v > 5 ? '#fff4d6' : 'rgba(255,244,214,0.4)'; g.fillRect(15, -7, 2, 4); g.fillRect(15, 3, 2, 4);
+    g.fillStyle = c.st === 'leave' && c.s < 80 ? '#ff5a4f' : 'rgba(255,90,79,0.55)'; g.fillRect(-17, -7, 2, 4); g.fillRect(-17, 3, 2, 4);
+    g.restore();
+  }
+  function render() {
+    var g = fctx; g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, floor.width, floor.height);
+    g.drawImage(base, 0, 0);
+    g.setTransform(scale * dprF, 0, 0, scale * dprF, 0, 0);
+    // bay LEDs at the aisle end
+    bays.forEach(function (b) {
+      var y = b.face > 0 ? b.cy + BD / 2 - 5 : b.cy - BD / 2 + 5;
+      g.drawImage(b.occ ? LED.red : LED.green, b.x - 10, y - 10, 20, 20);
+    });
+    // gate light pool in the state colour
+    var st = gateState(); var sc = st === 'go' ? '52,229,138' : st === 'amber' ? '255,178,31' : '255,77,94';
+    var gp = g.createRadialGradient(GATE_X, ROAD_Y, 0, GATE_X, ROAD_Y, 110 + gateFlash * 40); gp.addColorStop(0, 'rgba(' + sc + ',' + (0.28 + gateFlash * 0.3) + ')'); gp.addColorStop(1, 'rgba(' + sc + ',0)');
+    g.fillStyle = gp; g.fillRect(GATE_X - 160, ROAD_Y - 160, 320, 320);
+    cars.forEach(function (c) { if (c.st === 'parked') drawCar(g, c); });
+    cars.forEach(function (c) { if (c.st !== 'parked') drawCar(g, c); });
+    // barrier arm
+    var armL = 62 * (1 - barrier * 0.86);
+    g.fillStyle = 'rgba(0,0,0,0.35)'; g.fillRect(GATE_X + 7, ROAD_Y - 30, 5, armL);
+    g.fillStyle = '#f2f4f7'; g.fillRect(GATE_X + 3, ROAD_Y - 32, 5, armL);
+    g.fillStyle = '#ff4d5e'; for (var k = 6; k < armL - 4; k += 16) g.fillRect(GATE_X + 3, ROAD_Y - 32 + k, 5, 8);
+    g.fillStyle = 'rgb(' + sc + ')'; g.beginPath(); g.arc(GATE_X + 5, ROAD_Y - 36, 4, 0, 6.2832); g.fill();
+  }
+  function fitFloor() {
+    var w = floor.clientWidth || 1000; dprF = Math.min(2, window.devicePixelRatio || 1); scale = w / (w < 640 ? 600 : w < 900 ? 860 : W);
+    floor.width = Math.round(w * dprF); floor.height = Math.round(H * scale * dprF); floor.style.height = Math.round(H * scale) + 'px';
+    drawBase(); render();
+  }
+  try { new ResizeObserver(fitFloor).observe(floor); } catch (e) { window.addEventListener('resize', fitFloor); }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitFloor);
+
+  // ----- HUD
+  var poolEl = $('#pool'); poolEl.innerHTML = new Array(CAP + 1).join('<i></i>');
+  var shown = {};
+  function setNum(id, v) { if (shown[id] === v) return; shown[id] = v; var el = document.getElementById(id); if (el) el.textContent = v; }
+  var stateText = {
+    go: function (p) { return ['ZONE A  ' + p + ' FREE', 'OPEN TO ALL']; },
+    amber: function () { return ['PRIORITY ENTRY', 'MEMBERS ONLY']; },
+    red: function () { return ['ZONE A FULL', 'USE ZONE B >']; }
+  };
+  function hud() {
+    var occ = committed(), R = outstanding(), P = TOTAL - occ - R - MARGIN, st = gateState();
+    setNum('f-occ', occ); setNum('f-res', R); setNum('f-out', Math.max(0, P));
+    var pis = poolEl.children; for (var i = 0; i < pis.length; i++) pis[i].className = i < R ? 'on' : '';
+    var cs = st === 'go' ? COLORS.go : st === 'amber' ? COLORS.amber : COLORS.red;
+    heroSign.set(stateText[st](Math.max(0, P)), cs, true);
+    $('#sign-clock').textContent = clock(simT);
+    if (st !== lastState) {
+      $$('.hero .st').forEach(function (e) { e.classList.toggle('on', e.getAttribute('data-st') === st); });
+      root.style.setProperty('--state', cs);
+      root.style.setProperty('--state-glow', st === 'go' ? 'rgba(52,229,138,0.26)' : st === 'amber' ? 'rgba(255,178,31,0.28)' : 'rgba(255,77,94,0.28)');
+      if (lastState === 'amber' && st === 'go') log('x', 'Space freed up. Gate open to all shoppers again.');
+      lastState = st;
+    }
+  }
+
+  var running = false, last = 0, visible = true;
+  function loop(now) {
+    if (!running) return;
+    var dt = Math.min(0.05, (now - last) / 1000 || 0); last = now;
+    step(dt); render(); hud();
+    requestAnimationFrame(loop);
+  }
+  function start() { if (running || RM) return; running = true; last = performance.now(); requestAnimationFrame(loop); }
+  function stop() { running = false; }
+  try {
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible && !document.hidden) start(); else stop(); }, { threshold: 0.02 }).observe(floor);
+  } catch (e) { start(); }
+  document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else if (visible) start(); });
+  if (RM) {
+    // a still frame that matches the proposal's example: amber, members only
+    for (var w = 0; w < 600; w++) step(0.05);
+    render(); hud();
+  }
+  fitFloor(); hud();
+
+  // ------------------------------------------------------------ hero intro: one orchestrated entrance
+  function intro() {
+    if (RM) { root.classList.add('intro-done'); return; }
+    var lines = $$('.h1 .ln > span');
+    lines.forEach(function (el, i) { el.style.opacity = 1; anim(el, { transform: ['translateY(105%)', 'translateY(0%)'] }, { duration: 1, delay: 0.1 + i * 0.12, ease: [0.16, 1, 0.3, 1] }); });
+    var rest = $$('.hero [data-intro]').filter(function (el) { return lines.indexOf(el) < 0; });
+    rest.forEach(function (el, i) {
+      var isStage = el.classList.contains('stage');
+      anim(el, isStage ? { opacity: [0, 1], transform: ['translateY(40px) scale(0.98)', 'translateY(0px) scale(1)'] } : { opacity: [0, 1], transform: ['translateY(16px)', 'translateY(0px)'] }, { duration: isStage ? 1.3 : 0.9, delay: 0.35 + i * 0.1, ease: [0.16, 1, 0.3, 1] });
+    });
+    // the sign powers on with a sweep a moment after the page settles
+    setTimeout(function () { heroSign.powerOn(); }, 560);
+    setTimeout(function () { root.classList.add('intro-done'); }, 2600);
+  }
+  intro();
+
+  // ------------------------------------------------------------ nav background after scrolling
+  var nav = $('#nav');
+  function onScrollNav() { nav.classList.toggle('solid', window.scrollY > 24); }
+  window.addEventListener('scroll', onScrollNav, { passive: true }); onScrollNav();
+
+  // ------------------------------------------------------------ reveals for headings and blocks
+  var rvs = $$('[data-rv]');
+  if (RM || !('IntersectionObserver' in window)) rvs.forEach(function (el) { el.classList.add('rv-done'); });
+  else {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { var el = e.target; var sib = el.parentElement ? $$(':scope > [data-rv]', el.parentElement).indexOf(el) : 0; el.style.transitionDelay = Math.max(0, sib) * 0.08 + 's'; el.classList.add('rv-done'); io.unobserve(el); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    rvs.forEach(function (el) { io.observe(el); });
+  }
+
+  // ------------------------------------------------------------ three approaches
+  var MODES = {
+    locks: { members: [2, 12], locked: [2, 3, 4, 12, 13, 14], vip: [], free: [3, 4, 13, 14], wait: 2, idle: 4, hw: '6 bay locks', cap: 'Bay locks: dedicated hardware and maintenance for every reserved bay.', sub: 'Locked bays stay empty until their member arrives, even when the member is not coming.' },
+    vip: { members: [0, 10], locked: [], vip: [0, 1, 2, 3, 10, 11, 12, 13], free: [1, 2, 3, 11, 12, 13], wait: 4, idle: 6, hw: 'Paint and signs', cap: 'VIP-only zones: unused member spaces cannot serve general shoppers.', sub: 'Eight bays are set aside for good, so off-peak they sit empty while shoppers wait.' },
+    pool: { members: [3, 15], locked: [], vip: [], free: [8, 17], wait: 0, idle: 2, hw: 'None. ANPR at the gate', cap: 'ParkFlow: protects confirmed reservations and releases every uncommitted space to other shoppers.', sub: 'Members reserve a share of the zone, not a bay. The two empty spaces can be any two.' }
+  };
+  var baysEl = $('#bays'), qEl = $('#qcars'), cmp = $('#cmp');
+  var GCOL = ['#cfd6e0', '#9aa6b6', '#e9edf2', '#6c7a8c', '#b3bccb', '#8a3a44', '#3f5f9e'];
+  for (var bi = 0; bi < 20; bi++) { var d = document.createElement('div'); d.className = 'bay'; d.innerHTML = '<span class="lock"></span>'; baysEl.appendChild(d); }
+  var curMode = '';
+  function setMode(mode, user) {
+    if (mode === curMode) return; var m = MODES[mode]; curMode = mode;
+    cmp.setAttribute('data-mode', mode);
+    $$('.tab', cmp).forEach(function (t) { var on = t.getAttribute('data-mode') === mode; t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1; if (on) $('#cmp-panel').setAttribute('aria-labelledby', t.id); });
+    $$('.bay', baysEl).forEach(function (b, i) {
+      b.classList.toggle('vip', m.vip.indexOf(i) >= 0);
+      b.classList.toggle('locked', m.locked.indexOf(i) >= 0 && m.free.indexOf(i) >= 0);
+      var want = m.free.indexOf(i) >= 0 ? '' : m.members.indexOf(i) >= 0 ? 'm' : 'g';
+      var car = b.querySelector('.car'); var have = car ? (car.classList.contains('m') ? 'm' : 'g') : '';
+      if (want === have) return;
+      if (car) { car.remove(); }
+      if (want) { var c = document.createElement('div'); c.className = 'car' + (want === 'm' ? ' m' : ''); if (want === 'g') c.style.setProperty('--c', GCOL[i % GCOL.length]); b.appendChild(c); anim(c, { opacity: [0, 1], transform: [(i >= 10 ? 'rotate(180deg) ' : '') + 'translateY(-40%) scale(0.8)', (i >= 10 ? 'rotate(180deg) ' : '') + 'translateY(0%) scale(1)'] }, { duration: 0.55, delay: 0.02 * (i % 10), ease: [0.2, 0.9, 0.3, 1] }); }
+    });
+    var qn = m.wait; var cur = qEl.children.length;
+    while (qEl.children.length > qn) qEl.removeChild(qEl.lastElementChild);
+    for (var k = cur; k < qn; k++) { var qc = document.createElement('div'); qc.className = 'car'; qc.style.setProperty('--c', GCOL[(k * 3) % GCOL.length]); qEl.appendChild(qc); anim(qc, { opacity: [0, 1] }, { duration: 0.4, delay: 0.1 * k }); }
+    countTo($('#m-wait'), m.wait); countTo($('#m-idle'), m.idle);
+    $('#m-wait').className = m.wait ? 'bad' : 'good'; $('#m-idle').className = m.idle && mode !== 'pool' ? 'bad' : 'good';
+    $('#m-hw').textContent = m.hw;
+    var cap = $('#cmp-cap'); cap.innerHTML = m.cap + '<small>' + m.sub + '</small>';
+    anim(cap, { opacity: [0, 1], transform: ['translateY(6px)', 'translateY(0px)'] }, { duration: 0.45 });
+    if (user) autoplay = false;
+  }
+  function countTo(el, v) {
+    var from = parseInt(el.textContent, 10) || 0; if (from === v) { el.textContent = v; return; }
+    if (RM) { el.textContent = v; return; }
+    var t0 = performance.now(), D = 500;
+    (function tick(now) { var p = Math.min(1, (now - t0) / D); el.textContent = Math.round(from + (v - from) * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); })(t0);
+  }
+  $$('.tab', cmp).forEach(function (t) { t.addEventListener('click', function () { setMode(t.getAttribute('data-mode'), true); }); });
+  $('.tabs', cmp).addEventListener('keydown', function (e) {
+    var order = ['locks', 'vip', 'pool']; var i = order.indexOf(curMode);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); var n = order[(i + (e.key === 'ArrowRight' ? 1 : 2)) % 3]; setMode(n, true); $('#tab-' + n).focus(); }
+  });
+  setMode('locks');
+  // walk through the three approaches once the figure is on screen, until someone picks one
+  var autoplay = !RM, apTimer = null;
+  try {
+    new IntersectionObserver(function (es) {
+      if (es[0].isIntersecting && autoplay && !apTimer) {
+        apTimer = setInterval(function () { if (!autoplay) { clearInterval(apTimer); return; } var o = ['locks', 'vip', 'pool']; var n = o[(o.indexOf(curMode) + 1) % 3]; setMode(n); if (n === 'pool') { autoplay = false; clearInterval(apTimer); } }, 3600);
+      }
+    }, { threshold: 0.5 }).observe(cmp);
+  } catch (e) {}
+
+  // ------------------------------------------------------------ gate rule calculator
+  var calcSign = new Sign($('#calc-sign'));
+  var cT = $('#c-total'), cO = $('#c-occ'), cR = $('#c-res'), cM = $('#c-mar');
+  function fill(inp) { var p = (inp.value - inp.min) / (inp.max - inp.min) * 100; inp.style.setProperty('--v', p + '%'); }
+  function calc() {
+    var T = +cT.value; cO.max = T; cR.max = Math.min(60, T);
+    var O = Math.min(+cO.value, T), R = Math.min(+cR.value, T), Mg = +cM.value;
+    var P = T - O - R - Mg;
+    $('#o-total').textContent = T; $('#o-occ').textContent = O; $('#o-res').textContent = R; $('#o-mar').textContent = Mg;
+    [cT, cO, cR, cM].forEach(fill);
+    var st = P > 0 ? 'go' : T - O > 0 ? 'amber' : 'red';
+    var col = st === 'go' ? COLORS.go : st === 'amber' ? COLORS.amber : COLORS.red;
+    var out = $('#result'); out.style.setProperty('--cstate', col);
+    $('#calc-sign').parentElement.style.setProperty('--state-glow', st === 'go' ? 'rgba(52,229,138,0.22)' : st === 'amber' ? 'rgba(255,178,31,0.24)' : 'rgba(255,77,94,0.24)');
+    $('#r-num').textContent = Math.max(0, P);
+    var txt = st === 'go'
+      ? '<strong>Green: open to all shoppers</strong>' + P + ' space' + (P === 1 ? '' : 's') + ' for anyone who arrives, while ' + R + ' stay protected for members on the way.'
+      : st === 'amber'
+      ? '<strong>Amber: members only</strong>No space for new non-member cars, so they are directed to another zone. Members with confirmed reservations enter after the plate check.'
+      : '<strong>Red: zone unavailable</strong>The zone is physically full. Even confirmed members are offered another eligible zone.';
+    $('#r-txt').innerHTML = txt;
+    calcSign.set(stateText[st](Math.max(0, P)), col);
+  }
+  [cT, cO, cR, cM].forEach(function (i) { i.addEventListener('input', calc); });
+  $('#c-reset').addEventListener('click', function () { cT.value = 100; cO.max = 100; cO.value = 75; cR.value = 20; cM.value = 5; calc(); });
+  calc();
+
+  // ------------------------------------------------------------ closing sign: powers on when it comes into view
+  var closeSign = new Sign($('#close-sign'));
+  closeSign.set(['PARKFLOW', 'OPEN TO ALL'], COLORS.go, true);
+  try { new IntersectionObserver(function (es) { if (es[0].isIntersecting) { closeSign.powerOn(); } }, { threshold: 0.6 }).observe($('#close-sign')); } catch (e) {}
+
+  // ------------------------------------------------------------ steps: a rail that fills as you read
+  var stepsEl = $('#steps'), rail = $('#rail'), stepEls = $$('.step', stepsEl);
+  var phonesEls = $$('[data-par]');
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(function () {
+      ticking = false;
+      var vh = window.innerHeight;
+      var r = stepsEl.getBoundingClientRect();
+      var p = Math.max(0, Math.min(1, (vh * 0.6 - r.top) / r.height));
+      rail.style.setProperty('--p', RM ? 1 : p);
+      stepEls.forEach(function (s) { var t = s.getBoundingClientRect().top; s.classList.toggle('on', RM || t < vh * 0.62); });
+      if (!RM && window.innerWidth > 760) phonesEls.forEach(function (ph) { var k = +ph.getAttribute('data-par'); var pr = ph.parentElement.getBoundingClientRect(); var c = (pr.top + pr.height / 2 - vh / 2); ph.style.transform = 'translateY(' + (c * k).toFixed(1) + 'px)'; });
+      var road = $('#road'), run = $('#runner');
+      if (road && run && getComputedStyle(run).display !== 'none') {
+        var rb = road.getBoundingClientRect(); var q = Math.max(0, Math.min(1, (vh * 0.85 - rb.top) / (vh * 0.5)));
+        var phs = road.querySelectorAll('.ph'); var target = phs.length > 1 ? phs[0].offsetLeft + 27 + (phs[1].offsetLeft - phs[0].offsetLeft) * 0.42 : 0;
+        run.style.left = (RM ? target : target * q) + 'px';
+      }
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true }); window.addEventListener('resize', onScroll); onScroll();
+
+  // ------------------------------------------------------------ counting stats
+  var counters = $$('[data-count]');
+  if (!RM && 'IntersectionObserver' in window) {
+    counters.forEach(function (el) { el.textContent = '0'; });
+    var cio = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { var el = e.target; var v = +el.getAttribute('data-count'); var t0 = performance.now(); (function tick(now) { var p = Math.min(1, (now - t0) / 1400); el.textContent = Math.round(v * (1 - Math.pow(1 - p, 4))); if (p < 1) requestAnimationFrame(tick); })(t0); cio.unobserve(el); } }); }, { threshold: 0.6 });
+    counters.forEach(function (el) { cio.observe(el); });
+  }
+
+  // ------------------------------------------------------------ QR code for the driver app
+  (function () {
+    var target = /github\.io$/.test(location.hostname) ? new URL('driver.html', location.href).href : 'https://claude.ai/artifact/DMcbMgGuhv7SJkQ1hqoEWR';
+    if (typeof window.qrcode !== 'function') return;
+    try {
+      var q = window.qrcode(0, 'M'); q.addData(target); q.make();
+      var n = q.getModuleCount(), d = '';
+      for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) if (q.isDark(r, c)) d += 'M' + c + ' ' + r + 'h1v1h-1z';
+      $('#qr-svg').innerHTML = '<svg viewBox="-2 -2 ' + (n + 4) + ' ' + (n + 4) + '" shape-rendering="crispEdges" role="img" aria-label="QR code for the driver app"><rect x="-2" y="-2" width="' + (n + 4) + '" height="' + (n + 4) + '" fill="#fff"/><path d="' + d + '" fill="#0a111c"/></svg>';
+      $('#qr').hidden = false;
+    } catch (e) {}
+  })();
+});
+</script>

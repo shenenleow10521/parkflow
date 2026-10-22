@@ -7,3 +7,7 @@ dist/test-driver.html
 node_modules/
 __pycache__/
 .DS_Store
+dist/assets/
+dist/command.html
+dist/driver.html
+dist/test-landing.html

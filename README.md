@@ -13,16 +13,19 @@ KL East Mall pilot concept · illustrative layout · simulated data.
 
 With GitHub Pages serving the `docs/` folder (Settings → Pages → Deploy from branch → `main` / `docs`):
 
-- Operator command centre: `https://<user>.github.io/<repo>/`
+- Landing page: `https://<user>.github.io/<repo>/`
+- Operator command centre: `https://<user>.github.io/<repo>/command.html`
 - Driver app (open on a phone): `https://<user>.github.io/<repo>/driver.html`
 
-Or open `docs/index.html` and `docs/driver.html` straight from a clone.
+Or open the files in `docs/` straight from a clone.
 
 ## Run it
 
-Two pages, one simulation engine:
+A landing page and two apps on one simulation engine:
 
-- `docs/index.html` is the operator command centre (3D model, allocation, forecasts with members vs non-members live and since the window opened, impact).
+- `docs/index.html` is the landing page: the proposal (capacity pooling and the gate rule) with a live simulation of a
+  shared zone, an interactive gate calculator and links to both apps. Source: `src/landing/index.html`.
+- `docs/command.html` is the operator command centre (3D model, allocation, forecasts with members vs non-members live and since the window opened, impact).
 - `docs/driver.html` is the driver app for shoppers: level board, "I'm on my way" guidance with a
   live floor map, Ladies' parking and designated member bookings, parked confirmation, My cars (several cars, where each is parked,
   how long and how much) with find-my-car, and payment by mall wallet, connected card or member points.
@@ -60,6 +63,7 @@ node tools/bundle.mjs /tmp/core.js --core --test tools/core-test.js && node /tmp
 | `src/mobile/map.ts` | Live SVG floor map with a camera that frames the car, its target zone or the walk to the lift |
 | `src/mobile/motion.ts` | Motion (motion.dev) adapter with a Web Animations fallback and reduced-motion support |
 | `src/styles.css` | Design tokens (top of file) and layout |
+| `src/landing/` | Landing page (single file, Motion for animation with a Web Animations fallback) and its screenshots |
 
 ## Design notes
 
