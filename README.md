@@ -48,13 +48,14 @@ node tools/bundle.mjs /tmp/core.js --core --test tools/core-test.js && node /tmp
 
 ### Demo video
 
-The 4:58 pitch video is rendered from code in `tools/video/`, so it can be regenerated after the app changes (Python 3 with Playwright, numpy and scipy; ffmpeg with libx264 and libass).
+The 4:59 pitch video (Team Hexa, Universiti Malaya) is rendered from code in `tools/video/`, so it can be regenerated after the app changes (Python 3 with Playwright, numpy and scipy; ffmpeg with libx264 and libass).
 
 ```
 W=/tmp/pf-video
-python3 tools/video/capture.py $W/cap all        # app footage with a virtual clock: live clips, 2x stills, tall pages, facts.json
+python3 tools/video/capture2.py $W/cap all       # app footage with a virtual clock: driver clips with taps, operator clips, 2x stills, facts2.json
+                                                 # (or one part: driver | operator | pressure | entry)
 python3 tools/video/render.py $W --video $W/video_raw.mp4   # motion graphics in tools/video/comp.html, 1920x1080 at 30 fps
-python3 tools/video/music.py $W/music.wav 298    # original score, synthesised (no samples)
+python3 tools/video/music.py $W/music.wav 299    # original score, synthesised (no samples)
 python3 tools/video/subs.py $W                   # captions.ass, parkflow-demo.srt, voiceover-script.md from script.json
 python3 tools/video/assemble.py $W               # ParkFlow-demo.mp4 (captions + music) and ParkFlow-demo-for-voiceover.mp4
 ```

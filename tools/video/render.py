@@ -28,7 +28,14 @@ facts = json.loads((work / 'cap' / 'facts.json').read_text()) if (work / 'cap' /
 m = re.search(r'Scenario projection, per year\s*([\d.,]+)\s*t', facts.get('impact_text', ''))
 if m:
     facts['co2_year_t'] = f"{float(m.group(1).replace(',', '')):.1f}"
-init = f'window.SCRIPT = {json.dumps(script)}; window.LAYOUT = {json.dumps(layout)}; window.FACTS = {json.dumps(facts)};'
+def jl(name):
+    q = work / 'cap' / name
+    return json.loads(q.read_text()) if q.exists() else {}
+
+
+init = (f'window.SCRIPT = {json.dumps(script)}; window.LAYOUT = {json.dumps(layout)}; window.FACTS = {json.dumps(facts)};'
+        f'window.FACTS2 = {json.dumps(jl("facts2.json"))}; window.LAYOUT2 = {json.dumps(jl("layout2.json"))};'
+        f'window.TAPS = {json.dumps(jl("taps2.json"))}; window.FORECAST = {json.dumps(jl("forecast_1408.json") or None)};')
 duration = a.t1 if a.t1 is not None else script['duration']
 
 

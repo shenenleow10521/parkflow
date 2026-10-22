@@ -88,9 +88,9 @@ for b in range(nbars):
     place(padR, (segR * e).astype(np.float32), t0)
 pad_dark = np.stack([lp(pad, 650, 2), lp(padR, 650, 2)])
 pad_bright = np.stack([lp(pad, 2400, 2), lp(padR, 2400, 2)])
-bright = env_points([(0, 0.0), (10, 0.25), (14, 0.1), (42, 0.35), (117, 0.6), (201, 0.45), (228, 0.85), (289, 0.7), (298, 0.3)])
+bright = env_points([(0, 0.0), (5, 0.08), (17.8, 0.2), (18.0, 0.0), (21.2, 0.4), (24, 0.3), (50, 0.35), (120, 0.55), (164, 0.65), (222, 0.6), (250, 0.8), (288, 0.7), (299, 0.3)])
 pad_mix = pad_dark * (1 - bright) + pad_bright * bright
-pad_lvl = env_points([(0, 0), (1.5, 0.55), (9.6, 0.75), (14, 0.6), (42, 0.55), (117, 0.5), (228, 0.55), (289, 0.65), (295, 0.45), (298, 0)])
+pad_lvl = env_points([(0, 0), (1.2, 0.6), (5, 0.5), (17.6, 0.7), (18.0, 0.15), (21.0, 0.15), (21.3, 0.8), (24, 0.55), (288, 0.6), (296, 0.45), (299, 0)])
 pad_mix *= pad_lvl * 0.075
 
 # ---------------------------------------------------------------- bass (eighths on the root)
@@ -105,7 +105,7 @@ for b in range(nbars):
         e = np.minimum(1, tt / 0.006) * (0.55 + 0.45 * np.exp(-tt / 0.08)) * np.minimum(1, (L - tt) / 0.02)
         x = np.sin(2 * np.pi * root * tt) + 0.5 * np.sin(4 * np.pi * root * tt)
         place(bass, (np.tanh(1.6 * x) * e).astype(np.float32), t0, 1.0 if k % 2 == 0 else 0.75)
-bass_lvl = env_points([(0, 0), (14, 0), (16, 0.35), (42, 0.55), (117, 0.8), (201, 0.55), (228, 0.8), (289, 0.4), (292, 0), (298, 0)])
+bass_lvl = env_points([(0, 0), (5, 0), (6, 0.4), (17.6, 0.6), (17.9, 0), (21.2, 0), (24, 0.5), (50, 0.55), (120, 0.8), (200, 0.55), (222, 0.8), (288, 0.4), (291, 0), (299, 0)])
 bass = lp(bass, 900) * bass_lvl * 0.12
 
 # ---------------------------------------------------------------- pluck arpeggio (16ths) with ping-pong delay
@@ -126,7 +126,7 @@ for b in range(nbars):
         if m not in cache:
             cache[m] = pluck(hz(m))
         place(arp, cache[m], b * BAR + k * six, 1.0 if k % 4 == 0 else 0.62)
-arp_lvl = env_points([(0, 0), (40, 0), (43, 0.45), (95, 0.55), (117, 0.75), (201, 0.6), (228, 0.85), (289, 0.5), (293, 0), (298, 0)])
+arp_lvl = env_points([(0, 0), (22, 0), (24.5, 0.45), (92, 0.6), (120, 0.75), (200, 0.55), (222, 0.8), (288, 0.5), (292, 0), (299, 0)])
 arp = lp(arp, 5200) * arp_lvl * 0.06
 d = int(BEAT * 0.75 * SR)
 arpL = arp.copy()
@@ -160,7 +160,7 @@ kick = np.zeros(N, np.float32)
 hat = np.zeros(N, np.float32)
 clap = np.zeros(N, np.float32)
 kick_times = []
-SECT = [(95, 117, 'half'), (117, 201, 'full'), (201, 228, 'half'), (228, 289, 'full')]
+SECT = [(5, 17.8, 'half'), (50, 120, 'half'), (120, 200, 'full'), (200, 222, 'half'), (222, 288, 'full')]
 for b in range(nbars):
     for q in range(4):
         tq = b * BAR + q * BEAT
@@ -177,7 +177,7 @@ for b in range(nbars):
                 place(clap, CLAP, tq)
         else:
             place(hat, HAT, tq + BEAT / 2, 0.6)
-drum_lvl = env_points([(0, 0), (94, 0), (95, 0.6), (117, 1), (288, 1), (289.5, 0), (298, 0)])
+drum_lvl = env_points([(0, 0), (4.9, 0), (5, 0.55), (17.8, 0.55), (17.9, 0), (49.5, 0), (50, 0.6), (120, 1), (287, 1), (288.5, 0), (299, 0)])
 kick *= drum_lvl * 0.42
 hat *= drum_lvl * 0.035
 clap *= drum_lvl * 0.06
@@ -201,13 +201,13 @@ def bell(f, L=2.2):
 
 bellv = np.zeros(N, np.float32)
 MOTIF = [(0, 78), (1.5, 81), (2, 83), (3, 86), (4.5, 83), (6, 81), (7, 78)]  # beats, midi: F#5 A5 B5 D6
-for start in np.arange(228 - 228 % (2 * BAR) + 2 * BAR, 296, 2 * BAR):
+for start in np.arange(250 - 250 % (2 * BAR) + 2 * BAR, 286, 2 * BAR):
     for bt, m in MOTIF:
         place(bellv, bell(hz(m)), start + bt * BEAT, 0.8)
 for bt, m in [(0, 74), (0.5, 78), (1, 81), (1.5, 86)]:
-    place(bellv, bell(hz(m), 3.5), 289.6 + bt * BEAT * 0.5, 0.9)
+    place(bellv, bell(hz(m), 3.5), 288.8 + bt * BEAT * 0.5, 0.9)
 for bt, m in [(0, 78), (1, 81), (2, 83), (3, 86)]:  # title sparkle
-    place(bellv, bell(hz(m), 2.5), 9.9 + bt * 0.22, 0.55)
+    place(bellv, bell(hz(m), 2.5), 21.3 + bt * 0.22, 0.6)
 bellv *= 0.05
 
 # ---------------------------------------------------------------- transitions: risers and sub hits
@@ -227,12 +227,15 @@ def hit(t0, g=1.0):
     place(fx, x.astype(np.float32), t0, 0.32 * g)
 
 
-for th in (14, 42, 70, 95, 201, 255, 275):
+for th in (24, 50, 92, 120, 164, 200, 222, 250):
     riser(th, 1.5, 0.7)
-for th in (117, 228, 289):
+for th in (18.0, 21.2, 288):
     riser(th, 2.2, 1.0)
     hit(th, 0.9)
-hit(0.9, 0.7)
+hit(0.6, 0.7)
+# a clock tick on every beat while Aina is circling
+for tq in np.arange(5.0, 17.8, BEAT):
+    place(fx, (HAT * 9).astype(np.float32), tq, 0.05)
 
 # ---------------------------------------------------------------- mix, reverb, master
 dry = pad_mix * duck + np.stack([bass * duck, bass * duck]) + arp_st + np.stack([kick, kick]) + np.stack([hat * 0.8, hat]) + np.stack([clap, clap * 0.9]) + np.stack([bellv * 0.9, bellv]) + np.stack([fx, fx])

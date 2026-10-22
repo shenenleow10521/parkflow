@@ -20,7 +20,7 @@ def run(cmd):
 x264 = ['-c:v', 'libx264', '-preset', 'slow', '-crf', '19', '-pix_fmt', 'yuv420p', '-profile:v', 'high', '-level', '4.1',
         '-x264-params', 'keyint=60:aq-mode=3', '-movflags', '+faststart']
 aac = ['-c:a', 'aac', '-b:a', '192k', '-ar', '48000']
-meta = ['-metadata', 'title=ParkFlow: reserve capacity, not parking bays', '-metadata', 'comment=Sime Darby Property University Hackathon 2026 demo']
+meta = ['-metadata', 'title=ParkFlow: your parking data may be telling you more than you think', '-metadata', 'comment=Team Hexa, Universiti Malaya. Sime Darby Property University Hackathon 2026 demo']
 
 # A: captions burned in (libass), music at about -16 LUFS
 run(['ffmpeg', '-y', '-loglevel', 'error', '-i', raw, '-i', music, '-filter_complex',

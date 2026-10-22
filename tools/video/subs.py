@@ -96,13 +96,13 @@ for a, b, lines in C:
     ass.append(f'Dialogue: 0,{ts_ass(a)},{ts_ass(b)},Cap,,0,0,0,,{{\\fad(160,160)\\b600}}{txt}')
 (out / 'captions.ass').write_text('\n'.join(ass) + '\n', encoding='utf-8')
 
-md = ['# ParkFlow demo video: voiceover script', '',
+md = ['# ParkFlow demo video v2: voiceover script (Team Hexa, Universiti Malaya)', '',
       'Read at a calm, confident pace (about 150 words a minute). Each line starts at the time shown; the video already leaves room for it.', '']
 chap = {c['t0']: c for c in S['chapters']}
 cur = None
 for t0, t1, text in S['vo']:
     c = max([c for c in S['chapters'] if c['t0'] <= t0 + 0.01], key=lambda c: c['t0'], default=None)
-    name = c['name'] if c and t0 < c['t1'] else ('Opening' if t0 < 14 else 'Close')
+    name = c['name'] if c and t0 < c['t1'] else ('Opening' if t0 < S['chapters'][0]['t0'] else 'Close')
     if name != cur:
         md += ['', f'## {name}', '']
         cur = name
