@@ -46,6 +46,21 @@ python3 tools/driver_flow.py /tmp/drv  # optional: driver app flow test and scre
 node tools/bundle.mjs /tmp/core.js --core --test tools/core-test.js && node /tmp/core.js   # simulation checks
 ```
 
+### Demo video
+
+The 4:58 pitch video is rendered from code in `tools/video/`, so it can be regenerated after the app changes (Python 3 with Playwright, numpy and scipy; ffmpeg with libx264 and libass).
+
+```
+W=/tmp/pf-video
+python3 tools/video/capture.py $W/cap all        # app footage with a virtual clock: live clips, 2x stills, tall pages, facts.json
+python3 tools/video/render.py $W --video $W/video_raw.mp4   # motion graphics in tools/video/comp.html, 1920x1080 at 30 fps
+python3 tools/video/music.py $W/music.wav 298    # original score, synthesised (no samples)
+python3 tools/video/subs.py $W                   # captions.ass, parkflow-demo.srt, voiceover-script.md from script.json
+python3 tools/video/assemble.py $W               # ParkFlow-demo.mp4 (captions + music) and ParkFlow-demo-for-voiceover.mp4
+```
+
+`script.json` holds the chapters and the timed narration; the composition, captions and voiceover script all read from it.
+
 ## Code map
 
 | Folder | What it does |
