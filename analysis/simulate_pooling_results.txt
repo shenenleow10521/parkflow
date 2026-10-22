@@ -1,0 +1,68 @@
+BUSY DAY, 1000 simulated days, 100-bay zone, stays x1.0, 60 booking requests, quota 20, averages per day
+Policy                       Bookings got a bay Bookings failed  Public turned away  Bays held back (bay-h)  ...while walk-ins turned away  Occupied 5-9 pm
+No priority                              85.5%            7.90                 141                       0                              0             98%
+Fixed VIP section                        99.9%            0.03                 183                     143                             19             91%
+Fixed rule (5 safety bays)              100.0%            0.00                 189                     127                             23             87%
+Fixed rule (0 safety bays)              100.0%            0.00                 168                      62                             12             91%
+Forecast rule (ParkFlow)                100.0%            0.00                 157                      33                              5             95%
+
+NORMAL DAY, 1000 simulated days, 100-bay zone, stays x1.0, 25 booking requests, quota 20, averages per day
+Policy                       Bookings got a bay Bookings failed  Public turned away  Bays held back (bay-h)  ...while walk-ins turned away  Occupied 5-9 pm
+No priority                              99.6%            0.09                   1                       0                              0             80%
+Fixed VIP section                       100.0%            0.00                  11                     209                              2             77%
+Fixed rule (5 safety bays)              100.0%            0.00                   6                      92                              1             79%
+Fixed rule (0 safety bays)              100.0%            0.00                   3                      27                              0             80%
+Forecast rule (ParkFlow)                100.0%            0.00                   2                      17                              0             80%
+
+STRESS DAY, 1000 simulated days, 100-bay zone, stays x1.4, 100 booking requests, quota 30, averages per day
+Policy                       Bookings got a bay Bookings failed  Public turned away  Bays held back (bay-h)  ...while walk-ins turned away  Occupied 5-9 pm
+No priority                              68.9%           28.10                 266                       0                              0             99%
+Fixed VIP section                        96.9%            2.66                 326                     146                             30             94%
+Fixed rule (5 safety bays)              100.0%            0.00                 341                     166                             54             84%
+Fixed rule (0 safety bays)              100.0%            0.00                 321                     102                             34             89%
+Forecast rule (ParkFlow)                100.0%            0.01                 305                      51                             12             95%
+
+ROBUSTNESS, busy day, 1000 days. Bookings got a bay (failed per day) / bays held back (bay-h)
+Scenario                                         Fixed VIP section    Fixed rule (5 safety bays)    Fixed rule (0 safety bays)      Forecast rule (ParkFlow)
+As assumed                                     99.94% (0.03) / 143          100.00% (0.00) / 127           100.00% (0.00) / 62           100.00% (0.00) / 33
+Stays 20% longer than forecast                 99.36% (0.33) / 124          100.00% (0.00) / 127           100.00% (0.00) / 62           100.00% (0.00) / 32
+More show up (95%/99% vs 80%/95%)              99.85% (0.09) / 134          100.00% (0.00) / 125           100.00% (0.00) / 61           100.00% (0.00) / 31
+10% of shoppers ignore amber                   97.55% (1.27) / 119          100.00% (0.00) / 126            99.99% (0.01) / 62            99.88% (0.06) / 32
+All three at once                               93.44% (3.67) / 92          100.00% (0.00) / 123            99.93% (0.04) / 59            99.62% (0.21) / 29
+
+CAUTION LEVEL (forecast rule only), busy day. Bookings got a bay (failed per day) / bays held back (bay-h)
+Z=1.0   as assumed: 100.00% (0.00) / 33      all three at once: 99.62% (0.21) / 29
+Z=1.5   as assumed: 100.00% (0.00) / 37      all three at once: 99.71% (0.16) / 33
+Z=2.0   as assumed: 100.00% (0.00) / 41      all three at once: 99.78% (0.12) / 37
+
+LEARNED MODEL, busy day, 1000 days. The forecast fits its stay model from a simulated 2-week pilot (50 different pilots); show-up rates stay at the published priors (80% free / 95% paid).
+Scenario                                              Rule                           Bookings got a bay Failed/day Turned away Held back  ...while turned away
+Learned from 2 weeks, stays as in research            Fixed VIP section                         99.94%       0.03         183       143                    19
+Learned from 2 weeks, stays as in research            Fixed rule (0 safety bays)               100.00%       0.00         168        62                    12
+Learned from 2 weeks, stays as in research            Forecast rule (ParkFlow)                 100.00%       0.00         157        33                     5
+Learned, 40% cinema-goers (stays not lognormal)       Fixed VIP section                         99.90%       0.05         228       143                    24
+Learned, 40% cinema-goers (stays not lognormal)       Fixed rule (0 safety bays)               100.00%       0.00         210        62                    15
+Learned, 40% cinema-goers (stays not lognormal)       Forecast rule (ParkFlow)                 100.00%       0.00         199        34                     6
+Learned + cinema + more show-ups + 10% ignore amber   Fixed VIP section                         95.59%       2.46         212       105                    13
+Learned + cinema + more show-ups + 10% ignore amber   Fixed rule (0 safety bays)                99.96%       0.03         212        59                    15
+Learned + cinema + more show-ups + 10% ignore amber   Forecast rule (ParkFlow)                  99.80%       0.11         201        31                     5
+Fitted stay model (median, minutes): research-like stays 88 (true 87), log-sd 0.91 (true 0.93); with 40% cinema-goers median 113, log-sd 0.77.
+
+Inputs: stays lognormal median 87 min, mean ~125 min (Mueller et al. 2026); peaks 12:30 and 17:30 (Sun et al. 2025); show-up 80% free / 95% paid; 30% of bookings by PRIME, 2-24 h ahead, others 15-120 min; window+grace 30 min; fixed rule counts bookings due in 60 min, safety bays 5; forecast Z=1.0. Same simulated days for every policy. 'Bays held back' = free bays closed to walk-ins; '...while walk-ins turned away' counts only minutes when a walk-in was refused.
+
+HARDER TESTS, busy day, 1000 days. Bookings got a bay (failed per day) / held back while walk-ins waited (bay-h)
+Scenario                                                                     VIP section         Fixed rule (0 safety)                      ParkFlow
+20% of shoppers ignore amber                                           94.74% (2.73) / 8            99.93% (0.04) / 13             99.42% (0.30) / 4
+30% ignore amber                                                       92.62% (3.83) / 5            99.69% (0.16) / 13             98.52% (0.77) / 4
+40% ignore amber                                                       91.05% (4.65) / 4            98.96% (0.54) / 11             97.13% (1.49) / 4
+Day-level shock, sd 15% (stays and show-ups move together)            99.76% (0.12) / 19           100.00% (0.00) / 12             99.99% (0.00) / 5
+Day-level shock, sd 30%                                               99.22% (0.40) / 17           100.00% (0.00) / 12             99.99% (0.01) / 5
+30% ignore + shock 30% + learned model + 40% cinema                    87.46% (6.42) / 6            97.83% (1.11) / 12             95.73% (2.18) / 4
+
+PILOT POWER (switchback: each busy day randomly runs the fixed rule or ParkFlow; 10% ignore amber, shock 15%)
+Per busy day: held back while walk-ins waited 12.6 vs 4.5 bay-h (sd 3.7 / 1.4); walk-ins turned away 167 vs 156 (sd 54 / 54)
+   6 busy days (3 per rule): chance the pilot detects ParkFlow's advantage = 92%
+  10 busy days (5 per rule): chance the pilot detects ParkFlow's advantage = 100%
+  16 busy days (8 per rule): chance the pilot detects ParkFlow's advantage = 100%
+  24 busy days (12 per rule): chance the pilot detects ParkFlow's advantage = 100%
+  32 busy days (16 per rule): chance the pilot detects ParkFlow's advantage = 100%

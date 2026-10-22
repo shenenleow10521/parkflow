@@ -1,0 +1,18 @@
+WHOLE CAR PARK, busy Saturday, 1000 simulated days, 1300 bays (100-bay Priority Zone in B1). Per day; 95% range over days in brackets.
+Scenario                                Search min (all)  Min per driver  Booked drivers  Searched >10 min  No bay found  Peak full
+Today (no guidance, no zone)           29644 (27902-31514)            5.68             419               777           0.4       95%
+Level guidance only                     9331 (8964-9684)            1.79              60                 0           0.0       91%
+ParkFlow (guidance + zone)              8368 (7980-8750)            1.60               0                 0           0.0       91%
+
+SAVED BY PARKFLOW vs today, per busy Saturday: 21276 driver-minutes (19737-22901), 3546 vehicle-km of cruising, 532 litres of petrol, 1229 kg CO2.
+Search time cut by 72%. Booked drivers: 419 -> 0 minutes. Walk-ins: 29226 -> 8368 minutes.
+Of the saving, level guidance alone gives 20313 min; the Priority Zone adds 963 min.
+Per year (104 weekend days at the busy-day saving, 261 other days at a quarter of it): 60,016 driver-hours and about 208.0 tonnes CO2.
+
+SENSITIVITY (saving vs today, driver-minutes per busy Saturday, 300 days each)
+Search 50% faster (SEARCH_A x0.5)          23940  (today 28424, ParkFlow 4484)
+Search 50% slower (SEARCH_A x1.5)          20117  (today 30049, ParkFlow 9931)
+Demand 10% lower                           16701  (today 23992, ParkFlow 7290)
+Demand 10% higher                          25365  (today 34833, ParkFlow 9469)
+
+Assumptions: search 0.06 min / share of bays free, capped at a 3-min loop of a full level; 1 min between levels; signs show space at >= 5 free bays; cruising 10 km/h; 0.15 L/km at crawl; 2.31 kg CO2/L petrol (DESNZ/DEFRA). Stays and arrival peaks as in simulate_pooling.py. Walk-in demand 0.6 x the zone model's rate per bay. The zone uses the simple fixed rule here (conservative).

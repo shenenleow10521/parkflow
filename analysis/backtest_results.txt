@@ -1,0 +1,21 @@
+﻿Car parks: 30, readings used: 35416, test weeks: 6, test predictions: 48112
+
+Average error, % of capacity (lower is better)
+Look-ahead    Last week  No change  LightGBM  vs last wk  vs no chg
+ 30 min             5.3        3.7       1.6         70%        57%
+ 60 min             5.3        7.0       2.2         59%        69%
+ 90 min             5.4       10.1       2.8         49%        73%
+
+'Nearly full (>= 90%) in 60 min' probability: share of cases nearly full = 12.4%, Brier = 0.023 (always-guess-average = 0.109)
+
+Calibration at 60 min (when we said X%, how often was it nearly full?)
+                 cases  said  happened
+bin                                   
+(-0.001, 0.1] 13791.00  0.00      0.01
+(0.1, 0.3]      269.00  0.18      0.40
+(0.3, 0.5]      152.00  0.39      0.45
+(0.5, 0.7]      166.00  0.61      0.67
+(0.7, 0.9]      265.00  0.81      0.76
+(0.9, 1.0]     1385.00  0.98      0.97
+
+Example day: BHMNCPNHS01 on 2016-12-15, busy days to choose from: 257, its 60-min error: 2.4% (saved backtest_sample_day.csv)

@@ -1,0 +1,69 @@
+MARKET SIZE (annual licence value, RM2,500 a month per mall)
+  TAM  all malls in Malaysia            490 malls  RM 14.7m a year
+  SAM  Klang Valley (Selangor + KL)      173 malls  RM  5.2m a year
+  SOM  4 SDP malls + 6 partners, year 3  10 malls  RM 0.30m a year (6% of SAM)
+
+COST SHEET, per mall (one-off hardware), RM: low / base / high
+  Zone plate cameras, both directions (installed)        8,000   12,000   20,000
+  LED zone sign                                         12,000   16,300   16,300
+  2 AI boxes (NVIDIA Jetson Orin Nano Super)             2,340    2,340    2,340
+  4-6 extra cameras at blind spots                       3,000    5,000    9,000
+  Installation and cabling                               5,000    7,500   10,000
+  Hardware total                                        30,340   43,140   57,640
+  Platform build (once, all malls)                     100,000  150,000  200,000
+Running, per live mall per year, RM
+  Cloud hosting                                          3,600    4,800    7,200
+  WhatsApp confirmations                                   900    1,400    2,000
+  Hardware upkeep (10% of hardware a year)               3,400    4,300    5,700
+  Running total                                          7,900   10,500   14,900
+  Central engineer (portfolio)                         100,000  120,000  150,000
+
+REVENUE PER SDP MALL PER YEAR, RM (low / base / high)
+  low   paid bookings  3,385  fees net   10,561  tenant-sponsored   2,084  total   12,645
+  base  paid bookings  5,078  fees net   15,842  tenant-sponsored   5,208  total   21,050
+  high  paid bookings  6,770  fees net   21,122  tenant-sponsored   8,332  total   29,454
+  Base contribution per SDP mall after running costs: RM10,550 a year; hardware pays back in 4.1 years
+  Partner mall: licence RM30,000 - running RM10,500 = contribution RM19,500 a year (partner buys its own hardware)
+  Fixed central costs RM150,000 a year are covered at 5.5 partner malls plus the 4 SDP malls
+
+7-YEAR ROLLOUT, base case, RM thousands
+  Year   SDP malls  Partners   Revenue      Cost       Net  Cumulative
+  1              1         0        21       264      -243        -243
+  2              4         0        84       291      -207        -450
+  3              4         6       264       255         9        -441
+  4              4        12       444       438         6        -434
+  5              4        18       624       501       123        -311
+  6              4        24       804       564       240         -71
+  7              4        30       984       627       357         286
+  First profitable year: 3; cumulative payback: 7
+
+7-YEAR ROLLOUT, low case, RM thousands
+  Year   SDP malls  Partners   Revenue      Cost       Net  Cumulative
+  1              1         0        13       348      -335        -335
+  2              4         0        51       383      -332        -667
+  3              4         6       231       329       -98        -765
+  4              4        12       411       568      -158        -923
+  5              4        18       591       658       -67        -990
+  6              4        24       771       747        23        -967
+  7              4        30       951       837       114        -853
+  First profitable year: 6; cumulative payback: after year 7
+
+7-YEAR ROLLOUT, high case, RM thousands
+  Year   SDP malls  Partners   Revenue      Cost       Net  Cumulative
+  1              1         0        29       188      -159        -159
+  2              4         0       118       223      -105        -264
+  3              4         6       298       209        89        -175
+  4              4        12       478       356       121         -53
+  5              4        18       658       404       254         201
+  6              4        24       838       451       387         587
+  7              4        30      1018       499       519        1106
+  First profitable year: 3; cumulative payback: 5
+
+SDP ON ITS OWN (4 malls, no partners), base case, per year
+  Revenue RM84,199; running incl. engineer RM162,000; one-off RM322,560 spread over 5 years RM64,512
+  Net cost RM142,313 a year = RM9 per SDP home near the 4 malls (15,600 homes), or RM4.9 per booking served (29,014 a year)
+  Fees alone would need about 140 paid bookings per busy day per mall (base 30), so for SDP it is a loyalty and footfall programme, not a fee business
+  A partner mall pays RM49,128 a year (licence, running, hardware over 5 years) against RM21,050 of fees: it buys ParkFlow for footfall and loyalty, as SDP does; so partner licences are upside, not the base case.
+
+Not counted (upside for SDP): PRIME value for home sales, spend data, turnover rent from higher tenant sales, premium-rate income from non-bookers, search time saved (simulate_carpark.py).
+[S] sources: PPK Malaysia via The Star (490 malls, 2024); NAPIC via The Rakyat Post (Selangor 95, KL 78, mid-2025); NVIDIA list price; Tapconet list price; Meta WhatsApp rate card (via Sleekflow, Jul 2025).

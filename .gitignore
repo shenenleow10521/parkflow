@@ -11,3 +11,6 @@ dist/assets/
 dist/command.html
 dist/driver.html
 dist/test-landing.html
+
+# simulation raw output (regenerate with: python analysis/simulate_zone_size.py)
+analysis/*.npz

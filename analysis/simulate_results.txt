@@ -1,0 +1,4 @@
+﻿Case             Peak full  Max queue  Visits lost  Minutes full
+No alerts            100%         31           16            65
+Warn everyone         99%          0           74             0
+ParkAhead            100%          6            2            30

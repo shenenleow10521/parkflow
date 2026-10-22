@@ -1,0 +1,12 @@
+Test forecasts: 48112 over 6 weeks, 30 car parks
+
+Average error, % of capacity (lower is better)
+Ahead     Last wk  Adjusted  LightGBM  Ensemble  Ens vs GBM  GBM weight
+ 30 min      5.26      1.48      1.58      1.41       10.4%        0.51
+ 60 min      5.34      2.19      2.19      2.07        5.7%        0.64
+ 90 min      5.40      2.78      2.77      2.63        4.9%        0.67
+
+80% range check (should contain the real value ~80% of the time)
+ 30 min: contained 79.8%, average range +/- 2.2% of capacity
+ 60 min: contained 79.9%, average range +/- 3.2% of capacity
+ 90 min: contained 79.8%, average range +/- 4.1% of capacity

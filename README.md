@@ -80,6 +80,8 @@ python3 tools/video/assemble.py $W               # ParkFlow-demo.mp4 (captions +
 | `src/mobile/motion.ts` | Motion (motion.dev) adapter with a Web Animations fallback and reduced-motion support |
 | `src/styles.css` | Design tokens (top of file) and layout |
 | `src/landing/` | Landing page (single file, Motion for animation with a Web Animations fallback) and its screenshots |
+| `analysis/` | Python scripts behind every number in the pitch deck: Monte Carlo zone and car park simulations, forecast backtest, business case. See `analysis/README.md` |
+| `submission/` | The pitch deck as one self-contained HTML file |
 
 ## Design notes
 
