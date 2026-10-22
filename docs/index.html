@@ -621,6 +621,111 @@ html { overflow-x: clip; }
 @media (prefers-reduced-motion: reduce) {
   .ic-star, .ic-p, .ic-lock, .cone, .rec, .close-in::before, .rule::before, .road::before, .btn-sign::after { animation: none !important; }
 }
+
+/* =================================================================== motion layer, second pass */
+/* smooth scrolling (Lenis) */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* section colour that follows you down the page */
+.ambient { position: fixed; width: 70vw; height: 70vw; right: -24vw; top: -26vw; border-radius: 50%; background-color: var(--sign); filter: blur(120px); opacity: 0.16; mix-blend-mode: screen; pointer-events: none; z-index: 44; transition: background-color 1.4s ease; animation: amb 22s ease-in-out infinite alternate; }
+@keyframes amb { to { transform: translate(-18vw, 30vh) scale(1.15); } }
+
+/* cursor ring */
+.cring { position: fixed; left: 0; top: 0; width: 0; height: 0; z-index: 400; pointer-events: none; opacity: 0; transition: opacity 0.3s; }
+.cring.on { opacity: 1; }
+.cring span { position: absolute; left: -18px; top: -18px; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(235, 240, 246, 0.55); display: grid; place-items: center; font: 700 5.6px/1 var(--f-num); letter-spacing: 0.08em; color: #fff; text-transform: uppercase; transition: transform 0.35s cubic-bezier(.2, .8, .2, 1), background 0.3s, border-color 0.3s; }
+.cring.big span { transform: scale(1.7); border-color: var(--sign-hi); background: rgba(47, 111, 224, 0.16); }
+.cring.lab span { transform: scale(2.2); background: var(--sign); border-color: var(--sign); box-shadow: 0 0 30px rgba(47, 111, 224, 0.6); }
+
+/* hero lights */
+.bokeh { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+.h1 .ch { will-change: transform; }
+
+/* kinetic outline type */
+.kinetic { overflow: hidden; padding-block: clamp(36px, 6vw, 90px); position: relative; }
+.kt { font: 700 clamp(72px, 12.5vw, 210px)/0.95 var(--f-disp); white-space: nowrap; color: transparent; -webkit-text-stroke: 1.5px rgba(235, 240, 246, 0.22); will-change: transform; letter-spacing: -0.01em; }
+.kt + .kt { -webkit-text-stroke-color: rgba(227, 195, 90, 0.45); }
+.kt em { font-style: normal; color: rgba(235, 240, 246, 0.9); -webkit-text-stroke: 0; }
+.kt + .kt em { color: var(--gold); }
+.kt i { display: inline-block; width: 0.16em; height: 0.16em; border-radius: 50%; background: var(--go); vertical-align: middle; margin: 0 0.32em; box-shadow: 0 0 40px var(--go); }
+.kt + .kt i { background: var(--gold); box-shadow: 0 0 40px var(--gold); }
+
+/* problem cards: small looping scenes */
+.pv { height: 112px; border-radius: 14px; background: radial-gradient(90% 90% at 50% 0%, rgba(126, 168, 255, 0.10), transparent 70%), var(--deck); border: 1px solid var(--line); position: relative; overflow: hidden; display: grid; place-items: center; margin-bottom: 6px; }
+.mcard { width: 176px; height: 86px; border-radius: 12px; background: linear-gradient(135deg, #f0d77e, #b8902e); color: #2a2206; padding: 10px 12px; position: relative; overflow: hidden; display: grid; align-content: space-between; box-shadow: 0 12px 26px rgba(0, 0, 0, 0.45); animation: cardFloat 4.5s ease-in-out infinite; }
+.mcard::after { content: ""; position: absolute; top: -20%; bottom: -20%; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent); transform: skewX(-18deg); animation: sheen 3.2s ease-in-out infinite; }
+@keyframes sheen { 0%, 40% { left: -60%; } 75%, 100% { left: 130%; } }
+@keyframes cardFloat { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(2deg); } }
+.mc-top { display: flex; justify-content: space-between; align-items: center; font: 700 12px/1 var(--f-num); letter-spacing: 0.04em; }
+.mc-top i { width: 22px; height: 22px; border-radius: 6px; background: #2f6fe0; color: #fff; display: grid; place-items: center; font-style: normal; font-size: 13px; }
+.mc-row { display: flex; justify-content: space-between; align-items: baseline; font-size: 11px; font-weight: 600; }
+.mc-row b { font: 700 13px/1 var(--f-num); color: #a8232f; position: relative; }
+.mc-row b::after { content: ""; position: absolute; left: -2px; right: -2px; top: 50%; height: 2px; background: #a8232f; transform: scaleX(0); transform-origin: left; animation: strike 3.2s ease-in-out infinite; }
+@keyframes strike { 0%, 30% { transform: scaleX(0); } 45%, 85% { transform: scaleX(1); } 100% { transform: scaleX(0); } }
+.st2 { position: relative; width: 220px; height: 96px; }
+.lotmini { position: absolute; left: 30px; top: 22px; width: 160px; height: 52px; display: grid; grid-template-columns: repeat(6, 1fr); border-top: 2px solid rgba(235, 240, 246, 0.4); }
+.lotmini i { border-left: 2px solid rgba(235, 240, 246, 0.4); position: relative; }
+.lotmini i:last-child { border-right: 2px solid rgba(235, 240, 246, 0.4); }
+.lotmini .vb { background: repeating-linear-gradient(135deg, rgba(227, 195, 90, 0.3) 0 5px, rgba(227, 195, 90, 0.1) 5px 10px); }
+.lotmini .gb::after { content: ""; position: absolute; left: 22%; right: 22%; top: 12%; bottom: 14%; border-radius: 4px; background: #9aa6b6; }
+.loopcar { position: absolute; left: 0; top: 0; width: 20px; height: 11px; border-radius: 3px; background: #cfd6e0; box-shadow: 0 0 10px rgba(255, 244, 214, 0.35); offset-path: path("M 22 10 H 198 Q 210 10 210 22 V 74 Q 210 86 198 86 H 22 Q 10 86 10 74 V 22 Q 10 10 22 10 Z"); offset-rotate: auto; animation: loop 4.8s linear infinite; }
+.loopcar::after { content: ""; position: absolute; right: -14px; top: 1px; width: 14px; height: 9px; background: linear-gradient(90deg, rgba(255, 244, 214, 0.55), transparent); }
+@keyframes loop { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+.st3 { position: relative; width: 200px; height: 96px; }
+.bay3 { position: absolute; left: 70px; top: 10px; width: 60px; height: 78px; border: 2px solid rgba(235, 240, 246, 0.4); border-top: 0; }
+.bollard { position: absolute; left: 92px; bottom: 16px; width: 16px; height: 34px; border-radius: 4px 4px 2px 2px; background: repeating-linear-gradient(180deg, #ffb21f 0 7px, #1a1f27 7px 12px); transform-origin: bottom; animation: bollard 3s cubic-bezier(.5, 0, .3, 1) infinite; box-shadow: 0 0 14px rgba(255, 178, 31, 0.35); }
+@keyframes bollard { 0%, 15% { transform: scaleY(0.15); } 40%, 75% { transform: scaleY(1); } 100% { transform: scaleY(0.15); } }
+.coin { position: absolute; left: 88px; bottom: 50px; font: 700 10px/1 var(--f-num); color: #2a2206; background: var(--gold); border-radius: 999px; padding: 4px 5px; opacity: 0; animation: coin 3s ease-out infinite; }
+.coin.c2 { left: 112px; animation-delay: 1.5s; }
+@keyframes coin { 0%, 35% { opacity: 0; transform: translateY(10px) scale(0.6); } 50% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-34px) scale(0.9); } }
+
+/* who: cards swing in */
+.js:not(.no-anim) .who .role[data-rv]:not(.rv-done) { opacity: 0; transform: perspective(900px) rotateY(-30deg) translateX(40px); }
+.js .who .role.rv-done { transition: opacity 0.9s, transform 1.2s cubic-bezier(.16, 1, .3, 1); }
+
+/* a car drives down the steps rail */
+.rail { overflow: visible; }
+.railcar { position: absolute; left: 50%; bottom: -26px; width: 16px; height: 28px; transform: translateX(-50%); filter: drop-shadow(0 0 8px rgba(52, 229, 138, 0.7)); }
+.railcar::after { content: ""; position: absolute; left: 50%; top: 100%; width: 26px; height: 34px; transform: translateX(-50%); background: radial-gradient(50% 60% at 50% 0%, rgba(255, 244, 214, 0.45), transparent 70%); }
+
+/* hotspots on the laptop screen */
+.hots { position: absolute; inset: 12px 12px 0; pointer-events: none; }
+.hot { position: absolute; left: var(--x); top: var(--y); display: flex; align-items: center; gap: 8px; opacity: 0; transform: translateY(10px) scale(0.85); transition: opacity 0.5s, transform 0.7s cubic-bezier(.3, 1.5, .5, 1); transition-delay: calc(var(--i) * 0.28s); }
+.hot.r { left: auto; right: calc(100% - var(--x)); flex-direction: row-reverse; }
+.devices.hot-on .hot { opacity: 1; transform: none; }
+.hot i { width: 14px; height: 14px; border-radius: 50%; background: var(--go); box-shadow: 0 0 0 4px rgba(52, 229, 138, 0.25); position: relative; flex: none; margin-inline: -7px 0; }
+.hot.r i { margin-inline: 0 -7px; }
+.hot i::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--go); animation: ping 1.8s ease-out infinite; }
+@keyframes ping { from { transform: scale(0.6); opacity: 1; } to { transform: scale(2.8); opacity: 0; } }
+.hot b { font: 600 13.5px/1.2 var(--f-body); padding: 7px 11px; border-radius: 9px; background: rgba(10, 17, 28, 0.9); border: 1px solid rgba(52, 229, 138, 0.45); color: var(--chalk); white-space: nowrap; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45); }
+
+/* rolling stats take their time */
+.stat .odo .dg > span, .market .odo .dg > span { transition-duration: 1.8s; transition-timing-function: cubic-bezier(.16, 1, .3, 1); }
+.stat .odo .dg:nth-of-type(2) > span, .market .odo .dg:nth-of-type(2) > span { transition-delay: 0.12s; }
+.stat .odo .dg:nth-of-type(3) > span, .market .odo .dg:nth-of-type(3) > span { transition-delay: 0.24s; }
+
+/* ripple when the gate changes state */
+.burst { position: fixed; left: 0; top: 0; width: 70px; height: 70px; border-radius: 50%; border: 2px solid; pointer-events: none; z-index: 60; }
+
+/* leaving for a demo: the gate opens again */
+.leave { position: fixed; inset: 0; z-index: 320; display: grid; place-items: center; background: radial-gradient(90% 70% at 50% 110%, #13203a 0%, #070b12 62%, #04060a 100%); overflow: hidden; }
+
+/* footer: one more car on its way */
+.foot { position: relative; }
+.footcar { position: absolute; top: -12px; left: -60px; width: 40px; height: 22px; animation: footdrive 18s linear infinite; filter: drop-shadow(0 0 10px rgba(227, 195, 90, 0.6)); }
+@keyframes footdrive { from { left: -60px; } to { left: calc(100% + 20px); } }
+
+@media (max-width: 760px) {
+  .hot b { display: none; }
+  .kt { -webkit-text-stroke-width: 1px; }
+  .ambient { width: 120vw; height: 120vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ambient, .mcard, .mcard::after, .mc-row b::after, .loopcar, .bollard, .coin, .hot i::after, .footcar { animation: none !important; }
+  .coin { opacity: 0; }
+}
 </style>
 </head>
 <body>
@@ -632,6 +737,8 @@ html { overflow-x: clip; }
   <button class="intro-skip" type="button" tabindex="-1">Skip intro</button>
 </div>
 <div class="torch" id="torch" aria-hidden="true"></div>
+<div class="ambient" aria-hidden="true"></div>
+<div class="cring" id="cring" aria-hidden="true"><span></span></div>
 <a class="sr" href="#main">Skip to content</a>
 <header class="nav" id="nav">
   <div class="wrap nav-in">
@@ -650,6 +757,7 @@ html { overflow-x: clip; }
 
 <main id="main">
 <section class="hero" id="top" aria-labelledby="hero-h">
+  <canvas class="bokeh" id="bokeh" aria-hidden="true"></canvas>
   <div class="wrap">
     <div class="hero-top">
       <div>
@@ -711,16 +819,19 @@ html { overflow-x: clip; }
     </div>
     <div class="probs">
       <article class="prob" data-rv>
+        <div class="pv" aria-hidden="true"><div class="mcard"><span class="mc-top">REWARDS GOLD<i>P</i></span><span class="mc-row">Parking privilege<b>NONE</b></span></div></div>
         <svg class="ic-star" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         <h3>Membership feels thin</h3>
         <p>Members collect shopping rewards, but parking, the first thing they do at the mall, gives them nothing reliable.</p>
       </article>
       <article class="prob" data-rv>
+        <div class="pv" aria-hidden="true"><div class="st2"><div class="lotmini"><i class="vb"></i><i class="vb"></i><i class="vb"></i><i class="gb"></i><i class="gb"></i><i class="gb"></i></div><div class="loopcar"></div></div></div>
         <svg class="ic-p" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9"/></svg>
         <h3>VIP bays sit empty</h3>
         <p>Permanent member-only bays stay unused off-peak, while ordinary shoppers circle the floor below looking for a space.</p>
       </article>
       <article class="prob" data-rv>
+        <div class="pv" aria-hidden="true"><div class="st3"><i class="bay3"></i><i class="bollard"></i><span class="coin">RM</span><span class="coin c2">RM</span></div></div>
         <svg class="ic-lock" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
         <h3>Hardware on every bay</h3>
         <p>Bay locks and per-bay sensors add installation and maintenance cost to every single space a mall wants to reserve.</p>
@@ -839,7 +950,7 @@ html { overflow-x: clip; }
     </div>
     <div class="how-main">
     <ol class="steps" id="steps">
-      <span class="rail" id="rail" aria-hidden="true"></span>
+      <span class="rail" id="rail" aria-hidden="true"><svg class="railcar" viewBox="0 0 16 28"><rect x="1" y="1" width="14" height="26" rx="4" fill="#e3c35a"/><rect x="3" y="16" width="10" height="6" rx="2" fill="#0a111c" opacity=".75"/><rect x="3" y="5" width="10" height="4" rx="1.5" fill="#0a111c" opacity=".55"/><rect x="2" y="25" width="3" height="2" rx="1" fill="#fff6d6"/><rect x="11" y="25" width="3" height="2" rx="1" fill="#fff6d6"/></svg></span>
       <li class="step"><span class="dot">1</span><h3>Detect occupancy</h3><p>Existing CCTV feeds estimate occupied spaces with computer vision. Number-plate (ANPR) entry and exit records give a second, independent count. No sensor in each bay.</p></li>
       <li class="step"><span class="dot">2</span><h3>Set member-priority capacity</h3><p>The operator sets the most priority reservations a zone may hold at the same time. For example, a 100-space zone supports up to 20 overlapping member reservations.</p></li>
       <li class="step"><span class="dot">3</span><h3>Accept reservations</h3><p>Members give their arrival time and expected stay. Before confirming, ParkFlow checks:</p><ul><li>membership and the registered number plate</li><li>overlapping reservations</li><li>physical capacity available</li><li>the protected quota and safety margin</li></ul></li>
@@ -883,7 +994,13 @@ html { overflow-x: clip; }
       <p class="lede" data-rv>A command centre for the operator and a phone app for drivers, both driven by one seeded simulation of a three-level mall car park.</p>
     </div>
     <div class="devices" data-rv>
-      <div class="laptop"><img src="assets/op-overview.webp" width="1800" height="1125" alt="ParkFlow command centre: a 3D model of the car park with live bay lights, a level board, the parking occupancy forecast and the guidance a driver sees." loading="lazy" decoding="async"></div>
+      <div class="laptop"><img src="assets/op-overview.webp" width="1800" height="1125" alt="ParkFlow command centre: a 3D model of the car park with live bay lights, a level board, the parking occupancy forecast and the guidance a driver sees." loading="lazy" decoding="async">
+        <div class="hots" aria-hidden="true">
+          <span class="hot" style="--x:28%;--y:47%;--i:0"><i></i><b>Live 3D twin of the car park</b></span>
+          <span class="hot r" style="--x:60%;--y:31%;--i:1"><i></i><b>What the driver sees</b></span>
+          <span class="hot" style="--x:13%;--y:15%;--i:2"><i></i><b>Five live numbers</b></span>
+          <span class="hot" style="--x:21%;--y:86%;--i:3"><i></i><b>Next 30 minutes, in and out</b></span>
+        </div></div>
       <div class="phones" id="phones">
         <div class="phone" data-par="0.10"><img src="assets/app-home.webp" width="780" height="1688" alt="Driver app home: free bays by level, the car already parked and a busy-time forecast." loading="lazy" decoding="async"></div>
         <div class="phone" data-par="0.18"><img src="assets/app-reserve.webp" width="780" height="1688" alt="Driver app booking: Ladies' parking or a designated member bay, arrival time, stay and car." loading="lazy" decoding="async"></div>
@@ -920,6 +1037,11 @@ html { overflow-x: clip; }
     <p class="cap">Membership analytics in the command centre: who is parked right now, and how the member share has moved since the car park opened.</p>
   </div>
 </section>
+
+<div class="kinetic" id="kinetic" aria-hidden="true">
+  <div class="kt">RESERVE <em>CAPACITY</em> <i></i> NOT PARKING BAYS <i></i> RESERVE <em>CAPACITY</em> <i></i> NOT PARKING BAYS <i></i></div>
+  <div class="kt">ONE RULE AT <em>THE GATE</em> <i></i> NO BAY LOCKS <i></i> ONE RULE AT <em>THE GATE</em> <i></i> NO BAY LOCKS <i></i></div>
+</div>
 
 <section class="sec" id="impact" aria-labelledby="impact-h">
   <div class="wrap">
@@ -965,7 +1087,7 @@ html { overflow-x: clip; }
       <div class="rev" data-rv>
         <h3>Incremental revenue</h3>
         <div class="line"><span>membership upgrades × upgrade fee</span><em>+</em><span>paid reservations × reservation fee</span><em>−</em><span>operating and implementation costs</span></div>
-        <div class="market"><b>988</b><span>shopping complexes in Malaysia (NAPIC, end of June 2025). The first pilot is one zone in one mall; the same software runs in any of them.</span></div>
+        <div class="market"><b><i data-count="988" style="font-style:normal">988</i></b><span>shopping complexes in Malaysia (NAPIC, end of June 2025). The first pilot is one zone in one mall; the same software runs in any of them.</span></div>
       </div>
     </div>
   </div>
@@ -1015,12 +1137,14 @@ html { overflow-x: clip; }
 
 <footer>
   <div class="wrap foot">
+    <svg class="footcar" viewBox="0 0 46 26" aria-hidden="true"><rect x="3" y="4" width="40" height="18" rx="6" fill="#e3c35a"/><rect x="27" y="7" width="9" height="12" rx="2" fill="#0a111c" opacity=".7"/><rect x="8" y="7" width="6" height="12" rx="2" fill="#0a111c" opacity=".55"/><rect x="41" y="6" width="3" height="4" rx="1" fill="#fff6d6"/><rect x="41" y="16" width="3" height="4" rx="1" fill="#fff6d6"/></svg>
     <p><b style="color:var(--chalk)">ParkFlow</b>, smart membership parking through capacity sharing. Built for the Sime Darby Property University Hackathon 2026. The prototype runs on simulated data and an illustrative car park layout.</p>
     <p><a href="https://github.com/shenenleow10521/parkflow">Source on GitHub</a></p>
   </div>
 </footer>
 
 <script defer src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -1033,6 +1157,18 @@ document.addEventListener('DOMContentLoaded', function () {
   var M = window.Motion && typeof window.Motion.animate === 'function' ? window.Motion : null;
   var FINE = false;
   try { FINE = matchMedia('(pointer: fine)').matches; } catch (e) {}
+  // buttery scrolling with Lenis when it loaded (desktop pointers only)
+  var lenis = null;
+  if (!RM && FINE && typeof window.Lenis === 'function') {
+    try { lenis = new window.Lenis({ lerp: 0.09, smoothWheel: true, wheelMultiplier: 1 }); (function lr(t) { lenis.raf(t); requestAnimationFrame(lr); })(performance.now()); } catch (e) { lenis = null; }
+  }
+  function scrollToY(y) { if (lenis) lenis.scrollTo(y, { duration: 1.4 }); else window.scrollTo({ top: y, behavior: RM ? 'auto' : 'smooth' }); }
+  if (lenis) document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a) return;
+    var id = a.getAttribute('href').slice(1), t = id ? document.getElementById(id) : null; if (!t) return;
+    e.preventDefault(); lenis.scrollTo(t, { offset: -72, duration: 1.5 }); try { history.replaceState(null, '', '#' + id); } catch (x) {}
+  });
+  var frameHooks = [];
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
@@ -1120,6 +1256,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var tick = function (now) { self.p = Math.min(1, (now - t0) / D); self.draw(); if (self.p < 1) self.raf = requestAnimationFrame(tick); else self.raf = 0; };
     this.raf = requestAnimationFrame(tick);
   };
+  Sign.prototype.shimmer = function () { if (!this.cur || RM || this.p < 1) return; this.prev = this.cur; this.prevColor = this.color; this.run(); };
   Sign.prototype.powerOn = function () { if (!this.cur || RM) return; this.prev = new Uint8Array(this.cols * this.rows); this.prevColor = this.color; this.run(); };
   Sign.prototype.draw = function () {
     var c = this.c, ctx = c.getContext('2d'); if (!ctx || !this.cur) return;
@@ -1271,6 +1408,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
     cars = cars.filter(function (c) { return c.st !== 'gone'; });
+    cars.forEach(function (c) {
+      if (c.st !== 'parked' && c.v > 20) { var t = c.trail || (c.trail = []); t.push(c.x, c.y); if (t.length > 40) t.splice(0, 2); }
+      else if (c.trail && c.trail.length) c.trail.splice(0, 4);
+    });
     if (barrierTarget === 1 && gateBusy <= 0.1) barrierTarget = 0;
     barrier += (barrierTarget - barrier) * Math.min(1, dt * 9);
     gateFlash = Math.max(0, gateFlash - dt * 1.6);
@@ -1348,6 +1489,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var st = gateState(); var sc = st === 'go' ? '52,229,138' : st === 'amber' ? '255,178,31' : '255,77,94';
     var gp = g.createRadialGradient(GATE_X, ROAD_Y, 0, GATE_X, ROAD_Y, 110 + gateFlash * 40); gp.addColorStop(0, 'rgba(' + sc + ',' + (0.28 + gateFlash * 0.3) + ')'); gp.addColorStop(1, 'rgba(' + sc + ',0)');
     g.fillStyle = gp; g.fillRect(GATE_X - 160, ROAD_Y - 160, 320, 320);
+    g.save(); g.globalCompositeOperation = 'lighter'; g.lineCap = 'round';
+    cars.forEach(function (c) {
+      var t = c.trail; if (!t || t.length < 6) return; var n = t.length / 2;
+      for (var i = 1; i < n; i++) { var a = i / n; g.strokeStyle = c.member ? 'rgba(227,195,90,' + (a * 0.34).toFixed(3) + ')' : 'rgba(255,70,70,' + (a * 0.3).toFixed(3) + ')'; g.lineWidth = 2 + a * 7; g.beginPath(); g.moveTo(t[i * 2 - 2], t[i * 2 - 1]); g.lineTo(t[i * 2], t[i * 2 + 1]); g.stroke(); }
+    });
+    g.restore();
     cars.forEach(function (c) { if (c.st === 'parked') drawCar(g, c); });
     cars.forEach(function (c) { if (c.st !== 'parked') drawCar(g, c); });
     // barrier arm
@@ -1447,10 +1594,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var ov = $('#intro');
     if (!ov || RM || !root.classList.contains('play-intro')) { if (ov) ov.remove(); root.classList.remove('play-intro'); done(); return; }
     try { sessionStorage.setItem('pf-intro', '1'); } catch (e) {}
+    if (lenis) lenis.stop();
     var s = new Sign($('#intro-sign')); s.set(['PARKFLOW', 'RESERVE CAPACITY'], COLORS.gold, true); s.fit();
     var arm = $('.intro-arm', ov), timers = [], over = false;
     var finish = function () {
-      if (over) return; over = true; timers.forEach(clearTimeout);
+      if (over) return; over = true; timers.forEach(clearTimeout); if (lenis) lenis.start();
       ['keydown', 'wheel', 'touchstart'].forEach(function (ev) { window.removeEventListener(ev, finish); });
       anim(ov, { opacity: [1, 0], transform: ['scale(1)', 'scale(1.08)'] }, { duration: 0.75, ease: [0.7, 0, 0.3, 1] });
       setTimeout(function () { root.classList.remove('play-intro'); if (ov.parentNode) ov.parentNode.removeChild(ov); }, 780);
@@ -1555,7 +1703,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   $$('.tab', cmp).forEach(function (t) { t.addEventListener('click', function () {
     var mode = t.getAttribute('data-mode');
-    if (pinned) { var r = idea.getBoundingClientRect(), tot = r.height - window.innerHeight, idx = ['locks', 'vip', 'pool'].indexOf(mode); window.scrollTo({ top: window.scrollY + r.top + (idx / 3 + 0.16) * tot, behavior: 'smooth' }); }
+    if (pinned) { var r = idea.getBoundingClientRect(), tot = r.height - window.innerHeight, idx = ['locks', 'vip', 'pool'].indexOf(mode); scrollToY(window.scrollY + r.top + (idx / 3 + 0.16) * tot); }
     setMode(mode, true);
   }); });
   $('.tabs', cmp).addEventListener('keydown', function (e) {
@@ -1578,6 +1726,7 @@ document.addEventListener('DOMContentLoaded', function () {
   var rOdo = new Odo($('#r-num')), boom = $('#boom');
   var cT = $('#c-total'), cO = $('#c-occ'), cR = $('#c-res'), cM = $('#c-mar');
   function fill(inp) { var p = (inp.value - inp.min) / (inp.max - inp.min) * 100; inp.style.setProperty('--v', p + '%'); }
+  var calcState = '';
   function calc() {
     var T = +cT.value; cO.max = T; cR.max = Math.min(60, T);
     var O = Math.min(+cO.value, T), R = Math.min(+cR.value, T), Mg = +cM.value;
@@ -1590,6 +1739,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $('#calc-sign').parentElement.style.setProperty('--state-glow', st === 'go' ? 'rgba(52,229,138,0.22)' : st === 'amber' ? 'rgba(255,178,31,0.24)' : 'rgba(255,77,94,0.24)');
     rOdo.set(Math.max(0, P));
     boom.classList.toggle('up', st === 'go'); boom.style.setProperty('--cstate', col);
+    if (calcState && calcState !== st) burst($('#r-num'), col);
+    calcState = st;
     var txt = st === 'go'
       ? '<strong>Green: open to all shoppers</strong>' + P + ' space' + (P === 1 ? '' : 's') + ' for anyone who arrives, while ' + R + ' stay protected for members on the way.'
       : st === 'amber'
@@ -1632,9 +1783,11 @@ document.addEventListener('DOMContentLoaded', function () {
         var big = window.innerWidth > 760;
         phonesEls.forEach(function (ph, pi) {
           var kk = +ph.getAttribute('data-par'); var pr = ph.parentElement.getBoundingClientRect(); var c = (pr.top + pr.height / 2 - vh / 2);
-          ph.style.transform = 'translateX(' + ((1 - eq) * (big ? 220 + pi * 90 : 80)).toFixed(1) + 'px) rotateY(' + ((1 - eq) * -38).toFixed(2) + 'deg) translateY(' + (big ? c * kk : 0).toFixed(1) + 'px)';
+          ph._base = 'translateX(' + ((1 - eq) * (big ? 220 + pi * 90 : 80)).toFixed(1) + 'px) rotateY(' + ((1 - eq) * -38).toFixed(2) + 'deg) translateY(' + (big ? c * kk : 0).toFixed(1) + 'px)';
+          if (!protoVisible) ph.style.transform = ph._base;
           ph.style.opacity = (0.15 + 0.85 * eq).toFixed(3);
         });
+        if (eq > 0.92) dev.classList.add('hot-on');
       }
       var road = $('#road'), run = $('#runner');
       if (road && run && getComputedStyle(run).display !== 'none') {
@@ -1649,8 +1802,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // ------------------------------------------------------------ counting stats
   var counters = $$('[data-count]');
   if (!RM && 'IntersectionObserver' in window) {
-    counters.forEach(function (el) { el.textContent = '0'; });
-    var cio = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { var el = e.target; var v = +el.getAttribute('data-count'); var t0 = performance.now(); (function tick(now) { var p = Math.min(1, (now - t0) / 1400); el.textContent = Math.round(v * (1 - Math.pow(1 - p, 4))); if (p < 1) requestAnimationFrame(tick); })(t0); cio.unobserve(el); } }); }, { threshold: 0.6 });
+    counters.forEach(function (el) { el._odo = new Odo(el); el._odo.set(0, true); });
+    var cio = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { var el = e.target; setTimeout(function () { el._odo.set(+el.getAttribute('data-count')); }, 160); cio.unobserve(el); } }); }, { threshold: 0.6 });
     counters.forEach(function (el) { cio.observe(el); });
   }
 
@@ -1724,6 +1877,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     }
     for (var i = 0; i < marquees.length; i++) if (marquees[i].visible) marquees[i].frame(dt, ui.vel);
+    for (var fh = 0; fh < frameHooks.length; fh++) frameHooks[fh](now, dt);
     requestAnimationFrame(uiFrame);
   }
   if (!RM) requestAnimationFrame(uiFrame);
@@ -1778,6 +1932,141 @@ document.addEventListener('DOMContentLoaded', function () {
       setTimeout(function () { closeSign.set(['PARKFLOW', 'OPEN TO ALL'], COLORS.go, true); closeSign.powerOn(); }, RM ? 0 : 1100);
     }, { threshold: 0.5 }).observe($('#close-sign'));
   } catch (e) { closeSign.set(['PARKFLOW', 'OPEN TO ALL'], COLORS.go, true); }
+
+
+  // ================================================================ motion layer, second pass
+  var frameHooksReady = true;
+  // ----- hero: soft out-of-focus lights drifting behind everything
+  var bk = $('#bokeh'), bctx = bk && bk.getContext('2d'), blobs = [];
+  var BH = ['255,244,214', '126,168,255', '52,229,138', '227,195,90', '126,168,255'];
+  for (var bi2 = 0; bi2 < 26; bi2++) blobs.push({ x: Math.random(), y: Math.random() * 0.9, r: 24 + Math.random() * 110, a: 0.04 + Math.random() * 0.11, hue: BH[bi2 % BH.length], sp: 0.003 + Math.random() * 0.012, ph: Math.random() * 6.28, depth: 0.3 + Math.random() * 0.9 });
+  function fitBokeh() { if (!bk) return; var r = bk.getBoundingClientRect(); var dpr = Math.min(1.5, window.devicePixelRatio || 1); bk.width = Math.max(1, Math.round(r.width * dpr)); bk.height = Math.max(1, Math.round(r.height * dpr)); bk._dpr = dpr; }
+  if (bk) { try { new ResizeObserver(fitBokeh).observe(bk); } catch (e) { window.addEventListener('resize', fitBokeh); } fitBokeh(); }
+  frameHooks.push(function (now, dt) {
+    if (!heroVisible || !bctx) return;
+    var W = bk.width, H = bk.height, dpr = bk._dpr || 1; bctx.clearRect(0, 0, W, H); bctx.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < blobs.length; i++) {
+      var b = blobs[i]; b.x += b.sp * dt * 0.35; if (b.x > 1.15) b.x = -0.15;
+      var px = (b.x + ui.mx * 0.025 * b.depth) * W, py = (b.y + ui.my * 0.02 * b.depth) * H - window.scrollY * 0.25 * b.depth * dpr, rr2 = b.r * dpr;
+      var al = b.a * (0.55 + 0.45 * Math.sin(now / 1000 * 0.7 + b.ph));
+      var gr = bctx.createRadialGradient(px, py, 0, px, py, rr2); gr.addColorStop(0, 'rgba(' + b.hue + ',' + al.toFixed(3) + ')'); gr.addColorStop(0.55, 'rgba(' + b.hue + ',' + (al * 0.35).toFixed(3) + ')'); gr.addColorStop(1, 'rgba(' + b.hue + ',0)');
+      bctx.fillStyle = gr; bctx.fillRect(px - rr2, py - rr2, rr2 * 2, rr2 * 2);
+    }
+    bctx.globalCompositeOperation = 'source-over';
+  });
+
+  // ----- hero: headline letters lift toward the pointer
+  var chars = $$('.h1 .ch'), charPos = [], charLift = chars.map(function () { return 0; }), lettersOn = false, ptr = { x: -1e4, y: -1e4 };
+  function measureChars() { charPos = chars.map(function (c) { var r = c.getBoundingClientRect(); return { x: r.left + r.width / 2 + window.scrollX, y: r.top + r.height / 2 + window.scrollY }; }); }
+  if (FINE && !RM) {
+    setTimeout(function () { lettersOn = true; measureChars(); }, 3600);
+    window.addEventListener('resize', function () { if (lettersOn) measureChars(); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (lettersOn) measureChars(); });
+    window.addEventListener('pointermove', function (e) { ptr.x = e.pageX; ptr.y = e.pageY; }, { passive: true });
+    frameHooks.push(function (now, dt) {
+      if (!lettersOn || !heroVisible) return;
+      for (var i = 0; i < chars.length; i++) {
+        var p = charPos[i]; if (!p) continue;
+        var dx = ptr.x - p.x, dy = ptr.y - p.y, d = Math.sqrt(dx * dx + dy * dy), target = d < 150 ? 1 - d / 150 : 0;
+        charLift[i] += (target - charLift[i]) * Math.min(1, dt * 9);
+        var l = charLift[i];
+        if (l > 0.002 || chars[i]._l > 0.002) {
+          chars[i].style.transform = 'translateY(' + (-l * 18).toFixed(2) + 'px) rotate(' + ((dx > 0 ? -1 : 1) * l * 7).toFixed(2) + 'deg) scale(' + (1 + l * 0.08).toFixed(3) + ')';
+          chars[i].style.color = l > 0.02 ? 'rgb(' + Math.round(235 + (126 - 235) * l) + ',' + Math.round(240 + (168 - 240) * l) + ',' + Math.round(246 + (255 - 246) * l) + ')' : '';
+          chars[i]._l = l;
+        }
+      }
+    });
+  }
+  // the hero sign refreshes like a real LED panel
+  if (!RM) setInterval(function () { if (heroVisible && !document.hidden) heroSign.shimmer(); }, 6200);
+
+  // ----- cursor ring that grows over things you can use
+  var cring = $('#cring');
+  if (cring && FINE && !RM) {
+    var cr = { x: -100, y: -100, tx: -100, ty: -100, on: false };
+    window.addEventListener('pointermove', function (e) { cr.tx = e.clientX; cr.ty = e.clientY; if (!cr.on) { cr.on = true; cr.x = cr.tx; cr.y = cr.ty; cring.classList.add('on'); } }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', function () { cr.on = false; cring.classList.remove('on'); });
+    document.addEventListener('pointerover', function (e) {
+      var t = e.target.closest && e.target.closest('a, button, input[type="range"], .floor, [data-tilt], .tab, .lot');
+      var label = '';
+      if (t) label = t.matches('input[type="range"]') ? 'Drag' : t.matches('.tab, .lot') ? 'Compare' : t.matches('.floor') ? 'Live' : t.matches('a[href$=".html"]') ? 'Open' : '';
+      cring.classList.toggle('big', !!t); cring.classList.toggle('lab', !!label); cring.firstChild.textContent = label;
+    });
+    frameHooks.push(function (now, dt) { var k = Math.min(1, dt * 16); cr.x += (cr.tx - cr.x) * k; cr.y += (cr.ty - cr.y) * k; cring.style.transform = 'translate(' + cr.x.toFixed(1) + 'px,' + cr.y.toFixed(1) + 'px)'; });
+  }
+
+  // ----- scroll-driven: kinetic type, velocity skew, the section colour
+  var kin = $('#kinetic'), kts = kin ? $$('.kt', kin) : [], skewEls = $$('.probs, .who, .feas, .biz, .kinetic, .stats');
+  var ambEl = $('.ambient'), AMB = { top: '#34e58a', problem: '#7ea8ff', idea: '#2f6fe0', 'gate-rule': '#ffb21f', how: '#34e58a', who: '#e3c35a', prototype: '#2f6fe0', impact: '#34e58a', business: '#e3c35a', roadmap: '#7ea8ff', feasibility: '#2f6fe0' };
+  var secs = $$('main > section[id]'), lastAmb = '', sk = { v: 0, y: window.scrollY, s: 0 };
+  frameHooks.push(function (now, dt) {
+    var y = window.scrollY, vh = window.innerHeight;
+    var sv = (y - sk.y) / Math.max(dt, 0.001); sk.y = y; sk.v += (sv - sk.v) * Math.min(1, dt * 6);
+    var s = Math.max(-3, Math.min(3, sk.v * 0.0022));
+    if (Math.abs(s - sk.s) > 0.01) { sk.s = s; for (var i = 0; i < skewEls.length; i++) skewEls[i].style.transform = 'skewY(' + s.toFixed(3) + 'deg)'; }
+    if (kin) {
+      var r = kin.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < vh) { var p = (vh - r.top) / (vh + r.height); kts.forEach(function (t, i) { t.style.transform = 'translate3d(' + (i % 2 ? -32 + p * 30 : -p * 32).toFixed(2) + '%,0,0)'; }); }
+    }
+    for (var k = 0; k < secs.length; k++) {
+      var sr = secs[k].getBoundingClientRect();
+      if (sr.top < vh * 0.5 && sr.bottom > vh * 0.5) { var col = AMB[secs[k].id]; if (col && col !== lastAmb && ambEl) { lastAmb = col; ambEl.style.backgroundColor = col; } break; }
+    }
+  });
+
+  // ----- the gate rule plays itself once, unless you get there first
+  var calcTouched = false, calcPlayed = false;
+  [cT, cO, cR, cM].forEach(function (i) { ['pointerdown', 'keydown', 'touchstart'].forEach(function (ev) { i.addEventListener(ev, function () { calcTouched = true; }, { passive: true }); }); });
+  try {
+    new IntersectionObserver(function (es) {
+      if (!es[0].isIntersecting || calcPlayed || calcTouched || RM) return; calcPlayed = true;
+      cO.value = 50; cR.value = 6; calc();
+      var t0 = performance.now() + 600;
+      (function tk(now) {
+        if (calcTouched) return;
+        var p = Math.max(0, Math.min(1, (now - t0) / 2800)), e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        cO.value = Math.round(50 + 25 * e); cR.value = Math.round(6 + 14 * e); calc();
+        if (p < 1) requestAnimationFrame(tk);
+      })(performance.now());
+    }, { threshold: 0.45 }).observe($('.calc'));
+  } catch (e) {}
+  function burst(el, col) {
+    if (RM || !el) return; var r = el.getBoundingClientRect();
+    for (var i = 0; i < 3; i++) (function (i) {
+      var s = document.createElement('span'); s.className = 'burst'; s.style.borderColor = col; s.style.left = (r.left + r.width / 2) + 'px'; s.style.top = (r.top + r.height / 2) + 'px';
+      document.body.appendChild(s);
+      anim(s, { transform: ['translate(-50%,-50%) scale(0.2)', 'translate(-50%,-50%) scale(' + (2.6 + i * 1.4) + ')'], opacity: [0.95, 0] }, { duration: 0.8 + i * 0.22, delay: i * 0.08, ease: [0.2, 0.8, 0.2, 1] });
+      setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 1500);
+    })(i);
+  }
+
+  // ----- prototype: hotspots after the lid opens, phones float
+  var devEl = $('.devices'), protoVisible = false;
+  try { new IntersectionObserver(function (es) { protoVisible = es[0].isIntersecting; }).observe(devEl); } catch (e) { protoVisible = true; }
+  frameHooks.push(function (now) {
+    if (!protoVisible) return;
+    phonesEls.forEach(function (ph, i) { if (ph._base !== undefined) ph.style.transform = ph._base + ' translateY(' + (Math.sin(now / 950 + i * 1.9) * 8).toFixed(2) + 'px) rotate(' + (Math.sin(now / 1400 + i) * 0.8).toFixed(2) + 'deg)'; });
+  });
+
+  // ----- leaving for a demo: the gate opens again
+  function leaveTo(href, label) {
+    if (RM) { location.href = href; return; }
+    var ov = document.createElement('div'); ov.className = 'leave';
+    ov.innerHTML = '<div class="intro-sign"><canvas width="960" height="150"></canvas></div><div class="intro-gate"><div class="intro-post"></div><div class="intro-arm"></div></div>';
+    document.body.appendChild(ov);
+    anim(ov, { opacity: [0, 1] }, { duration: 0.3 });
+    var s = new Sign(ov.querySelector('canvas')); s.set(['OPENING', label], COLORS.gold, true); s.fit(); s.powerOn();
+    setTimeout(function () { s.set(['GATE OPEN', label], COLORS.go); ov.style.setProperty('--intro-lamp', '#34e58a'); ov.querySelector('.intro-sign').style.setProperty('--intro-glow', 'rgba(52,229,138,0.34)'); anim(ov.querySelector('.intro-arm'), { transform: ['rotate(0deg)', 'rotate(-84deg)'] }, { duration: 0.8, ease: [0.34, 1.32, 0.64, 1] }); }, 560);
+    setTimeout(function () { location.href = href; }, 1250);
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href]'); if (!a) return;
+    var h = a.getAttribute('href'); if (!/^(command|driver)\.html$/.test(h)) return;
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0 || a.target === '_blank') return;
+    e.preventDefault(); leaveTo(a.href, h.indexOf('driver') === 0 ? 'DRIVER APP' : 'COMMAND CENTRE');
+  });
+  window.addEventListener('pageshow', function () { $$('.leave').forEach(function (x) { x.remove(); }); });
 
   // ------------------------------------------------------------ QR code for the driver app
   (function () {
