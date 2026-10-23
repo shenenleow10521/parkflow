@@ -1,7 +1,20 @@
-# ParkFlow — Predictive Parking Command Centre
+# ParkFlow: reserve capacity, not parking bays
 
 Hackathon prototype for the Sime Darby Property University Hackathon.
 KL East Mall pilot concept · illustrative layout · simulated data.
+
+At peak, nobody can count on a parking bay. KL drivers spend about 25 minutes a day hunting for parking, and 26% of
+surveyed drivers have given up a trip because of it. Malls reward their best customers with vouchers, not parking, and
+reserved VIP bays sit empty or get misused. ParkFlow adds a bookable Priority Zone of about 100 bays by the lifts at KL
+East Mall. Big spenders book free with a voucher, care bookings for seniors, OKU and prams are free, and anyone else
+can book for RM4. Booked drivers park in any bay in the zone, and every bay not needed for a booking stays open to
+everyone. A forecast sets the zone sign green or amber every minute, so the zone holds back only the bays booked drivers
+will use. It needs one plate camera and one sign per zone, plus the mall app shoppers already use. Across 1,000
+simulated busy Saturdays, every booking got a bay, compared with 86% with no priority system. Bays held back while
+walk-ins waited fell to 5 bay-hours a day, against 19 for a VIP section. Level guidance for the rest of the car park
+cuts search time by about 69% and saves 1.2 tonnes of CO₂ per busy Saturday. Tested on 30 real car parks, the forecast
+is 61% more accurate than "same time last week". Hardware costs about RM43k per mall, and the base case pays back in
+2.4 years.
 
 ![Operator command centre](docs/screenshots/operator-overview.png)
 

@@ -14,3 +14,8 @@ dist/test-landing.html
 
 # simulation raw output (regenerate with: python analysis/simulate_zone_size.py)
 analysis/*.npz
+
+# submission: only the final PDF is tracked
+submission/*.html
+submission/*.pptx
+~$*
