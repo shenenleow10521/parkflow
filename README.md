@@ -11,13 +11,13 @@ KL East Mall pilot concept · illustrative layout · simulated data.
 
 ## Live demo
 
-With GitHub Pages serving the `docs/` folder (Settings → Pages → Deploy from branch → `main` / `docs`):
+GitHub Pages serves the repository root, which forwards to the site in `docs/`:
 
-- Landing page: `https://<user>.github.io/<repo>/`
-- Operator command centre: `https://<user>.github.io/<repo>/command.html`
-- Driver app (open on a phone): `https://<user>.github.io/<repo>/driver.html`
+- Landing page: https://shenenleow10521.github.io/parkflow/
+- Operator command centre: https://shenenleow10521.github.io/parkflow/docs/command.html
+- Driver app (open on a phone): https://shenenleow10521.github.io/parkflow/docs/driver.html
 
-Or open the files in `docs/` straight from a clone.
+Each app links back to the landing page and to the other app. Or open the files in `docs/` straight from a clone.
 
 ## Run it
 
