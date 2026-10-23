@@ -16,6 +16,23 @@ cuts search time by about 69% and saves 1.2 tonnes of CO₂ per busy Saturday. T
 is 61% more accurate than "same time last week". Hardware costs about RM43k per mall, and the base case pays back in
 2.4 years.
 
+## Camera bay detection, tested on cameras the model never saw
+
+ParkFlow reads free bays from a mall's existing CCTV. To check that a small model can do this on new cameras, we
+fine-tuned MobileNetV3-Small on 20,000 bay images from 5 cameras of the public CNRPark+EXT car park dataset, then
+tested it on all 78,270 images from the other 4 cameras.
+
+| Result on unseen cameras | Value |
+|---|---|
+| Bays classified correctly | 99.05% (sunny 99.2%, overcast 99.3%, rainy 98.6%) |
+| Car count per camera frame, within 1 car | 96.1% of 1,825 frames |
+| Car count accuracy (pilot target: 95%) | 99.1% |
+| Speed | about 1 ms per bay on a laptop CPU |
+
+Limits: one outdoor car park, and the test cameras are new viewpoints of it, not a new site. Indoor basements still need
+testing; we plan to film and hand-label frames on B1 at KL East Mall. Script and full results:
+[`analysis/cv_benchmark.py`](analysis/cv_benchmark.py), [`analysis/cv_benchmark_results.txt`](analysis/cv_benchmark_results.txt).
+
 ![Operator command centre](docs/screenshots/operator-overview.png)
 
 | Driver app: home | Guidance | My cars | Pay |

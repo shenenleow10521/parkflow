@@ -23,6 +23,7 @@ Tested with Python 3.12, numpy 2.4, pandas 3.0, scipy 1.17 and lightgbm 4.6.
 | `simulate_zone_size.py` | Zone size (2&ndash;25% of the car park) &times; booking cap. `python simulate_zone_size.py layout 6 8 10` compares one block with the zone split into pieces | `simulate_zone_size_results.txt` (the layout run's output is in `layout_log.txt`) | A5 |
 | `business_case.py` | Market size, cost sheet, per-mall revenue and the 7-year rollout | `business_case_results.txt` | Feasibility; A3, A4 |
 | `backtest_ensemble.py` | The forecast (pattern model + LightGBM, blended, with conformal ranges) against "same time last week" on 30 real car parks | `backtest_ensemble_results.txt`, `backtest_ensemble_day.csv` | How it works; A6 |
+| `cv_benchmark.py` | Camera bay detection: MobileNetV3-Small fine-tuned on 5 CNRPark+EXT cameras, tested on the 4 cameras it never saw. Bay accuracy by weather and camera, and car counts per camera frame | `cv_benchmark_results.txt` | Feasibility (camera bay detection); pilot target "car count accuracy 95%+" |
 | `backtest_birmingham.py` | The earlier single-model version of the backtest | `backtest_results.txt`, `backtest_sample_day.csv` | (superseded by the ensemble) |
 | `simulate_saturday.py` | Phase 2 idea: asking just enough drivers to come later to cut entrance queues | `simulate_saturday.csv`, printed summary | (earlier draft) |
 
@@ -35,6 +36,19 @@ curl -LO https://archive.ics.uci.edu/static/public/482/parking+birmingham.zip
 unzip parking+birmingham.zip
 python backtest_ensemble.py dataset.csv
 ```
+
+## Camera data
+
+The camera test uses CNRPark+EXT (Amato et al. 2017, licence ODbL v1.0): about 145,000 labelled images of single
+parking bays from 9 cameras, in sunny, overcast and rainy weather. It is not stored here (about 450 MB):
+
+```
+curl -LO https://github.com/fabiocarrara/deep-parking/releases/download/archive/CNR-EXT-Patches-150x150.zip
+unzip CNR-EXT-Patches-150x150.zip -d cnrpark
+python cv_benchmark.py --data cnrpark
+```
+
+Training takes about 4 minutes on a laptop CPU; the ImageNet weights download automatically on the first run.
 
 ## Naming in the code
 

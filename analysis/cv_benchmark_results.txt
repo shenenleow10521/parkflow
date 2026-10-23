@@ -1,0 +1,30 @@
+CAMERA BAY DETECTION ON UNSEEN CAMERAS (CNRPark+EXT)
+  Model: MobileNetV3-Small (ImageNet weights), fine-tuned at 112x112px, seed 7
+  Trained on cameras [1, 2, 3, 4, 5]: 20,000 patches, 3 epochs (4 min on CPU)
+  Tested on cameras [6, 7, 8, 9], never seen in training: 78,270 patches
+  epoch 1: validation accuracy (training cameras) 99.55%
+  epoch 2: validation accuracy (training cameras) 99.70%
+  epoch 3: validation accuracy (training cameras) 99.80%
+
+BAYS: accuracy 99.05%  (occupied: precision 99.50%, recall 98.69%; 204 free bays called occupied, 540 occupied called free)
+  By weather:
+    overcast    24,178 patches   accuracy 99.28%
+    rainy       20,300 patches   accuracy 98.57%
+    sunny       33,792 patches   accuracy 99.17%
+  By camera:
+    6           20,108 patches   accuracy 99.34%
+    7           21,114 patches   accuracy 98.75%
+    8           24,084 patches   accuracy 99.37%
+    9           12,964 patches   accuracy 98.49%
+
+CAR COUNTS PER CAMERA FRAME (1,825 frames, 43 bays per frame on average)
+  Exact count: 77.8% of frames;  within 1 car: 96.1%;  within 2: 97.8%
+  Mean error: 0.38 cars per frame = 0.89% of bays (count accuracy 99.11%; pilot target 95%)
+  All frames together: 41,039 cars counted vs 41,375 true (-0.81%)
+
+SPEED: 1.0 ms per bay on this CPU, batch 256 (a camera frame of ~43 bays in about 41 ms)
+
+Limits: one outdoor car park in Italy; the test cameras are new viewpoints of the same car park, not a new site.
+Bay positions are marked by hand. Speed is on a laptop CPU, not the Jetson AI box. Indoor basements (lighting,
+pillars, low ceilings) still need testing; we plan to film B1 at KL East Mall and hand-label frames (deck A14).
+Data: CNRPark+EXT, Amato et al. (2017), Expert Systems with Applications 72; licence ODbL v1.0.
