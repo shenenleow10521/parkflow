@@ -26,7 +26,8 @@ const js = fs.readFileSync('dist/app.js', 'utf8');
 if (js.includes('</script')) throw new Error('bundle contains a closing script tag');
 const css = fs.readFileSync('src/styles.css', 'utf8');
 const tpl = fs.readFileSync('src/template.html', 'utf8');
-const page = tpl.replace('/*__CSS__*/', () => css).replace('/*__JS__*/', () => js);
+const site = fs.readFileSync('src/shared/sitelinks.js', 'utf8');
+const page = tpl.replace('/*__CSS__*/', () => css).replace('/*__SITE__*/', () => site).replace('/*__JS__*/', () => js);
 fs.writeFileSync('dist/parkflow.html', page);
 // Local test harness mimicking the artifact skeleton
 const test = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style></head><body>${page}</body></html>`;
@@ -38,7 +39,7 @@ const djs = fs.readFileSync('dist/driver.js', 'utf8');
 if (djs.includes('</script')) throw new Error('driver bundle contains a closing script tag');
 const dcss = fs.readFileSync('src/mobile/styles.css', 'utf8');
 const dtpl = fs.readFileSync('src/mobile/template.html', 'utf8');
-const dpage = dtpl.replace('/*__CSS__*/', () => dcss).replace('/*__JS__*/', () => djs);
+const dpage = dtpl.replace('/*__CSS__*/', () => dcss).replace('/*__SITE__*/', () => site).replace('/*__JS__*/', () => djs);
 fs.writeFileSync('dist/parkflow-driver.html', dpage);
 fs.writeFileSync('dist/test-driver.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}</style></head><body>${dpage}</body></html>`);
 console.log('driver page', (fs.statSync('dist/parkflow-driver.html').size / 1024).toFixed(1), 'KB');

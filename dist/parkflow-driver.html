@@ -130,6 +130,17 @@ b { font-weight: 600; }
 .about p { margin: 0 0 14px; }
 .about ol { margin: 0 0 16px; padding-left: 20px; display: grid; gap: 6px; }
 .about-fine { font-size: 12.5px; color: var(--muted); }
+.about-home { display: inline-flex; align-items: center; gap: 4px; margin: 0 0 18px -4px; padding: 4px 8px 4px 4px; border-radius: 8px; color: var(--sign); font-weight: 600; font-size: 14px; text-decoration: none; }
+.about-home:hover { background: var(--sign-soft); }
+.about-switch { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; margin: 0 0 16px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line-2); background: var(--card); color: var(--ink); text-decoration: none; box-shadow: var(--shadow); }
+.about-switch:hover { border-color: var(--sign); }
+.about-switch .ic { color: var(--sign); }
+.about-switch span { display: flex; flex-direction: column; }
+.about-switch b { font-size: 15px; }
+.about-switch small { font-size: 13px; color: var(--muted); }
+a.mark { text-decoration: none; }
+a.btn { text-decoration: none; }
+.views-sheet { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .device {
   width: 390px; height: min(844px, calc(100vh - 48px)); min-height: 640px;
   border-radius: 48px; border: 11px solid #05080d; box-shadow: 0 0 0 1.5px #2a3445, 0 30px 70px rgba(10, 20, 40, 0.28);
@@ -572,6 +583,7 @@ legend { font-family: var(--font-num); font-size: 17px; font-weight: 600; paddin
 </style>
 <div class="desk">
   <aside class="about" aria-label="About this prototype">
+    <a class="about-home" data-site="home" href="index.html"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>ParkFlow home</a>
     <h1>ParkFlow for drivers</h1>
     <p>The shopper’s side of the command centre. It runs the same simulation: when you press <b>I’m on my way</b>, your car joins the arrivals and the allocation engine guides it to a zone near your lift.</p>
     <ol>
@@ -579,13 +591,14 @@ legend { font-family: var(--font-num); font-size: 17px; font-weight: 600; paddin
       <li>Tap <b>I’m at the entrance</b> to skip the drive here.</li>
       <li>Follow the sign until you park, then open <b>My car</b>.</li>
     </ol>
+    <a class="about-switch" data-site="command" href="command.html"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg><span><b>Switch to the command centre</b><small>See the same simulation from the operator's side</small></span></a>
     <p class="about-fine">KL East Mall pilot concept · Illustrative layout · Simulated data<br>Animation engine: <span id="engine">loading</span></p>
   </aside>
   <div class="device">
     <div class="app" id="app">
       <header class="top">
         <div class="top-l">
-          <span class="mark" aria-hidden="true">P</span>
+          <a class="mark" data-site="home" href="index.html" aria-label="ParkFlow home" title="ParkFlow home">P</a>
           <div class="top-t"><b>KL East Mall</b><span><span id="clock">–</span> <span class="sim">Simulated</span></span></div>
         </div>
         <span class="trip-dot" id="trip-dot" hidden title="Guidance is on"></span>
@@ -622,6 +635,67 @@ legend { font-family: var(--font-num); font-size: 17px; font-weight: 600; paddin
     </div>
   </div>
 </div>
+<script>
+window.PF_PAGE = 'driver';
+// Links between the three ParkFlow pages: landing (home), command centre and driver app.
+// On GitHub Pages, a local copy, or the landing artifact (which carries all three pages), the pages sit
+// side by side, so links stay relative. In the stand-alone command-centre and driver artifacts there is
+// no sibling page, so links go to the published artifacts instead (opening in a new tab).
+(function () {
+  var PAGE = window.PF_PAGE || '';
+  var FILE = { home: 'index.html', command: 'command.html', driver: 'driver.html' };
+  var ART = {
+    home: 'https://claude.ai/artifact/8THudTk6iUnNwCDdYnVpdi',
+    command: 'https://claude.ai/artifact/W7c5u2NbaxPYT3198u8oPu',
+    driver: 'https://claude.ai/artifact/DMcbMgGuhv7SJkQ1hqoEWR'
+  };
+  var TITLE = { command: 'ParkFlow Command Centre', driver: 'ParkFlow Driver' };
+  var local = location.protocol === 'file:' || /github\.io$/.test(location.hostname) || location.hostname === 'localhost';
+
+  function fix(a) {
+    var k = a.getAttribute('data-site');
+    if (!FILE[k]) return;
+    if (local) { a.setAttribute('href', FILE[k]); a.removeAttribute('target'); }
+    else { a.setAttribute('href', ART[k]); a.setAttribute('target', '_blank'); a.setAttribute('rel', 'noopener'); }
+  }
+  function fixAll() { document.querySelectorAll('a[data-site]').forEach(fix); }
+  // the driver app re-renders its sheets, so also settle each link just before it is used
+  ['pointerdown', 'focusin', 'mouseover'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('a[data-site]') : null;
+      if (a) fix(a);
+    }, true);
+  });
+  window.pfSiteHref = function (k) { return local ? FILE[k] : ART[k]; };
+
+  function probe() {
+    // Is the other app published next to this page? Read the start of it and check its title.
+    var other = PAGE === 'driver' ? 'command' : 'driver';
+    if (local || !window.fetch) { fixAll(); return; }
+    var ctl = window.AbortController ? new AbortController() : null;
+    fetch(new URL(FILE[other], location.href).href, { cache: 'force-cache', signal: ctl ? ctl.signal : undefined })
+      .then(function (r) {
+        if (!r.ok || !r.body || !r.body.getReader) return r.ok ? r.text() : '';
+        var rd = r.body.getReader(), dec = new TextDecoder(), txt = '';
+        function pump() {
+          return rd.read().then(function (c) {
+            if (c.done) return txt;
+            txt += dec.decode(c.value, { stream: true });
+            if (txt.length > 6000) { try { ctl && ctl.abort(); } catch (e) {} return txt; }
+            return pump();
+          });
+        }
+        return pump();
+      })
+      .then(function (txt) { if (txt && txt.indexOf('<title>' + TITLE[other] + '</title>') !== -1) local = true; fixAll(); })
+      .catch(function () { fixAll(); });
+  }
+  fixAll();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function () { fixAll(); probe(); });
+  else probe();
+})();
+
+</script>
 <script>
 (function(){
 'use strict';
@@ -4473,6 +4547,8 @@ function sheetHTML(kind) {
       <div class="garage">${cars}</div>
       ${app.addingCar ? addCarHTML() : `<button type="button" class="btn btn-wide" data-act="car-add">${ic('plus', 16)} Add a car</button>`}
       <h3 class="sheet-s">Demo clock</h3><div class="chips">${paces}</div>
+      <h3 class="sheet-s">Other ParkFlow views</h3>
+      <div class="views-sheet"><a class="btn" data-site="home" href="index.html">${ic('back', 16)} Home</a><a class="btn btn-primary" data-site="command" href="command.html">Command centre</a></div>
       <p class="fine">This app runs on simulated data for the KL East Mall pilot concept. Account, wallet and cars are stored on this device only. Reloading restarts the demo day at 14:08.</p>
       <button type="button" class="btn btn-ghost btn-wide" data-act="restart">Restart demo day</button>`;
     }

@@ -9,19 +9,23 @@
 </style>
 <div class="app" id="app">
   <header class="hdr">
-    <div class="brand">
+    <a class="brand" data-site="home" href="index.html" title="Back to the ParkFlow home page">
       <svg class="mark" width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect x="1" y="1" width="34" height="34" rx="7" fill="#2f6fe0"/><rect x="3.5" y="3.5" width="29" height="29" rx="5" fill="none" stroke="#fff" stroke-width="1.6" opacity=".9"/><path d="M13 27V9.5h6.4a5.4 5.4 0 0 1 0 10.8H13" fill="none" stroke="#fff" stroke-width="3.4" stroke-linejoin="round"/></svg>
       <div class="brand-t">
         <div class="wordmark">ParkFlow <span class="brand-sub">Command centre</span></div>
         <div class="pilot" title="Not the real floor plan, not an approved partnership and not a deployed system.">KL East Mall pilot concept · Illustrative layout · Simulated data</div>
       </div>
-    </div>
+    </a>
     <div class="hdr-clock">
       <span class="simbadge" id="simbadge" title="Everything on this screen comes from a simulation, not live sensors."><i class="pulse" aria-hidden="true"></i>Simulation</span>
       <span class="clock"><span id="clock">–</span><small>MYT</small></span>
       <span class="phase" id="phase"></span>
     </div>
     <div class="hdr-ctl">
+      <nav class="views" aria-label="ParkFlow pages">
+        <a class="btn btn-ghost" data-site="home" href="index.html"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/></svg><span>Home</span></a>
+        <a class="btn" data-site="driver" href="driver.html"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg><span>Driver app</span></a>
+      </nav>
       <label class="sel"><span class="sr">Scenario</span><select id="scenario" aria-label="Scenario"></select></label>
       <div class="transport" role="group" aria-label="Simulation playback">
         <button type="button" class="btn btn-play" id="play" aria-label="Pause simulation"></button>
@@ -150,6 +154,10 @@
   <div class="modal" id="welcome" hidden role="dialog" aria-modal="true" aria-labelledby="welcome-title"><div class="modal-card" id="welcome-card"></div></div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 </div>
+<script>
+window.PF_PAGE = 'command';
+/*__SITE__*/
+</script>
 <script>
 /*__JS__*/
 </script>

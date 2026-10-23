@@ -1058,6 +1058,8 @@ function sheetHTML(kind: SheetKind): string {
       <div class="garage">${cars}</div>
       ${app.addingCar ? addCarHTML() : `<button type="button" class="btn btn-wide" data-act="car-add">${ic('plus', 16)} Add a car</button>`}
       <h3 class="sheet-s">Demo clock</h3><div class="chips">${paces}</div>
+      <h3 class="sheet-s">Other ParkFlow views</h3>
+      <div class="views-sheet"><a class="btn" data-site="home" href="index.html">${ic('back', 16)} Home</a><a class="btn btn-primary" data-site="command" href="command.html">Command centre</a></div>
       <p class="fine">This app runs on simulated data for the KL East Mall pilot concept. Account, wallet and cars are stored on this device only. Reloading restarts the demo day at 14:08.</p>
       <button type="button" class="btn btn-ghost btn-wide" data-act="restart">Restart demo day</button>`;
   }

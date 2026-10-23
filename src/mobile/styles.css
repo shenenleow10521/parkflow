@@ -121,6 +121,17 @@ b { font-weight: 600; }
 .about p { margin: 0 0 14px; }
 .about ol { margin: 0 0 16px; padding-left: 20px; display: grid; gap: 6px; }
 .about-fine { font-size: 12.5px; color: var(--muted); }
+.about-home { display: inline-flex; align-items: center; gap: 4px; margin: 0 0 18px -4px; padding: 4px 8px 4px 4px; border-radius: 8px; color: var(--sign); font-weight: 600; font-size: 14px; text-decoration: none; }
+.about-home:hover { background: var(--sign-soft); }
+.about-switch { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; margin: 0 0 16px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line-2); background: var(--card); color: var(--ink); text-decoration: none; box-shadow: var(--shadow); }
+.about-switch:hover { border-color: var(--sign); }
+.about-switch .ic { color: var(--sign); }
+.about-switch span { display: flex; flex-direction: column; }
+.about-switch b { font-size: 15px; }
+.about-switch small { font-size: 13px; color: var(--muted); }
+a.mark { text-decoration: none; }
+a.btn { text-decoration: none; }
+.views-sheet { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .device {
   width: 390px; height: min(844px, calc(100vh - 48px)); min-height: 640px;
   border-radius: 48px; border: 11px solid #05080d; box-shadow: 0 0 0 1.5px #2a3445, 0 30px 70px rgba(10, 20, 40, 0.28);
