@@ -742,6 +742,20 @@ html { scroll-snap-type: y proximity; }
 .act-money .flow rect:last-of-type + text { fill: #ffffff; }
 .act-money .grow > span,
 .act-money .gates b { animation: none; text-shadow: none; }
+.act-money .h2 {
+  max-width: 22ch;
+  font-size: clamp(40px, 4.6vw, 60px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+.biz-subtitle {
+  max-width: 72ch;
+  margin-top: 14px;
+  color: var(--chalk-2);
+  font-size: clamp(17px, 1.45vw, 20px);
+  line-height: 1.55;
+  text-wrap: pretty;
+}
 .js .act-money:not(.shown) [data-a] { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
   .act-money.shown [data-a], .act-money.shown [data-a="zoom"] { animation-duration: .28s; animation-delay: 0ms; }
@@ -1378,10 +1392,11 @@ html { scroll-snap-type: y proximity; }
 </section>
 
 <!-- 17 ============================================================ B2 value -->
-<section class="slide act-proof" id="value" data-lvl="B2" data-title="Who wins" aria-labelledby="val-h">
+<section class="slide act-proof" id="value" data-lvl="B2" data-title="Projected Outcomes" aria-labelledby="val-h">
   <div class="wrap">
     <div class="lvl" data-a><b>B2</b>The value</div>
-    <h2 class="h2 wide" id="val-h">Who wins: shoppers, the mall and the planet.</h2>
+    <h2 class="h2 wide" id="val-h">Projected Outcomes</h2>
+    <p class="lede" data-a style="margin-top:14px">The simulation estimates time, utilisation and emissions effects at one 1,300-bay mall. These are modelled outcomes to validate during the pilot.</p>
     <div class="value gap-top">
       <div data-a><span class="who3">Booked shoppers</span><div class="big num"><span>0</span><small>min</small></div><p>spent searching for a bay, every time.</p></div>
       <div data-a><span class="who3">Every driver</span><div class="big num">−<span data-count="72">72</span><small>%</small></div><p>time spent looking for parking, for every driver, on a busy Saturday.</p></div>
@@ -1394,10 +1409,11 @@ html { scroll-snap-type: y proximity; }
 </section>
 
 <!-- 18 ============================================================ B3 payers -->
-<section class="slide act-money" id="business" data-lvl="B3" data-title="How we make money" aria-labelledby="biz-h">
+<section class="slide act-money" id="business" data-lvl="B3" data-title="Value Proposition" aria-labelledby="biz-h">
   <div class="wrap">
     <div class="lvl" data-a><b>B3</b>Business thesis</div>
-    <h2 class="h2 wide" id="biz-h">Start as an SDP member-value case—not a parking-fee startup.</h2>
+    <h2 class="h2 wide" id="biz-h">Value Proposition</h2>
+    <p class="biz-subtitle" data-a>A members-only Priority Zone strengthens the SDP loyalty offer. Public booking fees and external licensing are outside the base case.</p>
     <div class="payers gap-top">
       <figure class="flow" data-a style="margin:0">
         <svg viewBox="0 0 560 360" role="img" aria-label="Value flow: ParkFlow improves member experience, operating insight and repeat visits for Sime Darby Property.">
@@ -1436,10 +1452,11 @@ html { scroll-snap-type: y proximity; }
 </section>
 
 <!-- 19 ============================================================ B3 market -->
-<section class="slide act-money" id="market" data-lvl="B3" data-title="Why members matter" aria-labelledby="mkt-h">
+<section class="slide act-money" id="market" data-lvl="B3" data-title="Business Impact" aria-labelledby="mkt-h">
   <div class="wrap">
     <div class="lvl" data-a><b>B3</b>Evidence benchmark</div>
-    <h2 class="h2 wide" id="mkt-h">Frequent mall visitors already spend more.</h2>
+    <h2 class="h2 wide" id="mkt-h">Business Impact</h2>
+    <p class="biz-subtitle" data-a>Frequent Malaysian mall visitors report higher spending per visit. The pilot will test whether reliable peak-period parking supports retention and repeat visits.</p>
     <div class="market gap-top">
       <figure class="tam" data-a="zoom" style="margin:0">
         <img class="case-chart" src="assets/member_spend.png" width="1600" height="900" alt="Benchmark chart: frequent Malaysian mall visitors report RM327 average spend per visit versus RM195 for occasional visitors, a 68 percent difference.">
@@ -1471,10 +1488,11 @@ html { scroll-snap-type: y proximity; }
 </section>
 
 <!-- 20 ============================================================ B3 payback -->
-<section class="slide act-money" id="money" data-lvl="B3" data-title="Value sensitivity" aria-labelledby="fin-h">
+<section class="slide act-money" id="money" data-lvl="B3" data-title="Financial Sensitivity" aria-labelledby="fin-h">
   <div class="wrap">
     <div class="lvl" data-a><b>B3</b>Value sensitivity</div>
-    <h2 class="h2 wide" id="fin-h">The pilot must prove retention—not pretend it.</h2>
+    <h2 class="h2 wide" id="fin-h">Financial Sensitivity</h2>
+    <p class="biz-subtitle" data-a>The model shows the member behaviour required to justify the pilot. It is a planning range, not a forecast.</p>
     <div class="panel fin-card gap-top" data-a>
       <div class="fin-top">
         <p class="fine">Illustrative annual value from retained high-frequency members. This is a sensitivity range, not a forecast.</p>
@@ -1499,7 +1517,8 @@ html { scroll-snap-type: y proximity; }
 <section class="slide act-money" id="costs" data-lvl="B3" data-title="Pilot investment" aria-labelledby="cost-h">
   <div class="wrap">
     <div class="lvl" data-a><b>B3</b>Planning envelope</div>
-    <h2 class="h2 wide" id="cost-h">Price the lighthouse before pricing the company.</h2>
+    <h2 class="h2 wide" id="cost-h">Pilot Investment</h2>
+    <p class="biz-subtitle" data-a>The planning envelope combines hardware, production integration and first-year operating costs. Supplier quotations are required before approval.</p>
     <div class="costs-grid gap-top">
       <div data-a>
       <div class="panel cost">
@@ -1532,12 +1551,13 @@ html { scroll-snap-type: y proximity; }
 </section>
 
 <!-- 21 ============================================================ B4 roadmap -->
-<section class="slide act-money" id="roadmap" data-lvl="B4" data-title="The plan" aria-labelledby="road-h">
+<section class="slide act-money" id="roadmap" data-lvl="B4" data-title="Three-Phase Horizon" aria-labelledby="road-h">
   <div class="wrap">
     <div class="lvl" data-a><b>B4</b>Three horizons</div>
-    <h2 class="h2 wide" id="road-h">Lighthouse first. Portfolio second. Platform only if earned.</h2>
+    <h2 class="h2 wide" id="road-h">Three-Phase Horizon</h2>
+    <p class="biz-subtitle" data-a>Phase 1 validates KL East. Phase 2 standardises the operating model across qualified SDP malls. Phase 3 evaluates an internal platform, joint venture or licensing option.</p>
     <div class="panel road gap-top" data-a>
-      <img class="case-chart" src="assets/three_horizons.png" width="1600" height="900" alt="Three horizons: zero to six months prove KL East, six to twenty-four months standardise across qualified Sime Darby Property malls, and twenty-four to forty-eight months consider an internal platform, joint venture or licensing model.">
+      <img class="case-chart" src="assets/three_horizons.png" width="2400" height="1000" alt="Three-phase roadmap. Phase 1 runs from now to month 6 and validates the KL East pilot. Phase 2 runs from month 6 to month 24 and standardises the model across qualified SDP malls. Phase 3 runs from month 24 to month 48 and evaluates platform ownership options.">
       <svg viewBox="0 0 1100 230" role="img" aria-label="Roadmap: an 8-week pilot at KL East Mall, a go or no-go decision at week 8, SDP's other three malls, other mall groups at six a year reaching 40 malls by year 7, then new products.">
         <defs><marker id="r-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8696ad"/></marker></defs>
         <rect x="20" y="70" width="1060" height="40" rx="20" fill="#16233a" stroke="#2f4360"/>
@@ -1593,7 +1613,8 @@ html { scroll-snap-type: y proximity; }
 <section class="slide act-money" id="next-up" data-lvl="B4" data-title="Go to market" aria-labelledby="nx-h">
   <div class="wrap">
     <div class="lvl" data-a><b>B4</b>Go to market</div>
-    <h2 class="h2 wide" id="nx-h">A proof-of-value motion, not a mass launch.</h2>
+    <h2 class="h2 wide" id="nx-h">Go-to-Market</h2>
+    <p class="biz-subtitle" data-a>One KL East proof-of-value pilot establishes the evidence and deployment playbook required for portfolio expansion.</p>
     <div class="next gap-top">
       <div class="panel" data-a><h3 class="h4">1. Lighthouse</h3><p>Align the Mall GM, operator, loyalty, IT/DPO and finance around one KL East problem and one scorecard.</p></div>
       <div class="panel" data-a><h3 class="h4">2. Value gate</h3><p>Compare baseline and pilot cohorts; review service reliability, member response, workload and economics.</p></div>

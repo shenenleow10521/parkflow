@@ -204,6 +204,7 @@ The signature component shows deterministic bookable capacity. It must never imp
 - **Do** distinguish measured evidence, planning assumptions and hypotheses.
 - **Do** make the front cinematic and the business case restrained.
 - **Do** switch B3/B4 to white investment-memo mode with flat panels and cool grey rules.
+- **Do** use direct B3/B4 headings such as “Value Proposition”, “Business Impact” and “Pilot Investment”; place the argument in a smaller subtitle.
 - **Do** support WCAG 2.1 AA focus and `prefers-reduced-motion` behavior.
 
 ### Don't:
@@ -213,3 +214,4 @@ The signature component shows deterministic bookable capacity. It must never imp
 - **Don't** turn the business case into a static consulting-template wall of boxes.
 - **Don't** conflate deterministic control with probabilistic forecasting.
 - **Don't** use excessive animation, especially in financial and go-to-market sections.
+- **Don't** use conclusion-style slogans as the main heading on commercial slides.

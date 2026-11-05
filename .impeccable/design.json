@@ -70,7 +70,7 @@
       { "name": "The Answer-First Rule", "body": "Headlines state the decision or outcome; explanatory prose follows.", "section": "typography" },
       { "name": "The Physical Depth Rule", "body": "If an element does not plausibly float in the car-park world, it receives no drop shadow.", "section": "elevation" }
     ],
-    "dos": ["Do make the member guarantee legible before discussing forecasting.", "Do distinguish measured evidence, planning assumptions and hypotheses.", "Do switch B3 and B4 to white investment-memo mode with flat panels and cool grey rules."],
-    "donts": ["Don't use generic SaaS landing-page clichés.", "Don't conflate deterministic control with probabilistic forecasting.", "Don't use excessive animation in financial and go-to-market sections."]
+    "dos": ["Do make the member guarantee legible before discussing forecasting.", "Do distinguish measured evidence, planning assumptions and hypotheses.", "Do switch B3 and B4 to white investment-memo mode with flat panels and cool grey rules.", "Do use direct B3 and B4 headings, with the argument in a smaller subtitle."],
+    "donts": ["Don't use generic SaaS landing-page clichés.", "Don't conflate deterministic control with probabilistic forecasting.", "Don't use excessive animation in financial and go-to-market sections.", "Don't use conclusion-style slogans as the main heading on commercial slides."]
   }
 }

@@ -148,37 +148,83 @@ def make_charts() -> dict[str, Path]:
     plt.close(fig)
 
     horizons = GEN_DIR / "three_horizons.png"
-    fig, ax = plt.subplots(figsize=(10.8, 3.4), dpi=220)
-    fig.patch.set_alpha(0)
-    ax.set_facecolor("none")
-    x = np.linspace(0, 48, 500)
-    curves = [
-        (0, 12, 0.25, 1.35, "#2D6CDF"),
-        (7, 30, 0.52, 1.62, "#F0B400"),
-        (20, 48, 0.82, 1.92, "#168A64"),
+    phase_names = ["Phase 1", "Phase 2", "Phase 3"]
+    phase_y = [2, 1, 0]
+    starts = [0, 6, 24]
+    durations = [6, 18, 24]
+    colors = ["#2F6FE0", "#C18A00", "#168A64"]
+    phase_text = [
+        "KL East pilot<br><span style='font-size:15px'>Validate demand, reliability and member value</span>",
+        "SDP portfolio<br><span style='font-size:15px'>Standardise site qualification and operations</span>",
+        "Platform option<br><span style='font-size:15px'>Evaluate internal, JV or licensing ownership</span>",
     ]
-    for start, end, base, top, color in curves:
-        y = np.full_like(x, np.nan)
-        mask = (x >= start) & (x <= end)
-        xm = (x[mask] - start) / (end - start)
-        y[mask] = base + (top - base) * (1 - np.exp(-4.5 * xm)) / (1 - np.exp(-4.5))
-        ax.plot(x, y, color=color, linewidth=4.2, solid_capstyle="round")
-        ax.fill_between(x, base - 0.12, y, where=mask, color=color, alpha=0.09)
-    ax.text(2, 0.57, "H1  LIGHTHOUSE", color="#2D6CDF", fontsize=12, fontweight="bold")
-    ax.text(10, 1.18, "H2  PORTFOLIO", color="#9A7100", fontsize=12, fontweight="bold")
-    ax.text(26, 1.63, "H3  PLATFORM OPTION", color="#168A64", fontsize=12, fontweight="bold")
-    for month in [6, 18, 36]:
-        ax.axvline(month, color="#BFC6CC", linewidth=1.0, linestyle=(0, (3, 4)))
-    ax.set_xlim(0, 48)
-    ax.set_ylim(0, 2.15)
-    ax.set_xticks([0, 6, 12, 18, 24, 36, 48], ["Now", "6m", "12m", "18m", "24m", "36m", "48m"])
-    ax.set_yticks([])
-    ax.spines[["top", "right", "left"]].set_visible(False)
-    ax.spines["bottom"].set_color("#AEB6BD")
-    ax.tick_params(axis="x", length=0, pad=8, colors="#5F6B76")
-    fig.tight_layout()
-    fig.savefig(horizons, transparent=True, bbox_inches="tight", pad_inches=0.06)
-    plt.close(fig)
+    fig = go.Figure()
+    for name, y, start, duration, color, label in zip(phase_names, phase_y, starts, durations, colors, phase_text):
+        fig.add_trace(
+            go.Bar(
+                x=[duration],
+                y=[y],
+                base=[start],
+                orientation="h",
+                width=0.58,
+                marker={"color": color, "line": {"color": color, "width": 0}},
+                text=[label],
+                textposition="inside",
+                insidetextanchor="middle",
+                textfont={"family": "Arial", "size": 19, "color": "#FFFFFF"},
+                hoverinfo="skip",
+                name=name,
+                showlegend=False,
+            )
+        )
+    fig.add_trace(
+        go.Scatter(
+            x=[6, 24],
+            y=[2.48, 1.48],
+            mode="markers+text",
+            marker={"symbol": "diamond", "size": 14, "color": "#111827", "line": {"color": "#FFFFFF", "width": 1}},
+            text=["Value gate", "Portfolio gate"],
+            textposition="top center",
+            textfont={"family": "Arial", "size": 14, "color": "#344054"},
+            hoverinfo="skip",
+            showlegend=False,
+        )
+    )
+    for month in [6, 24]:
+        fig.add_vline(x=month, line_width=1.5, line_dash="dot", line_color="#98A2B3")
+    fig.update_layout(
+        width=2400,
+        height=1000,
+        margin={"l": 150, "r": 70, "t": 100, "b": 110},
+        paper_bgcolor="#FFFFFF",
+        plot_bgcolor="#FFFFFF",
+        bargap=0.32,
+        font={"family": "Arial", "color": "#344054"},
+        xaxis={
+            "range": [0, 48],
+            "tickvals": [0, 6, 12, 18, 24, 36, 48],
+            "ticktext": ["Now", "6m", "12m", "18m", "24m", "36m", "48m"],
+            "tickfont": {"size": 17, "color": "#667085"},
+            "showgrid": True,
+            "gridcolor": "#EAECF0",
+            "gridwidth": 1,
+            "zeroline": False,
+            "showline": True,
+            "linecolor": "#98A2B3",
+            "fixedrange": True,
+        },
+        yaxis={
+            "range": [-0.6, 2.7],
+            "tickvals": phase_y,
+            "ticktext": phase_names,
+            "tickfont": {"size": 18, "color": "#111827"},
+            "showgrid": False,
+            "zeroline": False,
+            "fixedrange": True,
+        },
+        uniformtext={"minsize": 14, "mode": "show"},
+    )
+    fig.write_image(horizons, scale=1)
 
     return {"spend": spend, "investment": investment, "heat": heat, "horizons": horizons}
 
