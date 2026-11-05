@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-05T00:00:00+08:00",
+  "title": "Design System: ParkFlow",
+  "extensions": {
+    "colorMeta": {
+      "night": { "role": "neutral", "displayName": "Night", "canonical": "#0a111c", "tonalRamp": ["#07101a", "#0a111c", "#111b2a", "#22324a", "#465875", "#8696ad", "#b8c5d6", "#ebf0f6"] },
+      "sign-blue": { "role": "primary", "displayName": "Parking Sign Blue", "canonical": "#2f6fe0", "tonalRamp": ["#071630", "#0d2c62", "#17469a", "#2f6fe0", "#5b8bec", "#7ea8ff", "#bdd2ff", "#edf3ff"] },
+      "member-gold": { "role": "secondary", "displayName": "Member Gold", "canonical": "#e3c35a", "tonalRamp": ["#201a05", "#44370b", "#755f18", "#a98d35", "#e3c35a", "#ecd77f", "#f4e7ad", "#fff8dc"] },
+      "case-white": { "role": "neutral", "displayName": "Case White", "canonical": "#ffffff", "tonalRamp": ["#111827", "#344054", "#667085", "#98a2b3", "#d8dee8", "#eaecf0", "#f7f8fb", "#ffffff"] },
+      "case-gold": { "role": "secondary", "displayName": "Case Gold", "canonical": "#80620a", "tonalRamp": ["#211900", "#403000", "#604801", "#80620a", "#a5811f", "#c9a54d", "#e7d18b", "#fff6d6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero and decisive closing statements." },
+      "body": { "displayName": "Body", "purpose": "Evidence and operating explanations." },
+      "label": { "displayName": "Operational Label", "purpose": "Levels, values, sources and statuses." }
+    },
+    "shadows": [
+      { "name": "sign-glow", "value": "0 12px 34px rgba(47,111,224,.38)", "purpose": "Illuminated primary controls." },
+      { "name": "equipment-drop", "value": "0 24px 60px rgba(0,0,0,.55)", "purpose": "Floating physical signage." }
+    ],
+    "motion": [
+      { "name": "state", "value": "200ms ease", "purpose": "Hover, focus and compact state changes." },
+      { "name": "mechanical", "value": "900ms cubic-bezier(.2,.7,.2,1)", "purpose": "Front-half spatial machinery only." }
+    ],
+    "breakpoints": [
+      { "name": "mobile", "value": "700px" },
+      { "name": "tablet", "value": "900px" },
+      { "name": "desktop", "value": "1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The single decisive action.",
+      "html": "<button class=\"ds-btn-primary\">SEE THE PILOT CASE</button>",
+      "css": ".ds-btn-primary{height:52px;padding:0 22px;border:0;border-radius:12px;background:#2f6fe0;color:#fff;font:600 17px/1 Barlow,Segoe UI,sans-serif;box-shadow:0 12px 34px rgba(47,111,224,.38);transition:background .2s,transform .2s}.ds-btn-primary:hover{background:#3d7cf0}.ds-btn-primary:focus-visible{outline:2px solid #7ea8ff;outline-offset:3px}.ds-btn-primary:active{transform:translateY(1px)}"
+    },
+    {
+      "name": "Operational Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A flat concrete panel for evidence and controls.",
+      "html": "<article class=\"ds-card\"><strong>Capacity you can promise</strong><p>Entry, exit and bookings reconcile continuously.</p></article>",
+      "css": ".ds-card{max-width:360px;padding:28px;border:1px solid #22324a;border-radius:18px;background:#111b2a;color:#ebf0f6;font:400 17px/1.6 Barlow,Segoe UI,sans-serif}.ds-card strong{font-weight:600}.ds-card p{margin:8px 0 0;color:#b8c5d6}"
+    },
+    {
+      "name": "Status Chip",
+      "kind": "chip",
+      "description": "A text-plus-color operational status.",
+      "html": "<span class=\"ds-chip\"><i></i>BOOKABLE</span>",
+      "css": ".ds-chip{display:inline-flex;align-items:center;gap:7px;height:30px;padding:0 12px;border-radius:999px;background:rgba(52,229,138,.1);color:#34e58a;font:600 14px/1 Barlow,Segoe UI,sans-serif}.ds-chip i{width:8px;height:8px;border-radius:50%;background:currentColor}"
+    },
+    {
+      "name": "Investment Case Panel",
+      "kind": "card",
+      "description": "A flat white B3/B4 panel for financial charts, assumptions and decision gates.",
+      "html": "<article class=\"ds-case-panel\"><strong>Value gate</strong><p>Scale only after member value and operating reliability are measured.</p></article>",
+      "css": ".ds-case-panel{max-width:420px;padding:28px;border:1px solid #d8dee8;border-radius:12px;background:#fff;color:#111827;font:400 17px/1.6 Barlow,Segoe UI,sans-serif}.ds-case-panel strong{font-weight:600}.ds-case-panel p{margin:8px 0 0;color:#344054}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Operating Car Park",
+    "overview": "ParkFlow feels like walking through a well-run premium parking facility at night: legible signage, visible machinery and exact status signals. B3 and B4 deliberately switch to a white investment-memo mode with dark ink, cool grey rules and flat financial surfaces.",
+    "keyCharacteristics": ["Cinematic entrance, operational detail, white business appendix.", "Evidence, assumptions and hypotheses are separated.", "Member gold is rare; a darker case gold is used on white."],
+    "rules": [
+      { "name": "The Signal Rule", "body": "Green, amber, red and violet communicate status; never use them as arbitrary decoration.", "section": "colors" },
+      { "name": "The Answer-First Rule", "body": "Headlines state the decision or outcome; explanatory prose follows.", "section": "typography" },
+      { "name": "The Physical Depth Rule", "body": "If an element does not plausibly float in the car-park world, it receives no drop shadow.", "section": "elevation" }
+    ],
+    "dos": ["Do make the member guarantee legible before discussing forecasting.", "Do distinguish measured evidence, planning assumptions and hypotheses.", "Do switch B3 and B4 to white investment-memo mode with flat panels and cool grey rules."],
+    "donts": ["Don't use generic SaaS landing-page clichés.", "Don't conflate deterministic control with probabilistic forecasting.", "Don't use excessive animation in financial and go-to-market sections."]
+  }
+}

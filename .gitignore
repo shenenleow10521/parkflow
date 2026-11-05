@@ -19,3 +19,8 @@ analysis/*.npz
 submission/*.html
 submission/*.pptx
 ~$*
+
+# presentation review output
+presentation/generated/
+presentation/render/
+presentation/*.pdf
