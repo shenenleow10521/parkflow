@@ -94,11 +94,11 @@ def make_charts() -> dict[str, Path]:
         go.Waterfall(
             orientation="v",
             measure=["relative", "relative", "relative", "total"],
-            x=["Hardware +\ninstall", "Production\nintegration", "Year 1\nrunning", "Planning\nenvelope"],
+            x=["Hardware +<br>install", "Production<br>integration", "Year 1<br>running", "Planning<br>envelope"],
             y=[43.14, 60.0, 10.5, 0],
             text=["RM43.1k", "RM60.0k", "RM10.5k", "RM113.6k"],
             textposition="outside",
-            textfont={"family": "Arial", "size": 18, "color": "#18212B"},
+            textfont={"family": "Arial", "size": 30, "color": "#18212B"},
             connector={"line": {"color": "#AEB7BF", "width": 1.4}},
             increasing={"marker": {"color": "#2F6FE0"}},
             totals={"marker": {"color": "#0A111C"}},
@@ -107,12 +107,12 @@ def make_charts() -> dict[str, Path]:
     )
     fig.update_layout(
         showlegend=False,
-        margin={"l": 64, "r": 24, "t": 42, "b": 54},
+        margin={"l": 100, "r": 24, "t": 58, "b": 100},
         width=1200,
         height=620,
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font={"family": "Arial", "color": "#5F6B76", "size": 15},
+        paper_bgcolor="#FFFFFF",
+        plot_bgcolor="#FFFFFF",
+        font={"family": "Arial", "color": "#5F6B76", "size": 27},
         yaxis={
             "title": "RM thousands",
             "range": [0, 135],
@@ -121,7 +121,7 @@ def make_charts() -> dict[str, Path]:
             "showline": False,
             "ticksuffix": "k",
         },
-        xaxis={"showline": False, "tickfont": {"size": 14, "color": "#18212B"}},
+        xaxis={"showline": False, "tickfont": {"size": 27, "color": "#18212B"}},
     )
     fig.write_image(investment, scale=2)
 
