@@ -464,6 +464,7 @@ html { scroll-snap-type: y proximity; }
 .mall-goal { margin-top: 18px; }
 .statement-slide .bays-demo { margin-top: clamp(20px, 4vh, 44px); padding: 16px 22px; }
 .bays-demo svg { width: 100%; height: auto; display: block; max-height: 31vh; margin: 0 auto; }
+#priority-zone-svg { max-height: 34vh; }
 .principles-v { display: grid; gap: 0; align-content: start; }
 .principles-v > div { padding: 16px 0; border-top: 1px solid var(--line); display: grid; gap: 6px; }
 .principles-v > p { padding-bottom: 14px; }
@@ -1076,41 +1077,125 @@ html { scroll-snap-type: y proximity; }
 <section class="slide act-problem" id="fixes" data-lvl="L2" data-title="Today's fixes" aria-labelledby="fix-h">
   <div class="wrap">
     <div class="lvl" data-a><b>L2</b>Today's fixes</div>
-    <h2 class="h2 wide" id="fix-h">Today, reserved spots sit empty, or there is no promise at all.</h2>
+    <h2 class="h2 wide" id="fix-h">Most malls ask drivers to turn up and find a bay.</h2>
     <div class="tradeoff gap-top">
       <div class="panel pan" data-a>
-        <h3 class="h3">Reserve spots</h3>
-        <div class="verdict"><span class="chip ok"><i></i>Guaranteed</span><span class="chip bad"><i></i>Often empty</span></div>
+        <h3 class="h3">Normal parking: just turn up</h3>
+        <div class="verdict"><span class="chip ok"><i></i>Uses every bay</span><span class="chip bad"><i></i>No guarantee</span></div>
         <ul>
-          <li><b>Member parking areas</b><span>1 Utama ONECARD. A fixed area, kept even when it's empty.</span></li>
-          <li><b>Reserved VIP and family bays</b><span>Mid Valley, Jaya One. Rarely checked: a third are misused (UK survey).</span></li>
-          <li><b>Bay locks and booking apps</b><span>SpotHero, JustPark. Locked spots that nobody else can use.</span></li>
+          <li><b>First come, first served</b><span>The first drivers to arrive take the available bays.</span></li>
+          <li><b>Signs show what is free</b><span>They help drivers choose a level, but they do not hold a bay.</span></li>
+          <li><b>Busy periods are uncertain</b><span>A member may still queue, circle the car park or arrive after it is full.</span></li>
         </ul>
       </div>
       <div class="fulcrum" aria-hidden="true" data-a><div>?</div></div>
       <div class="panel pan" data-a>
-        <h3 class="h3">First come, first served</h3>
-        <div class="verdict"><span class="chip ok"><i></i>No empty spots</span><span class="chip bad"><i></i>No promise</span></div>
+        <h3 class="h3">What other malls offer</h3>
+        <div class="verdict"><span class="chip ok"><i></i>Useful benefits</span><span class="chip bad"><i></i>No timed booking</span></div>
         <ul>
-          <li><b>Just turn up</b><span>On a busy Saturday, 1 in 7 drivers who need a spot at a set time would not get one (our simulation).</span></li>
-          <li><b>Smart sharing from research</b><span>University systems share spots, but nobody can see how they decide.</span></li>
-          <li><b>More signs, more apps</b><span>Show where the space is, but promise nothing at the moment it matters.</span></li>
+          <li><b>1 Utama ONECARD</b><span>Members get preferred parking and plate-recognition entry. Its FAQ describes access, not booking a bay for a chosen time.</span></li>
+          <li><b>Sunway Pyramid</b><span>Drivers can use preferred parking at a higher rate. Its FAQ describes the zone and rates, not advance bay booking.</span></li>
+          <li><b>The Gardens Club</b><span>Members receive free or valet parking benefits based on tier and spending. Its policy does not describe advance bay booking.</span></li>
         </ul>
       </div>
     </div>
-    <p class="src" data-a>Sources: SAYS (2025) on 1 Utama ONECARD; Confused.com and PCP (2022) on reserved-bay misuse.</p>
+    <p class="src" data-a>Official policies: <a href="https://www.onecard.com.my/Home/FAQ" target="_blank" rel="noopener">1 Utama ONECARD parking FAQ</a>; <a href="https://www.sunwaypyramid.com/faq" target="_blank" rel="noopener">Sunway Pyramid parking FAQ</a>; <a href="https://www.thegardensmall.com.my/thegardensclub" target="_blank" rel="noopener">The Gardens Club benefits</a>.</p>
   </div>
 </section>
 
 <!-- 5 ============================================================ L2 the third way -->
-<section class="slide act-solution statement-slide" id="third" data-lvl="L2" data-title="Our idea" aria-labelledby="third-h">
+<section class="slide act-solution statement-slide" id="third" data-lvl="L2" data-title="Priority Zone" aria-labelledby="third-h">
   <div class="wrap">
-    <div class="lvl" data-a><b>L2</b>Our idea</div>
-    <h2 class="statement" id="third-h">Promise the Priority Zone to members. Guide everyone else through the wider car park.</h2>
+    <div class="lvl" data-a><b>L2</b>ParkFlow Priority Zone</div>
+    <h2 class="h2 wide" id="third-h">How the Priority Zone works</h2>
+    <p class="lede" data-a style="margin-top:14px">Members book access to one gated area next to the lifts. Plate cameras verify every entry and exit, so the system only accepts a booking when capacity is confirmed.</p>
     <div class="panel bays-demo" data-a>
-      <svg id="bays-svg" viewBox="0 0 1000 300" role="img" aria-label="Illustration. Top row, a fixed VIP section holds six bays all evening although only two are used. Bottom row, ParkFlow protects the two active member bookings while the remaining Priority Zone bays stay available to other eligible members."></svg>
+      <svg id="priority-zone-svg" viewBox="0 0 1200 340" role="img" aria-label="ParkFlow system diagram. A member books in the mall app, a plate-recognition gate verifies entry into the members' Priority Zone, bays show booked, occupied and available states beside the lifts, and the exit scan releases capacity for the next booking.">
+        <defs>
+          <marker id="pz-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7ea8ff"/></marker>
+          <marker id="pz-return" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8696ad"/></marker>
+        </defs>
+
+        <g font-family="Barlow, Segoe UI, sans-serif">
+          <rect x="18" y="72" width="160" height="190" rx="14" fill="#0d1624" stroke="#2f4360"/>
+          <rect x="65" y="94" width="66" height="108" rx="12" fill="#16233a" stroke="#7ea8ff" stroke-width="2"/>
+          <rect x="75" y="108" width="46" height="70" rx="6" fill="#0a111c"/>
+          <circle cx="98" cy="188" r="4" fill="#7ea8ff"/>
+          <text x="98" y="226" text-anchor="middle" fill="#ebf0f6" font-size="18" font-weight="600">1. Book</text>
+          <text x="98" y="247" text-anchor="middle" fill="#b8c5d6" font-size="13">Mall member app</text>
+
+          <path d="M178 166H224" stroke="#7ea8ff" stroke-width="2.5" marker-end="url(#pz-arrow)"/>
+
+          <rect x="228" y="72" width="178" height="190" rx="14" fill="#0d1624" stroke="#2f4360"/>
+          <rect x="263" y="101" width="54" height="38" rx="7" fill="#16233a" stroke="#7ea8ff"/>
+          <circle cx="290" cy="120" r="9" fill="none" stroke="#7ea8ff" stroke-width="2"/>
+          <path d="M317 111l20-10v38l-20-10" fill="none" stroke="#7ea8ff" stroke-width="2"/>
+          <path d="M255 165H375" stroke="#ebf0f6" stroke-width="6" stroke-linecap="round"/>
+          <path d="M255 165H330" stroke="#ff5a66" stroke-width="6" stroke-linecap="round"/>
+          <rect x="250" y="154" width="10" height="48" rx="4" fill="#2f4360"/>
+          <text x="317" y="226" text-anchor="middle" fill="#ebf0f6" font-size="18" font-weight="600">2. Verify plate</text>
+          <text x="317" y="247" text-anchor="middle" fill="#b8c5d6" font-size="13">Entry and exit gate</text>
+
+          <path d="M406 166H452" stroke="#7ea8ff" stroke-width="2.5" marker-end="url(#pz-arrow)"/>
+
+          <rect x="456" y="36" width="584" height="252" rx="16" fill="rgba(47,111,224,.11)" stroke="#7ea8ff" stroke-width="2"/>
+          <text x="480" y="69" fill="#ebf0f6" font-size="22" font-weight="700">3. MEMBERS' PRIORITY ZONE</text>
+          <text x="480" y="91" fill="#b8c5d6" font-size="14">Booking capacity = verified free bays − active bookings</text>
+
+          <g transform="translate(480 108)">
+            <g>
+              <rect width="66" height="132" rx="8" fill="rgba(180,140,255,.13)" stroke="#b48cff" stroke-width="2" stroke-dasharray="6 4"/>
+              <rect x="18" y="31" width="30" height="66" rx="9" fill="#3f6fb8"/><rect x="23" y="41" width="20" height="18" rx="4" fill="#0a111c"/><rect x="23" y="76" width="20" height="11" rx="3" fill="#0a111c" opacity=".6"/>
+              <circle cx="33" cy="114" r="5" fill="#b48cff"/>
+            </g>
+            <g transform="translate(76)">
+              <rect width="66" height="132" rx="8" fill="rgba(180,140,255,.13)" stroke="#b48cff" stroke-width="2" stroke-dasharray="6 4"/>
+              <circle cx="33" cy="114" r="5" fill="#b48cff"/>
+            </g>
+            <g transform="translate(152)">
+              <rect width="66" height="132" rx="8" fill="#111b2a" stroke="#2f4360"/>
+              <rect x="18" y="31" width="30" height="66" rx="9" fill="#d9e2ee"/><rect x="23" y="41" width="20" height="18" rx="4" fill="#293548"/><rect x="23" y="76" width="20" height="11" rx="3" fill="#293548" opacity=".7"/>
+              <circle cx="33" cy="114" r="5" fill="#ff5a66"/>
+            </g>
+            <g transform="translate(228)">
+              <rect width="66" height="132" rx="8" fill="#111b2a" stroke="#2f4360"/>
+              <circle cx="33" cy="114" r="5" fill="#34e58a"/>
+            </g>
+            <g transform="translate(304)">
+              <rect width="66" height="132" rx="8" fill="#111b2a" stroke="#2f4360"/>
+              <rect x="18" y="31" width="30" height="66" rx="9" fill="#cf4d59"/><rect x="23" y="41" width="20" height="18" rx="4" fill="#43131b"/><rect x="23" y="76" width="20" height="11" rx="3" fill="#43131b" opacity=".7"/>
+              <circle cx="33" cy="114" r="5" fill="#ff5a66"/>
+            </g>
+            <g transform="translate(380)">
+              <rect width="66" height="132" rx="8" fill="#111b2a" stroke="#2f4360"/>
+              <circle cx="33" cy="114" r="5" fill="#34e58a"/>
+            </g>
+            <g transform="translate(456)">
+              <rect width="66" height="132" rx="8" fill="#111b2a" stroke="#2f4360"/>
+              <circle cx="33" cy="114" r="5" fill="#34e58a"/>
+            </g>
+          </g>
+
+          <g transform="translate(480 262)" font-size="13">
+            <circle cx="5" cy="0" r="5" fill="#b48cff"/><text x="18" y="5" fill="#b8c5d6">Held for an arriving booking</text>
+            <circle cx="222" cy="0" r="5" fill="#ff5a66"/><text x="235" y="5" fill="#b8c5d6">Occupied</text>
+            <circle cx="326" cy="0" r="5" fill="#34e58a"/><text x="339" y="5" fill="#b8c5d6">Available to eligible members</text>
+          </g>
+
+          <rect x="1058" y="72" width="124" height="190" rx="14" fill="#0d1624" stroke="#7ea8ff"/>
+          <text x="1120" y="111" text-anchor="middle" fill="#ebf0f6" font-size="18" font-weight="600">4. Lifts</text>
+          <rect x="1082" y="132" width="32" height="78" rx="5" fill="#16233a" stroke="#2f4360"/>
+          <rect x="1126" y="132" width="32" height="78" rx="5" fill="#16233a" stroke="#2f4360"/>
+          <path d="M1090 153l8-10 8 10M1090 188l8 10 8-10" fill="none" stroke="#7ea8ff" stroke-width="2"/>
+          <path d="M1134 153l8-10 8 10M1134 188l8 10 8-10" fill="none" stroke="#7ea8ff" stroke-width="2"/>
+          <text x="1120" y="239" text-anchor="middle" fill="#b8c5d6" font-size="13">Closest bays</text>
+
+          <path d="M1036 307H317V268" fill="none" stroke="#8696ad" stroke-width="2" stroke-dasharray="7 6" marker-end="url(#pz-return)"/>
+          <text x="676" y="327" text-anchor="middle" fill="#8696ad" font-size="14">Exit scan releases capacity for the next member booking</text>
+        </g>
+      </svg>
     </div>
-    <p class="fine" data-a style="margin-top:10px">Example: one evening, 12 spots next to the lifts.</p>
+    <p class="fine" data-a style="margin-top:10px">General parking continues as normal. The whole-car-park forecast helps members choose when to travel, but it never controls the gate.</p>
   </div>
 </section>
 
@@ -2304,43 +2389,6 @@ html { scroll-snap-type: y proximity; }
       boardT = setInterval(function () { boardOn = !boardOn; board.set(boardSegs(boardOn)); }, 700);
     };
   }
-
-  // the third way: a 12-bay stretch, VIP section against ParkFlow
-  (function () {
-    var s = $('#bays-svg'); if (!s) return;
-    var X = 250, BWD = 60, k = 0;
-    function car(g, cx, cy, col, held) {
-      var c = el('g', { 'class': 'bcar', style: '--k:' + (k++) }, g);
-      el('rect', { x: cx - 13, y: cy - 22, width: 26, height: 44, rx: 7, fill: col, stroke: 'rgba(0,0,0,.35)' }, c);
-      el('rect', { x: cx - 10, y: cy - 13, width: 20, height: 9, rx: 3, fill: '#0b1220', 'fill-opacity': '.75' }, c);
-      el('rect', { x: cx - 9, y: cy + 9, width: 18, height: 6, rx: 2, fill: '#0b1220', 'fill-opacity': '.55' }, c);
-      if (held) el('circle', { cx: cx, cy: cy - 30, r: 4, fill: C.held }, c);
-    }
-    function row(y, title, sub1, sub2, plan) {
-      var g = el('g', null, s);
-      el('text', { x: 0, y: y + 36, fill: C.chalk, 'font-size': 24, 'font-weight': 600, 'font-family': 'Barlow, sans-serif' }, g, title);
-      el('text', { x: 0, y: y + 62, fill: C.chalk2, 'font-size': 15, 'font-family': 'Barlow, sans-serif' }, g, sub1);
-      el('text', { x: 0, y: y + 82, fill: C.chalk2, 'font-size': 15, 'font-family': 'Barlow, sans-serif' }, g, sub2);
-      el('rect', { x: X - 8, y: y - 4, width: 12 * BWD + 16, height: 108, rx: 10, fill: '#0c1522', stroke: C.line2 }, g);
-      plan.forEach(function (b, i) {
-        var x = X + i * BWD, cx = x + BWD / 2, cy = y + 50;
-        if (b.held) el('rect', { x: x + 2, y: y + 2, width: BWD - 4, height: 96, rx: 6, fill: 'rgba(180,140,255,.14)', stroke: C.held, 'stroke-opacity': '.6', 'stroke-dasharray': '5 4', 'class': b.car ? null : 'held-empty' }, g);
-        el('line', { x1: x, x2: x, y1: y + 4, y2: y + 96, stroke: '#3b5170', 'stroke-width': 1.6 }, g);
-        if (b.car) car(g, cx, cy, b.col, b.held);
-        else el('circle', { cx: cx, cy: cy + 36, r: 5, fill: b.held ? C.held : C.go, filter: 'url(#bglow)' }, g);
-      });
-      el('line', { x1: X + 12 * BWD, x2: X + 12 * BWD, y1: y + 4, y2: y + 96, stroke: '#3b5170', 'stroke-width': 1.6 }, g);
-    }
-    var defs = el('defs', null, s), f = el('filter', { id: 'bglow', x: '-200%', y: '-200%', width: '500%', height: '500%' }, defs);
-    el('feGaussianBlur', { stdDeviation: 3, result: 'b' }, f); var mg = el('feMerge', null, f); el('feMergeNode', { in: 'b' }, mg); el('feMergeNode', { in: 'SourceGraphic' }, mg);
-    var W = '#dfe6ef', G = '#9aa6b6', R = '#c84a55', B = '#3f6fb8', D = '#5d6b80';
-    row(20, 'Fixed VIP section', '6 bays held all evening, 2 used.', 'Other eligible members wait.', [
-      { held: 1, car: 1, col: B }, { held: 1, car: 1, col: W }, { held: 1 }, { held: 1 }, { held: 1 }, { held: 1 },
-      { car: 1, col: G }, { car: 1, col: R }, { car: 1, col: W }, { car: 1, col: D }, { car: 1, col: G }, { car: 1, col: W }]);
-    row(176, 'ParkFlow', 'Protects 2 active bookings.', 'The rest serve eligible members.', [
-      { held: 1, car: 1, col: B }, { held: 1, car: 1, col: W }, { car: 1, col: G }, { car: 1, col: R }, { car: 1, col: W }, { car: 1, col: D },
-      { car: 1, col: G }, { car: 1, col: R }, { car: 1, col: W }, { car: 1, col: D }, { car: 1, col: G }, {}]);
-  })();
 
   // 1,000 simulated Saturdays, one dot each
   var days = (function () {
