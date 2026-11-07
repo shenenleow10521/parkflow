@@ -95,8 +95,8 @@ def make_charts() -> dict[str, Path]:
             orientation="v",
             measure=["relative", "relative", "relative", "total"],
             x=["Hardware +<br>install", "Production<br>integration", "Year 1<br>running", "Planning<br>envelope"],
-            y=[43.14, 60.0, 10.5, 0],
-            text=["RM43.1k", "RM60.0k", "RM10.5k", "RM113.6k"],
+            y=[21.5, 60.0, 10.5, 0],
+            text=["RM21.5k", "RM60.0k", "RM10.5k", "RM92.0k"],
             textposition="outside",
             textfont={"family": "Arial", "size": 30, "color": "#18212B"},
             connector={"line": {"color": "#AEB7BF", "width": 1.4}},
@@ -115,7 +115,7 @@ def make_charts() -> dict[str, Path]:
         font={"family": "Arial", "color": "#5F6B76", "size": 27},
         yaxis={
             "title": "RM thousands",
-            "range": [0, 135],
+            "range": [0, 110],
             "gridcolor": "#E6E9EC",
             "zeroline": False,
             "showline": False,
@@ -151,12 +151,12 @@ def make_charts() -> dict[str, Path]:
     phase_names = ["Phase 1", "Phase 2", "Phase 3"]
     phase_y = [2, 1, 0]
     starts = [0, 6, 24]
-    durations = [6, 18, 24]
+    durations = [6, 18, 36]
     colors = ["#2F6FE0", "#C18A00", "#168A64"]
     phase_text = [
-        "KL East pilot<br><span style='font-size:15px'>Validate demand, reliability and member value</span>",
-        "SDP portfolio<br><span style='font-size:15px'>Standardise site qualification and operations</span>",
-        "Platform option<br><span style='font-size:15px'>Evaluate internal, JV or licensing ownership</span>",
+        "KL East lighthouse<br><span style='font-size:15px'>Validate demand, reliability and full-cost value</span>",
+        "SDP operating system<br><span style='font-size:15px'>Replicate integration, governance and service levels</span>",
+        "Multi-mall platform<br><span style='font-size:15px'>Contract a managed-service or licence model</span>",
     ]
     fig = go.Figure()
     for name, y, start, duration, color, label in zip(phase_names, phase_y, starts, durations, colors, phase_text):
@@ -201,9 +201,9 @@ def make_charts() -> dict[str, Path]:
         bargap=0.32,
         font={"family": "Arial", "color": "#344054"},
         xaxis={
-            "range": [0, 48],
-            "tickvals": [0, 6, 12, 18, 24, 36, 48],
-            "ticktext": ["Now", "6m", "12m", "18m", "24m", "36m", "48m"],
+            "range": [0, 60],
+            "tickvals": [0, 6, 12, 24, 36, 48, 60],
+            "ticktext": ["Now", "6m", "12m", "24m", "36m", "48m", "60m"],
             "tickfont": {"size": 17, "color": "#667085"},
             "showgrid": True,
             "gridcolor": "#EAECF0",
@@ -486,7 +486,7 @@ def build_deck():
     add_header(slide, "Business case", "Finance the proof; do not capitalise the hypothesis")
     add_text(slide, "The approval case is a bounded pilot investment with explicit evidence gates. Retention and GTO are measured upside—not guaranteed cash flow.", M, 1.48, 11.7, 0.46, 14, INK, True)
     add_image_crop(slide, charts["investment"], M, 2.08, 6.18, 3.26)
-    add_text(slide, "Midpoint planning case; ranges remain RM30k–58k hardware and RM45k–100k integration.", M + 0.23, 5.17, 5.72, 0.32, 8.3, SLATE)
+    add_text(slide, "Planning case uses current Malaysian list prices for two ANPR cameras, one compact parking guidance display, aisle cameras and installation. Integration remains scope-dependent.", M + 0.23, 5.10, 5.72, 0.46, 8.3, SLATE)
     add_rect(slide, 7.18, 2.20, 4.88, 3.02, fill=NAVY, line=NAVY, radius=True)
     add_text(slide, "ILLUSTRATIVE VALUE BRIDGE", 7.47, 2.49, 3.8, 0.24, 9.5, GOLD, True)
     add_text(slide, "RM327", 7.47, 3.00, 1.5, 0.45, 25, WHITE, True)
@@ -498,7 +498,7 @@ def build_deck():
     add_text(slide, "potential GTO value per incremental visit", 9.18, 4.47, 2.35, 0.34, 10, "CBD5DE")
     add_rect(slide, M, 5.56, 11.42, 0.65, fill=PALE_RED, line="F2C2C5", radius=True)
     add_text(slide, "Not yet proven: reservation → incremental visit; KL East GTO share; member retention effect; final vendor cost.", M + 0.22, 5.76, 10.98, 0.22, 10.5, RED, True)
-    add_footer(slide, 8)
+    add_footer(slide, 8, "Sources: AAC Group Hikvision Price List 2025; Viskou Malaysia DS-TVL224 guidance display; final installed cost requires site quotations.")
 
     # 9 — Sensitivity
     slide = prs.slides.add_slide(blank)
@@ -511,7 +511,7 @@ def build_deck():
     add_text(slide, "This is a pilot hurdle—not a forecast.", 8.36, 4.55, 3.10, 0.30, 11, RED, True)
     add_rect(slide, M, 6.05, 11.42, 0.45, fill=PALE_GOLD, line="F2D978", radius=True)
     add_text(slide, "Decision rule: report measured incremental visits and observed tenant sales; do not multiply every booking by a basket value.", M + 0.22, 6.17, 10.98, 0.20, 10.5, "7A5B00", True)
-    add_footer(slide, 9)
+    add_footer(slide, 9, "Source for RM195/RM327 basket benchmarks: Vase.ai Malaysia Shopping Mall Report 2026 (n=500, recalled behaviour).")
 
     # 10 — Operator value
     slide = prs.slides.add_slide(blank)
@@ -560,16 +560,16 @@ def build_deck():
     add_header(slide, "Three horizons", "Build the next option before the current horizon is complete")
     add_image_crop(slide, charts["horizons"], M, 1.52, 11.90, 3.18)
     horizon_cards = [
-        (M, "H1  •  0–6 months", "Prove at KL East", "Deterministic fulfilment, member adoption, operator value and data quality.", BLUE),
-        (4.76, "H2  •  6–24 months", "Replicate in SDP", "Readiness screen, loyalty integration and a standard operating playbook.", GOLD),
-        (8.89, "H3  •  24–48 months", "Exercise the option", "Productise for internal ownership, a JV or selective external licensing.", GREEN),
+        (M, "H1  •  0–6 months", "Prove at KL East", "Complete the live trial, lock unit economics and publish a go, adapt or stop decision pack.", BLUE),
+        (4.76, "H2  •  6–24 months", "Build the SDP system", "Qualify sites, standardise app and operator integration, and run a central portfolio service model.", GOLD),
+        (8.89, "H3  •  24–60 months", "Scale a contracted platform", "Package APIs, governance and support for managed-service or licence agreements with mall groups.", GREEN),
     ]
     for x, tag, title, body, accent in horizon_cards:
         add_rect(slide, x, 4.80, 3.82, 1.52, fill=WHITE, line=LINE, radius=True)
         add_text(slide, tag, x + 0.20, 5.02, 3.35, 0.23, 9.2, accent, True)
         add_text(slide, title, x + 0.20, 5.37, 3.35, 0.31, 15, INK, True)
         add_text(slide, body, x + 0.20, 5.77, 3.35, 0.42, 9.6, SLATE)
-    add_footer(slide, 12)
+    add_footer(slide, 12, "Portfolio basis: SDP FY2025 reports three wholly owned malls; Melawati Mall is a 50:50 joint venture and needs separate approval economics.")
 
     # 13 — Ownership choices
     slide = prs.slides.add_slide(blank)

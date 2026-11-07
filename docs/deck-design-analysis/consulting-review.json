@@ -1,0 +1,2975 @@
+{
+  "slides": 34,
+  "main": 26,
+  "appendix": 8,
+  "browser_errors": [],
+  "contrast_pairs": [
+    {
+      "foreground": "#102a43",
+      "background": "#ffffff",
+      "contrast": 14.64
+    },
+    {
+      "foreground": "#53647a",
+      "background": "#ffffff",
+      "contrast": 6.05
+    },
+    {
+      "foreground": "#245bd8",
+      "background": "#ffffff",
+      "contrast": 5.89
+    },
+    {
+      "foreground": "#ffffff",
+      "background": "#102a43",
+      "contrast": 14.64
+    },
+    {
+      "foreground": "#d2deee",
+      "background": "#102a43",
+      "contrast": 10.75
+    },
+    {
+      "foreground": "#53647a",
+      "background": "#f2f5f9",
+      "contrast": 5.53
+    }
+  ],
+  "original_sha256": "62eb8b3aa1ce971016abecee50d28017f735cbf88e0e1a0d0d8fa52d3092c740",
+  "original_unchanged": true,
+  "all": {
+    "pages": 34,
+    "word_count_median": 148,
+    "text_coverage_median_pct": 10.12,
+    "edge_active_grid_median_pct": 59.72,
+    "light_neutral_median_pct": 91.58,
+    "fonts_by_character": [],
+    "text_colours_by_character": [],
+    "font_sizes_1600_px_by_character": [],
+    "visible_ocr_word_count_median": 146,
+    "visible_ocr_text_coverage_median_pct": 10.12
+  },
+  "business_and_implementation": {
+    "pages": 13,
+    "word_count_median": 152,
+    "text_coverage_median_pct": 10.49,
+    "edge_active_grid_median_pct": 60.42,
+    "light_neutral_median_pct": 91.84,
+    "fonts_by_character": [],
+    "text_colours_by_character": [],
+    "font_sizes_1600_px_by_character": [],
+    "visible_ocr_word_count_median": 148,
+    "visible_ocr_text_coverage_median_pct": 10.49
+  },
+  "product": {
+    "pages": 7,
+    "word_count_median": 115,
+    "text_coverage_median_pct": 8.15,
+    "edge_active_grid_median_pct": 65.28,
+    "light_neutral_median_pct": 81.64,
+    "fonts_by_character": [],
+    "text_colours_by_character": [],
+    "font_sizes_1600_px_by_character": [],
+    "visible_ocr_word_count_median": 129,
+    "visible_ocr_text_coverage_median_pct": 8.15
+  },
+  "layout": [
+    {
+      "document": "ParkFlow Consulting",
+      "page": 1,
+      "id": "cover",
+      "word_count": 67,
+      "section": "Overview",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 2,
+      "heading": null,
+      "content_height": 900,
+      "source_height": 32,
+      "body_text": "park\nflow\n\nA member service for KL East Mall\n\nA better arrival.\nA reason to return.\n\nPriority parking, verified at the gate.\nA measured operating and investment case.\n\nTeam Hexa\nUniversiti Malaya \u00b7 Hackathon 2026\nProposal for",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 48.23
+        },
+        {
+          "hex": "#bec7d7",
+          "area_pct": 14.67
+        },
+        {
+          "hex": "#372724",
+          "area_pct": 7.39
+        },
+        {
+          "hex": "#625c5a",
+          "area_pct": 6.5
+        },
+        {
+          "hex": "#151b21",
+          "area_pct": 5.57
+        },
+        {
+          "hex": "#393e44",
+          "area_pct": 5.25
+        },
+        {
+          "hex": "#b0b5bd",
+          "area_pct": 4.12
+        },
+        {
+          "hex": "#c5cad6",
+          "area_pct": 4.02
+        },
+        {
+          "hex": "#c3bebd",
+          "area_pct": 2.18
+        },
+        {
+          "hex": "#d0d5df",
+          "area_pct": 1.76
+        }
+      ],
+      "light_neutral_pct": 48.27,
+      "saturated_surface_pct": 6.5,
+      "background_relative_foreground_pct": 51.63,
+      "edge_ink_pct": 4.34,
+      "edge_active_grid_pct": 63.19,
+      "render": "docs/deck-design-analysis/renders/consulting/01-cover.png",
+      "visible_ocr_word_count": 70,
+      "visible_ocr_numeric_token_count": 2,
+      "visible_ocr_text_box_union_pct": 10.95,
+      "visible_ocr_text_bounds_px": [
+        64,
+        67,
+        1598,
+        886
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 7.44,
+        "right": 0.12,
+        "bottom": 1.56
+      },
+      "visible_ocr_text_preview": "parkflow = Proposal for Darby EAST IS EPIC service for KL East Mall KL@EAST ra A better arrival. MALL A reason to return. Priority parking, verified at the gate. Vy A measured operating and investment case. Team Hexa Universiti Malaya - Hackathon 2026 L aD any",
+      "text_box_union_pct": 10.95
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 2,
+      "id": "team",
+      "word_count": 98,
+      "section": "Overview",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 0,
+      "body_text": "Team Hexa\n\nUniversiti Malaya\n\nProduct, models,\noperations and finance.\nOne pilot decision.\n\nFive students building a member parking proposition that can be tested in a real mall.\n\nLeow Shen En\nProduct & experience\n\nTeam lead \u00b7 Data Science\n\nPohyi Chong\nForecasting & models\n\nData Science\n\nIsaac Teo\nAnalysis & simulation\n\nData Science\n\nLee Jia Shern\nBusiness case & finance\n\nActuarial Science\n\nChoong Zhuo Lin\nAI engineering & prototype\n\nArtificial Intelligence",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 95.5
+        },
+        {
+          "hex": "#102a43",
+          "area_pct": 1.09
+        },
+        {
+          "hex": "#e6e2df",
+          "area_pct": 0.69
+        },
+        {
+          "hex": "#635f7c",
+          "area_pct": 0.61
+        },
+        {
+          "hex": "#c09e9d",
+          "area_pct": 0.41
+        },
+        {
+          "hex": "#2a54b8",
+          "area_pct": 0.41
+        },
+        {
+          "hex": "#548dc7",
+          "area_pct": 0.36
+        },
+        {
+          "hex": "#a4dffb",
+          "area_pct": 0.3
+        },
+        {
+          "hex": "#dfffff",
+          "area_pct": 0.26
+        },
+        {
+          "hex": "#ffffe6",
+          "area_pct": 0.25
+        }
+      ],
+      "light_neutral_pct": 95.65,
+      "saturated_surface_pct": 3.13,
+      "background_relative_foreground_pct": 4.14,
+      "edge_ink_pct": 2.23,
+      "edge_active_grid_pct": 47.22,
+      "render": "docs/deck-design-analysis/renders/consulting/02-team.png",
+      "visible_ocr_word_count": 95,
+      "visible_ocr_numeric_token_count": 1,
+      "visible_ocr_text_box_union_pct": 8.31,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "The team behind ParkFlow A working prototype and a transparent investment case, built across five complementary roles. Leow Shen En Product & experience Team Hexa Team lead - Data Science Universiti Malaya Forecasting & models Pohyi Chong Data Science Product,",
+      "text_box_union_pct": 8.31
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 3,
+      "id": "executive",
+      "word_count": 176,
+      "section": "Overview",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Recommendation\nProve one zone.\nThen decide to scale.\n\nApprove site discovery and a measured KL East pilot, with deployment funding released against a confirmed scope.\n\nRM92k\nInitial scope subtotal\nFinal installed cost to be confirmed\nThe opportunity\nMake arrival part of the member benefit.\n\nKL East has existing LPR. ParkFlow adds a proposed booking and zone-capacity service above the current payment journey.\n\nThe operating test\nProtect the promise without wasting space.\n\nValidate the deployed admission rule, real member uptake, local camera performance and the exception-handling SOP.\n\nThe investment test\nMeasure complete cost and incremental value.\n\nReconcile installed scope, central support and landlord capture before applying SDP\u2019s agreed return hurdle.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 73.14
+        },
+        {
+          "hex": "#102a43",
+          "area_pct": 21.49
+        },
+        {
+          "hex": "#535c7f",
+          "area_pct": 0.82
+        },
+        {
+          "hex": "#e5e6e2",
+          "area_pct": 0.78
+        },
+        {
+          "hex": "#9dcae7",
+          "area_pct": 0.71
+        },
+        {
+          "hex": "#a58683",
+          "area_pct": 0.65
+        },
+        {
+          "hex": "#4a80b6",
+          "area_pct": 0.63
+        },
+        {
+          "hex": "#ecc19d",
+          "area_pct": 0.48
+        },
+        {
+          "hex": "#deffff",
+          "area_pct": 0.42
+        },
+        {
+          "hex": "#ffffe5",
+          "area_pct": 0.41
+        }
+      ],
+      "light_neutral_pct": 73.38,
+      "saturated_surface_pct": 24.73,
+      "background_relative_foreground_pct": 26.33,
+      "edge_ink_pct": 3.9,
+      "edge_active_grid_pct": 70.83,
+      "render": "docs/deck-design-analysis/renders/consulting/03-executive.png",
+      "visible_ocr_word_count": 169,
+      "visible_ocr_numeric_token_count": 2,
+      "visible_ocr_text_box_union_pct": 12.8,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "A bounded pilot, with a clear investment gate The decision is whether to validate the service at KL East before committing to a wider rollout. The opportunity Recommendation Make arrival part of the member benefit. KL East has existing LPR. ParkFlow adds a pro",
+      "text_box_union_pct": 12.8
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 4,
+      "id": "context",
+      "word_count": 115,
+      "section": "Product",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 1,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "KL East Mall \u00b7 proposed lighthouse site\nBuild on what\nalready exists.\nPublished today\nCashless parking, LPR and online payment.\nProposed addition\nBookable member-zone access near the lifts.\nFirst investigation\nVerify vendor interfaces, physical boundary and zone-level counts.\n\nLocal search time, peak demand and willingness to pay require a baseline. Broad urban surveys are not a KL East demand estimate.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 61.73
+        },
+        {
+          "hex": "#bac8d8",
+          "area_pct": 7.66
+        },
+        {
+          "hex": "#262e39",
+          "area_pct": 5.43
+        },
+        {
+          "hex": "#5f504b",
+          "area_pct": 5.07
+        },
+        {
+          "hex": "#3c3a3b",
+          "area_pct": 4.79
+        },
+        {
+          "hex": "#181514",
+          "area_pct": 3.94
+        },
+        {
+          "hex": "#c0b5b1",
+          "area_pct": 3.49
+        },
+        {
+          "hex": "#878b8c",
+          "area_pct": 3.32
+        },
+        {
+          "hex": "#ded7d3",
+          "area_pct": 2.03
+        },
+        {
+          "hex": "#c8c8ce",
+          "area_pct": 1.83
+        }
+      ],
+      "light_neutral_pct": 61.91,
+      "saturated_surface_pct": 6.93,
+      "background_relative_foreground_pct": 37.85,
+      "edge_ink_pct": 6.26,
+      "edge_active_grid_pct": 72.92,
+      "render": "docs/deck-design-analysis/renders/consulting/04-context.png",
+      "visible_ocr_word_count": 129,
+      "visible_ocr_numeric_token_count": 4,
+      "visible_ocr_text_box_union_pct": 9.18,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Start with the property, not a generic parking problem Existing LPR makes integration and reuse the first design decision. Build on what ~ rh already exists. EAST IS EPIC 1 Published Cashless parking, LPR and online payment. MALL today MALL Proposed Bookable m",
+      "text_box_union_pct": 9.18
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 5,
+      "id": "alternatives",
+      "word_count": 134,
+      "section": "Product",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 3,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Member access is established\n\nONECARD publishes member preferred parking and LPR-linked access/payment.\n\nCompare the fulfilment promise,\nnot membership alone.\nPremium areas and reservations exist\n\nSunway\u2019s FAQ covers preferred parking and EV bay reservation via ParkEasy.\n\nReservation is a capability\nto evaluate, not a uniqueness claim.\npark\nflow\nA pooled, auditable member service\n\nVerified admissions, advisory forecasts and a shared record of commitments and exceptions.\n\nProve reliability, capacity efficiency\nand incremental member value.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 78.81
+        },
+        {
+          "hex": "#f0f5fc",
+          "area_pct": 15.33
+        },
+        {
+          "hex": "#885262",
+          "area_pct": 1.39
+        },
+        {
+          "hex": "#153358",
+          "area_pct": 1.3
+        },
+        {
+          "hex": "#e5dfd9",
+          "area_pct": 1.04
+        },
+        {
+          "hex": "#a09fa5",
+          "area_pct": 0.91
+        },
+        {
+          "hex": "#a8daf6",
+          "area_pct": 0.46
+        },
+        {
+          "hex": "#ffffe3",
+          "area_pct": 0.21
+        },
+        {
+          "hex": "#d1f6fc",
+          "area_pct": 0.19
+        },
+        {
+          "hex": "#f7f7e4",
+          "area_pct": 0.13
+        }
+      ],
+      "light_neutral_pct": 94.35,
+      "saturated_surface_pct": 3.98,
+      "background_relative_foreground_pct": 5.41,
+      "edge_ink_pct": 3.1,
+      "edge_active_grid_pct": 59.72,
+      "render": "docs/deck-design-analysis/renders/consulting/05-alternatives.png",
+      "visible_ocr_word_count": 134,
+      "visible_ocr_numeric_token_count": 5,
+      "visible_ocr_text_box_union_pct": 10.26,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Differentiate on the operating promise Published parking programmes establish the category; the pilot must establish ParkFlow\u2019s added value. Member access is established Compare the fulfilment promise, 2 one ONECARD publishes member preferred parking and LPR-l",
+      "text_box_union_pct": 10.26
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 6,
+      "id": "service",
+      "word_count": 89,
+      "section": "Product",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 1,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 0,
+      "body_text": "Illustrative concept only. Not a surveyed or approved KL East floor plan.\nOne shared zone.\nAny free bay.\n\nMembers reserve access to pooled capacity. The system does not assign an individual parking bay.\n\nBoundary, arrival window, cancellation terms and assistance require operator approval.\n\nReserve\nEligible member + plate\nVerify\nEntitlement + capacity\nPark\nAny available zone bay\nRelease\nExit closes the record",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 66.33
+        },
+        {
+          "hex": "#102a43",
+          "area_pct": 11.69
+        },
+        {
+          "hex": "#8a8d92",
+          "area_pct": 6.18
+        },
+        {
+          "hex": "#fefdfc",
+          "area_pct": 4.67
+        },
+        {
+          "hex": "#afa6a0",
+          "area_pct": 4.02
+        },
+        {
+          "hex": "#4a4e5c",
+          "area_pct": 3.63
+        },
+        {
+          "hex": "#20242d",
+          "area_pct": 1.57
+        },
+        {
+          "hex": "#f1f4f5",
+          "area_pct": 0.92
+        },
+        {
+          "hex": "#e2ffff",
+          "area_pct": 0.35
+        },
+        {
+          "hex": "#ffffe5",
+          "area_pct": 0.29
+        }
+      ],
+      "light_neutral_pct": 71.3,
+      "saturated_surface_pct": 15.23,
+      "background_relative_foreground_pct": 28.48,
+      "edge_ink_pct": 3.34,
+      "edge_active_grid_pct": 54.17,
+      "render": "docs/deck-design-analysis/renders/consulting/06-service.png",
+      "visible_ocr_word_count": 90,
+      "visible_ocr_numeric_token_count": 2,
+      "visible_ocr_text_box_union_pct": 6.59,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Make the service tangible A dedicated zone by the lifts, with controlled entry and reconciled exit. One shared zone. Any free bay. = 1 Members reserve access to pooled capacity. The system does not assign an individual parking bay. = Boundary, arrival window, ",
+      "text_box_union_pct": 6.59
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 7,
+      "id": "member",
+      "word_count": 111,
+      "section": "Product",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 2,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Before the journey,\nremove the uncertainty.\nChoose\nSee eligibility, the extra booking fee and an arrival window.\nArrive\nUse the registered plate and directions to the correct zone.\nResolve\nReach support for late arrival, a plate mismatch or a refund.\n\nRM4 weekday / RM5 peak is a proposed pricing test, additional to normal parking charges.\n\nFind and reserve\nNavigate and arrive",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 61.63
+        },
+        {
+          "hex": "#f2f5f9",
+          "area_pct": 20.06
+        },
+        {
+          "hex": "#4c5b74",
+          "area_pct": 6.69
+        },
+        {
+          "hex": "#f2f3f5",
+          "area_pct": 5.72
+        },
+        {
+          "hex": "#dfe8ed",
+          "area_pct": 4.64
+        },
+        {
+          "hex": "#fbfcfd",
+          "area_pct": 0.29
+        },
+        {
+          "hex": "#e4f6fa",
+          "area_pct": 0.27
+        },
+        {
+          "hex": "#faf7ea",
+          "area_pct": 0.25
+        },
+        {
+          "hex": "#ffffe8",
+          "area_pct": 0.22
+        },
+        {
+          "hex": "#f3f5f9",
+          "area_pct": 0.13
+        }
+      ],
+      "light_neutral_pct": 89.7,
+      "saturated_surface_pct": 3.81,
+      "background_relative_foreground_pct": 10.4,
+      "edge_ink_pct": 3.07,
+      "edge_active_grid_pct": 53.47,
+      "render": "docs/deck-design-analysis/renders/consulting/07-member.png",
+      "visible_ocr_word_count": 132,
+      "visible_ocr_numeric_token_count": 7,
+      "visible_ocr_text_box_union_pct": 7.49,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "A member journey that stays in one place Booking, guidance and help should feel like a single service. eR Before the journey, 65 ox Parking available remove the uncertainty. & Ic] 1487 ( p ) Parking in bay 21 Choose See eligibility, the extra booking fee and a",
+      "text_box_union_pct": 7.49
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 8,
+      "id": "operator",
+      "word_count": 72,
+      "section": "Product",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 1,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 0,
+      "body_text": "Working interface prototype \u00b7 simulated data\nA record the\noperator can explain.\nBefore entry\nCheck promises and reconciled capacity.\nDuring service\nMonitor stale data, no-shows and exceptions.\nAt review\nTrace every override to its reason, user and timestamp.\n\nAssistance and emergency egress remain available during faults.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 63.11
+        },
+        {
+          "hex": "#152030",
+          "area_pct": 9.57
+        },
+        {
+          "hex": "#0f1621",
+          "area_pct": 6.64
+        },
+        {
+          "hex": "#202b3c",
+          "area_pct": 4.81
+        },
+        {
+          "hex": "#4c5c76",
+          "area_pct": 4.78
+        },
+        {
+          "hex": "#84a8ae",
+          "area_pct": 4.0
+        },
+        {
+          "hex": "#0a111b",
+          "area_pct": 2.59
+        },
+        {
+          "hex": "#e7e5e4",
+          "area_pct": 1.51
+        },
+        {
+          "hex": "#131d2c",
+          "area_pct": 1.16
+        },
+        {
+          "hex": "#11263d",
+          "area_pct": 0.95
+        }
+      ],
+      "light_neutral_pct": 63.95,
+      "saturated_surface_pct": 7.5,
+      "background_relative_foreground_pct": 35.87,
+      "edge_ink_pct": 5.59,
+      "edge_active_grid_pct": 72.22,
+      "render": "docs/deck-design-analysis/renders/consulting/08-operator.png",
+      "visible_ocr_word_count": 90,
+      "visible_ocr_numeric_token_count": 7,
+      "visible_ocr_text_box_union_pct": 5.66,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Give the operator one coherent view The operational record connects entry, occupancy, commitments and exceptions. Sat 14:09 ta Run: Arecord the 58 69 ot m ured operator can explain. oo Bays el ea Check promises and reconciled ike capacity. 18m \u2014 \u201c Monitor stal",
+      "text_box_union_pct": 5.66
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 9,
+      "id": "admission",
+      "word_count": 127,
+      "section": "Product",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Eight verified free bays, accounted for\nPromise\nPromise\nPromise\nPromise\nPromise\nBuffer\nAvailable\nAvailable\n\nAccounting illustration. Individual physical bays are not assigned.\n\n8\nverified free\n\u2212\n5\noutstanding promises\n\u2212\n1\nproposed buffer\n=\n2\nadditional promises now\nVerified control protects access\n\nCommit only against a reconciled capacity guard. Freeze new promises when counts or connectivity become uncertain.\n\nForecasts improve planning\n\nAdvise arrival choices and operating modes. Predicted departures alone do not create bookable capacity.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 85.89
+        },
+        {
+          "hex": "#b9c9dc",
+          "area_pct": 5.91
+        },
+        {
+          "hex": "#245bd8",
+          "area_pct": 2.55
+        },
+        {
+          "hex": "#e6e8ea",
+          "area_pct": 1.51
+        },
+        {
+          "hex": "#83879c",
+          "area_pct": 1.27
+        },
+        {
+          "hex": "#1a2e4a",
+          "area_pct": 1.25
+        },
+        {
+          "hex": "#9cd9fa",
+          "area_pct": 0.37
+        },
+        {
+          "hex": "#fbc9a0",
+          "area_pct": 0.37
+        },
+        {
+          "hex": "#ffffe4",
+          "area_pct": 0.32
+        },
+        {
+          "hex": "#dffffe",
+          "area_pct": 0.3
+        }
+      ],
+      "light_neutral_pct": 87.21,
+      "saturated_surface_pct": 5.68,
+      "background_relative_foreground_pct": 12.54,
+      "edge_ink_pct": 2.9,
+      "edge_active_grid_pct": 65.28,
+      "render": "docs/deck-design-analysis/renders/consulting/09-admission.png",
+      "visible_ocr_word_count": 121,
+      "visible_ocr_numeric_token_count": 6,
+      "visible_ocr_text_box_union_pct": 8.15,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Protect the commitment at the gate Current verified capacity and forecast availability serve different purposes. Eight verified free bays, accounted for Promise Promise Promise Promise Promise Buffer Available Available Accounting illustration. Individual phys",
+      "text_box_union_pct": 8.15
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 10,
+      "id": "integration",
+      "word_count": 193,
+      "section": "Product",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 1,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Capabilities to validate\nSite / integration question\nWhy it matters\nZone-specific counts\n\nCan existing entry/exit events isolate the proposed boundary?\n\n\u2192\n\nThe capacity guard needs a reconciled zone count, not only a mall-wide payment event.\n\nMember entitlements\n\nCan eligibility, plate and booking expiry connect to the controller?\n\n\u2192\n\nThe operator needs one valid admission decision and a traceable exception path.\n\nLocal perception\n\nCan existing CCTV resolve indoor glare, pillars and blind spots?\n\n\u2192\n\nBuy cameras only after local coverage and false-free errors are tested.\n\nFirst action: a focused site and vendor audit, before expanding the hardware scope.\nExisting property, potential reuse.\nBuild on the installed foundation\nLPR\nPublished by KL East; confirm zone access and protocol.\nCCTV\nSurvey coverage before pricing additional cameras.\nMall touchpoint\nConfirm member identity, API rights and payment settlement.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 78.0
+        },
+        {
+          "hex": "#102a44",
+          "area_pct": 5.95
+        },
+        {
+          "hex": "#e1eaf5",
+          "area_pct": 3.64
+        },
+        {
+          "hex": "#edf3fc",
+          "area_pct": 3.47
+        },
+        {
+          "hex": "#c1cfde",
+          "area_pct": 3.11
+        },
+        {
+          "hex": "#6b7083",
+          "area_pct": 2.5
+        },
+        {
+          "hex": "#f1d6bd",
+          "area_pct": 1.0
+        },
+        {
+          "hex": "#3f2a41",
+          "area_pct": 0.91
+        },
+        {
+          "hex": "#231c1d",
+          "area_pct": 0.5
+        },
+        {
+          "hex": "#ffffe5",
+          "area_pct": 0.39
+        }
+      ],
+      "light_neutral_pct": 81.64,
+      "saturated_surface_pct": 9.44,
+      "background_relative_foreground_pct": 15.05,
+      "edge_ink_pct": 5.48,
+      "edge_active_grid_pct": 80.56,
+      "render": "docs/deck-design-analysis/renders/consulting/10-integration.png",
+      "visible_ocr_word_count": 194,
+      "visible_ocr_numeric_token_count": 2,
+      "visible_ocr_text_box_union_pct": 11.22,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Close capability gaps without duplicating the site The public record establishes LPR; the survey must establish the additional integration and control requirements. cast Capabi es to vali late Vy LOEAST MALL Site / integration question Why it matters \u2018a yy ing",
+      "text_box_union_pct": 11.22
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 11,
+      "id": "simulation",
+      "word_count": 145,
+      "section": "Evidence",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Policy tested\nBookings honoured\nIdle protected bay-hours*\nNo priority control\n85.5%\n0\nFixed VIP section\n99.9%\n19\nFixed rule: 5 safety bays\n100.0%\n23\nForecast policy\n100.0%\n5\nReliability axis starts at 80%\nLower is better\n1,000 simulated busy days \u00b7 100-bay zone \u00b7 same synthetic demand.\nWhat the model shows\n\nA trade-off between reliability and unused protected capacity under different policies.\n\nWhat the pilot must test\n\nThe proposed current-capacity guard differs from the forecast policy. Its efficiency is not established by this comparison.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 94.14
+        },
+        {
+          "hex": "#8795a7",
+          "area_pct": 1.05
+        },
+        {
+          "hex": "#e7e8e4",
+          "area_pct": 0.7
+        },
+        {
+          "hex": "#546e97",
+          "area_pct": 0.64
+        },
+        {
+          "hex": "#102c49",
+          "area_pct": 0.61
+        },
+        {
+          "hex": "#2560d5",
+          "area_pct": 0.54
+        },
+        {
+          "hex": "#ddbea8",
+          "area_pct": 0.44
+        },
+        {
+          "hex": "#907784",
+          "area_pct": 0.4
+        },
+        {
+          "hex": "#e0ffff",
+          "area_pct": 0.4
+        },
+        {
+          "hex": "#302530",
+          "area_pct": 0.39
+        }
+      ],
+      "light_neutral_pct": 94.5,
+      "saturated_surface_pct": 2.95,
+      "background_relative_foreground_pct": 5.24,
+      "edge_ink_pct": 2.7,
+      "edge_active_grid_pct": 59.03,
+      "render": "docs/deck-design-analysis/renders/consulting/11-simulation.png",
+      "visible_ocr_word_count": 140,
+      "visible_ocr_numeric_token_count": 12,
+      "visible_ocr_text_box_union_pct": 8.59,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Show the operating trade-off transparently The recorded forecast policy is efficient in simulation; the deployed admission rule still needs validation. Policy tested Bookings honoured Idle protected bay-hours* 85.5% No priority control 19 Fixed VIP section 23 ",
+      "text_box_union_pct": 8.59
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 12,
+      "id": "forecast",
+      "word_count": 163,
+      "section": "Evidence",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Historical occupancy back-test\nMAE (% of car-park capacity; lower is better)\n0%\n2%\n4%\n6%\n5.26\n1.41\n30 minutes\n5.34\n2.07\n60 minutes\n5.40\n2.63\n90 minutes\n48,112 forecasts \u00b7 30 Birmingham car parks \u00b7 six-week test. Lower is better.\nSame time last week\nEnsemble\nEvidence boundary\n\n60-minute MAE: 2.07% versus 5.34% of capacity, a 61.2% relative reduction.\n\nCamera test: 99.05% patch accuracy on 78,270 patches from held-out cameras at one outdoor Italian site.\n\nBefore deployment: test indoor lighting, pillars, occlusion, plate errors and occupancy drift at KL East.\n\nNew camera views at the same location are not a new-site validation. Forecast and perception scores measure different tasks.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 87.8
+        },
+        {
+          "hex": "#8795a7",
+          "area_pct": 3.49
+        },
+        {
+          "hex": "#f2f5f9",
+          "area_pct": 3.36
+        },
+        {
+          "hex": "#132a45",
+          "area_pct": 2.07
+        },
+        {
+          "hex": "#656a84",
+          "area_pct": 1.02
+        },
+        {
+          "hex": "#a9c9de",
+          "area_pct": 0.57
+        },
+        {
+          "hex": "#f2dec6",
+          "area_pct": 0.49
+        },
+        {
+          "hex": "#eaf7fc",
+          "area_pct": 0.34
+        },
+        {
+          "hex": "#dffffe",
+          "area_pct": 0.31
+        },
+        {
+          "hex": "#ffffe2",
+          "area_pct": 0.26
+        }
+      ],
+      "light_neutral_pct": 91.32,
+      "saturated_surface_pct": 4.22,
+      "background_relative_foreground_pct": 8.42,
+      "edge_ink_pct": 3.13,
+      "edge_active_grid_pct": 57.64,
+      "render": "docs/deck-design-analysis/renders/consulting/12-forecast.png",
+      "visible_ocr_word_count": 158,
+      "visible_ocr_numeric_token_count": 21,
+      "visible_ocr_text_box_union_pct": 16.67,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Forecasting evidence The ensemble beats a same-time-last-week baseline; indoor perception and KL East transfer remain separate tests. Historical occupancy back-test Evidence boundary 60-minute MAE: 2.07% versus 5.34% of capacity, a 61.2% MAE (% of car-park cap",
+      "text_box_union_pct": 16.67
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 13,
+      "id": "member-value",
+      "word_count": 148,
+      "section": "Business",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Observed association\nRecalled spend per mall visit (RM)\n0\n100\n200\n300\nRM195\n1\u20132 visits / month\nRM327\n5+ visits / month\n+68%\nVase.ai 2026 consumer survey; total n=500. Recalled trip spending by visit frequency.\nCommercial interpretation\nPrioritize members whose repeat visits are valuable to the mall.\nSeparate tenant turnover from the landlord\u2019s effective share.\nMeasure incremental trips against a comparable group or baseline.\nAvoid converting the 68% basket difference directly into a parking-driven uplift.\nValue bridge: additional visits \u00d7 spend per visit \u00d7 effective mall capture, less additional service and support costs.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 85.11
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 5.51
+        },
+        {
+          "hex": "#245bd8",
+          "area_pct": 2.87
+        },
+        {
+          "hex": "#828b9e",
+          "area_pct": 2.67
+        },
+        {
+          "hex": "#25304c",
+          "area_pct": 1.36
+        },
+        {
+          "hex": "#b9d2e2",
+          "area_pct": 0.89
+        },
+        {
+          "hex": "#f8dcb8",
+          "area_pct": 0.5
+        },
+        {
+          "hex": "#ddfffe",
+          "area_pct": 0.29
+        },
+        {
+          "hex": "#1371c1",
+          "area_pct": 0.28
+        },
+        {
+          "hex": "#ffffe1",
+          "area_pct": 0.22
+        }
+      ],
+      "light_neutral_pct": 90.87,
+      "saturated_surface_pct": 5.94,
+      "background_relative_foreground_pct": 8.91,
+      "edge_ink_pct": 3.13,
+      "edge_active_grid_pct": 59.72,
+      "render": "docs/deck-design-analysis/renders/consulting/13-member-value.png",
+      "visible_ocr_word_count": 147,
+      "visible_ocr_numeric_token_count": 16,
+      "visible_ocr_text_box_union_pct": 10.49,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Member value case Frequent visitors report higher baskets; parking must demonstrate that it causes additional valuable visits. Observed association Commercial interpretation Recalled spend per mall visit (RM) Prioritize members whose repeat visits are valuable",
+      "text_box_union_pct": 10.49
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 14,
+      "id": "investment",
+      "word_count": 166,
+      "section": "Business",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 32,
+      "body_text": "Initial planning scope\nRM thousands\n0\n25\n50\n75\n100\nRM21.5k\nHardware &\ninstallation\nRM60.0k\nProduction\nintegration\nRM10.5k\nYear 1\nzone running\nRM92.0k\nInitial scope\nsubtotal\nHardware RM21.5k + build RM60.0k + annual zone running RM10.5k.\nComplete the approval envelope\nSurvey whether existing LPR/CCTV can be reused.\nPrice physical zone separation, barriers, controller and intercom interfaces.\nConfirm cabling, power, network and commissioning.\nAdd central support, tax treatment and contingency.\nDefine warranty, maintenance and ownership at handover.\nProcurement gate: no final installed-cost claim until scope, incumbent-system access and binding supplier quotes are reconciled.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 84.86
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 5.49
+        },
+        {
+          "hex": "#102b49",
+          "area_pct": 3.15
+        },
+        {
+          "hex": "#146fbf",
+          "area_pct": 2.29
+        },
+        {
+          "hex": "#4c6cba",
+          "area_pct": 1.0
+        },
+        {
+          "hex": "#bcd7e8",
+          "area_pct": 0.97
+        },
+        {
+          "hex": "#f8ddb8",
+          "area_pct": 0.72
+        },
+        {
+          "hex": "#402f3c",
+          "area_pct": 0.52
+        },
+        {
+          "hex": "#dcfffe",
+          "area_pct": 0.34
+        },
+        {
+          "hex": "#fafbfd",
+          "area_pct": 0.28
+        }
+      ],
+      "light_neutral_pct": 90.7,
+      "saturated_surface_pct": 7.54,
+      "background_relative_foreground_pct": 9.03,
+      "edge_ink_pct": 3.58,
+      "edge_active_grid_pct": 60.42,
+      "render": "docs/deck-design-analysis/renders/consulting/14-investment.png",
+      "visible_ocr_word_count": 163,
+      "visible_ocr_numeric_token_count": 15,
+      "visible_ocr_text_box_union_pct": 12.28,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Pilot investment RM92k is an initial scope subtotal; complete the installed scope and support estimate before approving funding. Initial planning scope Complete the approval envelope RM thousands Survey whether existing LPR/CCTV can be reused. Price physical z",
+      "text_box_union_pct": 12.28
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 15,
+      "id": "booking-return",
+      "word_count": 130,
+      "section": "Business",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Annual booking-fee bridge\nRM thousands\n0\n6.5\n13\n19.5\n26\nRM23.4k\nGross booking\nfees\n\u2212RM4.7k\nOperator\n20% share\n\u2212RM0.5k\nProcessing\n2% allowance\n\u2212RM10.5k\nZone running\nallowance\nRM7.8k\nOperating\ncontribution\n365-day illustration; 104 peak / 261 weekday days.\nBase planning inputs\nPeak days\n30 bookings / day \u00d7 RM5\nWeekdays\n7.5 bookings / day \u00d7 RM4\nAllocations\n20% operator + 2% processing\nZone running\nRM10,500 per year\n\nDemand, shares and costs require validation. Booking fees sit above normal parking charges.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 92.1
+        },
+        {
+          "hex": "#102a43",
+          "area_pct": 2.7
+        },
+        {
+          "hex": "#8f97a3",
+          "area_pct": 1.23
+        },
+        {
+          "hex": "#4f81b7",
+          "area_pct": 1.05
+        },
+        {
+          "hex": "#b5d3e9",
+          "area_pct": 0.83
+        },
+        {
+          "hex": "#b17f72",
+          "area_pct": 0.49
+        },
+        {
+          "hex": "#f4e7d6",
+          "area_pct": 0.49
+        },
+        {
+          "hex": "#defffe",
+          "area_pct": 0.41
+        },
+        {
+          "hex": "#384987",
+          "area_pct": 0.27
+        },
+        {
+          "hex": "#ffffe3",
+          "area_pct": 0.23
+        }
+      ],
+      "light_neutral_pct": 92.43,
+      "saturated_surface_pct": 4.93,
+      "background_relative_foreground_pct": 7.34,
+      "edge_ink_pct": 2.58,
+      "edge_active_grid_pct": 52.78,
+      "render": "docs/deck-design-analysis/renders/consulting/15-booking-return.png",
+      "visible_ocr_word_count": 126,
+      "visible_ocr_numeric_token_count": 26,
+      "visible_ocr_text_box_union_pct": 8.04,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Booking income contributes to the service The model leaves RM7.8k a year before central support, tax and capital recovery. Annual booking-fee bridge Base planning inputs Peak days 30 bookings / day x RM5 RM thousands Weekdays 7.5 bookings / day x RM4 26 RM23.4",
+      "text_box_union_pct": 8.04
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 16,
+      "id": "sanity-checks",
+      "word_count": 220,
+      "section": "Business",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 32,
+      "body_text": "One model across all three checks.\nFee mix \u2192 operating contribution \u2192 capital hurdle \u2192 incremental visit requirement.\nIs zone OPEX covered?\nAnnual bookings, same fee mix\n2,918\nOperating\nbreak-even\n5,078\nBase-case\nbookings\n\nBase case clears zone OPEX. At the modeled fee mix, approximately 2,918 annual paid bookings cover RM10.5k. The base assumes 5,078.\n\nDemand and payment costs still require validation.\nDoes booking repay capital?\nAnnual contribution (RM)\n7,775\nBooking\ncontribution\n16,300\n5-year\nrequirement\n\nA recovery gap remains. RM7.8k booking contribution falls below the RM16.3k annual requirement for five-year simple recovery.\n\nAdditional net benefit required: RM8,524.60 a year.\nCan visits close that gap?\nAnnual net benefit (RM)\n8,525\nAnnual\nrecovery gap\n8,788\n13 extra\nweekly visits\n\nThirteen weekly visits illustrate the bridge. At RM260 spend and 5% effective net capture, 13 additional visits a week yield RM8,788 a year.\n\nCapture and genuinely incremental visits remain pilot questions.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 81.98
+        },
+        {
+          "hex": "#edf3fc",
+          "area_pct": 8.89
+        },
+        {
+          "hex": "#7c9ebf",
+          "area_pct": 2.08
+        },
+        {
+          "hex": "#136ebe",
+          "area_pct": 1.84
+        },
+        {
+          "hex": "#202e49",
+          "area_pct": 1.36
+        },
+        {
+          "hex": "#cfc4c2",
+          "area_pct": 1.34
+        },
+        {
+          "hex": "#3d60bb",
+          "area_pct": 0.9
+        },
+        {
+          "hex": "#d2f5fd",
+          "area_pct": 0.62
+        },
+        {
+          "hex": "#ffffe6",
+          "area_pct": 0.34
+        },
+        {
+          "hex": "#f9f6e5",
+          "area_pct": 0.34
+        }
+      ],
+      "light_neutral_pct": 91.13,
+      "saturated_surface_pct": 5.63,
+      "background_relative_foreground_pct": 8.48,
+      "edge_ink_pct": 4.62,
+      "edge_active_grid_pct": 82.64,
+      "render": "docs/deck-design-analysis/renders/consulting/16-sanity-checks.png",
+      "visible_ocr_word_count": 216,
+      "visible_ocr_numeric_token_count": 23,
+      "visible_ocr_text_box_union_pct": 12.84,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Three checks connect demand, cash and capital The operating case can be positive while the complete investment case still needs additional value. One model across all three checks. Fee mix \u2014 operating contribution \u2014 capital hurdle \u2014 incremental visit requireme",
+      "text_box_union_pct": 12.84
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 17,
+      "id": "booking-sensitivity",
+      "word_count": 153,
+      "section": "Business",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 1,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Annual contribution before central support\nPeak bookings / day\t2.5 weekday / day\t7.5 weekday / day\t12.5 weekday / day\n10\t\u2212RM4.4k\t\u2212RM0.3k\tRM3.7k\n20\t\u2212RM0.4k\tRM3.7k\tRM7.8k \u00b7 base\n30\tRM3.7k\tRM7.8k \u00b7 base\tRM11.8k\n40\tRM7.8k \u00b7 base\tRM11.8k\tRM15.9k\n50\tRM11.8k\tRM15.9k\tRM20.0k\n\nRM thousands; weekday / peak volumes are sensitivity inputs. Highlighted cell is the shared base case.\n\nSupport changes the outcome\nRM0 support / year\nRM7,775\nRM12,000 support / year\n\u2212RM4,225\nRM24,000 support / year\n\u2212RM16,225\n\nMeasure incidents, support minutes, refunds and actual payment fees before calling the service profitable.\n\nSupport allocations are comparison cases, not staffing estimates.\n\nDemand test: track paid conversion, eligible-member exposure and repeat usage alongside the operating metrics.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 76.12
+        },
+        {
+          "hex": "#edf3fc",
+          "area_pct": 7.96
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 7.51
+        },
+        {
+          "hex": "#596a89",
+          "area_pct": 3.39
+        },
+        {
+          "hex": "#e4eaf1",
+          "area_pct": 2.3
+        },
+        {
+          "hex": "#cce0ec",
+          "area_pct": 1.49
+        },
+        {
+          "hex": "#f4f5e0",
+          "area_pct": 0.49
+        },
+        {
+          "hex": "#cdf4fc",
+          "area_pct": 0.3
+        },
+        {
+          "hex": "#ffffe2",
+          "area_pct": 0.21
+        },
+        {
+          "hex": "#ddfffe",
+          "area_pct": 0.11
+        }
+      ],
+      "light_neutral_pct": 91.84,
+      "saturated_surface_pct": 4.01,
+      "background_relative_foreground_pct": 7.95,
+      "edge_ink_pct": 3.85,
+      "edge_active_grid_pct": 74.31,
+      "render": "docs/deck-design-analysis/renders/consulting/17-booking-sensitivity.png",
+      "visible_ocr_word_count": 151,
+      "visible_ocr_numeric_token_count": 29,
+      "visible_ocr_text_box_union_pct": 10.53,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Test volume and support cost together A positive zone contribution can disappear when central delivery effort is allocated. Annual contribution before central support Support changes the outcome Peak bookings / day 2.5 weekday / day 7.5 weekday / day 12.5 week",
+      "text_box_union_pct": 10.53
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 18,
+      "id": "recovery",
+      "word_count": 148,
+      "section": "Business",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Annual contribution hurdle\nAnnual net contribution required (RM thousands)\n5-year simple recovery\n7.8k\n+8.5k\nTotal RM16,300 / year\n3-year simple recovery\n7.8k\n+19.4k\nTotal RM27,167 / year\nRM81,500 initial capital; straight-line comparison, no discounting or terminal value.\nHow to close the gap\nVerify genuinely incremental visits and the associated landlord capture.\nQuantify operational savings only after staff effort is measured.\nTreat sponsorship and external contracts as separate, signed upside.\nInclude central support and any extra capital before testing the final hurdle.\nDecision: agree SDP\u2019s actual hurdle rate and investment period before presenting an NPV, IRR or claimed payback.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 85.1
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 5.26
+        },
+        {
+          "hex": "#e4e6e9",
+          "area_pct": 3.24
+        },
+        {
+          "hex": "#152942",
+          "area_pct": 3.16
+        },
+        {
+          "hex": "#8e97a5",
+          "area_pct": 1.55
+        },
+        {
+          "hex": "#c4eefa",
+          "area_pct": 0.58
+        },
+        {
+          "hex": "#f9ecd3",
+          "area_pct": 0.49
+        },
+        {
+          "hex": "#f9fbfd",
+          "area_pct": 0.18
+        },
+        {
+          "hex": "#ffffe0",
+          "area_pct": 0.17
+        },
+        {
+          "hex": "#dcfffe",
+          "area_pct": 0.16
+        }
+      ],
+      "light_neutral_pct": 93.6,
+      "saturated_surface_pct": 4.79,
+      "background_relative_foreground_pct": 6.18,
+      "edge_ink_pct": 3.17,
+      "edge_active_grid_pct": 58.33,
+      "render": "docs/deck-design-analysis/renders/consulting/18-recovery.png",
+      "visible_ocr_word_count": 147,
+      "visible_ocr_numeric_token_count": 9,
+      "visible_ocr_text_box_union_pct": 11.0,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "CAPItal recovery The base case needs additional annual net benefits of RM8.5k for five-year simple recovery. Annual contribution hurdle How to close the gap Verify genuinely incremental visits and the associated Annual net contribution required (RM thousands) ",
+      "text_box_union_pct": 11.0
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 19,
+      "id": "retention",
+      "word_count": 201,
+      "section": "Business",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 1,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Weekly visits required to close the gap\nSpend / visit\t3% capture\t5% capture\t8% capture\nRM195\t29\t17\t11\nRM260\t22\t13\t8\nRM327\t17\t11\t7\n\nRounded up. Darker cells = more than 20 visits; blue-grey = 12 or fewer. Cells share the RM8,524.60 annual net benefit gap.\n\nWorked case: RM8,524.60 \u00f7 (52 \u00d7 RM260 \u00d7 5%) = 12.61, rounded up to 13 additional visits a week.\nValidate the conversion to value\nRM195 and RM327 are recalled survey baskets, not measured KL East baskets.\nRM260 is a midpoint illustration; 3%, 5% and 8% capture rates are scenarios.\nEffective capture must reflect actual leases and ancillary net contribution.\nUse incremental visits, avoiding double counting normal parking income or existing loyalty visits.\nFormula: weekly visits = annual contribution gap \u00f7 (52 \u00d7 spend per visit \u00d7 effective mall capture).",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 76.97
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 5.3
+        },
+        {
+          "hex": "#f2f5f9",
+          "area_pct": 4.66
+        },
+        {
+          "hex": "#5e6b82",
+          "area_pct": 3.33
+        },
+        {
+          "hex": "#ecf3fc",
+          "area_pct": 3.13
+        },
+        {
+          "hex": "#d6e3ef",
+          "area_pct": 2.85
+        },
+        {
+          "hex": "#ebeff3",
+          "area_pct": 2.53
+        },
+        {
+          "hex": "#f7f6dd",
+          "area_pct": 0.64
+        },
+        {
+          "hex": "#dbfffe",
+          "area_pct": 0.3
+        },
+        {
+          "hex": "#ffffe1",
+          "area_pct": 0.2
+        }
+      ],
+      "light_neutral_pct": 92.71,
+      "saturated_surface_pct": 4.02,
+      "background_relative_foreground_pct": 7.03,
+      "edge_ink_pct": 4.02,
+      "edge_active_grid_pct": 72.22,
+      "render": "docs/deck-design-analysis/renders/consulting/19-retention.png",
+      "visible_ocr_word_count": 198,
+      "visible_ocr_numeric_token_count": 35,
+      "visible_ocr_text_box_union_pct": 10.41,
+      "visible_ocr_text_bounds_px": [
+        64,
+        57,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.33,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Retention sensitivity The five-year recovery gap requires 7-29 additional weekly visits across the illustrated capture scenarios. Validate the conversion to value Weekly visits required to close the gap Spend / visit 3% capture 5% capture 8% capture RM195 and ",
+      "text_box_union_pct": 10.41
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 20,
+      "id": "commercial",
+      "word_count": 135,
+      "section": "Business",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 1,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Accountable sponsor\nSDP mall management\n\nOwns the member proposition, pilot boundary and scale decision.\n\nParking operator\n\nAdmission, exceptions, staffing and ordinary parking settlement.\n\nDecision evidence\nOperating agreement + signed SOP\nDigital, IT & privacy\n\nInterfaces, access, deployment and processing responsibilities.\n\nDecision evidence\nAPI/SSO + data map + acceptance\nFinance & procurement\n\nInstalled scope, support allocation, capture and return hurdle.\n\nDecision evidence\nComparable quotes + investment case\nTeam and integrator: co-design, software delivery and approved site connection; suppliers confirm warranty and handover.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 75.11
+        },
+        {
+          "hex": "#f1f5fa",
+          "area_pct": 13.81
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 5.26
+        },
+        {
+          "hex": "#4e405b",
+          "area_pct": 2.77
+        },
+        {
+          "hex": "#b6bbc1",
+          "area_pct": 1.44
+        },
+        {
+          "hex": "#cdf3fa",
+          "area_pct": 0.67
+        },
+        {
+          "hex": "#f9f7e2",
+          "area_pct": 0.44
+        },
+        {
+          "hex": "#ffffe4",
+          "area_pct": 0.18
+        },
+        {
+          "hex": "#e1ffff",
+          "area_pct": 0.12
+        },
+        {
+          "hex": "#f8fbfe",
+          "area_pct": 0.09
+        }
+      ],
+      "light_neutral_pct": 94.39,
+      "saturated_surface_pct": 4.04,
+      "background_relative_foreground_pct": 5.36,
+      "edge_ink_pct": 3.24,
+      "edge_active_grid_pct": 60.42,
+      "render": "docs/deck-design-analysis/renders/consulting/20-commercial.png",
+      "visible_ocr_word_count": 136,
+      "visible_ocr_numeric_token_count": 2,
+      "visible_ocr_text_box_union_pct": 10.3,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Make ownership clear before deployment One sponsor connects the operating, technology and investment decisions. Accountable sponsor Parking operator Admission, exceptions, staffing and ordinary parking settlement. Decision evidence SDP mall management Operatin",
+      "text_box_union_pct": 10.3
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 21,
+      "id": "pilot-design",
+      "word_count": 186,
+      "section": "Implementation",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 32,
+      "body_text": "Before live\nBaseline & readiness\n\nSurvey the zone, confirm vendor access, agree member terms, label local frames and sign the measurement plan.\n\nWeeks 1\u20132\nSupervised service\n\nObserve booked arrivals, reconcile counts and test plate mismatch, stale data and support handling.\n\nWeeks 3\u20136\nControlled comparison\n\nUse matched peak windows or approved blocked/randomized policy days. Track fulfilment and idle capacity.\n\nWeeks 7\u20138\nValue & investment review\n\nReconcile paid demand, support effort and cohort value. Extend measurement if the evidence is insufficient.\n\nOperational comparison\n\nServed accepted arrivals, reconciled count drift, idle held bay-hours while demand is refused, and the cause of every failure.\n\nCommercial comparison\n\nExposed eligible members, paid conversion, matched/control revisit outcomes and complete support-adjusted cost.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 79.19
+        },
+        {
+          "hex": "#f2f5f9",
+          "area_pct": 14.25
+        },
+        {
+          "hex": "#65647e",
+          "area_pct": 1.75
+        },
+        {
+          "hex": "#9299b1",
+          "area_pct": 1.4
+        },
+        {
+          "hex": "#15345d",
+          "area_pct": 1.22
+        },
+        {
+          "hex": "#cfd9da",
+          "area_pct": 0.78
+        },
+        {
+          "hex": "#f8f6e0",
+          "area_pct": 0.52
+        },
+        {
+          "hex": "#d6f6fb",
+          "area_pct": 0.42
+        },
+        {
+          "hex": "#e1ffff",
+          "area_pct": 0.17
+        },
+        {
+          "hex": "#ffffe5",
+          "area_pct": 0.17
+        }
+      ],
+      "light_neutral_pct": 93.66,
+      "saturated_surface_pct": 4.63,
+      "background_relative_foreground_pct": 6.02,
+      "edge_ink_pct": 4.02,
+      "edge_active_grid_pct": 60.42,
+      "render": "docs/deck-design-analysis/renders/consulting/21-pilot-design.png",
+      "visible_ocr_word_count": 184,
+      "visible_ocr_numeric_token_count": 5,
+      "visible_ocr_text_box_union_pct": 12.82,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "An eight-week trial with a baseline before launch Separate service reliability from commercial uplift and define the comparison before the first paid booking. Before live Weeks 1-2 Weeks 3-6 Weeks 7-8 Baseline & readiness Supervised service Controlled comparis",
+      "text_box_union_pct": 12.82
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 22,
+      "id": "scorecard",
+      "word_count": 179,
+      "section": "Implementation",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 1,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Decision dimension\tMetric / denominator\tProposed decision rule\tOwner\nService reliability\tServed accepted arrivals \u00f7 all accepted arrivals; report confidence interval.\tAgree target and minimum observation volume; investigate every service failure.\tOperator + mall ops\nDemand\tPaid bookings \u00f7 eligible exposed members; repeat usage by cohort.\tTest RM4/RM5 willingness to pay; distinguish trial incentives from recurring demand.\tLoyalty + finance\nCapacity\tIdle protected bay-hours while demand is refused; peak occupancy.\tImprove against a valid comparator without reducing the service commitment.\tMall ops + analyst\nIncremental value\tAdditional visits and net mall capture, adjusted for cohort differences.\tClear the full-cost hurdle with credible evidence; otherwise adapt or stop.\tFinance + loyalty\nOperating readiness\tManual interventions, outages, stale counts and unresolved data exceptions.\tSigned SOP, fault drills, privacy review and auditable reconciliation.\tIT + privacy + operator",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 89.11
+        },
+        {
+          "hex": "#eaf0f7",
+          "area_pct": 4.42
+        },
+        {
+          "hex": "#1e2e4f",
+          "area_pct": 2.02
+        },
+        {
+          "hex": "#636c86",
+          "area_pct": 1.32
+        },
+        {
+          "hex": "#cde2ee",
+          "area_pct": 0.95
+        },
+        {
+          "hex": "#a9b6b7",
+          "area_pct": 0.79
+        },
+        {
+          "hex": "#fbe5bb",
+          "area_pct": 0.49
+        },
+        {
+          "hex": "#ffffdf",
+          "area_pct": 0.37
+        },
+        {
+          "hex": "#d9fffe",
+          "area_pct": 0.34
+        },
+        {
+          "hex": "#f2f8fe",
+          "area_pct": 0.1
+        }
+      ],
+      "light_neutral_pct": 93.67,
+      "saturated_surface_pct": 4.48,
+      "background_relative_foreground_pct": 6.01,
+      "edge_ink_pct": 3.85,
+      "edge_active_grid_pct": 57.64,
+      "render": "docs/deck-design-analysis/renders/consulting/22-scorecard.png",
+      "visible_ocr_word_count": 176,
+      "visible_ocr_numeric_token_count": 2,
+      "visible_ocr_text_box_union_pct": 12.27,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Pilot scorecard Agree the baseline, denominator and decision rule before the first paid booking. Decision dimension Metric / denominator Proposed decision rule Owner Service reliability Served accepted arrivals + all accepted Agree target and minimum observati",
+      "text_box_union_pct": 12.27
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 23,
+      "id": "risk",
+      "word_count": 152,
+      "section": "Implementation",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Can the operator trust the current state?\n\nVerified plate \u00b7 current counts \u00b7 live controller \u00b7 valid entitlement\n\nYes\nApply the capacity guard\n\nAdmit eligible vehicles only when the agreed promise and buffer rules pass.\n\nOwner: parking operator\nNo / uncertain\nPause new commitments\n\nUse assisted verification, preserve egress, log the incident and reconcile before restarting.\n\nOwner: operator + IT / integrator\nMember exceptions\nPublished grace, no-show, overstay and refund rules.\nData incident\nRestricted access, evidence preservation and SDP privacy escalation.\nLow paid demand\nReview scope and price with finance before expansion.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 65.63
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 10.28
+        },
+        {
+          "hex": "#112a43",
+          "area_pct": 10.24
+        },
+        {
+          "hex": "#f3f0e9",
+          "area_pct": 10.24
+        },
+        {
+          "hex": "#949dac",
+          "area_pct": 1.95
+        },
+        {
+          "hex": "#d2f3f6",
+          "area_pct": 0.78
+        },
+        {
+          "hex": "#f6f2d1",
+          "area_pct": 0.52
+        },
+        {
+          "hex": "#e3ffff",
+          "area_pct": 0.11
+        },
+        {
+          "hex": "#ffffe7",
+          "area_pct": 0.11
+        },
+        {
+          "hex": "#f8f8f9",
+          "area_pct": 0.08
+        }
+      ],
+      "light_neutral_pct": 86.32,
+      "saturated_surface_pct": 12.27,
+      "background_relative_foreground_pct": 13.51,
+      "edge_ink_pct": 3.01,
+      "edge_active_grid_pct": 51.39,
+      "render": "docs/deck-design-analysis/renders/consulting/23-risk.png",
+      "visible_ocr_word_count": 148,
+      "visible_ocr_numeric_token_count": 2,
+      "visible_ocr_text_box_union_pct": 9.37,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Design the exception path as carefully as entry The first response to uncertainty is a safe operating state and a traceable recovery process. Can the operator trust the current state? Verified plate - current counts - live controller - valid entitlement Yes No",
+      "text_box_union_pct": 9.37
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 24,
+      "id": "horizons",
+      "word_count": 142,
+      "section": "Implementation",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 1,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Validated service\nRepeatable operating system\nContracted platform\n\n0\u20136 months\n\nProve at KL East\nSurvey + local baseline\nEight-week live trial\nSOP + full-cost review\nValue gate: service and economics\n\n6\u201324 months\n\nBuild the SDP system\nQualify Elmina + KLGCC\nShared interfaces + reporting\nRepeatable support + onboarding\nRepeatability gate: approved sites\n\n24\u201360 months\n\nScale by contract\nExternal mall-group demand\nVersioned APIs + SLA\nOnboarding + support margin\nCommercial gate: signed economics\nThree wholly owned malls\n\nKL East, Elmina Lakeside and KLGCC. JV opportunities need separate rights, approvals and economics.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 79.44
+        },
+        {
+          "hex": "#f2f5f9",
+          "area_pct": 9.71
+        },
+        {
+          "hex": "#112a44",
+          "area_pct": 6.54
+        },
+        {
+          "hex": "#8e96aa",
+          "area_pct": 2.23
+        },
+        {
+          "hex": "#d9f1f8",
+          "area_pct": 0.72
+        },
+        {
+          "hex": "#fbefd8",
+          "area_pct": 0.55
+        },
+        {
+          "hex": "#d71a21",
+          "area_pct": 0.33
+        },
+        {
+          "hex": "#ffffe5",
+          "area_pct": 0.15
+        },
+        {
+          "hex": "#e2ffff",
+          "area_pct": 0.14
+        },
+        {
+          "hex": "#f8fafd",
+          "area_pct": 0.13
+        }
+      ],
+      "light_neutral_pct": 89.38,
+      "saturated_surface_pct": 9.23,
+      "background_relative_foreground_pct": 10.36,
+      "edge_ink_pct": 3.33,
+      "edge_active_grid_pct": 60.42,
+      "render": "docs/deck-design-analysis/renders/consulting/24-horizons.png",
+      "visible_ocr_word_count": 146,
+      "visible_ocr_numeric_token_count": 7,
+      "visible_ocr_text_box_union_pct": 9.35,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Scale the operating system in three horizons The next horizon begins when evidence clears the gate, rather than when a date alone is reached. Validated service Repeatable operating system Col cted platform 0-6 months 6-24 months 24-60 months Prove at KL East B",
+      "text_box_union_pct": 9.35
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 25,
+      "id": "decision",
+      "word_count": 131,
+      "section": "Implementation",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Requested now\nAuthorize discovery.\nSet the pilot up to decide.\n\nNominate a KL East sponsor and operator counterpart. Enable the site survey, integration discussions and baseline measurement.\n\nRM92k\nInitial planning subtotal\nFinal installed scope pending\nReturn with four decision inputs\nFeasible site\nZone boundary, incumbent interfaces and approved integration.\nComplete cost\nInstalled quotes, support, tax and contingency.\nReady operator\nSigned SOP, member terms and fault drills.\nCredible value test\nBaseline, cohort, measurement plan and go/adapt/stop criteria.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 70.51
+        },
+        {
+          "hex": "#102a43",
+          "area_pct": 25.48
+        },
+        {
+          "hex": "#e1e4e3",
+          "area_pct": 0.69
+        },
+        {
+          "hex": "#448ac4",
+          "area_pct": 0.56
+        },
+        {
+          "hex": "#9ecee9",
+          "area_pct": 0.55
+        },
+        {
+          "hex": "#b69283",
+          "area_pct": 0.42
+        },
+        {
+          "hex": "#4c5884",
+          "area_pct": 0.36
+        },
+        {
+          "hex": "#102a79",
+          "area_pct": 0.3
+        },
+        {
+          "hex": "#edc6a2",
+          "area_pct": 0.3
+        },
+        {
+          "hex": "#4f2a43",
+          "area_pct": 0.28
+        }
+      ],
+      "light_neutral_pct": 70.64,
+      "saturated_surface_pct": 27.89,
+      "background_relative_foreground_pct": 29.17,
+      "edge_ink_pct": 3.02,
+      "edge_active_grid_pct": 54.86,
+      "render": "docs/deck-design-analysis/renders/consulting/25-decision.png",
+      "visible_ocr_word_count": 119,
+      "visible_ocr_numeric_token_count": 3,
+      "visible_ocr_text_box_union_pct": 9.29,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Approve a bounded path to the pilot Release deployment funding once the scope and measurement plan are confirmed. Return with four decision inputs Requested now Zone boundary, incumbent interfaces and approved Authorize discovery. integration. Set the pilot up",
+      "text_box_union_pct": 9.29
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 26,
+      "id": "thanks",
+      "word_count": 26,
+      "section": "Overview",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 1,
+      "heading": null,
+      "content_height": 900,
+      "source_height": 0,
+      "body_text": "park\nflow\nThank you.\n\nTeam Hexa \u00b7 Universiti Malaya\n\nQuestions & discussion\nSupporting appendix follows.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 52.24
+        },
+        {
+          "hex": "#bac5d4",
+          "area_pct": 9.46
+        },
+        {
+          "hex": "#332925",
+          "area_pct": 7.57
+        },
+        {
+          "hex": "#c2c9d7",
+          "area_pct": 7.01
+        },
+        {
+          "hex": "#3d434a",
+          "area_pct": 6.15
+        },
+        {
+          "hex": "#171a1e",
+          "area_pct": 5.01
+        },
+        {
+          "hex": "#b1b5bb",
+          "area_pct": 4.45
+        },
+        {
+          "hex": "#6a6564",
+          "area_pct": 4.16
+        },
+        {
+          "hex": "#cbcfda",
+          "area_pct": 2.73
+        },
+        {
+          "hex": "#c2c2c9",
+          "area_pct": 1.05
+        }
+      ],
+      "light_neutral_pct": 52.29,
+      "saturated_surface_pct": 4.59,
+      "background_relative_foreground_pct": 47.67,
+      "edge_ink_pct": 3.18,
+      "edge_active_grid_pct": 48.61,
+      "render": "docs/deck-design-analysis/renders/consulting/26-thanks.png",
+      "visible_ocr_word_count": 30,
+      "visible_ocr_numeric_token_count": 0,
+      "visible_ocr_text_box_union_pct": 7.85,
+      "visible_ocr_text_bounds_px": [
+        64,
+        198,
+        1575,
+        886
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 22.0,
+        "right": 1.56,
+        "bottom": 1.56
+      },
+      "visible_ocr_text_preview": "EAST IS EPIC parkflow = KL@EAST MALL Thank you i Team Hexa - Universiti Malaya juestions & discussion Va) yy\u2019 yy\u00bb li, | it park Overview Product Evidence Business Appendix",
+      "text_box_union_pct": 7.85
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 27,
+      "id": "a-cost",
+      "word_count": 185,
+      "section": "Appendix",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 1,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Cost line\tAllowance\tBasis / validation status\tBefore commitment\nEntry / exit ANPR\tRM6,000\tLegacy installed allowance; current AAC listings show multiple price labels.\tConfirm reuse, exact model, warranty and installed quote.\nCompact LED sign\tRM4,000\tProduct option exists; the old RM2,033 price was not revalidated.\tConfirm display size, viewing distance, interfaces and installed price.\nBlind-spot cameras\tRM4,000\tCoverage-dependent allowance, not a counted site requirement.\tSurvey existing CCTV before adding cameras.\nCabling / electrical\tRM7,500\tEngineering allowance; installation distance not surveyed.\tQuote PoE, conduit, network and power works.\nSoftware integration\tRM60,000\tPrototype-to-production estimate; incumbent access not confirmed.\tDefine identity, payments, controller scope and acceptance.\nAnnual zone OPEX\tRM10,500\tHosting, messaging and upkeep allowance.\tMeasure usage; allocate support, tax and contingency separately.\nNot yet priced: zone barriers/boundary, controller/intercom changes, additional support, taxes, contingency and any extra privacy/IT deployment requirements.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 82.22
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 7.64
+        },
+        {
+          "hex": "#eaf0f7",
+          "area_pct": 3.76
+        },
+        {
+          "hex": "#394564",
+          "area_pct": 2.8
+        },
+        {
+          "hex": "#bbc9cd",
+          "area_pct": 1.36
+        },
+        {
+          "hex": "#cdf3fb",
+          "area_pct": 1.13
+        },
+        {
+          "hex": "#eaf0da",
+          "area_pct": 0.44
+        },
+        {
+          "hex": "#ffffe3",
+          "area_pct": 0.21
+        },
+        {
+          "hex": "#f8f4de",
+          "area_pct": 0.18
+        },
+        {
+          "hex": "#e0ffff",
+          "area_pct": 0.17
+        }
+      ],
+      "light_neutral_pct": 93.77,
+      "saturated_surface_pct": 4.19,
+      "background_relative_foreground_pct": 5.94,
+      "edge_ink_pct": 4.03,
+      "edge_active_grid_pct": 61.81,
+      "render": "docs/deck-design-analysis/renders/consulting/27-a-cost.png",
+      "visible_ocr_word_count": 183,
+      "visible_ocr_numeric_token_count": 11,
+      "visible_ocr_text_box_union_pct": 11.01,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Appendix / cost & scope Keep planning allowances distinct from validated supplier prices and final installed scope. Cost line Allowance Basis / validation status Before commitment Entry / exit ANPR RM6,000 Legacy installed allowance; current AAC listings show ",
+      "text_box_union_pct": 11.01
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 28,
+      "id": "a-finance",
+      "word_count": 154,
+      "section": "Appendix",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 1,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Pilot base model\nCalculation\tAnnual RM\n104 \u00d7 30 \u00d7 RM5 + 261 \u00d7 7.5 \u00d7 RM4\t23,430.00\nOperator share: 20% of booking fees\t(4,686.00)\nProcessing: 2% of booking fees\t(468.60)\nAnnual zone OPEX\t(10,500.00)\nZone operating contribution\t7,775.40\nCapital required / 5 years\t16,300.00\nAdditional net benefit required\t8,524.60\nWhat must not be mixed\nRM92k includes Year 1 running cost; RM81.5k is the upfront capital used in recovery comparisons.\nThe old RM9,360 retention target is replaced with the model-derived RM8,524.60 five-year gap.\nPartner margin uses the same annual zone OPEX; cloud-only cost is not a complete contribution margin.\nNo NPV/IRR from an older four-mall model is carried into this pilot case.\nSupport, tax, contingency and additional capital remain explicit exclusions.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 92.53
+        },
+        {
+          "hex": "#eaf0f7",
+          "area_pct": 1.9
+        },
+        {
+          "hex": "#102a4a",
+          "area_pct": 1.82
+        },
+        {
+          "hex": "#646f85",
+          "area_pct": 1.09
+        },
+        {
+          "hex": "#b8d6e7",
+          "area_pct": 1.03
+        },
+        {
+          "hex": "#fbd4a0",
+          "area_pct": 0.55
+        },
+        {
+          "hex": "#412a43",
+          "area_pct": 0.33
+        },
+        {
+          "hex": "#daffff",
+          "area_pct": 0.3
+        },
+        {
+          "hex": "#ffffdf",
+          "area_pct": 0.3
+        },
+        {
+          "hex": "#f1f0e3",
+          "area_pct": 0.06
+        }
+      ],
+      "light_neutral_pct": 94.53,
+      "saturated_surface_pct": 4.09,
+      "background_relative_foreground_pct": 5.23,
+      "edge_ink_pct": 3.15,
+      "edge_active_grid_pct": 52.78,
+      "render": "docs/deck-design-analysis/renders/consulting/28-a-finance.png",
+      "visible_ocr_word_count": 149,
+      "visible_ocr_numeric_token_count": 21,
+      "visible_ocr_text_box_union_pct": 9.77,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Appendix / model reconciliation Every sensitivity is derived from one fee, share, capital and operating-cost definition. Pilot base model What must not be mixed Calculation Annual RM RM92k includes Year 1 running cost; RM81.5k is the upfront capital 104 x 30 x",
+      "text_box_union_pct": 9.77
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 29,
+      "id": "a-partners",
+      "word_count": 153,
+      "section": "Appendix",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 1,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Sign-ups from Year 2\tYear 7 live malls\tAnnual fees in Year 7\tAnnual zone OPEX\tContribution before central costs\n0 / year\t0\tRM0\tRM0\tRM0\n2 / year\t12\tRM540,000\tRM189,000\tRM351,000\n4 / year\t24\tRM1,080,000\tRM378,000\tRM702,000\n6 / year\t36\tRM1,620,000\tRM567,000\tRM1,053,000\nTransparent assumptions\n\nSix years of additions, 1.5 zones per partner, RM45,000 annual fee and RM10,500 annual running allowance per zone. Zero churn is assumed for this illustration.\n\nBefore using as an investment case\n\nVerify signed pricing, churn, onboarding, support, hardware ownership, taxes and shared-platform allocation. These rows are annual run-rate scenarios, not cumulative cash or NPV.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 90.26
+        },
+        {
+          "hex": "#eaf0f7",
+          "area_pct": 4.2
+        },
+        {
+          "hex": "#2b3958",
+          "area_pct": 2.19
+        },
+        {
+          "hex": "#769fc1",
+          "area_pct": 1.03
+        },
+        {
+          "hex": "#c1ecf9",
+          "area_pct": 1.0
+        },
+        {
+          "hex": "#ddcbbc",
+          "area_pct": 0.54
+        },
+        {
+          "hex": "#fce7bc",
+          "area_pct": 0.27
+        },
+        {
+          "hex": "#ffffe1",
+          "area_pct": 0.2
+        },
+        {
+          "hex": "#dcfffe",
+          "area_pct": 0.17
+        },
+        {
+          "hex": "#f2f8fe",
+          "area_pct": 0.06
+        }
+      ],
+      "light_neutral_pct": 94.57,
+      "saturated_surface_pct": 3.76,
+      "background_relative_foreground_pct": 5.2,
+      "edge_ink_pct": 3.14,
+      "edge_active_grid_pct": 56.94,
+      "render": "docs/deck-design-analysis/renders/consulting/29-a-partners.png",
+      "visible_ocr_word_count": 142,
+      "visible_ocr_numeric_token_count": 28,
+      "visible_ocr_text_box_union_pct": 9.84,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Appendix / partner pace Consistent zone OPEX lowers the illustrated partner contribution to RM29,250 per mall before central costs. Sign-ups from Year 2 Year 7 live malls Annual fees in Year 7 Annual zone OPEX Contribution before central costs 0/year RMO RMO R",
+      "text_box_union_pct": 9.84
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 30,
+      "id": "a-retention",
+      "word_count": 136,
+      "section": "Appendix",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 2,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Five-year gap: RM8,524.60 / year\nSpend / visit\t3% capture\t5% capture\t8% capture\nRM195\t29\t17\t11\nRM260\t22\t13\t8\nRM327\t17\t11\t7\nThree-year gap: RM19,391.27 / year\nSpend / visit\t3% capture\t5% capture\t8% capture\nRM195\t64\t39\t24\nRM260\t48\t29\t18\nRM327\t39\t23\t15\nBoth tables: required additional weekly visits, rounded up; 52 weeks \u00d7 basket \u00d7 effective net capture. Add support costs before setting a final hurdle.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 78.96
+        },
+        {
+          "hex": "#dbe4ef",
+          "area_pct": 5.86
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 5.04
+        },
+        {
+          "hex": "#e9f0f7",
+          "area_pct": 3.99
+        },
+        {
+          "hex": "#6f7d92",
+          "area_pct": 2.44
+        },
+        {
+          "hex": "#edf3fc",
+          "area_pct": 2.35
+        },
+        {
+          "hex": "#b3e7fb",
+          "area_pct": 0.6
+        },
+        {
+          "hex": "#f5e8cb",
+          "area_pct": 0.43
+        },
+        {
+          "hex": "#e0fffe",
+          "area_pct": 0.13
+        },
+        {
+          "hex": "#ffffe5",
+          "area_pct": 0.09
+        }
+      ],
+      "light_neutral_pct": 90.42,
+      "saturated_surface_pct": 2.86,
+      "background_relative_foreground_pct": 9.45,
+      "edge_ink_pct": 3.08,
+      "edge_active_grid_pct": 60.42,
+      "render": "docs/deck-design-analysis/renders/consulting/30-a-retention.png",
+      "visible_ocr_word_count": 132,
+      "visible_ocr_numeric_token_count": 40,
+      "visible_ocr_text_box_union_pct": 7.22,
+      "visible_ocr_text_bounds_px": [
+        64,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.0,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Appendix / retention hurdles Three-year recovery needs a larger incremental visit base than the five-year comparison. Five-year gap: RM8,524.60 / year Three-year gap: RM19,391.27 / year Spend / visit 3% capture 5% capture 8% capture Spend / visit 3% capture 5%",
+      "text_box_union_pct": 7.22
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 31,
+      "id": "a-method",
+      "word_count": 183,
+      "section": "Appendix",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 1,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Experiment\tRecorded evidence\tBoundary\tNext validation\nOccupancy forecast\t48,112 forecasts; six weeks; 30 Birmingham car parks; 60-minute MAE 2.07%.\tHistorical UK data; no KL East deployment result.\tLocal holdout by time, peak events and zone; calibrate intervals and drift.\nCamera perception\t78,270 patches; cameras 6\u20139 held out; accuracy 99.05%.\tOne outdoor Italian site; 540 occupied patches called free.\tIndoor local labels, safety-critical false-free rates and count reconciliation.\nBooking policy\t1,000 synthetic busy days; forecast rule 100.0% baseline fulfilment.\tForecast-based future capacity differs from proposed hard current-capacity guard.\tReplay deployed rule; validate queue, faults, no-shows and overstays.\nStress policy\tCombined scenario: forecast policy 99.62%; fixed VIP 93.44%.\tScenario-specific assumptions; not \u201ceverything that can go wrong\u201d.\tTest wider conditions and field fault drills; report failures explicitly.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 90.62
+        },
+        {
+          "hex": "#eaf0f7",
+          "area_pct": 3.76
+        },
+        {
+          "hex": "#2d395a",
+          "area_pct": 1.86
+        },
+        {
+          "hex": "#cae2ee",
+          "area_pct": 1.11
+        },
+        {
+          "hex": "#5b95c7",
+          "area_pct": 0.86
+        },
+        {
+          "hex": "#cfad92",
+          "area_pct": 0.72
+        },
+        {
+          "hex": "#fce5ba",
+          "area_pct": 0.37
+        },
+        {
+          "hex": "#dfffff",
+          "area_pct": 0.29
+        },
+        {
+          "hex": "#ffffe2",
+          "area_pct": 0.24
+        },
+        {
+          "hex": "#faf4de",
+          "area_pct": 0.09
+        }
+      ],
+      "light_neutral_pct": 94.51,
+      "saturated_surface_pct": 3.75,
+      "background_relative_foreground_pct": 5.18,
+      "edge_ink_pct": 3.6,
+      "edge_active_grid_pct": 52.08,
+      "render": "docs/deck-design-analysis/renders/consulting/31-a-method.png",
+      "visible_ocr_word_count": 181,
+      "visible_ocr_numeric_token_count": 18,
+      "visible_ocr_text_box_union_pct": 9.97,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Appendix / technical validation Back-testing, held-out-camera testing and synthetic policy trials answer different questions. Experiment Recorded evidence Boundary Next validation Occupancy forecast 48,112 forecasts; six weeks; 30 Birmingham car Historical UK ",
+      "text_box_union_pct": 9.97
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 32,
+      "id": "a-evidence",
+      "word_count": 186,
+      "section": "Appendix",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 1,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "Claim / input\tEvidence class\tTreatment in this deck\tOutstanding deliverable\nKL East has LPR parking\tOfficial public fact\tReuse-first integration approach.\tVendor permissions and zone-level interfaces.\nHigher frequent-visitor basket\tSurvey association\tContext for cohort selection, not causal uplift.\tLocal incremental visits and net capture.\nReliable, efficient policy\tInternal simulation\tFull comparison with explicit policy boundary.\tExact deployed-rule test and live fulfilment.\nRM92k planning subtotal\tEngineering estimate\tIncomplete installed scope, not a final quote.\tSupplier scope, support allocation and contingency.\nThree-mall SDP rollout\tPortfolio fact + proposed plan\tThree wholly owned assets; each rollout gated.\tSite feasibility, authority and business case.\nExternal partner value\tIllustrative economics\tConsistent OPEX; no forecasted NPV claim.\tSigned fees, demand, onboarding, churn and support.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 90.47
+        },
+        {
+          "hex": "#eaf0f7",
+          "area_pct": 3.69
+        },
+        {
+          "hex": "#263454",
+          "area_pct": 1.85
+        },
+        {
+          "hex": "#cde1ed",
+          "area_pct": 1.22
+        },
+        {
+          "hex": "#558bbd",
+          "area_pct": 0.91
+        },
+        {
+          "hex": "#caab94",
+          "area_pct": 0.79
+        },
+        {
+          "hex": "#fce5b8",
+          "area_pct": 0.37
+        },
+        {
+          "hex": "#dfffff",
+          "area_pct": 0.29
+        },
+        {
+          "hex": "#ffffe2",
+          "area_pct": 0.22
+        },
+        {
+          "hex": "#f9f4de",
+          "area_pct": 0.08
+        }
+      ],
+      "light_neutral_pct": 94.29,
+      "saturated_surface_pct": 3.78,
+      "background_relative_foreground_pct": 5.4,
+      "edge_ink_pct": 3.53,
+      "edge_active_grid_pct": 52.08,
+      "render": "docs/deck-design-analysis/renders/consulting/32-a-evidence.png",
+      "visible_ocr_word_count": 185,
+      "visible_ocr_numeric_token_count": 9,
+      "visible_ocr_text_box_union_pct": 9.74,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Appendix / evidence & open gaps Close documentary gaps through research; close site and commercial gaps through the pilot. Claim / input Evidence class Treatment in this deck Outstanding deliverable KL East has LPR parking Official public fact Reuse-first inte",
+      "text_box_union_pct": 9.74
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 33,
+      "id": "a-sources",
+      "word_count": 266,
+      "section": "Appendix",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 16,
+      "body_text": "S1 \u00b7 KL East Mall official parking information\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS2 \u00b7 1 Utama ONECARD official FAQ\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS3 \u00b7 Sunway Pyramid official FAQ\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS4 \u00b7 Vase.ai, Malaysia Shopping Mall Report 2026 (n=500)\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS5 \u00b7 SDP Q4 FY2025 quarterly report\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS6 \u00b7 AAC current ANPR product listings\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS7 \u00b7 Viskou DS-TVL224 display product\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS8 \u00b7 Malaysia PDP official Act/guidelines index\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS9 \u00b7 CNRPark dataset, CNR institute record\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.\n\nS10 \u00b7 UCI Parking Birmingham dataset\n\nPublic source checked 7 November 2026. Scope and limitations are recorded in the evidence register.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 93.45
+        },
+        {
+          "hex": "#102a43",
+          "area_pct": 1.2
+        },
+        {
+          "hex": "#6c6b87",
+          "area_pct": 1.12
+        },
+        {
+          "hex": "#cba18b",
+          "area_pct": 0.82
+        },
+        {
+          "hex": "#b4dbf1",
+          "area_pct": 0.73
+        },
+        {
+          "hex": "#619bd1",
+          "area_pct": 0.66
+        },
+        {
+          "hex": "#e0ffff",
+          "area_pct": 0.58
+        },
+        {
+          "hex": "#f8e6cd",
+          "area_pct": 0.52
+        },
+        {
+          "hex": "#ffffe4",
+          "area_pct": 0.41
+        },
+        {
+          "hex": "#583c49",
+          "area_pct": 0.18
+        }
+      ],
+      "light_neutral_pct": 93.67,
+      "saturated_surface_pct": 4.57,
+      "background_relative_foreground_pct": 5.92,
+      "edge_ink_pct": 4.41,
+      "edge_active_grid_pct": 61.11,
+      "render": "docs/deck-design-analysis/renders/consulting/33-a-sources.png",
+      "visible_ocr_word_count": 252,
+      "visible_ocr_numeric_token_count": 35,
+      "visible_ocr_text_box_union_pct": 11.28,
+      "visible_ocr_text_bounds_px": [
+        65,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 4.06,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Appendix / public sources Primary sources support facts; they do not validate ParkFlow\u2019s untested commercial assumptions. S1- KL East Mall official parking information S6- AAC current ANPR product listings Public source checked 7 November 2026. Scope and limit",
+      "text_box_union_pct": 11.28
+    },
+    {
+      "document": "ParkFlow Consulting",
+      "page": 34,
+      "id": "a-audit",
+      "word_count": 139,
+      "section": "Appendix",
+      "overflow": [],
+      "sourceOverflow": false,
+      "tables": 0,
+      "images": 0,
+      "heading": {
+        "font": "\"Public Sans\", Arial, sans-serif",
+        "size_px": 42,
+        "x": 64,
+        "y": 48
+      },
+      "content_height": 597,
+      "source_height": 0,
+      "body_text": "Internal analysis files\nM1 \u00b7 ParkFlow shared booking economics\nM2 \u00b7 ParkFlow policy simulation, recorded output\nM3 \u00b7 ParkFlow ensemble back-test, recorded output\nM4 \u00b7 ParkFlow camera benchmark, recorded output\n\nRecorded research outputs are not independent audits. Calculation and deployment boundaries remain visible throughout.\n\nDesign and evidence record\nguidance.md: measured grid, hierarchy, palette and density ramp.\nGap register: corrections, sources and remaining site evidence.\nReference PDFs: 45 pages measured; original deck: 32 slides measured.\nOpening remains lighter; business slides use comparative exhibits and explicit decision inputs.\nPreservation: this edition has its own HTML, CSS, JavaScript and PDF. The current site-vnext deck and its assets remain unchanged.",
+      "palette_quantized": [
+        {
+          "hex": "#ffffff",
+          "area_pct": 89.06
+        },
+        {
+          "hex": "#eef3fa",
+          "area_pct": 5.26
+        },
+        {
+          "hex": "#102a49",
+          "area_pct": 1.76
+        },
+        {
+          "hex": "#768498",
+          "area_pct": 1.14
+        },
+        {
+          "hex": "#cad5d5",
+          "area_pct": 0.92
+        },
+        {
+          "hex": "#10458a",
+          "area_pct": 0.41
+        },
+        {
+          "hex": "#503d4d",
+          "area_pct": 0.39
+        },
+        {
+          "hex": "#cdf5fc",
+          "area_pct": 0.37
+        },
+        {
+          "hex": "#ffffe1",
+          "area_pct": 0.26
+        },
+        {
+          "hex": "#f7f6df",
+          "area_pct": 0.25
+        }
+      ],
+      "light_neutral_pct": 94.44,
+      "saturated_surface_pct": 4.31,
+      "background_relative_foreground_pct": 5.34,
+      "edge_ink_pct": 3.47,
+      "edge_active_grid_pct": 56.25,
+      "render": "docs/deck-design-analysis/renders/consulting/34-a-audit.png",
+      "visible_ocr_word_count": 140,
+      "visible_ocr_numeric_token_count": 7,
+      "visible_ocr_text_box_union_pct": 10.85,
+      "visible_ocr_text_bounds_px": [
+        60,
+        56,
+        1535,
+        882
+      ],
+      "visible_ocr_text_margins_pct": {
+        "left": 3.75,
+        "top": 6.22,
+        "right": 4.06,
+        "bottom": 2.0
+      },
+      "visible_ocr_text_preview": "Appendix / analysis & design record The consulting edition is isolated from the original deck and uses a documented, measurable layout system. Internal analysis files Design and evidence record . M1 - ParkFlow shared booking economics guidance.md: measured gri",
+      "text_box_union_pct": 10.85
+    }
+  ],
+  "main_table_slides": [
+    "booking-sensitivity",
+    "retention",
+    "scorecard"
+  ],
+  "image_slides": [
+    "cover",
+    "context",
+    "alternatives",
+    "service",
+    "member",
+    "operator",
+    "integration",
+    "commercial",
+    "horizons",
+    "thanks"
+  ]
+}

@@ -3,6 +3,15 @@
 Hackathon prototype for the Sime Darby Property University Hackathon.
 KL East Mall pilot concept · illustrative layout · simulated data.
 
+## Current files
+
+- [Current presentation](site-consulting/index.html) and [PDF](submission/ParkFlow-Consulting-Deck.pdf).
+- [Preserved original deck](site-vnext/index.html).
+- [Presentation build guide](presentation/README.md) and [design/evidence guidance](guidance.md).
+- [Historical presentation archive](archive/2026-11-07/README.md).
+
+Superseded drafts and exports have been archived. The prototype description below includes historical model figures; use the current presentation and shared financial model for the revised business case.
+
 At peak, nobody can count on a parking bay. KL drivers spend about 25 minutes a day hunting for parking, and 26% of
 surveyed drivers have given up a trip because of it. Malls reward their best customers with vouchers, not parking, and
 reserved VIP bays sit empty or get misused. ParkFlow adds a bookable Priority Zone of about 100 bays by the lifts at KL
@@ -111,7 +120,7 @@ python3 tools/video/assemble.py $W               # ParkFlow-demo.mp4 (captions +
 | `src/styles.css` | Design tokens (top of file) and layout |
 | `src/landing/` | Landing page (single file, Motion for animation with a Web Animations fallback) and its screenshots |
 | `analysis/` | Python scripts behind every number in the pitch deck: Monte Carlo zone and car park simulations, forecast backtest, business case. See `analysis/README.md` |
-| `submission/` | The pitch deck as one self-contained HTML file |
+| `submission/` | Current presentation PDFs; superseded exports are in `archive/2026-11-07/` |
 
 ## Design notes
 

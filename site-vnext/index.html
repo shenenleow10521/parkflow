@@ -857,6 +857,8 @@ html { scroll-snap-type: y proximity; }
 .case-callout strong { color: #654f08; }
 .case-chart-wrap { margin: 0; }
 .case-chart-wrap figcaption { margin-top: 9px; color: var(--fog); font-size: 13px; line-height: 1.35; }
+.case-source { display: block; margin-top: 5px; color: var(--fog) !important; font-size: 12px !important; line-height: 1.35 !important; }
+.case-source a { color: inherit; }
 .case-chart-wrap .case-chart { display: block; }
 .case-proof { display: grid; gap: 15px; }
 .case-proof > div { padding-bottom: 15px; border-bottom: 1px solid var(--line); }
@@ -896,6 +898,25 @@ html { scroll-snap-type: y proximity; }
 .appendix-table td { color: #344054; font-size: 12.75px; line-height: 1.3; }
 .appendix-table td:first-child { color: #111827; font-weight: 600; }
 .appendix-slide .gap-top { margin-top: 14px; }
+.partner-sensitivity { display: grid; gap: 12px; margin-top: 22px; }
+.partner-row { display: grid; grid-template-columns: 150px minmax(280px, 1fr) 185px 150px; gap: 16px; align-items: center; }
+.partner-row > b { color: #111827; font-size: 15px; }
+.partner-track { height: 42px; border-radius: 9px; background: #e9edf3; overflow: hidden; }
+.partner-bar { width: var(--bar); min-width: 2px; height: 100%; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; box-sizing: border-box; border-radius: 9px; background: linear-gradient(90deg, #294f9b, #5a83d4); color: #fff; font: 700 15px/1 var(--font-mono); }
+.partner-row:first-child .partner-bar { background: #aeb8c7; }
+.partner-metric { color: #111827; font: 700 20px/1.15 var(--font-mono); }
+.partner-metric small { display: block; margin-top: 4px; color: #667085; font: 500 12px/1.25 var(--font-sans); }
+.partner-note { display: grid; grid-template-columns: 1.15fr .85fr; gap: 18px; margin-top: 22px; }
+.partner-note > div { padding: 15px 17px; border: 1px solid var(--line); border-radius: 12px; background: #f7f9fc; color: #475467; font-size: 13px; line-height: 1.45; }
+.partner-note b { color: #111827; }
+.thank-slide { background: #07111f; color: #fff; }
+.thank-slide::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 72% 36%, rgba(79,125,222,.26), transparent 34%), radial-gradient(circle at 24% 72%, rgba(25,201,150,.12), transparent 30%); pointer-events: none; }
+.thank-slide .wrap { position: relative; min-height: 72vh; display: grid; place-content: center; text-align: center; }
+.thank-kicker { color: #72e1be; font-size: 15px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.thank-title { margin: 14px 0 10px; color: #fff; font-size: clamp(82px, 10vw, 150px); line-height: .92; letter-spacing: -.055em; }
+.thank-sub { margin: 0 auto; max-width: 42ch; color: #c7d3e3; font-size: clamp(21px, 2vw, 30px); line-height: 1.35; }
+.thank-meta { display: flex; justify-content: center; gap: 12px; margin-top: 30px; color: #91a5bd; font-size: 13px; }
+.thank-meta span { padding: 8px 12px; border: 1px solid rgba(255,255,255,.15); border-radius: 999px; }
 .evidence-key { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
 .evidence-key span { margin: 0; }
 @media (max-width: 1000px) {
@@ -1099,7 +1120,7 @@ html { scroll-snap-type: y proximity; }
 .act-money .case-headline { max-width: 26ch !important; font-size: clamp(38px, 3.9vw, 56px) !important; }
 .act-money .biz-subtitle { margin-top: 11px; }
 .appendix-slide .case-headline { max-width: 30ch !important; }
-/* Presentation reading sizes and the 19-slide edit. */
+/* Presentation reading sizes for the continuous main-deck and appendix edit. */
 .diagram-caption, .problem-implication { margin-top: 22px; font-size: 21px; line-height: 1.45; color: var(--chalk-2); }
 .problem-implication b { color: var(--chalk); }
 .result-method { font-size: 18px; line-height: 1.4; color: var(--chalk-2); }
@@ -1135,8 +1156,8 @@ html { scroll-snap-type: y proximity; }
 .horizon-label { position: absolute; width: 30%; z-index: 1; }
 .horizon-label span { display: block; color: #344054; font-size: 21px; }
 .horizon-label h3 { margin: 8px 0 0; color: #174ea6; font: 600 38px/1.1 var(--f-disp); }
-.horizon-one { left: 3%; top: 39%; }
-.horizon-two { left: 36%; top: 14%; }
+.horizon-one { left: 3%; top: 42%; }
+.horizon-two { left: 36%; top: 19%; }
 .horizon-two h3 { color: #80620a; }
 .horizon-three { left: 69%; top: 2%; }
 .horizon-three h3 { color: #087f70; }
@@ -1144,6 +1165,12 @@ html { scroll-snap-type: y proximity; }
 .horizon-decisions p { border-top: 1px solid #c6cfdb; padding-top: 15px; color: #344054; font-size: 21px; line-height: 1.4; }
 .horizon-decisions b { display: block; margin-bottom: 7px; color: #111827; font-size: 23px; }
 .horizon-caption { margin-top: 17px; color: #475467; font-size: 16px; }
+.horizon-programs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; margin-top: 18px; }
+.horizon-programs article { padding-top: 13px; border-top: 2px solid #2f6fe0; }
+.horizon-programs article:nth-child(2) { border-color: #b18100; }
+.horizon-programs article:nth-child(3) { border-color: #087f70; }
+.horizon-programs b { display: block; margin-bottom: 5px; color: #111827; font-size: 18px; }
+.horizon-programs p { margin: 0; color: #344054; font-size: 15px; line-height: 1.4; }
 .appendix-back { position: fixed; top: 14px; right: 25px; z-index: 50; background: #ffffff; color: #174ea6; border: 1px solid #c6cfdb; border-radius: 6px; padding: 9px 14px; font: 600 16px/1.2 var(--f-body); text-decoration: none; }
 @media (min-width: 900px) {
   .slide .lede, .slide .scene { font-size: 24px; line-height: 1.45; }
@@ -1170,7 +1197,7 @@ html { scroll-snap-type: y proximity; }
   #books .tickets { grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(220px, .78fr); }
 }
 @media (max-width: 899px) {
-  .control-story, .forecast-evidence, .pilot-outcomes, .horizon-decisions { grid-template-columns: 1fr; gap: 24px; }
+  .control-story, .forecast-evidence, .pilot-outcomes, .horizon-decisions, .horizon-programs { grid-template-columns: 1fr; gap: 24px; }
   .horizon-visual { height: 240px; }
   .horizon-label span { font-size: 13px; }
   .horizon-label h3 { font-size: 22px; }
@@ -1692,7 +1719,7 @@ html { scroll-padding-top: 0; }
       </article>
     </div>
     <p class="access-protection" data-a>In both modes: protect arriving bookings + a safety buffer.</p>
-    <p class="access-note" data-a>Walk-ins are members without bookings. Verified capacity controls entry. <a href="?appendix=1#appendix-access-rules">View access rules</a></p>
+    <p class="access-note" data-a>Walk-ins are members without bookings. Verified capacity controls entry. <a href="#appendix-access-rules">View access rules</a></p>
   </div>
 </section>
 
@@ -1730,7 +1757,7 @@ html { scroll-padding-top: 0; }
     <div class="case-grid gap-top">
       <figure class="case-chart-wrap" data-a>
         <img class="case-chart" src="assets/member_spend.png" width="1600" height="900" alt="Frequent Malaysian mall visitors report RM327 average spend per visit versus RM195 for occasional visitors, a 68 percent difference.">
-        <figcaption>Vase.ai Malaysia Shopping Mall Report 2026 (n = 500): average reported spend per visit.</figcaption>
+        <figcaption>Source: <a href="https://www.vase.ai/resources/insights-report/malaysia-shopping-mall-report-2026" target="_blank" rel="noopener">Vase.ai Malaysia Shopping Mall Report 2026</a> (n = 500), average self-reported spend per visit.</figcaption>
       </figure>
       <div class="case-proof" data-a>
         <div><span class="case-tag observed">Market benchmark</span><h3 class="with-icon"><img class="public-icon" src="assets/icons/users.svg" width="26" height="26" alt="">Why frequent visitors matter</h3><p>Shoppers visiting five or more times a month report RM327 per trip, compared with RM195 for occasional visitors.</p></div>
@@ -1745,15 +1772,15 @@ html { scroll-padding-top: 0; }
 <section class="slide act-money" id="costs" data-lvl="B3" data-title="Pilot Investment" aria-labelledby="cost-h">
   <div class="wrap">
     <h2 class="h2 case-headline" id="cost-h">Pilot Investment</h2>
-    <p class="case-takeaway" data-a>RM103.1k upfront plus RM10.5k annual running costs: RM113.6k in first-year funding.</p>
+    <p class="case-takeaway" data-a>RM81.5k upfront plus RM10.5k annual running costs: RM92.0k in first-year funding.</p>
     <div class="case-grid gap-top">
       <figure class="case-chart-wrap" data-a>
-        <img class="case-chart" src="assets/pilot_investment_waterfall.png" width="2400" height="1240" alt="Pilot planning envelope of RM113,640, comprising RM43,140 hardware and installation, RM60,000 production integration, and RM10,500 first-year running costs.">
-        <figcaption>Planning budget based on current vendor list prices and engineering estimates prior to final site survey quotations.</figcaption>
+        <img class="case-chart" src="assets/pilot_investment_waterfall.png" width="2400" height="1240" alt="Pilot planning envelope of RM92,000, comprising RM21,500 hardware and installation, RM60,000 production integration, and RM10,500 first-year running costs.">
+        <figcaption>Planning budget based on current Malaysian list prices and engineering estimates prior to final site survey quotations.</figcaption>
       </figure>
       <div data-a>
         <div class="case-ledger">
-          <div class="case-row"><b>RM43.1k</b><span>Zone LPR cameras, dynamic LED sign, edge AI boxes, blind-spot cameras, cabling, and installation.</span></div>
+          <div class="case-row"><b>RM21.5k</b><span>Two smart ANPR cameras, compact parking guidance display, blind-spot cameras, cabling, mounting and commissioning.<small class="case-source">Sources: <a href="https://store.aacgroup.com.my/pricelist/Hikvision_Price_List_2025.pdf" target="_blank" rel="noopener">AAC Group Hikvision Price List 2025</a>; <a href="https://viskou.my/products/outdoorledguidancedisplayds-tvl224-4-5y2rows" target="_blank" rel="noopener">Viskou Malaysia DS-TVL224 display</a>. Final installed price requires quotations.</small></span></div>
           <div class="case-row"><b>RM60.0k</b><span>One-off production build to embed booking, plate verification, and operator controls into the mall app.</span></div>
           <div class="case-row"><b>RM10.5k</b><span>First-year cloud hosting, WhatsApp/push notifications, and routine maintenance at KL East.</span></div>
         </div>
@@ -1777,7 +1804,7 @@ html { scroll-padding-top: 0; }
           <div class="case-row"><b>RM23.4k / year</b><span>Gross member booking fees at the proposed RM4 / RM5 prices.</span></div>
           <div class="case-row"><b>RM18.3k / year</b><span>SDP receipts after a proposed 20% operator share and 2% processing allowance.</span></div>
           <div class="case-row"><b>RM7.8k / year</b><span>After RM10.5k zone running costs, before central staffing and tax.</span></div>
-          <div class="case-row"><b>~13.3 years</b><span>Simple payback on RM103.1k upfront funding from booking fees alone at this steady annual demand.</span></div>
+          <div class="case-row"><b>~10.5 years</b><span>Simple payback on RM81.5k upfront funding from booking fees alone at this steady annual demand.</span></div>
         </div>
         <p class="case-callout"><strong>Pilot test:</strong> confirm paid demand and all delivery costs. Sponsorship and additional turnover rent are separate upside cases.</p>
       </div>
@@ -1790,7 +1817,7 @@ html { scroll-padding-top: 0; }
     <h2 class="h2 case-headline" id="conditions-h">Investment Conditions</h2>
     <p class="case-takeaway" data-a>Booking fees alone leave a capital-recovery gap. The pilot must test what can close it.</p>
     <div class="case-grid gap-top">
-      <figure class="case-chart-wrap" data-a><img class="case-chart" src="assets/capital_recovery_gap.png" width="2090" height="1210" alt="Booking-only annual operating contribution of RM7.8k falls short of RM20.6k needed for five-year recovery and RM34.4k for three-year recovery. Additional annual net benefits needed are RM12.9k and RM26.6k respectively."><figcaption>Illustrative simple recovery of RM103,140 upfront. Three and five years are comparison cases, not SDP's approved hurdle.</figcaption></figure>
+      <figure class="case-chart-wrap" data-a><img class="case-chart" src="assets/capital_recovery_gap.png" width="2090" height="1210" alt="Booking-only annual operating contribution of RM7.8k falls short of RM16.3k needed for five-year recovery and RM27.2k for three-year recovery. Additional annual net benefits needed are RM8.5k and RM19.4k respectively."><figcaption>Illustrative simple recovery of RM81,500 upfront. Three and five years are comparison cases, not SDP's approved hurdle.</figcaption></figure>
       <div class="investment-actions" data-a>
         <h3 class="with-icon"><img class="public-icon" src="assets/icons/credit-card.svg" width="26" height="26" alt="">Measure paid demand</h3><p>Validate booking volumes, price acceptance, refunds and settlement costs.</p>
         <h3 class="with-icon"><img class="public-icon" src="assets/icons/store.svg" width="26" height="26" alt="">Test additional net value</h3><p>Retained visits, contracted sponsorship or operating savings count only when evidenced and captured by SDP.</p>
@@ -1847,16 +1874,17 @@ html { scroll-padding-top: 0; }
   <div class="wrap">
     <h2 class="h2 case-headline" id="road-h">Three Horizons</h2>
     <figure class="horizon-visual" data-a>
-      <img src="assets/three-horizons-curves.png" width="2048" height="683" alt="Three ascending S-curves illustrate the progression from a KL East pilot to the SDP portfolio and then a potential wider platform.">
+      <img src="assets/three-horizons-roadmap.svg" width="1800" height="520" alt="Three connected maturity curves progress from the KL East lighthouse through an SDP portfolio operating system to a contracted multi-mall platform over sixty months.">
       <div class="horizon-label horizon-one"><span>Horizon 1 · Months 0–6</span><h3>Prove at KL East</h3></div>
-      <div class="horizon-label horizon-two"><span>Horizon 2 · Months 6–24</span><h3>Roll out across SDP</h3></div>
-      <div class="horizon-label horizon-three"><span>Horizon 3 · Months 24–48</span><h3>Evaluate a platform</h3></div>
+      <div class="horizon-label horizon-two"><span>Horizon 2 · Months 6–24</span><h3>Build the SDP system</h3></div>
+      <div class="horizon-label horizon-three"><span>Horizon 3 · Months 24–60</span><h3>Scale a contracted platform</h3></div>
     </figure>
-    <div class="horizon-decisions" data-a>
-      <p><b>Gate 1 · Before portfolio rollout</b>Confirm paid demand, agreed booking reliability and full-cost economics at KL East.</p>
-      <p><b>Gate 2 · Before external expansion</b>Prove repeatable delivery across qualified SDP sites before choosing platform ownership or external licensing.</p>
+    <div class="horizon-programs" data-a>
+      <article><b>Decision pack</b><p>Complete site validation, an eight-week live trial, the operating SOP and a go, adapt or stop investment decision.</p></article>
+      <article><b>Portfolio operating system</b><p>Qualify and sequence SDP sites, standardise app and operator integration, centralise service levels, and separate Melawati's JV economics.</p></article>
+      <article><b>Commercial platform</b><p>Package APIs, data governance, onboarding and support for signed managed-service or licence agreements with mall groups.</p></article>
     </div>
-    <p class="horizon-caption">Planning horizons, not revenue forecasts. Horizon 1 includes preparation, an eight-week live trial and review.</p>
+    <p class="horizon-caption">Value gate at Month 6; repeatability gate at Month 24. Planning horizons, not revenue forecasts. Sources: <a href="https://www.simedarbyproperty.com/sites/default/files/2026-02/%5BANALYST%5D%20Q4%20FY2025%20Financial%20Results%20Briefings_no_video.pdf" target="_blank" rel="noopener">SDP FY2025 results briefing</a>; <a href="https://www.simedarbyproperty.com/sites/default/files/2021-04/SDP%20Annual%20Report%202020.pdf" target="_blank" rel="noopener">Melawati Mall JV disclosure</a>.</p>
   </div>
 </section>
 
@@ -1875,16 +1903,25 @@ html { scroll-padding-top: 0; }
       </div>
       <div class="decision-budget" data-a>
         <h3>Planning funding</h3>
-        <dl><div><dt>Upfront build + hardware</dt><dd class="num">RM103.1k</dd></div><div><dt>Annual zone running cost</dt><dd class="num">RM10.5k</dd></div><div class="budget-total"><dt>First-year envelope</dt><dd class="num">RM113.6k</dd></div></dl>
+        <dl><div><dt>Upfront build + hardware</dt><dd class="num">RM81.5k</dd></div><div><dt>Annual zone running cost</dt><dd class="num">RM10.5k</dd></div><div class="budget-total"><dt>First-year envelope</dt><dd class="num">RM92.0k</dd></div></dl>
         <p>Before contingency and confirmed central support costs. An eight-week live trial sits inside Horizon 1.</p>
       </div>
     </div>
     <p class="decision-rule" data-a>Expand only when measured member demand, reliable entry and complete economics clear SDP's agreed thresholds.</p>
-    <div class="btn-row" style="margin-top:20px"><a class="btn btn-line" href="#investment-conditions">Review investment conditions</a><a class="btn btn-line" href="?appendix=1#appendix-scorecard">Supporting appendix</a></div>
+    <div class="btn-row" style="margin-top:20px"><a class="btn btn-line" href="#investment-conditions">Review investment conditions</a></div>
   </div>
 </section>
 
-<section class="slide team-slide" id="team" data-lvl="UM" data-title="Team Hexa" aria-labelledby="team-h" data-appendix="true" data-skip="true">
+<section class="slide thank-slide" id="thanks" data-title="Thank You" aria-labelledby="thanks-h">
+  <div class="wrap">
+    <p class="thank-kicker" data-a>ParkFlow · Team Hexa</p>
+    <h2 class="thank-title" id="thanks-h" data-a>Thank You</h2>
+    <p class="thank-sub" data-a>Priority parking, promised to members—and proven before it scales.</p>
+    <div class="thank-meta" data-a><span>Questions &amp; discussion</span><span>Supporting appendix follows</span></div>
+  </div>
+</section>
+
+<section class="slide team-slide" id="team" data-lvl="UM" data-title="Team Hexa" aria-labelledby="team-h">
   <div class="team-bg" aria-hidden="true">
     <div class="hexgrid"></div>
     <div class="motto">ILMU PUNCA KEMAJUAN</div>
@@ -2046,6 +2083,24 @@ html { scroll-padding-top: 0; }
   </div>
 </section>
 
+<section class="slide act-money appendix-slide" id="appendix-partner-sensitivity" data-appendix="true" data-skip="true" data-lvl="A0" data-title="Appendix · Partner Pace Sensitivity" aria-labelledby="partner-sensitivity-h">
+  <div class="wrap">
+    <p class="case-section" data-a>Appendix · Commercial sensitivity</p>
+    <h2 class="h2 case-headline" id="partner-sensitivity-h">Partner pace changes the scale case—not the pilot decision.</h2>
+    <p class="case-takeaway" data-a>Illustrative Year 7 annual partner contribution under four post-pilot sign-up rates.</p>
+    <div class="partner-sensitivity" data-a>
+      <div class="partner-row"><b>No external rollout</b><div class="partner-track"><div class="partner-bar" style="--bar:2%"></div></div><div class="partner-metric">RM0<small>annual contribution</small></div><div class="partner-metric">0<small>active partner malls</small></div></div>
+      <div class="partner-row"><b>2 malls / year</b><div class="partner-track"><div class="partner-bar" style="--bar:33%">RM459k</div></div><div class="partner-metric">RM459k<small>annual contribution</small></div><div class="partner-metric">12<small>active partner malls</small></div></div>
+      <div class="partner-row"><b>4 malls / year</b><div class="partner-track"><div class="partner-bar" style="--bar:67%">RM918k</div></div><div class="partner-metric">RM918k<small>annual contribution</small></div><div class="partner-metric">24<small>active partner malls</small></div></div>
+      <div class="partner-row"><b>6 malls / year</b><div class="partner-track"><div class="partner-bar" style="--bar:100%">RM1.38m</div></div><div class="partner-metric">RM1.38m<small>annual contribution</small></div><div class="partner-metric">36<small>active partner malls</small></div></div>
+    </div>
+    <div class="partner-note" data-a>
+      <div><b>Transparent model:</b> sign-ups begin in Year 2; Year 7 active malls equal six years of additions. Contribution is RM38,250 per mall: RM45,000 target annual fee less RM6,750 cloud/API allowance (1.5 zones × RM4,500).</div>
+      <div><b>Decision use:</b> this is a sensitivity, not a forecast. Replace fee, zone count, churn and cloud usage with signed commercial terms before any rollout investment.</div>
+    </div>
+  </div>
+</section>
+
 <section class="slide act-solution" id="kit" data-skip="true" data-lvl="B1" data-title="What we install" aria-labelledby="kit-h">
   <div class="wrap">
     <h2 class="h2 wide" id="kit-h">No sensor on every spot. A closed verification loop.</h2>
@@ -2057,7 +2112,7 @@ html { scroll-padding-top: 0; }
         <div class="panel"><svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="11" y="4" width="18" height="32" rx="4"/><path d="M17 31h6"/><path d="M15 13h10M15 18h10M15 23h6"/></svg><h4 class="h4">The mall's own app</h4><p>We add a booking button to the KL East Mall app shoppers already use.</p></div>
       </div>
     </div>
-    <div class="kit-total" data-a><span class="num"><span data-count="43140" data-sep="1">43,140</span></span><p>to set up one mall: cameras, sign, AI computers and installation.</p></div>
+    <div class="kit-total" data-a><span class="num"><span data-count="21500" data-sep="1">21,500</span></span><p>to set up one pilot zone: smart cameras, compact guidance sign, cabling and installation.</p></div>
   </div>
 </section>
 
@@ -2104,7 +2159,7 @@ html { scroll-padding-top: 0; }
   </div>
 </section>
 
-<section class="slide act-proof act-money" id="result" data-lvl="B2" data-title="The results" aria-labelledby="res-h" data-appendix="true" data-skip="true">
+<section class="slide act-proof act-money" id="result" data-lvl="B2" data-title="The results" aria-labelledby="res-h">
   <div class="wrap">
     <h2 class="h2 wide" id="res-h">100% of booked members got a bay—with 74% less idle space.</h2>
     <div class="res-grid gap-top">
@@ -2149,7 +2204,7 @@ html { scroll-padding-top: 0; }
   </div>
 </section>
 
-<section class="slide act-money appendix-slide" id="appendix-retention" data-appendix="true" data-skip="true" data-lvl="B3" data-title="Retention Sensitivity" aria-labelledby="retention-h">
+<section class="slide act-money appendix-slide" id="appendix-retention" data-lvl="B3" data-title="Retention Sensitivity" aria-labelledby="retention-h">
   <div class="wrap">
     <h2 class="h2 case-headline" id="retention-h">Retention Sensitivity</h2>
     <p class="case-takeaway" data-a>An illustrative RM9,360 annual contribution requires 7–31 additional visits a week, depending on spend and mall capture.</p>
@@ -2160,7 +2215,7 @@ html { scroll-padding-top: 0; }
       </figure>
       <div data-a>
         <div class="case-ledger">
-          <div class="case-row"><div><span class="case-tag observed">Observed</span><b>Basket size</b></div><span>Malaysian mall benchmarks place average trip spend between RM195 and RM327.</span></div>
+          <div class="case-row"><div><span class="case-tag observed">Observed</span><b>Basket size</b></div><span>Malaysian mall benchmarks place average trip spend between RM195 and RM327.<small class="case-source">Source: <a href="https://www.vase.ai/resources/insights-report/malaysia-shopping-mall-report-2026" target="_blank" rel="noopener">Vase.ai, Malaysia Shopping Mall Report 2026</a>, n = 500; self-reported spending.</small></span></div>
           <div class="case-row"><div><span class="case-tag assumed">Assumed</span><b>Mall capture</b></div><span>Modeled across a 3% to 8% effective GTO rent and ancillary capture range.</span></div>
           <div class="case-row"><div><span class="case-tag decision">Measured</span><b>Pilot uplift</b></div><span>Track net additional member visits rather than raw app clicks or reservations.</span></div>
           <div class="case-row"><div><span class="case-tag decision">Decision</span><b>Rollout gate</b></div><span>Scale across the portfolio once measured retention clears SDP's return hurdle.</span></div>
@@ -2197,14 +2252,14 @@ html { scroll-padding-top: 0; }
     <table class="appendix-table gap-top" data-a>
       <thead><tr><th>Cost item</th><th>Planning estimate</th><th>Basis of estimate</th><th>Pre-approval action</th></tr></thead>
       <tbody>
-        <tr><td>Zone LPR cameras (installed)</td><td>RM12,000</td><td>Commercial list-price estimate</td><td>Confirm B1 entry/exit sightlines and installer quote</td></tr>
-        <tr><td>Dynamic LED zone sign</td><td>RM16,300</td><td>Indicative supplier quotation</td><td>Confirm dimensions, brightness, mounting, and power feed</td></tr>
-        <tr><td>Two local edge AI boxes</td><td>RM2,340</td><td>Retail hardware pricing (Jetson Orin Nano)</td><td>Confirm comms room enclosure and thermal specs</td></tr>
-        <tr><td>Blind-spot aisle cameras</td><td>RM5,000</td><td>Provisional allowance pending site walk</td><td>Verify exact camera count during KL East B1 survey</td></tr>
+        <tr><td>Two smart ANPR cameras (installed)</td><td>RM6,000</td><td>2 × RM1,918 list price plus RM2,164 mounting and commissioning allowance<small class="case-source">Source: <a href="https://store.aacgroup.com.my/pricelist/Hikvision_Price_List_2025.pdf" target="_blank" rel="noopener">AAC Group Hikvision Price List 2025</a>, DS-TCG205-E.</small></td><td>Confirm B1 entry/exit sightlines and installer quote</td></tr>
+        <tr><td>Compact LED parking guidance display</td><td>RM4,000</td><td>RM2,033 listed display plus RM1,967 mounting, tax and commissioning allowance<small class="case-source">Source: <a href="https://viskou.my/products/outdoorledguidancedisplayds-tvl224-4-5y2rows" target="_blank" rel="noopener">Viskou Malaysia, Hikvision DS-TVL224-4-5Y</a>.</small></td><td>Confirm viewing distance, mounting, brightness and power feed</td></tr>
+        <tr><td>Separate edge AI boxes</td><td>RM0 base</td><td>Plate inference is built into the selected ANPR cameras; use existing NVR or cloud services for the bounded pilot</td><td>Add a deployment-grade edge gateway only if SDP IT or privacy review requires one</td></tr>
+        <tr><td>Blind-spot aisle cameras</td><td>RM4,000</td><td>Four-camera hardware and mounting allowance benchmarked to current Hikvision dealer pricing<small class="case-source">Source: <a href="https://store.aacgroup.com.my/pricelist/Hikvision_Price_List_2025.pdf" target="_blank" rel="noopener">AAC Group Hikvision Price List 2025</a>; exact count remains site-dependent.</small></td><td>Reuse existing CCTV coverage where suitable; verify remaining blind spots during survey</td></tr>
         <tr><td>Cabling &amp; electrical works</td><td>RM7,500</td><td>Engineering installation estimate</td><td>Obtain contractor quote for PoE runs and conduit</td></tr>
         <tr><td>Production software integration</td><td>RM60,000</td><td>Prototype-to-production engineering scope</td><td>Confirm KL East Mall app API, SSO, and DPO sign-off</td></tr>
         <tr><td>Year 1 operating &amp; cloud cost</td><td>RM10,500</td><td>Cloud hosting, messaging, and hardware upkeep</td><td>Validate message volume and support SLA with SDP IT</td></tr>
-        <tr><td>Total pilot planning envelope</td><td><strong>RM113,640</strong></td><td>Base estimate before contingency</td><td>Finalise contingency buffer once vendor quotes are in</td></tr>
+        <tr><td>Total pilot planning envelope</td><td><strong>RM92,000</strong></td><td>RM81,500 upfront plus RM10,500 Year 1 operations, before contingency</td><td>Replace allowances with binding quotations before approval</td></tr>
       </tbody>
     </table>
   </div>
@@ -2220,7 +2275,7 @@ html { scroll-padding-top: 0; }
         <tr><td>Higher spend by frequent shoppers</td><td><span class="case-tag observed">Observed</span></td><td>Vase.ai Malaysia Shopping Mall Report 2026 (n = 500)</td><td>Actual spend and revisit uplift among KL East members</td></tr>
         <tr><td>Booking reliability under stress</td><td><span class="case-tag assumed">Simulated</span></td><td>1,000 simulated busy Saturdays across 5 stress scenarios</td><td>Live B1 gate fulfilment and driver compliance rates</td></tr>
         <tr><td>60-minute occupancy forecasting</td><td><span class="case-tag assumed">Back-tested</span></td><td>48,112 forecasts tested across 30 real-world car parks</td><td>Calibration to KL East cinema and dining turnover peaks</td></tr>
-        <tr><td>RM113.6k pilot budget</td><td><span class="case-tag assumed">Costed</span></td><td>Component list prices and engineering build scope</td><td>Binding local contractor and system-integrator quotes</td></tr>
+        <tr><td>RM92.0k pilot budget</td><td><span class="case-tag assumed">Costed</span></td><td>Current Malaysian component prices and engineering build scope</td><td>Binding local contractor and system-integrator quotes</td></tr>
         <tr><td>Member retention economics</td><td><span class="case-tag decision">Pilot test</span></td><td>Weekly visit sensitivity matrix across GTO capture rates</td><td>Matched pre/post member visit frequency with SDP Loyalty</td></tr>
         <tr><td>Portfolio &amp; platform rollout</td><td><span class="case-tag decision">Stage-gated</span></td><td>Three-horizon expansion roadmap</td><td>Repeatability across Melawati, Elmina, and KLGCC malls</td></tr>
       </tbody>
@@ -2920,18 +2975,17 @@ html { scroll-padding-top: 0; }
   }
 
   // ------------------------------------------------------------ the deck
-  var appendixMode = new URLSearchParams(location.search).get('appendix') === '1';
-  if (appendixMode) {
-    doc.querySelectorAll('.slide').forEach(function (s) {
-      s.setAttribute('data-skip', s.hasAttribute('data-appendix') ? 'false' : 'true');
-    });
-    var backLink = doc.createElement('a');
-    backLink.href = location.pathname + '#close';
-    backLink.className = 'appendix-back';
-    backLink.textContent = 'Back to the 19-slide presentation';
-    doc.body.appendChild(backLink);
-    doc.title = 'ParkFlow | Supporting appendix';
+  // Main narrative, one thank-you slide, then appendix: one continuous sequence.
+  function moveBefore(id, beforeId) {
+    var node = doc.getElementById(id), before = doc.getElementById(beforeId);
+    if (node && before) before.parentNode.insertBefore(node, before);
   }
+  moveBefore('result', 'market');
+  moveBefore('appendix-retention', 'next-up');
+  moveBefore('team', 'problem');
+  doc.querySelectorAll('.slide[data-appendix]').forEach(function (s) {
+    s.setAttribute('data-skip', 'false');
+  });
   var slides = [].slice.call(doc.querySelectorAll('.slide:not([data-skip="true"])'));
   var cur = 0, busy = false;
   function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
@@ -3076,11 +3130,6 @@ html { scroll-padding-top: 0; }
     var a = e.target.closest ? e.target.closest('a[href^="#"]') : null; if (!a) return;
     var id = a.getAttribute('href').slice(1), el2 = id && doc.getElementById(id); if (!el2) return;
     var s = el2.closest('.slide') || el2, idx = slides.indexOf(s);
-    if (idx < 0 && s.classList.contains('slide')) {
-      e.preventDefault();
-      location.href = location.pathname + (s.hasAttribute('data-appendix') ? '?appendix=1' : '') + '#' + encodeURIComponent(s.id);
-      return;
-    }
     if (idx < 0) return;
     e.preventDefault(); go(idx);
   });

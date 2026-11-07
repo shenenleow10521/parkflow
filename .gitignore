@@ -7,6 +7,13 @@ dist/test-driver.html
 node_modules/
 __pycache__/
 .DS_Store
+.impeccable/
+.codex-preview/
+.pytest_cache/
+.ruff_cache/
+.env
+.env.*
+!.env.example
 dist/assets/
 dist/command.html
 dist/driver.html
@@ -15,7 +22,7 @@ dist/test-landing.html
 # simulation raw output (regenerate with: python analysis/simulate_zone_size.py)
 analysis/*.npz
 
-# submission: only the final PDF is tracked
+# submission: keep current PDF exports; HTML/PPTX intermediates stay local
 submission/*.html
 submission/*.pptx
 ~$*

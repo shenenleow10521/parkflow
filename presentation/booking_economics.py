@@ -11,7 +11,7 @@ WEEKDAY_DAYS = 261
 OPERATOR_SHARE = 0.20
 PROCESSING_SHARE = 0.02  # Allowance applied to gross booking fees.
 ANNUAL_RUNNING = 10_500
-UPFRONT = 103_140
+UPFRONT = 81_500
 
 
 def economics(peak_per_day=30, weekday_per_day=7.5):

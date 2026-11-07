@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def export(appendix=False):
-    label = "Appendix" if appendix else "19-Slide-Deck"
+    label = "Appendix" if appendix else "Main-Deck"
     target = ROOT / "submission" / f"ParkFlow-{label}.pdf"
     target.parent.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as p:
@@ -21,13 +21,19 @@ def export(appendix=False):
             device_scale_factor=2,
         )
         url = (ROOT / "site-vnext" / "index.html").as_uri()
-        page.goto(url + ("?appendix=1" if appendix else ""))
+        page.goto(url)
         page.wait_for_function("window.__pfReady === true")
         page.evaluate("document.fonts.ready")
-        page.evaluate("""() => {
+        page.evaluate("""(appendixOnly) => {
+            document.querySelectorAll('.slide').forEach(s => {
+                const inAppendix = s.hasAttribute('data-appendix');
+                const permanentlyHidden = ['who', 'solution', 'kit'].includes(s.id);
+                const shouldSkip = appendixOnly ? !inAppendix : (inAppendix || permanentlyHidden);
+                s.setAttribute('data-skip', String(shouldSkip));
+            });
             document.querySelectorAll('.slide').forEach(s => s.classList.add('shown'));
             document.querySelectorAll('img').forEach(i => i.loading = 'eager');
-        }""")
+        }""", appendix)
         page.wait_for_function("Array.from(document.images).every(i => i.complete && i.naturalWidth > 0)")
         titles = page.locator('.slide:not([data-skip="true"])').evaluate_all(
             "ss => ss.map(s => s.querySelector('h1,h2').textContent.trim().replace(/\\s+/g, ' '))"
@@ -134,7 +140,7 @@ def export_combined():
                 pdf_page.insert_link({"kind": fitz.LINK_URI, "from": link["from"], "uri": uri})
     combined.set_metadata({
         "title": "ParkFlow | Pitch Deck and Appendix",
-        "subject": "19 main slides followed by the complete supporting appendix",
+        "subject": f"{len(main_titles)} main slides followed by {len(appendix_titles)} supporting slides",
     })
     combined.save(target, garbage=3, deflate=True)
     assert len(combined) == len(main_titles) + len(appendix_titles)

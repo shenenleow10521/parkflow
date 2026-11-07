@@ -1,0 +1,6 @@
+# Preserve historical source and previously tracked exports, not local build caches.
+*/presentation/generated/
+*/presentation/render/
+*/presentation/*.pdf
+*/submission/*.html
+*/submission/*.pptx

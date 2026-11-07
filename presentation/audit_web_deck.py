@@ -1,12 +1,13 @@
-"""Render the HTML presentation and check the visible main/appendix sequences."""
+"""Render the continuous HTML presentation and check its main/appendix sequence."""
 import json
+import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT.parent / ".codex-preview" / "deck-19"
+OUT = ROOT.parent / ".codex-preview" / "deck-continuous"
 OUT.mkdir(parents=True, exist_ok=True)
 
 with sync_playwright() as p:
@@ -24,16 +25,21 @@ with sync_playwright() as p:
     }""")
     page.wait_for_timeout(400)
     ids = page.locator('.slide:not([data-skip="true"])').evaluate_all("(ss) => ss.map(s => s.id)")
-    assert len(ids) == 19, ids
+    assert len(ids) == 32, ids
+    assert ids[1] == "team"
     assert "books" in ids and "driver" in ids and "ml-stack" in ids
     assert ids.index("ml-stack") + 1 == ids.index("accuracy")
     assert ids.index("prototype") < ids.index("ml-stack")
-    assert ids.index("accuracy") + 1 == ids.index("market")
+    assert ids.index("accuracy") + 1 == ids.index("result")
+    assert ids.index("result") + 1 == ids.index("market")
     assert ids.index("market") + 1 == ids.index("costs")
     assert ids.index("money") + 1 == ids.index("investment-conditions")
+    assert ids.index("appendix-retention") + 1 == ids.index("next-up")
     assert ids.index("next-up") + 1 == ids.index("pilot-plan")
-    assert "team" not in ids and "business" not in ids
-    assert "result" not in ids and "stress-slide" not in ids
+    assert ids.index("close") + 1 == ids.index("thanks")
+    assert ids.index("thanks") + 1 == ids.index("business")
+    assert ids.index("business") + 1 == ids.index("appendix-partner-sensitivity")
+    assert "stress-slide" in ids and "appendix-access-rules" in ids
     shots = []
     for number, slide_id in enumerate(ids, 1):
         slide = page.locator("#" + slide_id)
@@ -61,28 +67,23 @@ with sync_playwright() as p:
                 parseFloat(getComputedStyle(s).paddingBottom) + 1;
         }).map(s => s.id)""")
         assert not failures, (width, height, failures)
-    page.locator("#close").scroll_into_view_if_needed()
-    page.get_by_role("link", name="Supporting appendix", exact=True).click()
-    page.wait_for_url("**?appendix=1#appendix-scorecard")
-    page.wait_for_function("window.__pfReady === true")
-    appendix = page.locator('.slide:not([data-skip="true"])').evaluate_all("(ss) => ss.map(s => s.id)")
-    assert len(appendix) == 11, appendix
-    assert "appendix-access-rules" in appendix
-    assert "result" in appendix and "stress-slide" in appendix
-    assert "team" in appendix and "business" in appendix
-    assert page.locator("#appendix-scorecard").is_visible()
-    assert abs(page.locator("#appendix-scorecard").bounding_box()["y"]) < 5
-    page.locator(".appendix-back").click()
-    page.wait_for_function("window.__pfReady === true")
-    assert page.locator("#d-tot").inner_text() == "19"
-    assert abs(page.locator("#close").bounding_box()["y"]) < 5
+    thanks_index = ids.index("thanks")
+    main = ids[:thanks_index + 1]
+    appendix = ids[thanks_index + 1:]
+    assert len(main) == 23, main
+    assert len(appendix) == 9, appendix
+    assert appendix[0] == "business"
+    assert page.locator("#d-tot").inner_text() == "32"
+    assert page.locator("#close-h").inner_text() == "Pilot Decision"
+    assert page.locator("#thanks-h").inner_text() == "Thank You"
+    assert "appendix=1" not in page.content()
     assert not errors, errors
-    report = {"main": ids, "appendix": appendix, "layout": layout, "errors": errors}
+    report = {"main": main, "appendix": appendix, "layout": layout, "errors": errors}
     print(json.dumps(report, indent=2))
     browser.close()
 
 thumb_w, thumb_h = 400, 250
-sheet = Image.new("RGB", (thumb_w * 4, thumb_h * 5), "#dce1e8")
+sheet = Image.new("RGB", (thumb_w * 4, thumb_h * math.ceil(len(shots) / 4)), "#dce1e8")
 draw = ImageDraw.Draw(sheet)
 for i, shot in enumerate(shots):
     x, y = i % 4 * thumb_w, i // 4 * thumb_h

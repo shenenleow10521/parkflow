@@ -1,19 +1,30 @@
-# ParkFlow business-case deck
+# ParkFlow presentation tools
 
-This folder generates the members-first ParkFlow business-case deck.
+The current property/product presentation is [site-consulting/index.html](../site-consulting/index.html). The preserved original presentation is [site-vnext/index.html](../site-vnext/index.html). Their assets and current PDF exports remain in place.
 
-## Build
+## Current deck
 
 ```powershell
-python -m pip install -r presentation/requirements.txt
-python presentation/build_deck.py
+python presentation/build_consulting_deck.py
+python presentation/review_consulting_deck.py
 ```
 
-Output:
+Output: [ParkFlow-Consulting-Deck.pdf](../submission/ParkFlow-Consulting-Deck.pdf).
 
-- `submission/ParkFlow-Priority-Zone-Business-Case-vNext.pptx`
+`consulting_art_direction.py` composes the individual exhibits. `booking_economics.py` supplies the shared financial model. `prepare_consulting_assets.py` refreshes the recorded official/public assets. `measure_deck_design.py` reproduces the reference measurements; [guidance.md](../guidance.md) documents the design and evidence boundaries.
 
-The financial visuals use Plotly/Kaleido and Matplotlib. The product screenshots and visual tokens come from the extracted design reference in `references/parkflow-site-v2/`.
+## Preserved original deck
+
+```powershell
+python presentation/audit_web_deck.py
+python presentation/export_html_pdf.py --with-appendix
+```
+
+Outputs: `ParkFlow-Main-Deck.pdf`, `ParkFlow-Appendix.pdf`, and `ParkFlow-Deck-With-Appendix.pdf` in `submission/`. `generate_web_charts.py` and `draw_ml_pipeline.py` remain available for its chart assets; their generation commands write to the original deck, so run them only when deliberately updating it.
+
+## Historical files
+
+The old PowerPoint generator, its snapshot/rendering directories and superseded exports are in [archive/2026-11-07](../archive/2026-11-07/). The generator retains its historical path assumptions; restore the recorded paths and companion workspace assets before running it. The archive README links to a checksum-verified move journal.
 
 ## Narrative decisions
 

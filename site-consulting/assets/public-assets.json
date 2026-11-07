@@ -1,0 +1,65 @@
+[
+  {
+    "file": "kl-east-exterior.jpg",
+    "url": "https://imagedelivery.net/TdjZsXzzZt_je48pBzV3SA/f81bbb9c-4938-4cd0-65b7-32d6765a4800/1920",
+    "source_page": "https://www.simedarbyproperty.com/malls/kleast-mall/",
+    "purpose": "Official property exterior photograph; identify the proposed pilot location.",
+    "date": "2026-11-07",
+    "sha256": "32a3fd97623f3f48f12d3339345e67f1cbf6688ac0a5ca1cbb105be45a3b60ff",
+    "bytes": 803864
+  },
+  {
+    "file": "sdp-logo.png",
+    "url": "https://www.simedarbyproperty.com/home/images/sdp-logo-coloured.png?v2",
+    "source_page": "https://www.simedarbyproperty.com/home/",
+    "purpose": "Official current organisation mark; proposal recipient, not endorsement.",
+    "date": "2026-11-07",
+    "sha256": "b4cc063b957a3dc2719f19474e031a75552fdcc0b84b65bc4ce65b0650c4fc51",
+    "bytes": 12902
+  },
+  {
+    "file": "1utama.png",
+    "url": "https://www.onecard.com.my/Files/Logos/1Utama.png",
+    "source_page": "https://www.onecard.com.my/",
+    "purpose": "Official comparator identity.",
+    "date": "2026-11-07",
+    "sha256": "aca98afee38b374844d7960381d9cebf1f316265164ee66504f54e5cb1b68a63",
+    "bytes": 14313
+  },
+  {
+    "file": "onecard.png",
+    "url": "https://www.onecard.com.my/Files/Logos/ONECARD.png",
+    "source_page": "https://www.onecard.com.my/",
+    "purpose": "Official comparator identity.",
+    "date": "2026-11-07",
+    "sha256": "7a945c16d01915f0484b6516dfb231e5e1b9ac63e01ea97fdf710d15bd47e36e",
+    "bytes": 15974
+  },
+  {
+    "file": "sunway-pyramid.png",
+    "url": "https://www.sunwaypyramid.com/static/pyramid-logopngori-1730968244654.png",
+    "source_page": "https://www.sunwaypyramid.com/",
+    "purpose": "Official comparator identity.",
+    "date": "2026-11-07",
+    "sha256": "279da394f24ca7efae357a572a65f720a48ac89e78d341840d902b18f2d3242e",
+    "bytes": 4804
+  },
+  {
+    "file": "public-sans.ttf",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/publicsans/PublicSans%5Bwght%5D.ttf",
+    "source_page": "https://github.com/uswds/public-sans",
+    "purpose": "Self-hosted variable typeface; SIL Open Font License.",
+    "date": "2026-11-07",
+    "sha256": "d75a7dc1a27eb9e336d5b33f55489d2ecb5621bf694d5c43b2415bce2ca830a8",
+    "bytes": 103316
+  },
+  {
+    "file": "public-sans-OFL.txt",
+    "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/publicsans/OFL.txt",
+    "source_page": "https://github.com/google/fonts/tree/main/ofl/publicsans",
+    "purpose": "Font licence.",
+    "date": "2026-11-07",
+    "sha256": "157a9e77f7580246e97c769490e2e977ae94399f9d30f4556015c41fe8c28bac",
+    "bytes": 4390
+  }
+]

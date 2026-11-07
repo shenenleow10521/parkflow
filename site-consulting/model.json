@@ -1,0 +1,15 @@
+{
+  "gross": 23430.0,
+  "operator": 4686.0,
+  "processing": 468.6,
+  "net": 18275.4,
+  "contribution": 7775.4000000000015,
+  "payback": 10.481775857190625,
+  "upfront": 81500,
+  "annual_zone_running": 10500,
+  "recovery_gap_5y": 8524.599999999999,
+  "recovery_gap_3y": 19391.266666666666,
+  "partner_fee_assumed": 45000,
+  "partner_zones_assumed": 1.5,
+  "partner_contribution_before_central": 29250.0
+}
