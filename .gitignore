@@ -21,6 +21,7 @@ dist/test-landing.html
 
 # simulation raw output (regenerate with: python analysis/simulate_zone_size.py)
 analysis/*.npz
+analysis/benchmark_data/
 
 # submission: keep current PDF exports; HTML/PPTX intermediates stay local
 submission/*.html
@@ -31,3 +32,7 @@ submission/*.pptx
 presentation/generated/
 presentation/render/
 presentation/*.pdf
+
+# V2 embeds its SVG exhibits; standalone chart previews are regenerated.
+site-consulting/assets/graphics-preview/
+site-consulting/assets/v2-charts/

@@ -24,6 +24,8 @@ Implementation is in `premium.css` and `presentation/consulting_art_direction.py
 
 ### Current-edition verification
 
+**V2 graphical revision, 8 November 2026:** start each slide with a short topic heading; remove the separate takeaway band and put interpretations beside their exhibit. Use the ML forecasting architecture, scatterplot, forecast lines, commercial value map, cost map, break-even curve, visit contour and task-level Gantt. Horizon curves overlap and reach different scope levels with shared junction nodes; heights are not financial projections. The final trimmed V2 has 24 main slides and 11 continuous appendix slides, with Team second and standalone Thank You before the appendix. Keep member visits/spending; move pilot measures to the appendix. Floating controls are removed. These choices supersede the V1 composition counts below for V2 only.
+
 The current build has 34 slides: 26 main (Team Hexa second, standalone Thank You last) followed continuously by 8 appendix slides. The main story uses tables only for booking-volume sensitivity, retention sensitivity and the pilot scorecard. Ten slides include real property imagery, official marks or product/concept visuals.
 
 The capability analysis combines linked question/impact boxes, a property image, asset-reuse notes and a conclusion. The financial sanity-check exhibit combines three quantitative charts, interpretations and validation boundaries. Its operating break-even calculation holds the fee mix fixed; the extra-visit scenario uses the same recovery gap as the rest of the model.

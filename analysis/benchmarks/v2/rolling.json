@@ -1,0 +1,4182 @@
+{
+  "protocol_sha256": "d7eb4154bdc20615ce64336fb086053eb6037865a1c6a6c8f1b1d9651ccb90fc",
+  "code_sha256": "7363843895fcb83de585b57cf9a28cca18203d835919ad8f3ac15b639e12a54d",
+  "data_kind": "synthetic",
+  "train_days": 160,
+  "calibration_days": 40,
+  "test_days": 60,
+  "policy_day_runs": 3500,
+  "runtime_seconds": 177.97674519999418,
+  "environment": {
+    "python": "3.12.10",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "lightgbm": "4.6.0"
+  },
+  "forecast_scores": {
+    "booking_demand": [
+      {
+        "minutes": 30,
+        "n": 1500,
+        "models": {
+          "average": {
+            "mae": 1.2735570811085684,
+            "wape": 0.5142222400169186,
+            "interval80_coverage": 0.774,
+            "half_width": 1.9736842105263157
+          },
+          "ml": {
+            "mae": 1.1985551956005753,
+            "wape": 0.4839388407539335,
+            "interval80_coverage": 0.772,
+            "half_width": 1.8073416139074538
+          }
+        }
+      },
+      {
+        "minutes": 60,
+        "n": 1440,
+        "models": {
+          "average": {
+            "mae": 2.028436202220527,
+            "wape": 0.40067875599417824,
+            "interval80_coverage": 0.7791666666666667,
+            "half_width": 3.1228070175438596
+          },
+          "ml": {
+            "mae": 1.7288539010129707,
+            "wape": 0.3415020051383646,
+            "interval80_coverage": 0.7826388888888889,
+            "half_width": 2.632073120570279
+          }
+        }
+      },
+      {
+        "minutes": 120,
+        "n": 1320,
+        "models": {
+          "average": {
+            "mae": 3.3802111504056582,
+            "wape": 0.3227632174866514,
+            "interval80_coverage": 0.8007575757575758,
+            "half_width": 5.434782608695652
+          },
+          "ml": {
+            "mae": 2.5639615962528794,
+            "wape": 0.24482272186442422,
+            "interval80_coverage": 0.8166666666666667,
+            "half_width": 4.27033089072121
+          }
+        }
+      },
+      {
+        "minutes": 180,
+        "n": 1200,
+        "models": {
+          "average": {
+            "mae": 4.748396262395119,
+            "wape": 0.29391218418910314,
+            "interval80_coverage": 0.7933333333333333,
+            "half_width": 7.37719298245614
+          },
+          "ml": {
+            "mae": 3.2699141072589604,
+            "wape": 0.20239835604842174,
+            "interval80_coverage": 0.8291666666666667,
+            "half_width": 5.63805320883402
+          }
+        }
+      }
+    ],
+    "turnover": [
+      {
+        "minutes": 15,
+        "n": 1560,
+        "models": {
+          "average": {
+            "departure_count_mae": 2.1920474779509465,
+            "interval80_coverage": 0.7871794871794872
+          },
+          "ml": {
+            "departure_count_mae": 2.0873191172235668,
+            "interval80_coverage": 0.7903846153846154
+          }
+        }
+      },
+      {
+        "minutes": 30,
+        "n": 1560,
+        "models": {
+          "average": {
+            "departure_count_mae": 2.8154516017534013,
+            "interval80_coverage": 0.8282051282051283
+          },
+          "ml": {
+            "departure_count_mae": 2.7077812483301633,
+            "interval80_coverage": 0.8217948717948718
+          }
+        }
+      }
+    ],
+    "data_kind": "synthetic only"
+  },
+  "settings": {
+    "base_100": {
+      "days": 60,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 445.81666666666666,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 44.083333333333336,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 425.55,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 84.18333333333334,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 404.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 129.525,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 434.3,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 69.64166666666667,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 445.81666666666666,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 44.083333333333336,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 3.8906101914248072,
+          "solver_latency_ms_p95": 4.806350002278729
+        },
+        "rolling_ml": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 445.81666666666666,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 44.083333333333336,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 5.043506281725012,
+          "solver_latency_ms_p95": 6.191799171210732
+        },
+        "oracle_reference": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 445.81666666666666,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 44.083333333333336,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.742343399157294,
+          "solver_latency_ms_p95": 3.455915425244408
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 20.266666666666666,
+          "ci95": [
+            18.28291666666667,
+            22.26708333333333
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -40.1,
+          "ci95": [
+            -43.958333333333336,
+            -36.249375
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 41.21666666666667,
+          "ci95": [
+            37.816250000000004,
+            44.61708333333333
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -85.44166666666666,
+          "ci95": [
+            -92.33354166666666,
+            -78.22395833333333
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "size_50_same_demand": {
+      "days": 60,
+      "capacity": 50,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 63.25,
+          "accepted": 61.6,
+          "fulfilled": 54.31666666666667,
+          "failed": 0.0,
+          "late_expired": 1.2666666666666666,
+          "no_show_expired": 6.016666666666667,
+          "valid_accepted_arrivals": 54.31666666666667,
+          "walkins": 208.78333333333333,
+          "rejected": 1.65,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 60.40833333333333,
+          "rejection_rate": 0.02183817951065691,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 63.25,
+          "accepted": 62.95,
+          "fulfilled": 55.45,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.2,
+          "valid_accepted_arrivals": 55.45,
+          "walkins": 179.88333333333333,
+          "rejected": 0.3,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 118.01666666666667,
+          "rejection_rate": 0.0036311709175788605,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 63.25,
+          "accepted": 63.2,
+          "fulfilled": 55.68333333333333,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.68333333333333,
+          "walkins": 152.13333333333333,
+          "rejected": 0.05,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 178.41666666666666,
+          "rejection_rate": 0.0005813953488372093,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 63.25,
+          "accepted": 62.983333333333334,
+          "fulfilled": 55.483333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.2,
+          "valid_accepted_arrivals": 55.483333333333334,
+          "walkins": 193.4,
+          "rejected": 0.26666666666666666,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 93.41666666666667,
+          "rejection_rate": 0.0034483958375098886,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 63.25,
+          "accepted": 61.6,
+          "fulfilled": 54.31666666666667,
+          "failed": 0.0,
+          "late_expired": 1.2666666666666666,
+          "no_show_expired": 6.016666666666667,
+          "valid_accepted_arrivals": 54.31666666666667,
+          "walkins": 208.78333333333333,
+          "rejected": 1.65,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 60.40833333333333,
+          "rejection_rate": 0.02183817951065691,
+          "solver_latency_ms_mean": 3.5644790472228096,
+          "solver_latency_ms_p95": 4.349511346760361
+        },
+        "rolling_ml": {
+          "requests": 63.25,
+          "accepted": 61.7,
+          "fulfilled": 54.4,
+          "failed": 0.0,
+          "late_expired": 1.2833333333333334,
+          "no_show_expired": 6.016666666666667,
+          "valid_accepted_arrivals": 54.4,
+          "walkins": 208.25,
+          "rejected": 1.55,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 60.9,
+          "rejection_rate": 0.020864151161616128,
+          "solver_latency_ms_mean": 4.369784752487548,
+          "solver_latency_ms_p95": 5.21551958071844
+        },
+        "oracle_reference": {
+          "requests": 63.25,
+          "accepted": 63.03333333333333,
+          "fulfilled": 55.56666666666667,
+          "failed": 0.0,
+          "late_expired": 1.2833333333333334,
+          "no_show_expired": 6.183333333333334,
+          "valid_accepted_arrivals": 55.56666666666667,
+          "walkins": 205.58333333333334,
+          "rejected": 0.21666666666666667,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 64.54166666666667,
+          "rejection_rate": 0.0025938236636128997,
+          "solver_latency_ms_mean": 2.9886352719994815,
+          "solver_latency_ms_p95": 3.7037091719685122
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.08333333333333333,
+          "ci95": [
+            -0.016666666666666666,
+            0.25
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": -0.5333333333333333,
+          "ci95": [
+            -1.05,
+            -0.1
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.49166666666666664,
+          "ci95": [
+            0.07479166666666667,
+            1.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": -1.05,
+          "ci95": [
+            -1.4333333333333333,
+            -0.7
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 28.366666666666667,
+          "ci95": [
+            27.16625,
+            29.483333333333334
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -57.11666666666667,
+          "ci95": [
+            -58.5,
+            -55.64145833333333
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": -1.2833333333333334,
+          "ci95": [
+            -1.7833333333333334,
+            -0.8333333333333334
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 56.11666666666667,
+          "ci95": [
+            54.499583333333334,
+            57.766666666666666
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -117.51666666666667,
+          "ci95": [
+            -119.40020833333334,
+            -115.55833333333334
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.08333333333333333,
+          "ci95": [
+            -0.016666666666666666,
+            0.25
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": -0.5333333333333333,
+          "ci95": [
+            -1.05,
+            -0.1
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.49166666666666664,
+          "ci95": [
+            0.07479166666666667,
+            1.0
+          ]
+        }
+      ]
+    },
+    "size_150_same_demand": {
+      "days": 60,
+      "capacity": 150,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 594.8,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.758333333333333,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 583.5,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 44.96666666666667,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 571.7166666666667,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 68.59166666666667,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 586.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 40.85,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 594.8,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.758333333333333,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 4.2011942948029635,
+          "solver_latency_ms_p95": 5.317048331198748
+        },
+        "rolling_ml": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 594.8,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.758333333333333,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 5.526538012632861,
+          "solver_latency_ms_p95": 6.907057923672255
+        },
+        "oracle_reference": {
+          "requests": 63.25,
+          "accepted": 63.25,
+          "fulfilled": 55.733333333333334,
+          "failed": 0.0,
+          "late_expired": 1.3,
+          "no_show_expired": 6.216666666666667,
+          "valid_accepted_arrivals": 55.733333333333334,
+          "walkins": 594.8,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.758333333333333,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.7900510236250757,
+          "solver_latency_ms_p95": 3.5127283292240463
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 11.3,
+          "ci95": [
+            9.449583333333333,
+            13.233333333333333
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -20.208333333333332,
+          "ci95": [
+            -23.941666666666666,
+            -16.62416666666667
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 23.083333333333332,
+          "ci95": [
+            19.6,
+            26.783749999999998
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -43.833333333333336,
+          "ci95": [
+            -51.343125,
+            -36.69979166666667
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "size_50_scaled": {
+      "days": 60,
+      "capacity": 50,
+      "demand_scale": 0.5,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 32.71666666666667,
+          "accepted": 32.63333333333333,
+          "fulfilled": 28.733333333333334,
+          "failed": 0.0,
+          "late_expired": 0.5166666666666667,
+          "no_show_expired": 3.3833333333333333,
+          "valid_accepted_arrivals": 28.733333333333334,
+          "walkins": 215.08333333333334,
+          "rejected": 0.08333333333333333,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 28.775,
+          "rejection_rate": 0.0018830037558260552,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 32.71666666666667,
+          "accepted": 32.71666666666667,
+          "fulfilled": 28.816666666666666,
+          "failed": 0.0,
+          "late_expired": 0.5166666666666667,
+          "no_show_expired": 3.3833333333333333,
+          "valid_accepted_arrivals": 28.816666666666666,
+          "walkins": 194.73333333333332,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 70.45,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 32.71666666666667,
+          "accepted": 32.71666666666667,
+          "fulfilled": 28.816666666666666,
+          "failed": 0.0,
+          "late_expired": 0.5166666666666667,
+          "no_show_expired": 3.3833333333333333,
+          "valid_accepted_arrivals": 28.816666666666666,
+          "walkins": 171.91666666666666,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 122.70833333333333,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 32.71666666666667,
+          "accepted": 32.7,
+          "fulfilled": 28.8,
+          "failed": 0.0,
+          "late_expired": 0.5166666666666667,
+          "no_show_expired": 3.3833333333333333,
+          "valid_accepted_arrivals": 28.8,
+          "walkins": 208.0,
+          "rejected": 0.016666666666666666,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 44.791666666666664,
+          "rejection_rate": 0.0003787878787878788,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 32.71666666666667,
+          "accepted": 32.63333333333333,
+          "fulfilled": 28.733333333333334,
+          "failed": 0.0,
+          "late_expired": 0.5166666666666667,
+          "no_show_expired": 3.3833333333333333,
+          "valid_accepted_arrivals": 28.733333333333334,
+          "walkins": 215.08333333333334,
+          "rejected": 0.08333333333333333,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 28.775,
+          "rejection_rate": 0.0018830037558260552,
+          "solver_latency_ms_mean": 3.4100638631677542,
+          "solver_latency_ms_p95": 4.299868742915957
+        },
+        "rolling_ml": {
+          "requests": 32.71666666666667,
+          "accepted": 32.63333333333333,
+          "fulfilled": 28.733333333333334,
+          "failed": 0.0,
+          "late_expired": 0.5166666666666667,
+          "no_show_expired": 3.3833333333333333,
+          "valid_accepted_arrivals": 28.733333333333334,
+          "walkins": 215.08333333333334,
+          "rejected": 0.08333333333333333,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 28.775,
+          "rejection_rate": 0.0018830037558260552,
+          "solver_latency_ms_mean": 4.104473976469121,
+          "solver_latency_ms_p95": 5.07679057259035
+        },
+        "oracle_reference": {
+          "requests": 32.71666666666667,
+          "accepted": 32.71666666666667,
+          "fulfilled": 28.816666666666666,
+          "failed": 0.0,
+          "late_expired": 0.5166666666666667,
+          "no_show_expired": 3.3833333333333333,
+          "valid_accepted_arrivals": 28.816666666666666,
+          "walkins": 214.76666666666668,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 28.983333333333334,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.790130331615806,
+          "solver_latency_ms_p95": 3.5797780823971457
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": -0.08333333333333333,
+          "ci95": [
+            -0.2,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 20.35,
+          "ci95": [
+            18.7,
+            22.033749999999998
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -41.675,
+          "ci95": [
+            -45.29208333333333,
+            -37.925
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": -0.08333333333333333,
+          "ci95": [
+            -0.2,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 43.166666666666664,
+          "ci95": [
+            40.29958333333333,
+            46.20083333333333
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -93.93333333333334,
+          "ci95": [
+            -100.31708333333333,
+            -87.76645833333333
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "size_150_scaled": {
+      "days": 60,
+      "capacity": 150,
+      "demand_scale": 1.5,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 93.28333333333333,
+          "accepted": 93.28333333333333,
+          "fulfilled": 82.05,
+          "failed": 0.0,
+          "late_expired": 1.7,
+          "no_show_expired": 9.533333333333333,
+          "valid_accepted_arrivals": 82.05,
+          "walkins": 676.0833333333334,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 58.24166666666667,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 93.28333333333333,
+          "accepted": 93.28333333333333,
+          "fulfilled": 82.05,
+          "failed": 0.0,
+          "late_expired": 1.7,
+          "no_show_expired": 9.533333333333333,
+          "valid_accepted_arrivals": 82.05,
+          "walkins": 656.45,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 97.14166666666667,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 93.28333333333333,
+          "accepted": 93.28333333333333,
+          "fulfilled": 82.05,
+          "failed": 0.0,
+          "late_expired": 1.7,
+          "no_show_expired": 9.533333333333333,
+          "valid_accepted_arrivals": 82.05,
+          "walkins": 635.8833333333333,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 139.05,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 93.28333333333333,
+          "accepted": 93.28333333333333,
+          "fulfilled": 82.05,
+          "failed": 0.0,
+          "late_expired": 1.7,
+          "no_show_expired": 9.533333333333333,
+          "valid_accepted_arrivals": 82.05,
+          "walkins": 659.8666666666667,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 92.88333333333334,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 93.28333333333333,
+          "accepted": 93.28333333333333,
+          "fulfilled": 82.05,
+          "failed": 0.0,
+          "late_expired": 1.7,
+          "no_show_expired": 9.533333333333333,
+          "valid_accepted_arrivals": 82.05,
+          "walkins": 676.0833333333334,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 58.24166666666667,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 4.660673140927265,
+          "solver_latency_ms_p95": 6.28701916866703
+        },
+        "rolling_ml": {
+          "requests": 93.28333333333333,
+          "accepted": 93.28333333333333,
+          "fulfilled": 82.05,
+          "failed": 0.0,
+          "late_expired": 1.7,
+          "no_show_expired": 9.533333333333333,
+          "valid_accepted_arrivals": 82.05,
+          "walkins": 676.0833333333334,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 58.24166666666667,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 6.098743653348767,
+          "solver_latency_ms_p95": 7.613715406720682
+        },
+        "oracle_reference": {
+          "requests": 93.28333333333333,
+          "accepted": 93.28333333333333,
+          "fulfilled": 82.05,
+          "failed": 0.0,
+          "late_expired": 1.7,
+          "no_show_expired": 9.533333333333333,
+          "valid_accepted_arrivals": 82.05,
+          "walkins": 676.0833333333334,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 58.24166666666667,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 3.008186924629486,
+          "solver_latency_ms_p95": 3.8256395841017365
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 19.633333333333333,
+          "ci95": [
+            17.883333333333333,
+            21.417499999999997
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -38.9,
+          "ci95": [
+            -42.550625,
+            -35.39125
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 40.2,
+          "ci95": [
+            36.96625,
+            43.5
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -80.80833333333334,
+          "ci95": [
+            -87.89395833333333,
+            -73.91458333333335
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "spike": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 105.65,
+          "accepted": 105.55,
+          "fulfilled": 93.05,
+          "failed": 0.0,
+          "late_expired": 1.55,
+          "no_show_expired": 10.95,
+          "valid_accepted_arrivals": 93.05,
+          "walkins": 445.9,
+          "rejected": 0.1,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 84.875,
+          "rejection_rate": 0.0008620689655172414,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 105.65,
+          "accepted": 105.65,
+          "fulfilled": 93.15,
+          "failed": 0.0,
+          "late_expired": 1.55,
+          "no_show_expired": 10.95,
+          "valid_accepted_arrivals": 93.15,
+          "walkins": 418.15,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 141.425,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 105.65,
+          "accepted": 105.65,
+          "fulfilled": 93.15,
+          "failed": 0.0,
+          "late_expired": 1.55,
+          "no_show_expired": 10.95,
+          "valid_accepted_arrivals": 93.15,
+          "walkins": 389.55,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 199.475,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 105.65,
+          "accepted": 105.65,
+          "fulfilled": 93.15,
+          "failed": 0.0,
+          "late_expired": 1.55,
+          "no_show_expired": 10.95,
+          "valid_accepted_arrivals": 93.15,
+          "walkins": 425.9,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 130.65,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 105.65,
+          "accepted": 105.55,
+          "fulfilled": 93.05,
+          "failed": 0.0,
+          "late_expired": 1.55,
+          "no_show_expired": 10.95,
+          "valid_accepted_arrivals": 93.05,
+          "walkins": 445.9,
+          "rejected": 0.1,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 84.875,
+          "rejection_rate": 0.0008620689655172414,
+          "solver_latency_ms_mean": 4.212757267219086,
+          "solver_latency_ms_p95": 5.093126005958766
+        },
+        "rolling_ml": {
+          "requests": 105.65,
+          "accepted": 105.55,
+          "fulfilled": 93.05,
+          "failed": 0.0,
+          "late_expired": 1.55,
+          "no_show_expired": 10.95,
+          "valid_accepted_arrivals": 93.05,
+          "walkins": 445.9,
+          "rejected": 0.1,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 84.875,
+          "rejection_rate": 0.0008620689655172414,
+          "solver_latency_ms_mean": 5.5548477844030675,
+          "solver_latency_ms_p95": 6.918953512504231
+        },
+        "oracle_reference": {
+          "requests": 105.65,
+          "accepted": 105.6,
+          "fulfilled": 93.1,
+          "failed": 0.0,
+          "late_expired": 1.55,
+          "no_show_expired": 10.95,
+          "valid_accepted_arrivals": 93.1,
+          "walkins": 445.75,
+          "rejected": 0.05,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 84.925,
+          "rejection_rate": 0.0004310344827586207,
+          "solver_latency_ms_mean": 3.068392762762065,
+          "solver_latency_ms_p95": 3.958388000901323
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": -0.1,
+          "ci95": [
+            -0.3,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 27.75,
+          "ci95": [
+            26.14875,
+            29.3
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -56.55,
+          "ci95": [
+            -58.7,
+            -53.749375
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": -0.1,
+          "ci95": [
+            -0.3,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 56.35,
+          "ci95": [
+            53.39875,
+            59.35
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -114.6,
+          "ci95": [
+            -118.325,
+            -110.525
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "long_stays": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 64.35,
+          "fulfilled": 56.75,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 56.75,
+          "walkins": 320.85,
+          "rejected": 0.45,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 53.9,
+          "rejection_rate": 0.007032076949230878,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 302.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 104.5,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 284.8,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 157.25,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 312.25,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 83.3,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 64.35,
+          "fulfilled": 56.75,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 56.75,
+          "walkins": 320.85,
+          "rejected": 0.45,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 53.9,
+          "rejection_rate": 0.007032076949230878,
+          "solver_latency_ms_mean": 4.133750029329138,
+          "solver_latency_ms_p95": 5.112544229486957
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 64.35,
+          "fulfilled": 56.75,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 56.75,
+          "walkins": 320.85,
+          "rejected": 0.45,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 53.9,
+          "rejection_rate": 0.007032076949230878,
+          "solver_latency_ms_mean": 5.439492177621174,
+          "solver_latency_ms_p95": 6.728932994301431
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 64.75,
+          "fulfilled": 57.15,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.15,
+          "walkins": 320.0,
+          "rejected": 0.05,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 54.4,
+          "rejection_rate": 0.0016129032258064516,
+          "solver_latency_ms_mean": 2.9241923985178935,
+          "solver_latency_ms_p95": 3.7462177604902536
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": -0.45,
+          "ci95": [
+            -0.85,
+            -0.15
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 18.5,
+          "ci95": [
+            16.65,
+            20.45
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -50.6,
+          "ci95": [
+            -53.8,
+            -46.574375
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": -0.45,
+          "ci95": [
+            -0.85,
+            -0.15
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 36.05,
+          "ci95": [
+            33.0,
+            38.95
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -103.35,
+          "ci95": [
+            -109.65,
+            -96.17250000000001
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "late_arrivals": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 40.7,
+          "failed": 0.0,
+          "late_expired": 17.6,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 40.7,
+          "walkins": 459.85,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 59.425,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 40.7,
+          "failed": 0.0,
+          "late_expired": 17.6,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 40.7,
+          "walkins": 438.95,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 101.575,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 40.7,
+          "failed": 0.0,
+          "late_expired": 17.6,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 40.7,
+          "walkins": 417.15,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 149.65,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 40.7,
+          "failed": 0.0,
+          "late_expired": 17.6,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 40.7,
+          "walkins": 447.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 86.35,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 40.7,
+          "failed": 0.0,
+          "late_expired": 17.6,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 40.7,
+          "walkins": 459.85,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 59.425,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 3.8613499997434424,
+          "solver_latency_ms_p95": 4.6872262508259155
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 40.7,
+          "failed": 0.0,
+          "late_expired": 17.6,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 40.7,
+          "walkins": 459.85,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 59.425,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 4.964362309860567,
+          "solver_latency_ms_p95": 6.133417505770922
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 40.7,
+          "failed": 0.0,
+          "late_expired": 17.6,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 40.7,
+          "walkins": 459.85,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 59.425,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.830295195767226,
+          "solver_latency_ms_p95": 3.6058174853678793
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 20.9,
+          "ci95": [
+            18.15,
+            23.7
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -42.15,
+          "ci95": [
+            -47.55,
+            -36.549375
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 42.7,
+          "ci95": [
+            37.35,
+            47.951249999999995
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -90.225,
+          "ci95": [
+            -100.67625,
+            -78.82187500000002
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "no_shows": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 41.65,
+          "failed": 0.0,
+          "late_expired": 0.75,
+          "no_show_expired": 22.4,
+          "valid_accepted_arrivals": 41.65,
+          "walkins": 460.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 55.775,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 41.65,
+          "failed": 0.0,
+          "late_expired": 0.75,
+          "no_show_expired": 22.4,
+          "valid_accepted_arrivals": 41.65,
+          "walkins": 439.65,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 99.175,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 41.65,
+          "failed": 0.0,
+          "late_expired": 0.75,
+          "no_show_expired": 22.4,
+          "valid_accepted_arrivals": 41.65,
+          "walkins": 419.1,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 146.25,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 41.65,
+          "failed": 0.0,
+          "late_expired": 0.75,
+          "no_show_expired": 22.4,
+          "valid_accepted_arrivals": 41.65,
+          "walkins": 448.65,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 82.2,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 41.65,
+          "failed": 0.0,
+          "late_expired": 0.75,
+          "no_show_expired": 22.4,
+          "valid_accepted_arrivals": 41.65,
+          "walkins": 460.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 55.775,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 3.910174422736207,
+          "solver_latency_ms_p95": 4.856381252466235
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 41.65,
+          "failed": 0.0,
+          "late_expired": 0.75,
+          "no_show_expired": 22.4,
+          "valid_accepted_arrivals": 41.65,
+          "walkins": 460.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 55.775,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 5.08520250060918,
+          "solver_latency_ms_p95": 6.216225007665344
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 41.65,
+          "failed": 0.0,
+          "late_expired": 0.75,
+          "no_show_expired": 22.4,
+          "valid_accepted_arrivals": 41.65,
+          "walkins": 460.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 55.775,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.821389230442807,
+          "solver_latency_ms_p95": 3.525318751053419
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 20.95,
+          "ci95": [
+            18.35,
+            23.65124999999999
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -43.4,
+          "ci95": [
+            -48.9,
+            -37.574375
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 41.5,
+          "ci95": [
+            36.698750000000004,
+            46.2
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -90.475,
+          "ci95": [
+            -100.025625,
+            -79.649375
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "forecast_bias": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 429.65,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 88.4,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 408.9,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 136.925,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 444.9,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 60.95,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 3.7691286556834642,
+          "solver_latency_ms_p95": 4.649337497539818
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 5.00805307596098,
+          "solver_latency_ms_p95": 6.153908756095916
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.6711326923060157,
+          "solver_latency_ms_p95": 3.3493150112917647
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 21.7,
+          "ci95": [
+            18.848750000000003,
+            24.7
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -42.25,
+          "ci95": [
+            -48.075625,
+            -35.975
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 42.45,
+          "ci95": [
+            37.65,
+            46.701249999999995
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -90.775,
+          "ci95": [
+            -100.15,
+            -80.39875
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "count_drift": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 421.65,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 128.4,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 403.0,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 163.0,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 383.8,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 203.85,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 412.5,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 148.725,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 421.65,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 128.4,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 3.8934634096222,
+          "solver_latency_ms_p95": 4.7761734868981875
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 421.65,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 128.4,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 5.058577042655089,
+          "solver_latency_ms_p95": 6.380227486370131
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 421.65,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 128.4,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 2.8369440929964185,
+          "solver_latency_ms_p95": 3.5715370005345903
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 18.65,
+          "ci95": [
+            15.9,
+            21.45
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -34.6,
+          "ci95": [
+            -40.300625,
+            -28.825
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 37.85,
+          "ci95": [
+            32.8,
+            42.55
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -75.45,
+          "ci95": [
+            -86.15125,
+            -64.42312500000001
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "outage": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 421.65,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 128.4,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 403.0,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 163.0,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 383.8,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 203.85,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 412.5,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 148.725,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 421.65,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 128.4,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 4.01057181879878,
+          "solver_latency_ms_p95": 4.988395994296297
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 421.65,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 128.4,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 5.1322715899335565,
+          "solver_latency_ms_p95": 6.488596739654895
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 56.8,
+          "fulfilled": 50.25,
+          "failed": 0.0,
+          "late_expired": 0.85,
+          "no_show_expired": 5.7,
+          "valid_accepted_arrivals": 50.25,
+          "walkins": 421.65,
+          "rejected": 8.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 8.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 128.4,
+          "rejection_rate": 0.12270686885322271,
+          "solver_latency_ms_mean": 2.900740233334628,
+          "solver_latency_ms_p95": 3.6240242663188837
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 18.65,
+          "ci95": [
+            15.9,
+            21.45
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -34.6,
+          "ci95": [
+            -40.300625,
+            -28.825
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 37.85,
+          "ci95": [
+            32.8,
+            42.55
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -75.45,
+          "ci95": [
+            -86.15125,
+            -64.42312500000001
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "undetected_drift": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 5.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 454.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 2.85,
+          "physical_entry_denials": 9.3,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 38.35,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 434.45,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 2.8,
+          "physical_entry_denials": 0.25,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 74.675,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 413.55,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 120.8,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 444.7,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 2.6,
+          "physical_entry_denials": 1.55,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 60.275,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 454.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 2.85,
+          "physical_entry_denials": 9.3,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 38.35,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 4.024520770046644,
+          "solver_latency_ms_p95": 4.908337496453896
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 454.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 2.85,
+          "physical_entry_denials": 9.3,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 38.35,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 5.244608077247483,
+          "solver_latency_ms_p95": 6.563480013574008
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 454.6,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 2.85,
+          "physical_entry_denials": 9.3,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 38.35,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.8662819222797857,
+          "solver_latency_ms_p95": 3.58683624654077
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 20.15,
+          "ci95": [
+            17.3,
+            23.1
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -36.325,
+          "ci95": [
+            -41.7,
+            -30.62375000000001
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 41.05,
+          "ci95": [
+            36.34875,
+            45.75
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -82.45,
+          "ci95": [
+            -92.450625,
+            -71.925
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "weight_1": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 1.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 429.65,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 88.4,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 408.9,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 136.925,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 440.4,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 72.0,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 4.132168844807893,
+          "solver_latency_ms_p95": 5.133331239630934
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 5.194953844049731,
+          "solver_latency_ms_p95": 6.394949999230448
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.864482883104267,
+          "solver_latency_ms_p95": 3.662050007551443
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 21.7,
+          "ci95": [
+            18.848750000000003,
+            24.7
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -42.25,
+          "ci95": [
+            -48.075625,
+            -35.975
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 42.45,
+          "ci95": [
+            37.65,
+            46.701249999999995
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -90.775,
+          "ci95": [
+            -100.15,
+            -80.39875
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "weight_10": {
+      "days": 20,
+      "capacity": 100,
+      "demand_scale": 1.0,
+      "member_weight": 10.0,
+      "policies": {
+        "fixed0": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed5": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 429.65,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 88.4,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "fixed10": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 408.9,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 136.925,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "reactive": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 440.4,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 72.0,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 0.0,
+          "solver_latency_ms_p95": 0.0
+        },
+        "rolling_average": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 4.289806730678089,
+          "solver_latency_ms_p95": 5.270106253738049
+        },
+        "rolling_ml": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 5.163050387636758,
+          "solver_latency_ms_p95": 6.395044989767484
+        },
+        "oracle_reference": {
+          "requests": 64.8,
+          "accepted": 64.8,
+          "fulfilled": 57.2,
+          "failed": 0.0,
+          "late_expired": 1.1,
+          "no_show_expired": 6.5,
+          "valid_accepted_arrivals": 57.2,
+          "walkins": 451.35,
+          "rejected": 0.0,
+          "physical_violations": 0.0,
+          "claim_violations": 0.0,
+          "physical_entry_denials": 0.0,
+          "fault_paused_requests": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.15,
+          "rejection_rate": 0.0,
+          "solver_latency_ms_mean": 2.9584088456781155,
+          "solver_latency_ms_p95": 3.7317312497179955
+        }
+      },
+      "paired": [
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed0",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "walkins",
+          "mean_delta": 21.7,
+          "ci95": [
+            18.848750000000003,
+            24.7
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed5",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -42.25,
+          "ci95": [
+            -48.075625,
+            -35.975
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "walkins",
+          "mean_delta": 42.45,
+          "ci95": [
+            37.65,
+            46.701249999999995
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "fixed10",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": -90.775,
+          "ci95": [
+            -100.15,
+            -80.39875
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "first": "rolling_ml",
+          "second": "rolling_average",
+          "metric": "idle_protected_bay_hours",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    }
+  },
+  "limits": [
+    "New offline 30-minute-batch research harness, not deployed application code.",
+    "Synthetic results depend on assumed arrival, request, stay and show-up distributions.",
+    "Oracle reference is not an optimal upper bound; fitted future-cohort kernels remain.",
+    "Safety assumes independently verified exact counts/ledger; undetected drift is not covered.",
+    "No causal customer, paid demand, retention or financial return validation."
+  ]
+}

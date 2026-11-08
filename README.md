@@ -5,7 +5,8 @@ KL East Mall pilot concept · illustrative layout · simulated data.
 
 ## Current files
 
-- [Current presentation](site-consulting/index.html) and [PDF](submission/ParkFlow-Consulting-Deck.pdf).
+- [Latest HTML presentation](site-consulting/index-v2.html): ML architecture, graphical exhibits and the trimmed pilot case; [benchmark results](analysis/benchmarks/decision_value/report.md) and [revision notes](site-consulting/v2-notes.md).
+- [Previous consulting edition](site-consulting/index.html) and [existing PDF](submission/ParkFlow-Consulting-Deck.pdf).
 - [Preserved original deck](site-vnext/index.html).
 - [Presentation build guide](presentation/README.md) and [design/evidence guidance](guidance.md).
 - [Historical presentation archive](archive/2026-11-07/README.md).

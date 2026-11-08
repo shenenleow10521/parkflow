@@ -1,0 +1,188 @@
+{
+  "dataset": "UCI Parking Birmingham",
+  "source": "https://archive.ics.uci.edu/dataset/482/parking+birmingham",
+  "csv_sha256": "f1e28b9c697769a1a05cd20148241b60b1a73fee4907611163efc6fd9d12770a",
+  "readings": 25358,
+  "code_sha256": "1a1a10240ca492ceb9a387c53f3372b86bbf810da6a5245667f61875363a84f0",
+  "environment": {
+    "python": "3.12.10",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "lightgbm": "4.6.0"
+  },
+  "car_parks": 28,
+  "test_forecasts": 18074,
+  "protocol": "Ceil observation availability; rolling train / blend / calibration / test weeks; horizon-specific comparisons.",
+  "limitations": [
+    "Historical UK occupancy only; no booking requests or entry/exit turnover labels.",
+    "Same car parks in train and test, not new-site validation.",
+    "Weekly pooling of interval residuals is empirical; temporal dependence limits nominal conformal guarantees.",
+    "Ceiling availability changes the sample relative to the earlier rounded-time benchmark."
+  ],
+  "metrics": [
+    {
+      "minutes": 30,
+      "n": 2832,
+      "car_parks": 28,
+      "mae_pct_capacity": {
+        "last_week": 5.41841850945824,
+        "persistence": 4.207884953453199,
+        "adjusted": 1.9762799215578621,
+        "ml": 2.42159464563288,
+        "ensemble": 1.9265609815433702
+      },
+      "interval_80_coverage": 0.7725988700564972,
+      "interval_mean_half_width_pct": 2.7566252803466718,
+      "paired_daily_mae_delta_vs_last_week_ci95": [
+        -4.705067510575687,
+        -2.7929977986000445
+      ]
+    },
+    {
+      "minutes": 60,
+      "n": 5956,
+      "car_parks": 28,
+      "mae_pct_capacity": {
+        "last_week": 5.700372184474902,
+        "persistence": 7.124353700713769,
+        "adjusted": 2.9151713134678823,
+        "ml": 3.1256207595186485,
+        "ensemble": 2.745217454290519
+      },
+      "interval_80_coverage": 0.7817327065144393,
+      "interval_mean_half_width_pct": 3.996568937553292,
+      "paired_daily_mae_delta_vs_last_week_ci95": [
+        -3.501707029705446,
+        -2.3728336314422727
+      ]
+    },
+    {
+      "minutes": 120,
+      "n": 4932,
+      "car_parks": 28,
+      "mae_pct_capacity": {
+        "last_week": 5.89903542703576,
+        "persistence": 12.962092663165576,
+        "adjusted": 3.9082436636721853,
+        "ml": 4.202978317009627,
+        "ensemble": 3.7964389029746535
+      },
+      "interval_80_coverage": 0.7909570154095702,
+      "interval_mean_half_width_pct": 5.6569438962035665,
+      "paired_daily_mae_delta_vs_last_week_ci95": [
+        -2.51266726854711,
+        -1.4360932285844044
+      ]
+    },
+    {
+      "minutes": 180,
+      "n": 4354,
+      "car_parks": 28,
+      "mae_pct_capacity": {
+        "last_week": 6.017592968276308,
+        "persistence": 17.811807178471305,
+        "adjusted": 4.55738066170965,
+        "ml": 5.022469287257107,
+        "ensemble": 4.417402605547361
+      },
+      "interval_80_coverage": 0.7983463481855765,
+      "interval_mean_half_width_pct": 6.730229086624524,
+      "paired_daily_mae_delta_vs_last_week_ci95": [
+        -2.0875337583205593,
+        -1.1229977598701608
+      ]
+    }
+  ],
+  "splits": [
+    {
+      "test_week": 4,
+      "train_end": "2016-10-24",
+      "blend_start": "2016-10-25",
+      "calibration_start": "2016-11-01",
+      "test_start": "2016-11-08",
+      "test_end": "2016-11-14",
+      "test_predictions": 2974,
+      "ml_weights": {
+        "1": 0.1411180787465887,
+        "2": 0.4016289056651694,
+        "4": 0.5983657410395421,
+        "6": 0.6445244174368276
+      }
+    },
+    {
+      "test_week": 5,
+      "train_end": "2016-10-31",
+      "blend_start": "2016-11-01",
+      "calibration_start": "2016-11-08",
+      "test_start": "2016-11-15",
+      "test_end": "2016-11-21",
+      "test_predictions": 3311,
+      "ml_weights": {
+        "1": 0.11202145323172923,
+        "2": 0.22278404088619974,
+        "4": 0.29456974388755386,
+        "6": 0.2934646165579062
+      }
+    },
+    {
+      "test_week": 6,
+      "train_end": "2016-11-07",
+      "blend_start": "2016-11-08",
+      "calibration_start": "2016-11-15",
+      "test_start": "2016-11-22",
+      "test_end": "2016-11-28",
+      "test_predictions": 3440,
+      "ml_weights": {
+        "1": 0.3722798235194834,
+        "2": 0.5191746428765533,
+        "4": 0.7484420799315993,
+        "6": 0.3825682856273071
+      }
+    },
+    {
+      "test_week": 7,
+      "train_end": "2016-11-14",
+      "blend_start": "2016-11-15",
+      "calibration_start": "2016-11-22",
+      "test_start": "2016-11-29",
+      "test_end": "2016-12-05",
+      "test_predictions": 2067,
+      "ml_weights": {
+        "1": 0.3681612141873376,
+        "2": 0.6262576005255889,
+        "4": 0.6131272126198795,
+        "6": 0.48802470822831523
+      }
+    },
+    {
+      "test_week": 8,
+      "train_end": "2016-11-21",
+      "blend_start": "2016-11-22",
+      "calibration_start": "2016-11-29",
+      "test_start": "2016-12-06",
+      "test_end": "2016-12-12",
+      "test_predictions": 3044,
+      "ml_weights": {
+        "1": 0.4054260704764411,
+        "2": 0.6563947971506718,
+        "4": 0.5482320655799874,
+        "6": 0.5074699470907983
+      }
+    },
+    {
+      "test_week": 9,
+      "train_end": "2016-11-28",
+      "blend_start": "2016-11-29",
+      "calibration_start": "2016-12-06",
+      "test_start": "2016-12-13",
+      "test_end": "2016-12-19",
+      "test_predictions": 3238,
+      "ml_weights": {
+        "1": 0.40232483170708117,
+        "2": 0.8725676925944421,
+        "4": 0.9863864302997291,
+        "6": 0.874733451502203
+      }
+    }
+  ]
+}
