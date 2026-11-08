@@ -15,7 +15,6 @@ from matplotlib import font_manager
 from matplotlib.ticker import FuncFormatter
 import numpy as np
 
-from booking_economics import economics, UPFRONT
 
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/'site-consulting'
@@ -82,32 +81,6 @@ def forecast_chart(deck=False):
     ax.legend(loc='upper left',frameon=False,ncol=3,fontsize=15 if deck else 13)
     fig.subplots_adjust(left=.09,right=.97,top=.92,bottom=.13)
     return svg(fig,'forecast-horizon-deck' if deck else 'forecast-horizon')
-
-
-def visit_contour(deck=False):
-    gap=UPFRONT/5-economics()['contribution']
-    capture=np.linspace(3,8,220);spend=np.linspace(195,327,220)
-    xx,yy=np.meshgrid(capture,spend)
-    visits=gap/(52*yy*xx/100)
-    fig,ax=plt.subplots(figsize=(14,4.6) if deck else (12.6,5.6))
-    filled=ax.contourf(xx,yy,visits,levels=[0,7,10,13,17,22,30],cmap='Blues_r')
-    contours=ax.contour(xx,yy,visits,levels=[7,10,13,17,22],colors='#ffffff',linewidths=.65)
-    labels=ax.clabel(contours,inline=True,fontsize=14 if deck else 12,colors=NAVY,fmt=lambda v:f'{v:g} visits')
-    for label in labels:
-        label.set_rotation(0)
-        label.set_bbox({'facecolor':'white','edgecolor':'none','alpha':.96,'pad':2})
-    ax.scatter([5],[260],color=BLUE,edgecolors='white',s=115,zorder=5)
-    ax.annotate('Base illustration\n13 extra visits/week',(5,260),xytext=(5.7,300),fontsize=16 if deck else 14,color=NAVY,
-                bbox={'facecolor':'white','edgecolor':'none','pad':9},arrowprops={'arrowstyle':'-','color':BLUE,'lw':1.2})
-    ax.set_xlabel('Illustrative effective mall capture',labelpad=15)
-    ax.set_ylabel('Illustrative spend per extra visit',labelpad=15)
-    ax.set_xticks([3,4,5,6,7,8],[f'{v}%' for v in [3,4,5,6,7,8]])
-    ax.set_yticks([195,220,260,300,327],[f'RM{v}' for v in [195,220,260,300,327]])
-    colorbar=fig.colorbar(filled,ax=ax,pad=.035,shrink=.88)
-    colorbar.set_label('Extra weekly visits required',labelpad=12)
-    fig.subplots_adjust(left=.11,right=.96,top=.95,bottom=.15)
-    return svg(fig,'visit-contour-deck' if deck else 'visit-contour')
-
 
 
 def horizon_curves():

@@ -1,6 +1,9 @@
 """Validate the separate V2 HTML deck without producing or changing any PDF."""
 import hashlib
 import json
+import math
+import re
+from decimal import Decimal
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
@@ -24,12 +27,54 @@ def main():
             assert (deck.parent / unquote(link.path)).resolve().exists(), link.path
         if not link.path and link.fragment:
             assert html.find(id=unquote(link.fragment)), link.fragment
-    # Independently checked annual fee flows and five-year recovery scenarios.
+    # Independently reconcile cash, capital and scenario metrics, including the
+    # two NEW zone cameras and tax on gateway fees (not on booking principal).
+    import consulting_v2_finance as finance
+    capital = Decimal(2)*Decimal(3226)+Decimal(2033)+Decimal(4000)+Decimal(7500)+Decimal(60000)
+    annual_running = Decimal(10500)
+    assert capital == 79985 and capital + annual_running == 90485
+    assert finance.LPR_COUNT == 2 and finance.LPR == 6452
     cases = html.select('#recovery tbody tr')
-    for case, contribution, gap, visits in zip(cases, ['RM1,684','RM7,775','RM13,867'],
-                                             ['RM14,616','RM8,525','RM2,433'], ['22','13','4'], strict=True):
+    for case, peak, weekday in zip(cases, [20,30,40,50], ['5','7.5','10','12.5'], strict=True):
+        gross = Decimal(104)*peak*5 + Decimal(261)*Decimal(weekday)*4
+        contribution = gross*(1-Decimal('.20')-Decimal('.018')*Decimal('1.08'))-annual_running
         values = [e.get_text(strip=True) for e in case.select('td')]
-        assert values[-3:] == [contribution, gap, visits], values
+        assert values[-3:] == [f'RM{contribution:,.0f}',f'{capital/contribution:.1f} years',f'{contribution/capital:.1%}'], values
+        actual=finance.economics(peak,float(weekday))
+        assert math.isclose(actual['contribution'],float(contribution),abs_tol=1e-8)
+        assert math.isclose(actual['net']-float(annual_running),actual['contribution'],abs_tol=1e-8)
+    cash=finance.economics()
+    assert math.isclose(cash['processing'],455.4792,abs_tol=1e-8)
+    assert math.isclose(cash['contribution'],7788.5208,abs_tol=1e-8)
+    assert math.isclose(finance.recovery_gap(5),8208.4792,abs_tol=1e-8)
+    # Independent cost/channel stress checks catch falsely attractive returns.
+    assert math.isclose(finance.economics(extra_annual=12000)['contribution'],cash['contribution']-12000,abs_tol=1e-8)
+    assert finance.economics(extra_annual=12000)['payback'] is None
+    assert math.isclose(finance.economics(route='billplz_fpx')['processing'],6854.625,abs_tol=1e-8)
+    assert finance.required_bookings(3) > finance.required_bookings(5) > finance.required_bookings()
+    assert finance.required_bookings(5,extra_annual=12000) > finance.required_bookings(5)
+    assert finance.required_bookings(5,upfront=finance.UPFRONT+10000) > finance.required_bookings(5)
+    for selector in ['#executive .budget-reference','#investment .g2-cost-envelope','#decision .decision-budget']:
+        assert 'RM90' in html.select_one(selector).get_text(), selector
+    financial_ids=['executive','investment','booking-return','booking-sensitivity','retention','decision','a-cost','a-finance','recovery']
+    for name in financial_ids:
+        slide=html.find(id=name)
+        assert slide['data-financial-model']=='v2-2026-11-09'
+        text=slide.get_text(' ',strip=True)
+        assert not any(stale in text for stale in ['RM92k','RM81,500','RM8,524','RM19,391','2% processing','Processing 2%'])
+    assert 'RM6,452' in html.find(id='a-cost').get_text()
+    assert '30/60/90' in html.find(id='scorecard').get_text()
+    assert '100%' in html.find(id='member-value').get_text()
+    # Unsupported visit/capture sensitivity must be absent from BOTH sections.
+    assert not html.find(id='a-retention')
+    assert not hasattr(finance,'weekly_visits') and not hasattr(finance,'CAPTURE_ILLUSTRATION')
+    assert finance.MARGINAL_VISIT_VALUE is None and finance.VISIT_LIFT_PER_MEMBER_MONTH is None
+    all_text=html.get_text(' ',strip=True)
+    assert not re.search(r'RM13(?![\d,.])|13\s+(?:extra|additional|visits)|\b[2358]%\s+(?:capture|net capture|effective capture)|extra visits / week',all_text,re.I)
+    assert len(html.select('#retention .g2-growth-levers>article'))==3
+    assert html.select_one('#retention a[href="https://doi.org/10.1086/500480"]')
+    assert html.select_one('#retention a[href="https://doi.org/10.1016/j.jretai.2021.08.001"]')
+    assert 'No retention cash uplift is included' in html.find(id='retention').get_text()
     assert not html.select('.takeaway,.controls'), 'Topic-led V2 must not retain the old takeaway band or floating controls'
     assert html.select_one('#pilot-design svg') and html.select_one('#horizons svg')
     assert html.select_one('script[src="v2.js"]')
@@ -43,7 +88,7 @@ def main():
         page.goto(url)
         page.wait_for_function('window.__consultingReady === true')
         ids = page.locator('section.slide').evaluate_all('ss => ss.map(s => s.id)')
-        assert len(ids) == 35 and len(set(ids)) == 35 and ids[1] == 'team', ids
+        assert len(ids) == 34 and len(set(ids)) == 34 and ids[1] == 'team', ids
         assert ids.index('thanks')==23, '24 main slides including standalone Thank You'
         assert ids[10:13]==['ml-stack','forecast','simulation'], 'Architecture precedes prediction and operating results'
         assert 'member-value' in ids[:ids.index('thanks')], 'Retain the former slide 13'

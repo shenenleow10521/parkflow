@@ -15,6 +15,7 @@ import build_consulting_deck as base
 from consulting_art_direction import detail_list, wordmark
 from consulting_v2_benchmarks import apply_completed_benchmarks
 from consulting_v2_layout import apply_graphical_revision
+from consulting_v2_financial_slides import apply_financial_revision
 
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/'site-consulting'
@@ -104,18 +105,8 @@ def build():
     must_be_true=add_slide('must-be-true','What must be true for ParkFlow to succeed?','An explicit hypothesis register connects the innovation argument to the business decision.',truths,'Sources: official comparator programmes, '+source_vase+', '+source_history+' and '+source_model+'. All five hypotheses require local validation; no optimizer or retention uplift is claimed.')
     soup.find(id='investment').insert_before(must_be_true)
 
-    # Three demand cases are calculated from the same existing fee/share/OPEX model.
-    cases=[]
-    for name,peak,weekday in [('Conservative',20,5),('Base',30,7.5),('Higher demand',40,10)]:
-        model=base.economics(peak,weekday)
-        visits=math.ceil(max(0,base.UPFRONT/5-model['contribution'])/(52*260*.05))
-        cases.append((name,peak,weekday,model,visits))
-    scenarios='<div class="v2-scenarios">'+''.join(f'<article><span>{name}</span><h3>{base.money(m["contribution"])}<small>annual contribution before central costs</small></h3><dl><div><dt>Peak bookings/day</dt><dd>{peak:g}</dd></div><div><dt>Weekday bookings/day</dt><dd>{weekday:g}</dd></div><div><dt>5-year annual value gap</dt><dd>{base.money(max(0,base.UPFRONT/5-m["contribution"]))}</dd></div><div><dt>Extra visits/week*</dt><dd>{visits}</dd></div></dl></article>' for name,peak,weekday,m,visits in cases)+'</div><div class="v2-cost-pressure"><h3>Full-cost correction</h3><p>Every additional RM12,000 of annual support reduces each contribution by RM12,000. Omitted installation cost, tax or a lower marginal capture rate increases the required visit uplift.</p></div>'
-    change('booking-sensitivity',title='Stress paid demand and the full-cost boundary',takeaway='Three transparent volume cases replace a single forecast; the installed scope and annual support still need quotations.',body=scenarios,note='Source: '+source_model+'. Scenarios only; same RM4/RM5 fees, 20% operator + 2% processing shares, RM10,500 OPEX and RM81,500 capital. *RM260 basket × 5% capture are unverified illustrations.')
-    change('recovery',title='Capital recovery needs verified incremental value')
-    change('sanity-checks',takeaway='The 13-visit bridge is a scenario: both genuinely extra visits and RM13 of net value per visit still need proof.')
-    change('retention',takeaway='Under the illustrated five-year model, the gap needs 7–29 extra weekly visits; bookings are not a substitute for causal visit measurement.')
-    replace_html(soup.select_one('#retention .cols>.col:last-child ul'),base.bullets(['Validate the marginal net benefit of an extra visit with SDP Finance; tenant spend is not landlord profit.','RM260 × 5% = RM13 is a scenario, not an approved lease capture estimate.','Measure visits attributable to the service, excluding members who would have visited anyway.','Add central support, omitted installation and tax before setting the final investment hurdle.']))
+    # Financial exhibits and sourced retention strategy are applied by the
+    # V2 financial pass; no basket/capture visit sensitivity is generated here.
 
     plan=[('Weeks 1–2','Baseline & price discovery','Record arrivals, occupancy, stays, member visits and parking pain. Test offer conversion across the proposed price arms.'),('Weeks 3–4','Conservative reservations','Launch a fixed-buffer policy after readiness checks. Record fulfilment, no-shows, exceptions and actual delivery effort.'),('Weeks 5–6','Shadow the optimizer','Replay the rolling policy against observed events first. Activate only after safety and operator acceptance criteria pass.'),('Weeks 7–8','Commercial evaluation','Compare member visits with a suitable control cohort, reconcile net capture and cost, and decide whether follow-up is needed.')]
     pilot='<div class="pilot-timeline">'+''.join(f'<article><span>{period}</span><h3>{title}</h3><p>{text}</p></article>' for period,title,text in plan)+'</div><div class="test-design"><div><h3>AI versus fixed rules</h3><p>Predefine comparisons, safety checks and the main operating outcome. Use paired event streams and shadow mode before approved live switching.</p></div><div><h3>Visits versus bookings</h3><p>Separate price-dependent uptake from incremental visits. Eight weeks can test feasibility; convincing retention uplift may require longer follow-up.</p></div></div>'
@@ -139,6 +130,7 @@ def build():
 
     apply_completed_benchmarks(soup)
     apply_graphical_revision(soup)
+    apply_financial_revision(soup)
     # Rebuild section navigation and numbering after the editorial insertions.
     slides=soup.select('section.slide')
     for index,slide in enumerate(slides,1):

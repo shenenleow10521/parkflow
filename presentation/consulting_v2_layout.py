@@ -200,7 +200,7 @@ def apply_graphical_revision(soup):
     # Graphs are rebuilt from recorded outputs; no model fitting or PDF export.
     result=json.loads((BENCH/'results.json').read_text())
     assert not result['quick_development_run']
-    scatter=graphics.outcomes(result,deck=True);forecast=graphics.forecast_chart(deck=True);contour=graphics.visit_contour(deck=True)
+    scatter=graphics.outcomes(result,deck=True);forecast=graphics.forecast_chart(deck=True)
     horizons=graphics.horizon_curves()
     put(soup.select_one('#cover h1'),'Member parking<br>at KL East Mall')
     put(soup.select_one('#cover .cover-context'),'ParkFlow · pilot proposal')
@@ -232,20 +232,14 @@ def apply_graphical_revision(soup):
     body(soup,'investment',cost,'Sources: '+MODEL+' and linked supplier/product references in Cost details. All figures are planning allowances; final installed price, reuse and supplier scope are not confirmed.')
     body(soup,'booking-sensitivity',plot(booking_curve(),cls='g2-breakeven')+'<div class="g2-result-notes"><p><b>Model boundary:</b> same RM4/RM5 fee mix, shares and RM10.5k zone running allowance across the line.</p><p><b>Capital recovery:</b> all three volume cases remain below the five-year booking-only reference before central support, tax and omitted scope.</p></div>',
          'Source: '+MODEL+'. Five-year reference is RM81,500 / 5, not an SDP-approved hurdle. These are demand scenarios, not forecasts. Annual support and additional capital raise the required return.')
-    scenarios=[]
-    for label,peak,weekday in [('Conservative',20,5),('Base',30,7.5),('Higher demand',40,10)]:
-        r=base.economics(peak,weekday);gap=max(0,base.UPFRONT/5-r['contribution']);visits=math.ceil(gap/(52*260*.05))
-        scenarios.append([label,f'{peak:g} / {weekday:g}',base.money(r['contribution']),base.money(gap),str(visits)])
-    body(soup,'recovery',base.table(['Demand case','Peak / weekday bookings','Annual contribution','Five-year annual gap','Extra visits / week*'],scenarios,[20,23,20,20,17])+base.strip('<b>Base case:</b> annual net benefit gap is RM8,524.60 for five-year simple recovery, or RM19,391.27 for three years. *Visits assume RM260 × 5% net capture; these inputs remain illustrative.'),
-         'Source: '+MODEL+'. Capital RM81,500; zone OPEX RM10,500/year. Before central support, tax and extra capital. Five/three years are comparison periods, not approved investment thresholds.')
     # These calculations remain available after Thank You rather than repeating
     # the same recovery gap on three consecutive main slides.
     anchor=soup.find(id='a-finance')
     for id in ['sanity-checks','recovery']:
         slide=soup.find(id=id);slide['data-section']='Appendix';slide['data-appendix']='true'
         slide.extract();anchor.insert_after(slide);anchor=slide
-    body(soup,'retention',plot(contour,cls='g2-contour')+'<p class="g2-bottom-note">The highlighted case is illustrative: RM260 spend × 5% effective capture = RM13 per extra visit. Finance must establish the actual marginal net value.</p>',
-         'Source: '+MODEL+'. Surface = RM8,524.60 / (52 × spend × effective capture); displayed base visits are rounded up to 13. This is a scenario relationship, not a measured retention effect. Excluded costs can raise the gap.')
+    # Retention is an evidence-linked business mechanism in the final V2 pass.
+    # Do not regenerate the former basket/capture visit sensitivity.
     body(soup,'pilot-design',plot(gantt(),cls='g2-gantt')+'<p class="g2-bottom-note">Site access and baseline instrumentation precede Week 1. Live AI activation follows shadow-mode acceptance; visit measurement may need a longer follow-up.</p>',
          'Proposed pilot sequence and owners. Bars show planned work, not completed delivery or agreed SLAs. Reservation readiness includes reconciled counts, entitlement checks and a signed recovery SOP.')
     body(soup,'horizons',plot(horizons,cls='g2-horizons'),
