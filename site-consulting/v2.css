@@ -101,6 +101,7 @@ body.edition-v2 .operator-composition aside h3 { font-size:36px; }
 .g2-plot.g2-forecast { height:500px; flex:none; }
 .g2-plot.g2-breakeven { height:500px; flex:none; }
 .g2-plot.g2-contour { height:545px; flex:none; }
+.g2-plot.g2-rent-sensitivity { height:480px; flex:none; }
 .g2-plot.g2-gantt { height:540px; flex:none; }
 .g2-plot.g2-architecture { height:545px; flex:none; }
 .g2-plot.g2-horizons { height:625px; flex:none; }

@@ -72,24 +72,33 @@ def spending_benchmark():
     return export_svg(fig, 'v2-spending-benchmark')
 
 
-def retention_strategy():
-    """Source-backed mechanisms, without importing a retention/capture estimate."""
-    voucher = '''<svg viewBox="0 0 360 94" role="img" aria-label="Local precedent: qualifying RM30 Jaya Grocer spend for first-hour-free Express Parking"><path d="M8 8H352V33Q330 47 352 61V86H8V61Q30 47 8 33Z" fill="#edf3fc" stroke="#a8b7ca"/><path d="M122 12V82" stroke="#a8b7ca" stroke-dasharray="4 5"/><text x="64" y="54" text-anchor="middle" fill="#245bd8" font-size="25" font-weight="600">RM30</text><text x="236" y="40" text-anchor="middle" fill="#102a43" font-size="18">Qualifying spend</text><text x="236" y="65" text-anchor="middle" fill="#102a43" font-size="18">→ parking benefit</text></svg>'''
-    progress = '<svg viewBox="0 0 360 94" role="img" aria-label="Illustration of a clearly explained head start toward a reward; proposed terms unagreed"><path d="M17 47H343" stroke="#d5dde7" stroke-width="3"/>'+''.join(f'<circle cx="{18+i*36}" cy="47" r="11" fill="{("#245bd8" if i<2 else "#ffffff")}" stroke="#245bd8" stroke-width="2"/>' for i in range(10))+'</svg>'
-    return_offer = '''<svg viewBox="0 0 360 94" role="img" aria-label="Proposed return offer linked to a relevant weekday shopping trip"><path d="M20 47H340" stroke="#d5dde7" stroke-width="3"/><path d="M46 47Q157 -13 289 38" fill="none" stroke="#245bd8" stroke-width="2"/><path d="M279 29L291 39L277 42" fill="none" stroke="#245bd8" stroke-width="2"/><rect x="12" y="27" width="102" height="40" fill="#102a43"/><rect x="245" y="27" width="102" height="40" fill="#edf3fc"/><text x="63" y="53" text-anchor="middle" fill="#ffffff" font-size="17">Last visit</text><text x="296" y="53" text-anchor="middle" fill="#102a43" font-size="17">Next visit</text></svg>'''
-    levers = [
-        ('Spend-linked parking credit', voucher,
-         'Propose a tenant-backed booking credit tied to qualifying purchases. Funding and offer terms need agreement.',
-         'Local precedent: 1 Utama Express Parking offers the first hour free with qualifying RM30 Jaya Grocer spend.', 'spend_parking'),
-        ('Repeat-visit milestones', progress,
-         'Test an explained head start toward a visit reward. Publish clear qualifying rules and reward costs.',
-         'Field experiment: initial reward progress increased completion and shortened completion time. No KL East uplift is inferred.', 'progress'),
-        ('Targeted return offers', return_offer,
-         'Test a relevant weekday grocery or dining offer for eligible members whose visit frequency has declined.',
-         'Retail research supports rewards and targeted coupons as visit mechanisms; results are specific to the studied retailer.', 'targeting'),
-    ]
-    columns = ''.join(f'<article><h3>{title}</h3><div class="g2-retention-art">{art}</div><p>{proposal}</p><p class="g2-retention-evidence">{evidence}</p><p class="g2-retention-source">Source: {source(key)}</p></article>' for title,art,proposal,evidence,key in levers)
-    return '<div class="g2-retention-owner"><b>KL East has a turnover-rent revenue channel</b><p>SDP reports that gross turnover rent contributed to KL East’s FY2023 performance. This supports the tenant-trading mechanism; it supplies no per-visit cash rate.</p><span>Source: '+source('turnover')+' · 17 May 2024, Q4(a), p. 4.</span></div><div class="g2-growth-levers">'+columns+'</div><div class="g2-retention-measure"><span>Eligible members offered a benefit</span><b>→</b><span>Control-adjusted repeat visits</span><b>→</b><span>Tenant trading and actual lease cash</span></div><p class="g2-bottom-note">Proposed extensions to ParkFlow. Measure local uptake, extra visits and net cost before including retention in project returns.</p>'
+def turnover_rent_sensitivity():
+    """Comparable gross-rent range; all plotted sales already clear lease floors."""
+    rates=np.linspace(f.LEASE_RATE_LOW*100,f.LEASE_RATE_HIGH*100,240)
+    sales=np.linspace(50,250,240)
+    xx,yy=np.meshgrid(rates,sales)
+    rent=xx/100*yy*1000
+    fig,ax=plt.subplots(figsize=(14,4.6))
+    filled=ax.contourf(xx,yy,rent,levels=[0,2500,5000,10000,15000,20000,25000,30000,40000],cmap='Blues')
+    lines=ax.contour(xx,yy,rent,levels=[5000,10000,15000,20000,30000],colors='white',linewidths=.8)
+    labels=ax.clabel(lines,inline=True,fontsize=13,fmt=lambda v:f'RM{v/1000:g}k')
+    for label in labels:
+        label.set_rotation(0)
+        label.set_color('#102a43')
+        label.set_bbox({'facecolor':'white','edgecolor':'none','alpha':.95,'pad':2})
+    gap=f.recovery_gap(5)
+    ax.contour(xx,yy,rent,levels=[gap],colors=['#102a43'],linewidths=1.7,linestyles='dashed')
+    ax.text(5.3,243,f'Dashed: RM{gap/1000:.1f}k reference booking-only recovery gap',
+            fontsize=12,color='#102a43',va='top',bbox={'facecolor':'white','edgecolor':'none','pad':7})
+    ax.set_xticks([5,7.5,10,12.5,15],['5%','7.5%','10%','12.5%','15%'])
+    ax.set_yticks([50,100,150,200,250],[f'RM{x}k' for x in [50,100,150,200,250]])
+    ax.set_xlabel('Gross turnover-rent clause · published comparable range, not an SDP average',labelpad=14)
+    ax.set_ylabel('Extra eligible tenant sales / year',labelpad=14)
+    bar=fig.colorbar(filled,ax=ax,pad=.035,shrink=.9)
+    bar.ax.yaxis.set_major_formatter(FuncFormatter(lambda v,_:f'RM{v/1000:g}k'))
+    bar.set_label('Additional gross rent / year',labelpad=12)
+    fig.subplots_adjust(left=.11,right=.96,top=.96,bottom=.17)
+    return export_svg(fig,'v2-turnover-rent-sensitivity')
 
 
 def apply_financial_revision(soup):
@@ -102,11 +111,18 @@ def apply_financial_revision(soup):
         a.string = 'V2 financial reference model'
 
     for selector in ['#executive .budget-reference', '#decision .decision-budget']:
-        put(soup.select_one(selector), f'<b>RM{f.FIRST_YEAR/1000:.1f}k +</b><span>Priced-line planning subtotal<br>Two NEW zone LPR cameras included</span>')
+        put(soup.select_one(selector), f'<b>RM{f.FIRST_YEAR/1000:.1f}k +</b><span>Reference new-zone subtotal<br>Two NEW zone LPR cameras included</span>')
+    put(soup.select_one('#cover h1'),'Member parking<br>for SDP malls')
+    put(soup.select_one('#cover .cover-context'),'ParkFlow · proposed member service')
+    put(soup.select_one('#cover .cover-deck'),'Reserved access for members.<br>KL East Mall is a proposed first pilot.')
+    put(soup.select_one('#cover .cover-credit>span'),'Universiti Malaya · revision 9 November 2026')
+    put(soup.select_one('#executive .slide-title'),'SDP member-parking proposal')
+    put(soup.select_one('#executive .recommendation h3'),'One zone pilot.<br>Portfolio pathway.')
+    put(soup.select_one('#executive .recommendation>p'),'Start with one suitable SDP mall; KL East is a proposed candidate. Member booking and verified zone admissions create a repeatable service to test.')
     put(soup.select_one('#executive .recommendation-logic article:last-child h3'), 'Booking income, repeat visits and tenant value')
     put(soup.select_one('#executive .recommendation-logic article:last-child p'),
         f'Booking-only five-year recovery needs {f.required_bookings(5)/365:.1f} paid bookings/day at the reference fee mix. The pilot also measures repeat visits and net mall value.')
-    put(soup.select_one('#executive .source'), shared+f'New-zone scope; subtotal is not an installed quote. {BOUNDARY}')
+    put(soup.select_one('#executive .source'), shared+f'One-zone planning reference, not a cost or demand average across SDP malls. KL East remains a pilot candidate. {BOUNDARY}')
     put(soup.select_one('#context .site-brief .detail-list div:last-child dd'), 'Two new zone LPR cameras, a defined boundary, zone counts and vendor interfaces.')
     put(soup.select_one('#context .site-brief .note'), 'Existing mall LPR does not replace the two new zone cameras. Baseline demand, zone works and willingness to pay still need site measurement.')
     put(soup.select_one('#integration .source'), f'Sources: {source("site")}; {RESEARCH}. New-zone scope includes two additional LPR cameras. Confirm controller, power/network, gate safety, local coverage and incumbent interfaces.')
@@ -118,14 +134,14 @@ def apply_financial_revision(soup):
     benchmark = spending_benchmark()
     member = base.cols(
         base.module('Why repeat visits matter', plot(benchmark)+'<p class="note">Source: '+source('spend')+'. National survey, N=500; recalled last-trip spend. Association does not establish parking-caused uplift.</p>'),
-        base.module('The KL East business context',
-            '<div class="g2-business-fact"><strong>100%</strong><span>committed occupancy · end-2025</span></div>'
-            '<p class="note">Source: '+source('landlord')+', printed p. 28. Committed occupancy is a leasing measure, not occupied parking bays.</p>'
-            '<div class="v2-proof-ladder"><article><b>Support repeat patronage</b><p>Test whether easier arrivals keep members returning to KL East.</p></article>'
-            '<article><b>Strengthen tenant trading</b><p>Track attributable visits and tenant sales; link cash value to actual lease terms.</p></article>'
-            '<article><b>Protect recurring income</b><p>Customer experience and tenant retention support the asset strategy; no rental uplift is booked today.</p></article></div>'), 'wide-left')
+        base.module('SDP members and repeat visits',
+            '<div class="g2-business-fact"><strong>100%</strong><span>KL East + Elmina committed occupancy · end-2025</span></div>'
+            '<p class="note">Source: '+source('landlord')+', printed p. 28. Leasing context; not parking utilisation.</p>'
+            '<div class="v2-proof-ladder"><article><b>Spend-linked parking credits</b><p>Test tenant-backed benefits tied to purchases. Source: '+source('spend_parking')+'.</p></article>'
+            '<article><b>Repeat-visit milestones</b><p>Test a clearly explained reward path. Source: '+source('progress')+'.</p></article>'
+            '<article><b>Targeted return offers</b><p>Test relevant offers for eligible members. Source: '+source('targeting')+'.</p></article></div>'), 'wide-left')
     body(soup, 'member-value', member,
-         'Sources: '+source('spend')+'; '+source('landlord')+'. +68% = 327 / 195 − 1, rounded. RM260 is the approximate published mean, not a midpoint. National consumer spend is neither KL East sales nor landlord profit.')
+         'Sources: '+source('spend')+'; '+source('landlord')+'; proposed mechanisms linked beside each. +68% = 327 / 195 − 1, rounded. National spending association does not establish ParkFlow uplift. No retention cash is assumed in reference returns.')
 
     put(soup.select_one('#must-be-true .g2-value-paths article:last-child h3'), 'Repeat visits and retention')
     put(soup.select_one('#must-be-true .g2-value-paths article:last-child p'), 'Measure return rate and extra visits<br>against an eligible control cohort')
@@ -134,7 +150,8 @@ def apply_financial_revision(soup):
     put(soup.select_one('#must-be-true .source'), shared+'Booking income, measured visit value and realized cost savings are separate cash channels. Benchmark scores, gross tenant sales and customer time savings are not added as profit.')
 
     cost = f'''<div class="g2-cost-map"><figure><img src="assets/priority-zone-pilot-concept.png" alt="Illustrative new Priority Zone; two additional entry and exit LPR cameras are budgeted"><figcaption>Zone hardware + works · <b>RM{f.HARDWARE/1000:.1f}k</b><span>2 NEW LPR × RM3,226 + LED RM2,033 + RM11,500 works/coverage allowances.</span><span>Source: {source('lpr')}; {source('led')}. Listed equipment excludes tax; both show zero stock.</span></figcaption></figure><div class="g2-cost-services"><article><span>Production integration allowance</span><h3>RM60k</h3><p>Identity, bookings, payments, zone control and commissioning. Project quotation still required.</p></article><article><span>Year 1 zone running allowance</span><h3>RM10.5k</h3><p>Hosting, messaging and upkeep. Central support and new equipment servicing need confirmation.</p></article></div></div><div class="g2-cost-envelope"><div><span>Priced-line subtotal · not all-in</span><strong>{money(f.FIRST_YEAR)} +</strong></div><p><b>Obtain prices for:</b> gates/arms, safety loops, intercom, edge controller/licenses, support, project taxes and contingency. Power/network scope sits inside an unquoted RM7,500 works allowance.</p></div>'''
-    body(soup, 'investment', cost, shared+'Two new LPR cameras are included. Listed equipment is a procurement benchmark, not a stock reservation or installed quote. The subtotal is incomplete until the remaining zone equipment, support and tax are quoted.')
+    body(soup, 'investment', cost, shared+'Reference deployment for one new mall zone, with two new LPR cameras. Listed equipment is not an installed quote. Site scope and costs vary across malls; remaining equipment, support and tax need pricing.')
+    put(soup.select_one('#investment .slide-title'),'Reference cost per new member zone')
 
     water = base.waterfall([r['gross'], -r['operator'], -r['processing'], -f.ANNUAL_RUNNING, r['contribution']],
                            ['Gross booking|fees', 'Operator|20% scenario', 'Card fees|1.944% incl. SST', 'Zone running|allowance', 'Operating|contribution'], 26000)
@@ -146,6 +163,7 @@ def apply_financial_revision(soup):
                             ('Operator / running', '20% proposed share; RM10,500 annual allowance')])+
                             f'<p class="note">Source: {source("payments")}; {source("fee_tax")}. All-card route is a comparison, not an agreed payment mix. RM{r["net"]/r["bookings"]:.2f} per booking remains before fixed running cost.</p>'), 'wide-left')
     body(soup, 'booking-return', booking, shared+f'Gross {money(r["gross"],2)} − operator {money(r["operator"],2)} − processing {money(r["processing"],2)} − running RM10,500 = {money(r["contribution"],2)}. {BOUNDARY}')
+    put(soup.select_one('#booking-return .slide-title'),'Booking economics per reference zone')
 
     body(soup, 'booking-sensitivity', plot(curve(), cls='g2-breakeven')+
          f'<div class="g2-result-notes"><p><b>Derived operating threshold:</b> {f.required_bookings()/365:.1f} paid bookings/day covers the RM10,500 running allowance at this fee mix.</p><p><b>Derived recovery thresholds:</b> {f.required_bookings(5)/365:.1f}/day for five years; {f.required_bookings(3)/365:.1f}/day for three years. Add omitted costs before setting a target.</p></div>',
@@ -159,9 +177,10 @@ def apply_financial_revision(soup):
          base.strip(f'<b>Growth scenario:</b> 50 peak / 12.5 weekday bookings produce {money(f.economics(50,12.5)["contribution"])}/year; this is a commercial target, not an observed forecast. *Contribution / upfront capital; cash yield is not IRR or net ROI.'),
          shared+f'{BOUNDARY} Simple payback = {money(f.UPFRONT)} / annual contribution. No tenant-spend uplift, retention benefit or ML preference score is included.')
 
-    body(soup, 'retention', retention_strategy(),
-         'Sources linked beside each mechanism; '+RESEARCH+'. SDP confirms a historical revenue channel, not a marginal capture rate or ParkFlow effect. Offer funding, causal visit lift and net cash remain unmeasured. No retention cash uplift is included in reference returns.')
-    put(soup.select_one('#retention .slide-title'), 'Member retention and repeat-visit growth')
+    body(soup, 'retention',plot(turnover_rent_sensitivity(),cls='g2-rent-sensitivity')+
+         '<div class="g2-result-notes"><p><b>Published comparable:</b> Tropicana Gardens disclosed around 5% for specified trades and 5–15% for other categories. Source: '+source('lease_benchmark')+'.</p><p><b>Conditional gross receipts:</b> plotted sales must already earn rent above tenant/month lease floors. Below a floor, extra rent can be RM0. Deduct campaign and operating costs before claiming net value.</p></div>',
+         'Sources: '+source('lease_benchmark')+' (3 Dec 2024 circular, printed p. 23); '+source('lease_structure')+'; '+MODEL+'. Sales levels and intermediate rates are sensitivity inputs, not observed uptake. No SDP average, net capture rate or retention cash forecast is asserted; excluded costs raise the recovery gap.')
+    put(soup.select_one('#retention .slide-title'),'Tenant-sales and turnover-rent sensitivity')
 
     costs = [
         ['2 NEW zone LPR cameras', money(f.LPR), '2 × RM3,226 · Viskou DS-TCG406-E; tax extra; zero listed stock.', 'Malaysia plate support, lens, SDK and gate relay; installed quote.'],
@@ -189,8 +208,8 @@ def apply_financial_revision(soup):
     body(soup, 'a-finance', base.cols(base.module('Reference annual cash reconciliation', base.table(['Calculation','Result'], reconciliation, [73,27])), base.module('Cost and return boundaries', finance_notes)),
          shared+'Only processing-fee SST is included. Annual calculations aggregate rate × value; gateway rounding, refunds, chargebacks and output taxes must be reconciled in the settlement quote.')
 
-    # Public sources do not validate a marginal cash rate or causal visit uplift.
-    # Remove the sensitivity entirely, including its appendix slide.
+    # The old basket/capture/visits appendix remains removed. The restored main
+    # chart uses a sourced gross lease range and eligible sales, not net capture.
     soup.find(id='a-retention').decompose()
 
     # Make the pilot assess the wider business case, without importing causal uplift.
@@ -226,7 +245,8 @@ def apply_financial_revision(soup):
             ''.join(f'<article class="g2-source-entry"><b>{source(k)}</b><p>{desc}</p></article>' for k,desc in [
                 ('landlord','FY2025: KL East and Elmina achieved 100% committed occupancy; recurring-income context.'),
                 ('spend','National survey N=500: RM195 / RM327 frequency-group means; ~RM260 mean. Not causal.'),
-                ('turnover','SDP 17 May 2024 reply, Q4(a): turnover rent contributed to KL East performance. No marginal rate disclosed.') ])+
+                ('lease_benchmark','Tropicana Gardens, 2024 valuation: around 5% for specified trades; 5–15% for other categories; above lease floor.'),
+                ('lease_structure','Paradigm PJ/JB: higher-of and percentage-only lease structures. Terms apply by tenant and period.') ])+
             '<p class="note">Technical sources: <a href="https://archive.ics.uci.edu/dataset/482/parking%2Bbirmingham">UCI Parking Birmingham</a>; <a href="../analysis/benchmarks/v2/report.md">occupancy / batch report</a>; <a href="../analysis/benchmarks/decision_value/report.md">event-driven report</a>. Other category/privacy references remain on their slides.</p>')),
          shared+'Public list prices and category precedents do not validate installed cost, local retention or willingness to pay. Payment selection must match the actual mix, merchant approval and settlement/refund terms.')
 

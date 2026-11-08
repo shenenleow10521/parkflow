@@ -65,16 +65,32 @@ def main():
     assert 'RM6,452' in html.find(id='a-cost').get_text()
     assert '30/60/90' in html.find(id='scorecard').get_text()
     assert '100%' in html.find(id='member-value').get_text()
-    # Unsupported visit/capture sensitivity must be absent from BOTH sections.
+    # No unsupported visit/capture conversion. Published comparable GROSS lease
+    # rates support a separate main chart, without adding rental cash to returns.
     assert not html.find(id='a-retention')
     assert not hasattr(finance,'weekly_visits') and not hasattr(finance,'CAPTURE_ILLUSTRATION')
     assert finance.MARGINAL_VISIT_VALUE is None and finance.VISIT_LIFT_PER_MEMBER_MONTH is None
     all_text=html.get_text(' ',strip=True)
     assert not re.search(r'RM13(?![\d,.])|13\s+(?:extra|additional|visits)|\b[2358]%\s+(?:capture|net capture|effective capture)|extra visits / week',all_text,re.I)
-    assert len(html.select('#retention .g2-growth-levers>article'))==3
-    assert html.select_one('#retention a[href="https://doi.org/10.1086/500480"]')
-    assert html.select_one('#retention a[href="https://doi.org/10.1016/j.jretai.2021.08.001"]')
-    assert 'No retention cash uplift is included' in html.find(id='retention').get_text()
+    assert len(html.select('#member-value .v2-proof-ladder>article'))==3
+    assert html.select_one('#member-value a[href="https://doi.org/10.1086/500480"]')
+    assert html.select_one('#member-value a[href="https://doi.org/10.1016/j.jretai.2021.08.001"]')
+    assert 'No retention cash is assumed' in html.find(id='member-value').get_text()
+    rent_slide=html.find(id='retention')
+    assert rent_slide.select_one('.g2-rent-sensitivity svg')
+    assert rent_slide.select_one('a[href$="TROP-AN20241203A3-1.pdf#page=32"]')
+    assert 'Below a floor, extra rent can be RM0' in rent_slide.get_text()
+    assert finance.LEASE_RATE_LOW==.05 and finance.LEASE_RATE_HIGH==.15
+    assert 'not a cost or demand average across SDP malls' in html.find(id='executive').get_text()
+    # Independent lease cases: no top-up below floor; partial rent at crossing;
+    # full marginal rate once above floor; reversal cannot undercut base rent.
+    lease=finance.monthly_turnover_rent_change
+    assert lease(base_and_service=10000,sales_before=90000,extra_sales=5000,rate=.10)==0
+    assert lease(base_and_service=10000,sales_before=90000,extra_sales=20000,rate=.10)==1000
+    assert lease(base_and_service=10000,sales_before=120000,extra_sales=5000,rate=.10)==500
+    assert lease(base_and_service=10000,sales_before=120000,extra_sales=-30000,rate=.10)==-2000
+    assert lease(base_and_service=0,sales_before=0,extra_sales=100000,rate=.05)==5000
+    assert lease(base_and_service=0,sales_before=0,extra_sales=100000,rate=.15)==15000
     assert not html.select('.takeaway,.controls'), 'Topic-led V2 must not retain the old takeaway band or floating controls'
     assert html.select_one('#pilot-design svg') and html.select_one('#horizons svg')
     assert html.select_one('script[src="v2.js"]')

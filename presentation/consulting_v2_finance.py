@@ -1,4 +1,4 @@
-"""V2-only commercial reference model; published prices are not installed quotes.
+"""V2-only single-zone reference model, not an SDP portfolio-average forecast.
 
 Source observations and unresolved inputs: ../site-consulting/financial-sources.md.
 Keep the original deck's booking_economics.py unchanged. No local demand, operator
@@ -20,6 +20,8 @@ SOURCES = {
     'progress': ('Nunes & Dreze: reward-progress experiment', 'https://doi.org/10.1086/500480'),
     'targeting': ('Gabel & Guhl: rewards and targeted coupons', 'https://doi.org/10.1016/j.jretai.2021.08.001'),
     'turnover': ('SDP: KL East turnover-rent contribution', 'https://www.simedarbyproperty.com/sites/default/files/2024-05/Reply%20Letter%20to%20MSWG%20%2817052024%29.pdf'),
+    'lease_benchmark': ('Tropicana Gardens: disclosed lease rates', 'https://www.insage.com.my/BursaNews/Attachment/202412/20241203/TROP-AN20241203A3-1.pdf#page=32'),
+    'lease_structure': ('Paradigm REIT: lease structures', 'https://ir2.chartnexus.com/paradigm/docs/Paradigm%20REIT%20-%20Prospectus.pdf#page=105'),
 }
 
 # Published: display-only, excluding tax; zero stock at listed branches on check.
@@ -48,9 +50,12 @@ WEEKDAY_FEE, PEAK_FEE = 4, 5
 PEAK_DAYS, WEEKDAY_DAYS = 104, 261  # fixed 365-day illustration, not a 2026 calendar
 SCENARIOS = [('Lower volume', 20, 5), ('Reference', 30, 7.5),
              ('Higher volume', 40, 10), ('Growth target', 50, 12.5)]
-# No national-basket-to-landlord-capture conversion is used. Local incremental
-# visits and marginal visit cash are unknown, so retention cash is unquantified
-# and excluded from economics(), rather than silently assigned a favourable rate.
+# Published comparable GROSS lease terms, not a net capture rate or SDP average.
+# Tropicana's 3 Dec 2024 circular, printed p.23, discloses around 5% for specified
+# trades and 5–15% for other categories. Top-up applies above base + service charge.
+LEASE_RATE_LOW, LEASE_RATE_HIGH = .05, .15
+# No national-basket-to-landlord-capture conversion or causal visit uplift is used.
+# The conditional sales/rent sensitivity is separate from booking-only returns.
 MARGINAL_VISIT_VALUE = None
 VISIT_LIFT_PER_MEMBER_MONTH = None
 
@@ -76,6 +81,20 @@ def economics(peak_per_day=30, weekday_per_day=7.5, *, upfront=UPFRONT,
 
 def recovery_gap(years=5, result=None, *, upfront=UPFRONT):
     return max(0, upfront / years - (result or economics())['contribution'])
+
+
+def monthly_turnover_rent_change(*, base_and_service, sales_before, extra_sales, rate):
+    """Higher-of lease: marginal gross rent, NOT net profit or total rent/sales.
+
+    All amounts share one tenant/month. No annual pooling across tenants or months
+    is valid because the fixed floor applies separately to each tenancy period.
+    """
+    from math import isfinite
+    if not all(isfinite(v) for v in [base_and_service,sales_before,extra_sales,rate]):
+        raise ValueError('Lease inputs must be finite')
+    if base_and_service < 0 or sales_before < 0 or sales_before+extra_sales < 0 or not 0 <= rate <= 1:
+        raise ValueError('Invalid sales, floor or rate')
+    return max(base_and_service,rate*(sales_before+extra_sales))-max(base_and_service,rate*sales_before)
 
 
 def required_bookings(years=None, *, upfront=UPFRONT, extra_annual=0,
