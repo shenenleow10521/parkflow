@@ -1,10 +1,10 @@
 # V2 financial evidence and commercial value
 
-Checked 9 November 2026. Applies only to `index-v2.html`. The original deck and its model remain unchanged. The business case is a **single-zone reference for a proposed SDP member service**, with KL East as one candidate pilot. Published equipment/payment benchmarks and comparable mall leases are labelled separately; these are not cost, demand or capture averages across SDP's portfolio. This is not an installed quotation or a forecast of customer behaviour.
+Checked 9 November 2026. Applies only to `index-v2.html`. The original deck and its model remain unchanged. The business case is a **single-zone reference for a proposed SDP member service**, with KLGCC Mall as the proposed candidate pilot. Published equipment/payment benchmarks and comparable mall leases are labelled separately; these are not cost, demand or capture averages across SDP's portfolio. This is not an installed quotation or a forecast of customer behaviour.
 
 ## New-zone scope
 
-The zone requires **two additional LPR cameras**, one entry and one exit, as confirmed by the project owner. Existing KL East entrance LPR does not replace these. Its presence establishes incumbent-system integration requirements, not a camera-purchase saving.
+The zone requires **two additional LPR cameras**, one entry and one exit, as confirmed by the project owner. [KLGCC Mall's official page](https://www.simedarbyproperty.com/malls/klgcc-mall/) lists about 1,000 bays on LG and B1–B3 with Touch 'n Go card payment; it does not publish mall-wide LPR. Any incumbent LPR found in the site audit sets integration requirements, not a camera-purchase saving.
 
 | Item | Source observation | Treatment in V2 |
 | --- | --- | --- |
@@ -31,7 +31,7 @@ At RM5, a Basic MYR-card payment costs RM0.0972 before transaction rounding, ver
 
 ## What is still an input rather than a sourced fact
 
-- RM4 weekday / RM5 peak are **price-test inputs**, additional to ordinary parking. [KL East's official page](https://www.simedarbyproperty.com/malls/kleast-mall/) currently lists RM2 for the first two hours and RM2 for each subsequent hour, excluding 8% service tax. Its valet starts at RM18 Monday–Thursday and RM23 Friday–Sunday/public holidays for four hours. Valet is a different service, so these prices establish a local comparison, not willingness to pay for ParkFlow. Booking-service output tax must be confirmed; it is not silently included or assumed exempt.
+- RM4 weekday / RM5 peak are **price-test inputs**, additional to ordinary parking. [KL East's official page](https://www.simedarbyproperty.com/malls/kleast-mall/) currently lists RM2 for the first two hours and RM2 for each subsequent hour, excluding 8% service tax. Its valet starts at RM18 Monday–Thursday and RM23 Friday–Sunday/public holidays for four hours. Valet is a different service, so these prices establish a local comparison, not willingness to pay for ParkFlow. For the KLGCC pilot, [KLGCC Mall's official page](https://www.simedarbyproperty.com/malls/klgcc-mall/) lists RM3 flat on weekdays and, on weekends, RM3 for the first three hours then RM2 per hour capped at RM10, excluding 6% SST, with charges taking effect from 1 September 2026. Booking-service output tax must be confirmed; it is not silently included or assumed exempt.
 - The proposed operator allocation remains 20% of gross booking fees; no agreed contract was supplied. This is not a published industry commission.
 - 104 peak and 261 weekday days are a fixed 365-day illustration. They are not the 2026 calendar and do not price public holidays separately.
 - Reference volume is 30 peak / 7.5 weekday paid bookings per day. Lower, higher and growth scenarios are comparisons, not demand estimates from an external mall.
