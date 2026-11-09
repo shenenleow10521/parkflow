@@ -1,42 +1,546 @@
-// Priority Zone operator prototype. Admission decisions and driver bookings share
-// one browser ledger. The old simulation is used only to draw the context model.
-import { store, resetSim } from './ui/store';
-import { esc } from './ui/dom';
-import { GLScene, SceneView } from './render/gl3d';
+// Entry point: wires the DOM, the shared store, the 3D scene and the simulation clock.
+
+import { store, on, emit, resetSim, setScenario, runMatchedComparison, persist, toast, Section } from './ui/store';
+import { $, $$, esc, icon, prefersReducedMotion, loadJSON, saveJSON } from './ui/dom';
 import { Scene3D } from './render/scene3d';
-import { PriorityData, PriorityBooking, PriorityResult, PRIORITY_MALLS, priorityRead, priorityEnsure, priorityPool, priorityCounts, priorityReady, prioritySubscribe, priorityAdmit, priorityExit, priorityFault, priorityReconcile, priorityResolve, priorityPlan, priorityClock, priorityDeckScenario } from './shared/priority';
-const OPS_PAGES = [{id:'overview',label:'Overview',icon:'◫',title:'Operations overview'},{id:'bookings',label:'Bookings',icon:'▤',title:'Accepted commitments'},{id:'plan',label:'Capacity plan',icon:'↗',title:'Three-hour capacity plan'},{id:'exceptions',label:'Exceptions',icon:'!',title:'Exceptions & recovery'},{id:'performance',label:'Performance',icon:'▥',title:'Pilot performance'},{id:'audit',label:'Audit trail',icon:'≡',title:'Decision audit trail'}];
-const OPS = {mall:'klgcc',page:'overview',data:priorityRead(),gatePlate:'',gateBooking:'',gateKind:'booking',observed:'',reconcileNote:'',planNote:'',resolution:'',metric:'occupancy',message:'',success:true};
-let opsScene: SceneView | null = null;
-let opsVehicleTemplate: any = null;
-const opsEl = (id:string)=>document.getElementById(id)!;
-function opsHTML(id:string,value:string){const el=opsEl(id);if(el.innerHTML!==value)el.innerHTML=value;}
-function opsTime(value:string){return new Date(value).toLocaleString('en-GB',{timeZone:'Asia/Kuala_Lumpur',day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false});}
-function opsMoney(value:number){return `RM${value.toFixed(2)}`;}
-function opsTag(label:string,tone='neutral'){return `<span class="tag ${tone}">${esc(label)}</span>`;}
-function opsStatusLabel(b:PriorityBooking){return b.status==='confirmed'?'Awaiting arrival':b.status==='checked-in'?'In zone':b.status.charAt(0).toUpperCase()+b.status.slice(1);}
-function opsBookings(){return OPS.data.bookings.filter(b=>b.mall===OPS.mall);}
-function opsCounts(){return priorityCounts(priorityPool(OPS.data,OPS.mall),OPS.data.ops[OPS.mall].safety);}
-function opsHeading(kicker:string,title:string,extra=''){return `<div class="panel-heading"><div><p class="eyebrow">${kicker}</p><h2>${title}</h2></div>${extra}</div>`;}
-function opsNotice(result:PriorityResult|string){OPS.message=typeof result==='string'?result:result.message;OPS.success=typeof result==='string'||result.ok;OPS.data=priorityRead();opsRender();}
-async function opsRun(action:()=>Promise<any>){try{const result=await action();if(result&&typeof result.ok==='boolean')opsNotice(result);else opsNotice('Saved to the shared demo ledger.');}catch{opsNotice({ok:false,message:'Could not save this change. Check browser storage and try again.'});}}
-function opsGo(page:string){OPS.page=page;OPS.message='';opsRender();if(page==='overview')requestAnimationFrame(()=>{opsScene?.resize();if(opsScene)opsScene.dirty=true;});opsEl('ops-main').scrollTop=0;}
-function opsRenderCapacity(){const c=opsCounts(),ready=priorityReady(OPS.data.ops[OPS.mall]),pool=priorityPool(OPS.data,OPS.mall);let safety=c.safety;const cells=pool.map(b=>{let status=b.status;if(status==='available'&&safety>0){status='safety' as any;safety--;}return `<span class="bay-cell ${status}" role="img" aria-label="${esc(b.id)} ${status}" title="${esc(b.id)} · ${status}"></span>`;}).join('');opsHTML('ops-capacity',`${opsHeading('CAPACITY GUARD','What can we promise?',opsTag(ready?'Guard active':'Admissions paused',ready?'green':'red'))}<div class="guard-equation"><div><strong>${c.total}</strong><span>Zone capacity</span></div><b>−</b><div><strong>${c.occupied}</strong><span>Occupied</span></div><b>−</b><div><strong class="amber-text">${c.reserved}</strong><span>Accepted, not arrived</span></div><b>−</b><div><strong>${c.safety}</strong><span>Safety buffer</span></div><b>=</b><div class="guard-answer"><strong class="blue-text">${c.atp}</strong><span>Available to promise</span></div></div><div class="guard-summary"><span>${ready?`Up to <b>${c.atp}</b> new commitments can be accepted.`:'New commitments are paused until data is reconciled.'}</span><small>${c.available} physically free · ${c.reserved} commitments protected</small></div><div class="bay-grid" aria-label="100 shared capacity slots, not an assigned bay map">${cells}</div><div class="legend"><span><i class="occupied"></i>Occupied ${c.occupied}</span><span><i class="reserved"></i>Reserved ${c.reserved}</span><span><i class="safety"></i>Safety ${Math.min(c.available,c.safety)}</span><span><i class="available"></i>Available to promise ${c.atp}</span></div><div class="info-strip">Booked entry transfers <b>Reserved → Occupied</b>. It does not consume a second space.</div>`);}
-function opsRenderGate(){const active=opsBookings().filter(b=>b.status==='confirmed'||b.id===OPS.gateBooking);opsHTML('ops-gate',`${opsHeading('ADMISSION CHECK','Verify a vehicle',opsTag('Simulated LPR','amber'))}<form id="ops-gate-form"><label>Entry type<select id="ops-entry-kind"><option value="booking"${OPS.gateKind==='booking'?' selected':''}>Booked visitor</option><option value="walkin"${OPS.gateKind==='walkin'?' selected':''}>Walk-in visitor</option></select></label><label>Observed vehicle plate<input id="ops-entry-plate" maxlength="12" placeholder="e.g. WXY 8812" value="${esc(OPS.gatePlate)}" required autocomplete="off"></label>${OPS.gateKind==='booking'?`<label>Booking reference<select id="ops-entry-booking"><option value="">Match by registered plate</option>${active.map(b=>`<option value="${esc(b.id)}"${b.id===OPS.gateBooking?' selected':''}>${esc(b.plate)} · ${esc(b.id)}</option>`).join('')}</select></label><div class="button-row"><button type="button" class="text-button" id="ops-latest-booking">Use latest driver booking</button><button type="button" class="text-button" id="ops-arrival-time"${OPS.gateBooking?'':' disabled'}>Use arrival time</button></div>`:''}<button class="button primary wide" type="submit">Simulate LPR entry →</button></form><p class="panel-footnote">Checks data health, plate, arrival window and capacity. QR is a demo booking reference. No physical gate is connected.</p><div class="gate-rule"><span>Arrival rule</span><b>15-min window + 10-min grace</b></div><div class="button-row"><button class="button quiet" id="ops-exit">Simulate zone exit</button><button class="text-button" id="ops-advance">Demo clock +30 min</button></div>`);}
-function opsRenderHealth(){const o=OPS.data.ops[OPS.mall],detailsOpen=!!opsEl('ops-health').querySelector<HTMLDetailsElement>('details')?.open;opsHTML('ops-health',`${opsHeading('DATA HEALTH','Trust before acceptance')}<div class="health-row"><span>Zone entry LPR</span>${opsTag(o.entryOnline?'Online · demo':'Offline',o.entryOnline?'green':'red')}</div><div class="health-row"><span>Zone exit LPR</span>${opsTag(o.exitOnline?'Online · demo':'Offline',o.exitOnline?'green':'red')}</div><div class="health-row"><span>Count reconciliation</span>${opsTag(o.countsTrusted?'Verified · demo':'Verification needed',o.countsTrusted?'green':'amber')}</div><p class="small muted">Last ledger write ${opsTime(o.updatedAt)} MYT</p><details class="demo-tools"${detailsOpen?' open':''}><summary>Demo faults & recovery</summary><div class="button-row fault-buttons"><button class="button quiet" data-fault="entry">Entry offline</button><button class="button quiet" data-fault="exit">Exit offline</button><button class="button quiet" data-fault="count">Count drift</button><button class="button quiet" data-fault="reconnect">Reconnect sensors</button></div><form id="ops-reconcile-form"><label>Verified occupied count<input id="ops-observed" type="number" min="0" max="100" value="${esc(OPS.observed)}" placeholder="${opsCounts().occupied}" required></label><label>Reconciliation note<input id="ops-reconcile-note" value="${esc(OPS.reconcileNote)}" placeholder="How the count was verified" required></label><button class="button quiet wide" type="submit">Reconcile & resume</button></form></details><p class="panel-footnote">On fault: pause new bookings and automatic entry. Preserve egress; do not release unverified capacity.</p>`);}
-function opsChart(){const c=opsCounts(),occupancy=OPS.metric==='occupancy',values=occupancy?[c.occupied,Math.min(99,c.occupied+7),Math.min(99,c.occupied+13),Math.min(99,c.occupied+8)]:[8,12,17,11],max=occupancy?100:20;const points=values.map((v,i)=>`${48+i*143},${156-v/max*120}`).join(' ');return `<svg class="plan-chart" viewBox="0 0 520 190" role="img" aria-label="Illustrative ${occupancy?'occupancy percentage':'booking requests per hour'} for the next three hours"><defs><linearGradient id="ops-chart-fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4295ff" stop-opacity=".28"/><stop offset="1" stop-color="#4295ff" stop-opacity="0"/></linearGradient></defs>${[0,.5,1].map(v=>`<line x1="48" y1="${156-v*120}" x2="480" y2="${156-v*120}" stroke="#24354a"/><text x="5" y="${160-v*120}">${v*max}${occupancy?'%':''}</text>`).join('')}<polygon points="48,156 ${points} 477,156" fill="url(#ops-chart-fill)"/><polyline points="${points}" fill="none" stroke="#58a4ff" stroke-width="3"/>${values.map((v,i)=>`<circle cx="${48+i*143}" cy="${156-v/max*120}" r="4" fill="#83bdff"/><text x="${48+i*143}" y="${144-v/max*120}" text-anchor="middle">${v}${occupancy?'%':''}</text><text x="${48+i*143}" y="182" text-anchor="middle">${i===0?'Now':`+${i}h`}</text>`).join('')}</svg>`;}
-function opsPlanCard(full=false){const c=opsCounts(),o=OPS.data.ops[OPS.mall];return `${opsHeading('PLAN AHEAD','Next three hours',opsTag('Illustrative · shadow','amber'))}<div class="segmented chart-toggle"><button data-metric="occupancy" aria-pressed="${OPS.metric==='occupancy'}">Zone occupancy (%)</button><button data-metric="bookings" aria-pressed="${OPS.metric==='bookings'}">Booking requests / hour</button></div>${opsChart()}<div class="plan-recommendation"><span class="recommendation-symbol">↗</span><div><b>${c.atp<=4?'Protect the remaining booking capacity':'Keep controlled admission open'}</b><p>Current guard allows ${c.atp} new commitment${c.atp===1?'':'s'}. Review walk-ins as occupancy increases; protect all accepted claims and ${c.safety} safety bays.</p></div></div>${full?`<div class="plan-disclosure"><b>Shadow recommendation only</b><p>These curves use demonstration assumptions, not a trained forecast. Review records an operator decision; it does not deploy an LP policy, adjust quotas or override accepted bookings.</p><p>Inputs planned for a pilot: historical entry/exit counts, accepted bookings, mall events and cinema demand. Compare forecasts against observed outcomes before activation.</p></div><form id="ops-plan-form"><label>Review note<input id="ops-plan-note" value="${esc(OPS.planNote)}" placeholder="Reason for accepting or rejecting this shadow recommendation" required></label><div class="button-row"><button class="button primary" name="decision" value="accepted">Accept for review</button><button class="button quiet" name="decision" value="rejected">Reject recommendation</button>${opsTag(`Review: ${o.plan}`,o.plan==='accepted'?'green':'neutral')}</div></form>`:`<button class="text-button" data-page="plan">Review shadow plan →</button>`}`;}
-function opsAuditRows(limit=0){const logs=OPS.data.ops[OPS.mall].logs;return logs.length?`<div class="audit-list">${logs.slice(0,limit||logs.length).map(l=>`<article class="audit-row"><time>${opsTime(l.at)}<small>${esc(l.actor)}</small></time><div><b>${esc(l.action)}</b><p>${esc(l.detail)}</p>${l.bookingId?`<code>${esc(l.bookingId)}</code>`:''}</div></article>`).join('')}</div>`:'<div class="empty-state"><span>↔</span><b>The next decision starts here</b><p>Make a driver booking or simulate an entry to see the shared audit trail.</p></div>';}
-function opsRenderBookings(){const bookings=opsBookings();opsHTML('ops-view-bookings',`<section class="panel">${opsHeading('SHARED LEDGER','Reservations & visits',opsTag(`${bookings.filter(b=>b.source==='driver').length} driver booking(s)`))}<p class="panel-intro">Accepted bookings protect shared zone capacity. A slot reference in the ledger is an internal capacity hold; visitors can use any available eligible bay.</p><div class="table-wrap"><table><thead><tr><th>Booking reference</th><th>Registered plate</th><th>Arrival (MYT)</th><th>Status</th><th>Source</th><th></th></tr></thead><tbody>${bookings.map(b=>`<tr><td><code>${esc(b.id)}</code></td><td><b>${esc(b.plate)}</b></td><td>${opsTime(`${b.date}T${b.time}:00+08:00`)}<small>15-min window + 10-min grace</small></td><td>${opsTag(opsStatusLabel(b),b.status==='confirmed'?'amber':b.status==='checked-in'?'green':'neutral')}</td><td>${b.source==='driver'?'Driver app':'Seeded demo'}</td><td>${b.status==='confirmed'?`<button class="button quiet" data-select-booking="${esc(b.id)}">Verify entry →</button>`:'—'}</td></tr>`).join('')||'<tr><td colspan="6">No booking records yet.</td></tr>'}</tbody></table></div></section>`);}
-function opsRenderExceptions(){const incidents=OPS.data.ops[OPS.mall].incidents;opsHTML('ops-view-exceptions',`<section class="panel">${opsHeading('ASSISTED RECOVERY','Exceptions & resolutions',opsTag(`${incidents.filter(i=>i.open).length} open`,'amber'))}<p class="panel-intro">Resolve plate and booking exceptions with a recorded note. Data-health incidents require sensor reconnection and count reconciliation in Overview.</p><label class="resolution-label">Resolution note<input id="ops-resolution" value="${esc(OPS.resolution)}" placeholder="Record the evidence and action taken"></label><div class="incident-list">${incidents.map(i=>`<article class="incident"><div>${opsTag(i.open?'Open':'Resolved',i.open?'amber':'green')}<time>${opsTime(i.at)} MYT</time></div><h3>${esc(i.kind)}</h3><p>${esc(i.detail)}</p>${i.resolution?`<p class="resolution">${esc(i.resolution)}</p>`:''}${i.open?['Data health','Count mismatch','Exit count uncertain'].includes(i.kind)?'<button class="text-button" data-page="overview">Go to data reconciliation →</button>':`<button class="button quiet" data-resolve="${esc(i.id)}">Save resolution</button>`:''}</article>`).join('')||'<div class="empty-state"><span>✓</span><b>No open exceptions</b><p>Try a plate mismatch or a simulated sensor fault to demonstrate assisted recovery.</p></div>'}</div></section>`);}
-function opsRenderPerformance(){const b=opsBookings().filter(b=>b.source==='driver'),confirmed=b.filter(x=>x.status==='confirmed'),arrived=b.filter(x=>['checked-in','completed'].includes(x.status)),cancelled=b.filter(x=>x.status==='cancelled'),expired=b.filter(x=>x.status==='expired'),illustrative=b.filter(x=>!['cancelled','expired'].includes(x.status)).reduce((n,x)=>n+x.fee,0);opsHTML('ops-view-performance',`<section class="panel">${opsHeading('PILOT SCORECARD','What this demo can measure',opsTag('Demo ledger only','amber'))}<div class="performance-grid">${[[b.length,'Driver bookings created'],[arrived.length,'Verified booked arrivals'],[confirmed.length,'Awaiting arrival'],[expired.length,'Expired commitments'],[cancelled.length,'Cancelled bookings'],[opsMoney(illustrative),'Illustrative gross booking fees']].map(([v,l])=>`<div><strong>${v}</strong><span>${l}</span></div>`).join('')}</div><div class="plan-disclosure"><b>Commercial assumptions, clearly separated</b><p>RM5 is a proposed booking fee. No actual payment is collected. The gross illustration excludes refunds, waivers, taxes, payment charges and operating costs; it is not revenue received or profit.</p><p>Retention lift, incremental mall spend and forecast accuracy require a measured pilot and a comparison group. They are not reported as proven outcomes here.</p></div></section>`);}
-function opsRender(){const c=opsCounts(),o=OPS.data.ops[OPS.mall],ready=priorityReady(o);opsHTML('ops-nav',OPS_PAGES.map(p=>`<button data-page="${p.id}" aria-current="${OPS.page===p.id?'page':'false'}"><span class="nav-icon">${p.icon}</span>${p.label}${p.id==='exceptions'&&o.incidents.some(i=>i.open)?`<i>${o.incidents.filter(i=>i.open).length}</i>`:''}</button>`).join(''));opsEl('ops-title').textContent=OPS_PAGES.find(p=>p.id===OPS.page)!.title;opsEl('ops-clock').textContent=opsTime(o.demoAt)+' MYT · demo clock';opsHTML('ops-status',opsTag(ready?'● Accepting commitments':'● New commitments paused',ready?'green':'red'));opsHTML('ops-kpis',`<article><span>Occupied</span><strong>${c.occupied}<small>/ ${c.total}</small></strong><p>${c.bookedParked} booked arrivals · ${c.walkIns} walk-ins</p></article><article><span>Accepted, not arrived</span><strong class="amber-text">${c.reserved}</strong><p>Protected capacity commitments</p></article><article class="atp-kpi"><span>Available to promise</span><strong class="blue-text">${c.atp}</strong><p>${ready?'Guard active': 'Acceptance paused'} · ${c.safety} safety bays</p></article><article><span>Open exceptions</span><strong>${o.incidents.filter(i=>i.open).length}</strong><p>${o.countsTrusted?'Counts verified in demo':'Count verification required'}</p></article>`);for(const p of OPS_PAGES)opsEl(`ops-view-${p.id}`).hidden=p.id!==OPS.page;const msg=opsEl('ops-message');msg.hidden=!OPS.message;msg.textContent=OPS.message;msg.className=OPS.success?'message success':'message failure';opsRenderCapacity();opsRenderGate();opsRenderHealth();opsHTML('ops-plan-preview',opsPlanCard());opsHTML('ops-audit-preview',opsHeading('RECENT ACTIVITY','Decisions you can trace',`<button class="text-button" data-page="audit">View all →</button>`)+opsAuditRows(4));opsHTML('ops-view-plan',`<section class="panel full-plan">${opsPlanCard(true)}</section>`);opsRenderBookings();opsRenderExceptions();opsRenderPerformance();opsHTML('ops-view-audit',`<section class="panel">${opsHeading('AUDIT TRAIL','Every operating decision',opsTag(`${o.logs.length} recorded events`))}<p class="panel-intro">Newest first. Shows the last 300 demo events, with booking references where applicable. This browser prototype is not a tamper-proof production audit store.</p>${opsAuditRows()}</section>`);opsHTML('ops-floor-summary',[0,1,2].map(f=>{const a=priorityPool(OPS.data,OPS.mall).filter(b=>b.floor===f),x=priorityCounts(a,0);return `<div><b>B${f+1}</b><span><i class="dot available"></i>${x.available} available</span><span><i class="dot reserved"></i>${x.reserved} reserved</span><span><i class="dot occupied"></i>${x.occupied} occupied</span></div>`;}).join(''));opsSyncScene();}
-function opsSyncScene(){if(!store.sim||!opsVehicleTemplate)return;const sim=store.sim;sim.vehicles=[];sim.occ.fill(-1);sim.claim.fill(-1);sim.hold.fill(null);for(const b of store.L.bays)b.flag='maintenance';const pool=priorityPool(OPS.data,OPS.mall);for(let f=0;f<3;f++){const physical=store.L.bays.filter(b=>b.floor===f),slots=pool.filter(b=>b.floor===f);slots.forEach((slot,i)=>{const bay=physical[i];bay.flag='none';bay.type='general';if(slot.status==='reserved')sim.hold[bay.idx]=slot.id;if(slot.status==='occupied'){const idx=sim.vehicles.length;sim.vehicles.push({...opsVehicleTemplate,i:idx,code:slot.plate||slot.id,state:'parked',pState:'parked',bay:bay.idx,paidT:Infinity,parkT:0,gateT:0,member:slot.booked});sim.occ[bay.idx]=idx;}});}store.selected=null;if(opsScene)opsScene.dirty=true;}
-function opsRemember(target:HTMLInputElement|HTMLSelectElement){const map:Record<string,string>={'ops-entry-plate':'gatePlate','ops-entry-booking':'gateBooking','ops-entry-kind':'gateKind','ops-observed':'observed','ops-reconcile-note':'reconcileNote','ops-plan-note':'planNote','ops-resolution':'resolution'};if(map[target.id])(OPS as any)[map[target.id]]=target.value;}
-async function opsInit(){await priorityEnsure();OPS.data=priorityRead();opsEl('ops-mall').innerHTML=Object.entries(PRIORITY_MALLS).map(([id,label])=>`<option value="${id}">${label}</option>`).join('');resetSim(0);opsVehicleTemplate=store.sim.vehicles.find(v=>v.state==='parked')||store.sim.vehicles[0];store.floorView=0;store.layers={lights:true,cctv:false,route:false,autoRotate:false};store.playing=false;opsSyncScene();const canvas=opsEl('scene') as HTMLCanvasElement;try{const gl=new GLScene(canvas,opsEl('labels'),opsEl('tip'));opsScene=gl.ok?gl:new Scene3D(canvas);}catch{opsScene=new Scene3D(canvas);}opsScene.resize();opsScene.fit(false);opsRender();new ResizeObserver(()=>{opsScene?.resize();if(opsScene)opsScene.dirty=true;}).observe(opsEl('viewport'));function frame(){if(OPS.page==='overview'&&opsScene&&(opsScene.dirty||opsScene.animating))opsScene.render(1);requestAnimationFrame(frame);}requestAnimationFrame(frame);
-  prioritySubscribe(()=>{const focus=document.activeElement as HTMLInputElement;const id=focus?.id,start=focus?.selectionStart,end=focus?.selectionEnd;OPS.data=priorityRead();opsRender();const restored=id?document.getElementById(id) as HTMLInputElement:null;if(restored){restored.focus();try{restored.setSelectionRange(start,end);}catch{}}});
-  document.addEventListener('input',e=>opsRemember(e.target as HTMLInputElement));document.addEventListener('change',e=>{const t=e.target as HTMLSelectElement;opsRemember(t);if(t.id==='ops-mall'){OPS.mall=t.value;OPS.gateBooking='';OPS.gatePlate='';OPS.message='';opsRender();}if(t.id==='ops-entry-kind')opsRenderGate();if(t.id==='ops-entry-booking'){const b=opsBookings().find(b=>b.id===t.value);if(b)OPS.gatePlate=b.plate;opsRenderGate();}});
-  document.addEventListener('submit',e=>{const form=e.target as HTMLFormElement;if(!form.id.startsWith('ops-'))return;e.preventDefault();if(form.id==='ops-gate-form')void opsRun(()=>priorityAdmit(OPS.mall,OPS.gatePlate,OPS.gateKind as 'booking'|'walkin',OPS.gateBooking));if(form.id==='ops-reconcile-form')void opsRun(()=>priorityReconcile(OPS.mall,Number(OPS.observed),OPS.reconcileNote));if(form.id==='ops-plan-form'){const decision=((e as SubmitEvent).submitter as HTMLButtonElement)?.value;if(decision==='accepted'||decision==='rejected')void opsRun(()=>priorityPlan(OPS.mall,decision,OPS.planNote));}});
-  document.addEventListener('click',e=>{const b=(e.target as Element).closest('button') as HTMLButtonElement|null;if(!b)return;if(b.dataset.page){opsGo(b.dataset.page);return;}if(b.dataset.fault){void opsRun(()=>priorityFault(OPS.mall,b.dataset.fault as any));return;}if(b.dataset.metric){OPS.metric=b.dataset.metric;opsRender();return;}if(b.dataset.floor){store.floorView=b.dataset.floor==='all'?'all':Number(b.dataset.floor);document.querySelectorAll('#ops-floors button').forEach(el=>el.setAttribute('aria-pressed',String(el===b)));opsScene?.fit(true);if(opsScene)opsScene.dirty=true;return;}if(b.dataset.selectBooking){const booking=opsBookings().find(x=>x.id===b.dataset.selectBooking)!;OPS.gateBooking=booking.id;OPS.gatePlate=booking.plate;OPS.gateKind='booking';opsGo('overview');opsEl('ops-entry-plate').focus();return;}if(b.dataset.resolve){void opsRun(()=>priorityResolve(OPS.mall,b.dataset.resolve!,OPS.resolution));return;}if(b.id==='ops-pitch')void opsRun(()=>priorityDeckScenario(OPS.mall));if(b.id==='ops-exit')void opsRun(()=>priorityExit(OPS.mall));if(b.id==='ops-advance')void opsRun(()=>priorityClock(OPS.mall));if(b.id==='ops-arrival-time')void opsRun(()=>priorityClock(OPS.mall,OPS.gateBooking));if(b.id==='ops-reset-view'){opsScene?.fit(true);if(opsScene)opsScene.dirty=true;}if(b.id==='ops-latest-booking'){const booking=opsBookings().find(x=>x.source==='driver'&&x.status==='confirmed');if(!booking)opsNotice({ok:false,message:'No driver booking awaiting arrival. Open the driver app in this browser and create one first.'});else{OPS.gateBooking=booking.id;OPS.gatePlate=booking.plate;OPS.gateKind='booking';opsRenderGate();}}});
+import { GLScene, SceneView } from './render/gl3d';
+import { initHeader, renderHeader, renderKPIs, renderSide, renderLower, renderPhone, initLowerStatic, applyAction, setResponse, setWeight, resetWeights, renderBanner } from './ui/panels';
+import { renderForecast, renderAllocation, renderReservations, renderImpact, setAssumption, resetAssumptions, validateObs, importCSV } from './ui/pages';
+import { initPresentation, startPresentation, presNext, presBack, presToggle, presExit, presTick, pres } from './ui/presentation';
+import { ScenarioId, clockLabel } from './core/scenarios';
+import { AllocWeights } from './core/allocation';
+import { ForecastAssumptions } from './core/forecast';
+import { DestId, FLOOR_NAMES, BookableType } from './core/layout';
+import { FieldObs, EmissionSettings } from './ui/store';
+
+const NAV: { id: Section; label: string; icon: string }[] = [
+  { id: 'overview', label: 'Overview', icon: 'overview' },
+  { id: 'forecast', label: 'Forecast', icon: 'forecast' },
+  { id: 'allocation', label: 'Allocation', icon: 'allocation' },
+  { id: 'reservations', label: 'Reservations', icon: 'reservations' },
+  { id: 'impact', label: 'Impact', icon: 'impact' }
+];
+
+let scene: SceneView;
+let uiDirty = true;
+let pageDirty = true;
+
+function goSection(s: Section) {
+  store.section = s;
+  for (const n of NAV) {
+    const v = document.getElementById(`view-${n.id}`) as HTMLElement;
+    v.hidden = n.id !== s;
+  }
+  for (const b of $$('#rail [data-section]')) {
+    const on = b.dataset.section === s;
+    b.setAttribute('aria-current', on ? 'page' : 'false');
+  }
+  if (s === 'overview') {
+    requestAnimationFrame(() => { scene.resize(); scene.dirty = true; uiDirty = true; });
+  }
+  pageDirty = true;
+  uiDirty = true;
+  $('#main').scrollTop = 0;
 }
-void opsInit().catch(()=>{opsEl('ops-message').hidden=false;opsEl('ops-message').textContent='Could not initialize the demo ledger. Enable browser storage and reload.';});
+
+function renderRail() {
+  $('#rail').innerHTML = NAV.map((n) => `<button type="button" data-section="${n.id}" aria-current="${n.id === store.section ? 'page' : 'false'}">${icon(n.icon, 20)}<span>${n.label}</span></button>`).join('') +
+    `<button type="button" class="rail-help" id="help-btn" title="How to use ParkFlow and keyboard shortcuts"><span class="help-ic" aria-hidden="true">?</span><span>Help</span></button>`;
+}
+
+function renderViewportControls() {
+  const fv = store.floorView;
+  for (const b of $$('#floor-seg button')) {
+    const v = b.dataset.floorview as string;
+    b.setAttribute('aria-pressed', String(v === String(fv)));
+    (b as HTMLButtonElement).disabled = store.planView && v === 'all';
+  }
+  $('#plan-toggle').setAttribute('aria-pressed', String(store.planView));
+  const sel = store.selected;
+  ($('#focus-btn') as HTMLButtonElement).disabled = !sel;
+  const following = scene && scene.followId !== null;
+  const label = following ? 'Stop following' : sel && sel.kind === 'bay' ? 'Show selected bay' : 'Follow selected';
+  const fl = $('#focus-label');
+  if (fl.textContent !== label) fl.textContent = label;
+  $('#focus-btn').setAttribute('aria-pressed', String(!!following));
+  $('#focus-btn').title = sel ? (following ? 'Stop moving the camera with this car' : 'Move the camera to the selection') : 'Select a car or bay first';
+}
+
+function renderToast() {
+  const el = $('#toast');
+  const age = performance.now() - store.toastT;
+  if (store.toast && age < 2600) {
+    el.textContent = store.toast;
+    el.classList.add('show');
+  } else el.classList.remove('show');
+}
+
+function renderAll() {
+  renderHeader();
+  renderKPIs();
+  renderViewportControls();
+  if (store.section === 'overview') {
+    renderBanner();
+    renderSide();
+    renderLower();
+    renderPhone();
+  }
+  renderToast();
+}
+
+function renderPage() {
+  if (store.section === 'forecast') renderForecast();
+  else if (store.section === 'allocation') renderAllocation();
+  else if (store.section === 'reservations') renderReservations();
+  else if (store.section === 'impact') renderImpact();
+}
+
+function runComparisonUI() {
+  const btn = $('#run-compare') as HTMLButtonElement;
+  btn.disabled = true;
+  btn.innerHTML = `${icon('compare', 16)}<span>Running…</span>`;
+  setTimeout(() => {
+    try {
+      runMatchedComparison();
+      store.comparisonStale = false;
+      toast('Matched comparison complete');
+      goSection('impact');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `${icon('compare', 16)}<span>Run comparison</span>`;
+    }
+  }, 30);
+}
+
+function selectVehicle(id: number, focus = false) {
+  store.selected = { kind: 'vehicle', id };
+  if (store.section !== 'overview' && store.section !== 'allocation') goSection('overview');
+  emit('select');
+  if (focus && store.section === 'overview') scene.focusVehicle(store.sim.vehicles[id]);
+}
+
+function selectBay(id: number) {
+  store.selected = { kind: 'bay', id };
+  store.rightTab = 'vehicle';
+  if (store.section !== 'overview') goSection('overview');
+  emit('select');
+  scene.focusBay(store.sim.L.bays[id]);
+}
+
+function handleAct(el: HTMLElement) {
+  const act = el.dataset.act as string;
+  const sim = store.sim;
+  const id = el.dataset.id;
+  switch (act) {
+    case 'run-compare': runComparisonUI(); break;
+    case 'pick-searching': {
+      const list = sim.searchingVehicles().filter((v) => v.state === 'driving');
+      const v = list.sort((a, b) => a.gateT - b.gateT)[0];
+      if (v) selectVehicle(v.i, true);
+      break;
+    }
+    case 'pick-latest': {
+      const v = sim.vehicles.filter((x) => x.gateT >= 0).sort((a, b) => b.gateT - a.gateT)[0];
+      if (v) selectVehicle(v.i, true);
+      break;
+    }
+    case 'focus-selected':
+    case 'focus-bay': focusSelected(); break;
+    case 'tab-reasoning': store.rightTab = 'reasoning'; emit('select'); break;
+    case 'select-vehicle': if (id) selectVehicle(Number(id), store.section === 'overview'); break;
+    case 'select-bay': if (id) selectBay(Number(id)); break;
+    case 'review-action': store.pendingAction = id || null; emit('action'); break;
+    case 'cancel-action': store.pendingAction = null; emit('action'); break;
+    case 'confirm-action': if (id) applyAction(id); break;
+    case 'ack-assist': {
+      const r = sim.assistance.find((x) => x.id === id);
+      if (r) { r.status = 'acknowledged'; sim.log('operator', `${r.id} acknowledged by the operator.`, 'ok'); }
+      emit('action');
+      break;
+    }
+    case 'reset-weights': resetWeights(); markStale(); emit('weights'); break;
+    case 'floor': { const f = Number(el.dataset.floor); store.floorView = store.floorView === f && !store.planView ? 'all' : f; store.planView = false; emit('floor'); scene.fit(true); break; }
+    case 'reset-assumptions': resetAssumptions(); markStale(); pageDirty = true; break;
+    case 'open-actions': store.rightTab = 'actions'; goSection('overview'); break;
+    case 'burst': {
+      const dest = (store.drafts.burstDest || 'atrium') as DestId;
+      const vs = sim.injectArrivals(4, dest);
+      store.demoBurst = vs.map((v) => v.i);
+      toast('Four arrivals added at the entrance');
+      pageDirty = true;
+      break;
+    }
+    case 'res-checkin': if (id) { store.resMsg = sim.checkInNow(id); pageDirty = true; } break;
+    case 'res-cancel': if (id) { store.resMsg = sim.cancelReservation(id); pageDirty = true; } break;
+    case 'field-del': store.field = store.field.filter((o) => o.id !== id); persist(); store.fieldMsg = `Observation ${id} deleted.`; pageDirty = true; break;
+    case 'field-import': {
+      const r = importCSV(store.drafts.fCsv || '');
+      store.fieldMsg = `${r.added} row${r.added === 1 ? '' : 's'} imported${r.rejected.length ? `, ${r.rejected.length} rejected: ${r.rejected.slice(0, 3).join(' ')}${r.rejected.length > 3 ? ' …' : ''}` : '.'}`;
+      if (r.added && !r.rejected.length) store.drafts.fCsv = '';
+      pageDirty = true;
+      break;
+    }
+    case 'field-clear': store.drafts.fieldClear = '1'; pageDirty = true; break;
+    case 'field-clear-no': store.drafts.fieldClear = ''; pageDirty = true; break;
+    case 'field-clear-yes': store.field = []; persist(); store.drafts.fieldClear = ''; store.fieldMsg = 'All observations deleted.'; pageDirty = true; break;
+  }
+  uiDirty = true;
+}
+
+function markStale() {
+  if (store.comparison) store.comparisonStale = true;
+}
+
+function focusSelected() {
+  const sel = store.selected;
+  if (!sel) return;
+  if (store.section !== 'overview') goSection('overview');
+  if (sel.kind === 'vehicle') scene.focusVehicle(store.sim.vehicles[sel.id]);
+  else scene.focusBay(store.sim.L.bays[sel.id]);
+}
+
+function bindEvents() {
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    const sec = t.closest('[data-section]') as HTMLElement | null;
+    if (sec) { goSection(sec.dataset.section as Section); return; }
+    const go = t.closest('[data-go]') as HTMLElement | null;
+    if (go) { goSection(go.dataset.go as Section); return; }
+    const wb = t.closest('[data-welcome]') as HTMLElement | null;
+    if (wb) {
+      closeWelcome();
+      if (wb.dataset.welcome === 'tour') startPresentation();
+      return;
+    }
+    const p = t.closest('[data-pres]') as HTMLElement | null;
+    if (p) {
+      const a = p.dataset.pres;
+      if (a === 'next') presNext(); else if (a === 'back') presBack(); else if (a === 'pause') presToggle(); else presExit();
+      uiDirty = true;
+      return;
+    }
+    const tab = t.closest('[data-tab]') as HTMLElement | null;
+    if (tab) { store.rightTab = tab.dataset.tab as typeof store.rightTab; renderSide(true); return; }
+    const filt = t.closest('[data-filter]') as HTMLElement | null;
+    if (filt) { store.eventFilter = filt.dataset.filter as string; uiDirty = true; return; }
+    const sp = t.closest('[data-speed]') as HTMLElement | null;
+    if (sp) { store.speed = Number(sp.dataset.speed); uiDirty = true; return; }
+    const fv = t.closest('[data-floorview]') as HTMLElement | null;
+    if (fv) {
+      const v = fv.dataset.floorview as string;
+      store.floorView = v === 'all' ? 'all' : Number(v);
+      emit('floor');
+      scene.fit(true);
+      return;
+    }
+    const act = t.closest('[data-act]') as HTMLElement | null;
+    if (act && (act.tagName === 'BUTTON' || act.getAttribute('role') === 'button' || act.tagName === 'TR' || act.tagName === 'LI' || act.tagName === 'A')) handleAct(act);
+  });
+  document.addEventListener('keydown', (e) => {
+    const t = e.target as HTMLElement;
+    const typing = t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA';
+    if (!$('#welcome').hidden) {
+      if (e.key === 'Escape') closeWelcome();
+      return;
+    }
+    if (!typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      if (e.key === ' ' && (t === document.body || t.tagName === 'CANVAS')) { e.preventDefault(); $('#play').click(); return; }
+      if (e.key === '?') { openWelcome(); return; }
+      if (store.section === 'overview' && /^[0-3]$/.test(e.key)) {
+        store.floorView = e.key === '0' ? 'all' : Number(e.key) - 1;
+        store.planView = false;
+        emit('floor');
+        scene.fit(true);
+        return;
+      }
+      if ((e.key === 'f' || e.key === 'F') && store.selected) { $('#focus-btn').click(); return; }
+      if (e.key === 'Escape' && store.selected && !pres.active) { store.selected = null; scene.stopFollow(); emit('select'); return; }
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && t.getAttribute('role') === 'button' && t.tagName !== 'BUTTON') {
+      e.preventDefault();
+      t.click();
+    }
+    if (pres.active && t.tagName !== 'INPUT' && t.tagName !== 'SELECT' && t.tagName !== 'TEXTAREA') {
+      if (e.key === 'ArrowRight') presNext();
+      else if (e.key === 'ArrowLeft') presBack();
+      else if (e.key === 'Escape') presExit();
+    }
+    if (t.getAttribute('role') === 'tab' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      const tabs = $$('#side-tabs [role="tab"]');
+      const i = tabs.indexOf(t);
+      const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      n.click();
+      n.focus();
+    }
+  });
+  document.addEventListener('input', (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.dataset.draft) store.drafts[t.dataset.draft] = t.type === 'checkbox' ? (t.checked ? '1' : '') : t.value;
+    if (t.dataset.weight) {
+      setWeight(t.dataset.weight as keyof AllocWeights, Number(t.value));
+      const o = t.parentElement?.querySelector('output');
+      if (o) o.textContent = Number(t.value).toFixed(2);
+      markStale();
+    }
+    if (t.dataset.resp) {
+      setResponse(t.dataset.resp, Number(t.value));
+      const o = t.parentElement?.querySelector('output');
+      if (o) o.textContent = `${Math.round(Number(t.value) * 100)}%`;
+    }
+    if (t.dataset.assume) {
+      const k = t.dataset.assume as keyof ForecastAssumptions;
+      setAssumption(k, Number(t.value));
+      markStale();
+      const o = t.parentElement?.querySelector('output');
+      if (o) o.textContent = t.step && Number(t.max) <= 1 ? `${Math.round(Number(t.value) * 100)}%` : t.value;
+    }
+    if (t.dataset.act === 'noshow') {
+      store.noShowRate = Number(t.value);
+      persist();
+      const o = t.parentElement?.querySelector('output');
+      if (o) o.textContent = `${Math.round(Number(t.value) * 100)}%`;
+    }
+    if (t.dataset.emission) {
+      const k = t.dataset.emission as keyof EmissionSettings;
+      const v = Number(t.value);
+      if (isFinite(v) && v >= 0) { store.emission[k] = v; persist(); }
+    }
+  });
+  document.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    if (t.id === 'scenario') { setScenario(t.value as ScenarioId); scene.fit(true); toast(`Scenario: ${(t as unknown as HTMLSelectElement).selectedOptions[0].text}`); return; }
+    if (t.dataset.act === 'vehicle-dest' && store.selected && store.selected.kind === 'vehicle') {
+      const msg = store.sim.changeDestination(store.selected.id, t.value as DestId);
+      toast(msg);
+      t.blur();
+    }
+    if (t.dataset.act === 'driver-dest') { store.driver.dest = t.value as DestId; t.blur(); }
+    if (t.dataset.act === 'driver-flag') { const f = t.dataset.flag as 'ladies' | 'member'; store.driver[f] = t.checked; t.blur(); }
+    if (t.dataset.weight || t.dataset.assume || t.dataset.resp || t.dataset.emission || t.dataset.act === 'noshow') { t.blur(); pageDirty = true; }
+    if (t.id === 'f-file' && t.files && t.files[0]) {
+      const file = t.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const r = importCSV(String(reader.result || ''));
+        store.fieldMsg = `${esc(file.name)}: ${r.added} row${r.added === 1 ? '' : 's'} imported${r.rejected.length ? `, ${r.rejected.length} rejected: ${r.rejected.slice(0, 3).join(' ')}` : '.'}`;
+        pageDirty = true;
+      };
+      reader.onerror = () => { store.fieldMsg = 'The file could not be read. Paste the rows instead.'; pageDirty = true; };
+      reader.readAsText(file);
+    }
+    uiDirty = true;
+  });
+  document.addEventListener('submit', (e) => {
+    const f = e.target as HTMLFormElement;
+    e.preventDefault();
+    const sim = store.sim;
+    if (f.id === 'res-form') {
+      if (store.drafts.resElig !== '1') { store.resMsg = 'Confirm the driver is eligible for this bay type before reserving.'; pageDirty = true; return; }
+      const type = (store.drafts.resType || 'ladies') as BookableType;
+      const r = sim.createReservation(type, Number(store.drafts.resStart || 20), Number(store.drafts.resDur || 90));
+      store.resMsg = r.ok ? `${r.r.id} confirmed. Bay ${sim.L.bays[r.r.bay].id} is held until ${clockOf(r.r.windowEnd + r.r.grace)}.` : r.error;
+      if (r.ok) store.drafts.resElig = '';
+      pageDirty = true;
+    }
+    if (f.id === 'assist-form') {
+      if (store.drafts.assistPermit !== '1') { store.resMsg = 'Accessible-bay assistance needs an OKU permit holder in the vehicle.'; pageDirty = true; return; }
+      const req = sim.requestAssistance(Number(store.drafts.assistEta || 10));
+      store.resMsg = `${req.id} logged for the operator. Accessible bays stay protected for permit holders; this is not a guaranteed bay.`;
+      store.drafts.assistPermit = '';
+      pageDirty = true;
+    }
+    if (f.id === 'field-form') {
+      const o: FieldObs = { id: (store.drafts.fId || '').trim(), date: store.drafts.fDate || '', gateEntry: store.drafts.fIn || '', parked: store.drafts.fOut || '', zone: store.drafts.fZone || '', note: store.drafts.fNote || '' };
+      const err = validateObs(o, store.field);
+      if (err) store.fieldMsg = err;
+      else {
+        store.field.push(o);
+        persist();
+        store.fieldMsg = `Observation ${o.id} added.`;
+        store.drafts.fId = ''; store.drafts.fIn = ''; store.drafts.fOut = ''; store.drafts.fNote = '';
+      }
+      pageDirty = true;
+    }
+    uiDirty = true;
+  });
+
+  $('#play').addEventListener('click', () => {
+    if (store.sim.t >= store.sim.tEnd) return;
+    store.playing = !store.playing;
+    uiDirty = true;
+  });
+  $('#reset').addEventListener('click', () => {
+    resetSim();
+    toast('Scenario reset to its starting state');
+  });
+  $('#run-compare').addEventListener('click', runComparisonUI);
+  $('#present').addEventListener('click', () => startPresentation());
+  $('#plan-toggle').addEventListener('click', () => {
+    store.planView = !store.planView;
+    if (store.planView && store.floorView === 'all') store.floorView = 0;
+    emit('floor');
+    scene.fit(true);
+  });
+  $('#focus-btn').addEventListener('click', () => {
+    if (scene.followId !== null) { scene.stopFollow(); uiDirty = true; return; }
+    focusSelected();
+    uiDirty = true;
+  });
+  $('#help-btn').addEventListener('click', () => openWelcome());
+  $('#welcome').addEventListener('click', (e) => { if (e.target === $('#welcome')) closeWelcome(); });
+  $('#reset-cam').addEventListener('click', () => scene.fit(true));
+  $('#phone-toggle').addEventListener('click', () => {
+    store.driver.collapsed = !store.driver.collapsed;
+    if (store.driver.collapsed) store.driver.autoOpen = false;
+    renderPhone(true);
+    scene.fit(true);
+  });
+  $('#legend-toggle').addEventListener('click', () => {
+    const lg = $('#legend');
+    const open = lg.classList.toggle('open');
+    $('#legend-toggle').setAttribute('aria-expanded', String(open));
+  });
+  // Layers popover: what the 3D model draws. Choices persist per viewer.
+  const pop = $('#layers-pop');
+  const setLayersOpen = (open: boolean) => {
+    pop.hidden = !open;
+    $('#layers-btn').setAttribute('aria-expanded', String(open));
+  };
+  for (const inp of $$('#layers-pop input[data-layer]') as HTMLInputElement[]) inp.checked = !!store.layers[inp.dataset.layer as keyof typeof store.layers];
+  $('#layers-btn').addEventListener('click', (e) => { e.stopPropagation(); setLayersOpen(!!pop.hidden); });
+  document.addEventListener('click', (e) => {
+    if (!pop.hidden && !(e.target as HTMLElement).closest('.layers')) setLayersOpen(false);
+  });
+  pop.addEventListener('keydown', (e) => { if (e.key === 'Escape') { setLayersOpen(false); $('#layers-btn').focus(); } });
+  pop.addEventListener('change', (e) => {
+    const t = e.target as HTMLInputElement;
+    const k = t.dataset.layer as keyof typeof store.layers | undefined;
+    if (!k) return;
+    store.layers[k] = t.checked;
+    persist();
+    scene.dirty = true;
+    toast(`${t.closest('label')?.querySelector('b')?.textContent || 'Layer'} ${t.checked ? 'on' : 'off'}`);
+  });
+}
+
+function openWelcome() {
+  const card = $('#welcome-card');
+  card.innerHTML = `
+    <div><h2 id="welcome-title">Welcome to ParkFlow</h2>
+    <p class="lede">A simulated parking command centre for the KL East Mall pilot concept. Everything here comes from one simulation with synthetic data; nothing is connected to the real mall.</p></div>
+    <ol class="steps">
+      <li><b>Watch the car park</b>The light above each bay shows its state, like the real indicators: green free, red taken, blinking amber about to leave. The level board counts free bays on each floor.</li>
+      <li><b>Click any car</b>See which zone ParkFlow chose for it, the reasons in plain language, and what the driver's phone shows.</li>
+      <li><b>Measure the impact</b>“Run comparison” replays the same demand with and without guidance and reports time and distance saved.</li>
+    </ol>
+    <div class="keys"><span><kbd>Space</kbd> play or pause</span><span><kbd>0</kbd>–<kbd>3</kbd> all floors, B1, B2, B3</span><span><kbd>F</kbd> follow the selected car</span><span><kbd>Esc</kbd> clear selection</span><span><kbd>?</kbd> this help</span></div>
+    <div class="modal-actions">
+      <button type="button" class="btn" data-welcome="close">Explore on my own</button>
+      <button type="button" class="btn btn-primary" data-welcome="tour">${icon('present', 16)} Start the 90-second tour</button>
+    </div>`;
+  $('#welcome').hidden = false;
+  (card.querySelector('[data-welcome="tour"]') as HTMLElement).focus();
+}
+
+function closeWelcome() {
+  $('#welcome').hidden = true;
+  saveJSON('parkflow.welcome', { seen: true });
+}
+
+function clockOf(t: number): string {
+  return clockLabel(store.sim.scn, t, false);
+}
+
+function loop() {
+  let last = performance.now();
+  let acc = 0;
+  let uiAcc = 0;
+  let pageAcc = 0;
+  const frame = (now: number) => {
+    const dt = Math.min(0.25, (now - last) / 1000);
+    last = now;
+    const sim = store.sim;
+    let ticked = false;
+    if (store.playing && sim.t < sim.tEnd) {
+      acc += dt * store.speed;
+      let n = 0;
+      while (acc >= 1 && n < 400 && sim.t < sim.tEnd) { sim.step(); acc -= 1; n++; }
+      ticked = n > 0;
+      if (sim.t >= sim.tEnd) {
+        store.playing = false;
+        acc = 0;
+        toast('Scenario run complete. Reset to replay it.');
+        uiDirty = true;
+      }
+    }
+    const alpha = store.playing ? Math.min(1, acc) : 1;
+    if (store.section === 'overview' && (ticked || scene.dirty || scene.animating || (store.playing && store.speed > 0))) scene.render(alpha);
+    uiAcc += dt;
+    pageAcc += dt;
+    if (uiDirty || uiAcc > 0.25) {
+      renderAll();
+      uiDirty = false;
+      uiAcc = 0;
+    }
+    if (store.section !== 'overview' && (pageDirty || pageAcc > 0.6)) {
+      renderPage();
+      pageDirty = false;
+      pageAcc = 0;
+    }
+    presTick();
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
+
+function showFallback() {
+  const fb = $('#fallback');
+  fb.hidden = false;
+  const sim = store.sim;
+  const c = sim.counts();
+  fb.innerHTML = `<p><strong>The model view could not start in this browser.</strong></p><p>All other panels use the same simulation. Current capacity:</p><ul>${[0, 1, 2].map((f) => `<li>${FLOOR_NAMES[f]}: ${c.perFloor[f].generalFree} general bays free, ${c.perFloor[f].occupied} occupied</li>`).join('')}</ul>`;
+}
+
+function init() {
+  renderRail();
+  initHeader();
+  initLowerStatic();
+  if (prefersReducedMotion()) { store.playing = false; store.speed = 5; }
+  else store.speed = 5;
+  resetSim(480);
+  const gls = new GLScene($('#scene') as HTMLCanvasElement, $('#vp-labels'), $('#vp-tip'));
+  if (gls.ok) scene = gls;
+  else {
+    // WebGL2 unavailable: swap in a fresh canvas for the 2D renderer
+    const old = $('#scene') as HTMLCanvasElement;
+    const cv = document.createElement('canvas');
+    cv.id = 'scene';
+    cv.setAttribute('aria-label', old.getAttribute('aria-label') || '');
+    old.replaceWith(cv);
+    $('#vp-labels').hidden = true;
+    scene = new Scene3D(cv);
+    if (!scene.ok) showFallback();
+  }
+  initPresentation(scene, goSection);
+  on((topic) => {
+    uiDirty = true;
+    pageDirty = true;
+    if (scene) scene.dirty = true;
+    if (topic === 'select' && store.selected && store.selected.kind === 'vehicle' && store.driver.collapsed && store.driver.autoOpen) {
+      store.driver.collapsed = false;
+      renderPhone(true);
+    }
+    if (topic === 'reset') {
+      store.playing = store.playing && !prefersReducedMotion() ? true : store.playing;
+      scene.fit(false);
+    }
+  });
+  bindEvents();
+  goSection('overview');
+  requestAnimationFrame(() => { scene.resize(); scene.fit(false); scene.dirty = true; });
+  if (!loadJSON<{ seen: boolean }>('parkflow.welcome', { seen: false }).seen) openWelcome();
+  loop();
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();

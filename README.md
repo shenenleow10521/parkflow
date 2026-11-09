@@ -3,21 +3,13 @@
 Hackathon prototype for the Sime Darby Property University Hackathon.
 KL East Mall pilot concept · illustrative layout · simulated data.
 
-## Current interactive prototype
+## Current driver prototype
 
-The driver and operator now share one 100-slot Priority Zone ledger per selected mall in the same browser and origin. KLGCC is the default demonstration selection, not a confirmed pilot site. The current deck presents KLGCC as a proposed pilot candidate.
+The driver keeps the red-and-white booking flow: reserve shared Priority Zone access, retain the demo QR and view Available / Reserved / Occupied counts. Membership tiers and navigation are removed. The 100-slot illustrative pool and RM5 proposed fee remain simulated, with no payment processing.
 
-- Driver: reserve zone access, display a demo QR reference and view Available / Reserved / Occupied counts. No membership tier or navigation step.
-- Operator: capacity guard, accepted bookings, simulated plate/window verification, walk-in control, sensor-fault recovery, shadow planning and a traceable demo event log. The 3D model mirrors the same ledger and remains illustrative.
-- Guard example: `100 capacity − 82 occupied − 12 outstanding commitments − 2 safety = 4 available to promise`. A booked arrival moves one commitment into occupancy without another capacity deduction.
-- New bookings pause on data faults. Reconnected sensors require a matching observed count and a reconciliation note. Exit faults preserve egress without claiming an unverified vacancy.
-- Forecast curves are illustrative. Reviewing a shadow plan records a decision without deploying an LP policy. RM5 is a proposed demo fee with no payment processing.
+The operator dashboard has been restored to its previous full-car-park simulation, including the original 3D model, guidance metrics, forecasts, allocation, reservations and impact views. It runs independently from the current driver booking ledger.
 
-For a pitch walkthrough, click **Load pitch example**, make a booking in **Open driver app**, then **Use latest driver booking → Use arrival time → Simulate LPR entry**. Both tabs update the same booking. Test **Demo faults & recovery** to show safe suspension and count reconciliation. This synchronization does not provide a backend or cross-device operation. Capacity holds are conservative across future bookings until entry, cancellation or simulated expiry, rather than a production time-indexed scheduling engine.
-
-Run `npm run test:priority` with Node 24+ for concurrent capacity, duplicate entry, plate/window checks, cancellation, expiry, fault recovery, mall isolation and driver-rendering invariants. `test:operator` and `test:driver` run the shared flow invariants. The older browser scripts target the archived navigation-based UI and are available as `test:operator:legacy` and `test:driver:legacy`.
-
-The descriptions, screenshots and model results below include historical versions. Use the current HTML deck for the business case and the current live prototype for the booking flow.
+Run `npm run test:priority` with Node 24+ for the driver ledger and rendering invariants. `test:operator` runs the original operator browser checks. The archived driver browser checks remain available as `test:driver:legacy`.
 
 ## Current files
 

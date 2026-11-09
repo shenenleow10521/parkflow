@@ -6,7 +6,7 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const order = [
   'core/rng', 'core/layout', 'core/scenarios', 'core/allocation', 'core/forecast', 'core/sim', 'core/metrics',
-  'ui/dom', 'shared/priority', 'ui/store', 'render/scene3d', 'render/gl3d', 'main'
+  'ui/dom', 'ui/store', 'render/scene3d', 'render/gl3d', 'ui/charts', 'ui/panels', 'ui/pages', 'ui/presentation', 'main'
 ];
 // Driver and operator share the ledger; only the operator needs the 3D core.
 export const driverOrder = ['ui/dom', 'shared/priority', 'mobile/app'];
