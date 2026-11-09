@@ -89,7 +89,7 @@ PHOTO_CSS = '<style id="v2-photo-style">#thanks .thank-composition img { object-
 PILOT_SOURCE = ('<div class="source">Proposed pilot sequence and owners. Bars show planned work, not completed delivery or agreed SLAs. '
                 'Reservation readiness includes reconciled counts, entitlement checks and a signed recovery SOP. Site access and baseline '
                 'instrumentation precede Week 1; live AI activation follows shadow-mode acceptance. Photos: Team Hexa site visit to KLGCC Mall, '
-                '9 Nov 2026.</div>')
+                '9 Nov 2026, including an interview with KLGCC customer-service staff.</div>')
 
 
 def part(name):
