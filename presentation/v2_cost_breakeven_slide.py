@@ -29,9 +29,9 @@ STEPS = [  # label lines, value, colour, show share of upfront
     (('Power, network', '& works'), fm.CABLING_ALLOWANCE, '#4b4f56', True),
     (('Software', 'integration'), fm.INTEGRATION_ALLOWANCE, '#e3261c', True),
 ]
-W, H, BASE, TOP_VAL_Y = 980, 476, 414, 92
+W, H, BASE, TOP_VAL_Y = 1440, 476, 414, 92
 scale = (BASE - TOP_VAL_Y) / fm.FIRST_YEAR
-slot, bar_w, x0 = 118, 80, 44
+slot, bar_w, x0 = 172, 104, 60
 
 
 def k(v):
@@ -55,12 +55,12 @@ def bar(i, lo, hi, colour, label, circle=None):
         out.append(f'<line x1="{x - slot + bar_w}" y1="{prev_top:.1f}" x2="{x}" y2="{prev_top:.1f}" '
                    'stroke="#9a9ea5" stroke-width="1.5" stroke-dasharray="5 4"/>')
     cx = x + bar_w / 2
-    out.append(text(cx, y_top - 11, k(hi - lo), 23, 700))
+    out.append(text(cx, y_top - 11, k(hi - lo), 24, 700))
     if circle is not None:
         out.append(f'<circle cx="{cx}" cy="{y_top - 64}" r="30" fill="#e3261c"/>')
         out.append(text(cx, y_top - 57, f'{circle}%', 19, 800, '#fff'))
     for j, line in enumerate(label):
-        out.append(text(cx, BASE + 28 + j * 22, line, 17, 400, '#3b3f45'))
+        out.append(text(cx, BASE + 28 + j * 22, line, 18, 400, '#3b3f45'))
     prev_top = y_top
     return out
 
@@ -79,24 +79,6 @@ waterfall = (f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="Waterfall of re
              f'<line x1="20" y1="{BASE}" x2="{W - 10}" y2="{BASE}" stroke="#1a1a1a" stroke-width="2"/>'
              + ''.join(parts) + '</g></svg>')
 
-# ---------- Cost sheet ----------
-ROWS = [
-    ('2 new zone LPR cameras', f'{fm.LPR:,}', 'Listed price', ''),
-    ('Compact LED sign', f'{fm.LED:,}', 'Listed price', ''),
-    ('Coverage cameras', f'{fm.CAMERA_ALLOWANCE:,}', 'Allowance', ''),
-    ('Power, network & works', f'{fm.CABLING_ALLOWANCE:,}', 'Allowance', ''),
-    ('Software integration', f'{fm.INTEGRATION_ALLOWANCE:,}', 'Allowance', 'hl'),
-    ('Gates, safety loops, controller', '—', 'Quote needed', 'gap'),
-    ('Upfront capital', f'{fm.UPFRONT:,}', '', 'sub'),
-    ('Year 1 zone running', f'{fm.ANNUAL_RUNNING:,}', 'Allowance', ''),
-    ('First-year priced total', f'{fm.FIRST_YEAR:,} +', '', 'total'),
-]
-tag_cls = {'Listed price': 'listed', 'Allowance': 'allow', 'Quote needed': 'quote'}
-sheet_rows = ''.join(
-    f'<tr class="{cls}"><td>{name}</td><td class="num">{rm}</td>'
-    f'<td>{f"<span class=cb-tag-{tag_cls[tag]}>{tag}</span>" if tag else ""}</td></tr>'
-    for name, rm, tag, cls in ROWS)
-
 # ---------- Break-even scale (paid bookings per day) ----------
 MAX_DAY = 30
 pos = lambda d: f'{d / MAX_DAY * 100:.2f}%'
@@ -113,8 +95,6 @@ ticks = ''.join(f'<span style="left:{pos(t)}">{t}</span>' for t in range(0, MAX_
 
 content = f'''<div class="cb-grid">
 <div class="cb-chart"><div class="cb-label">Upfront capital build-up <em>RM thousands · circles = share of upfront capital</em></div>{waterfall}</div>
-<div class="cb-sheet"><div class="cb-label">Cost sheet · one reference zone</div>
-<table><thead><tr><th>Cost line</th><th class="num">RM</th><th>Status</th></tr></thead><tbody>{sheet_rows}</tbody></table></div>
 </div>
 <div class="cb-be">
 <div class="cb-be-kpi"><span class="cb-label">Break-even</span><strong>{be_running:.1f}</strong><p>paid bookings a day cover the running cost, at ≈RM{net_per_booking:.2f} net per booking</p></div>
@@ -125,21 +105,9 @@ CSS = '''<style id="cost-breakeven-style">
 #investment .content { display:flex; flex-direction:column; gap:22px; }
 #investment .cb-label { font-size:13px; font-weight:750; letter-spacing:.08em; text-transform:uppercase; color:#1a1a1a; }
 #investment .cb-label em { font-style:normal; font-weight:500; letter-spacing:0; text-transform:none; color:#6b7280; margin-left:10px; font-size:14px; }
-#investment .cb-grid { display:grid; grid-template-columns:1fr 450px; gap:36px; flex:1; min-height:0; }
+#investment .cb-grid { display:grid; grid-template-columns:1fr; flex:1; min-height:0; }
 #investment .cb-chart { display:flex; flex-direction:column; min-height:0; }
 #investment .cb-chart svg { display:block; width:100%; flex:1; min-height:0; margin-top:4px; }
-#investment .cb-sheet table { width:100%; border-collapse:collapse; margin-top:12px; font-size:15px; table-layout:auto; }
-#investment .cb-sheet th { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:#6b7280; text-align:left; padding:0 6px 8px; border-bottom:2px solid #1a1a1a; background:none; }
-#investment .cb-sheet td { padding:8px 5px; border-bottom:1px solid #e5e7eb; vertical-align:middle; line-height:1.25; }
-#investment .cb-sheet .num { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; white-space:nowrap; }
-#investment .cb-sheet tr.hl td:first-child, #investment .cb-sheet tr.hl .num { color:#e3261c; font-weight:700; }
-#investment .cb-sheet tr.gap td { color:#6b7280; font-style:italic; }
-#investment .cb-sheet tr.sub td { font-weight:700; border-top:1.5px solid #1a1a1a; background:#f3f4f6; }
-#investment .cb-sheet tr.total td { font-weight:800; border-top:1.5px solid #1a1a1a; border-bottom:2px solid #1a1a1a; }
-#investment [class^="cb-tag-"] { display:inline-block; padding:2px 8px; font-size:12px; font-weight:700; white-space:nowrap; }
-#investment .cb-tag-listed { background:#1a1a1a; color:#fff; }
-#investment .cb-tag-allow { border:1.5px solid #9a9ea5; color:#4b4f56; }
-#investment .cb-tag-quote { border:1.5px solid #e3261c; color:#e3261c; }
 #investment .cb-be { flex:none; display:grid; grid-template-columns:300px 1fr; gap:40px; align-items:end; padding-top:10px; border-top:1px solid #e5e7eb; }
 #investment .cb-be-kpi strong { display:block; font-size:48px; line-height:1; font-weight:800; letter-spacing:-.03em; color:#e3261c; margin-top:8px; }
 #investment .cb-be-kpi p { font-size:15px; line-height:1.35; color:#3b3f45; margin-top:6px; }
