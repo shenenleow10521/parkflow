@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ParkFlow KLGCC video composition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600;700&family=Barlow+Semi+Condensed:wght@500;600;700&display=block" rel="stylesheet">
+<style>
+:root{
+  --night:#0a111c;--raised:#0d1624;--concrete:#111b2a;--concrete2:#16233a;--structure:#22324a;--structure2:#2f4360;
+  --chalk:#ebf0f6;--chalk2:#b8c5d6;--fog:#8696ad;--blue:#2f6fe0;--blue2:#7ea8ff;
+  --free:#34e58a;--wait:#ffb21f;--stop:#ff5a66;--held:#b48cff;--gold:#e3c35a;
+  --cond:"Barlow Condensed","Roboto Condensed","Arial Narrow",sans-serif;--semi:"Barlow Semi Condensed","Arial Narrow",sans-serif;--body:"Barlow","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--night);color:var(--chalk);font-family:var(--body)}
+#gl{position:absolute;left:0;top:0;display:block}
+.layer{position:absolute;inset:0;pointer-events:none}
+.scene{position:absolute;inset:0;opacity:0}
+.kicker{font-family:var(--semi);font-weight:600;font-size:22px;letter-spacing:.14em;text-transform:uppercase;color:var(--blue2)}
+.h1{font-family:var(--cond);font-weight:700;font-size:118px;line-height:.9;letter-spacing:-.01em}
+.h2{font-family:var(--cond);font-weight:700;font-size:64px;line-height:.95}
+.h3{font-family:var(--cond);font-weight:600;font-size:38px;line-height:1}
+.muted{color:var(--chalk2)}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:999px;font-family:var(--semi);font-weight:700;font-size:20px;letter-spacing:.06em;text-transform:uppercase}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.card{background:rgba(13,22,36,.92);border:1px solid var(--structure2);border-radius:18px;padding:28px}
+/* chrome */
+#brand{position:absolute;left:44px;top:30px;font-family:var(--semi);font-weight:700;font-size:21px;letter-spacing:.08em;text-transform:uppercase;color:var(--chalk2)}
+#brand b{color:var(--chalk)}
+#chapter{position:absolute;right:44px;top:26px;font-family:var(--semi);font-weight:700;font-size:21px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border-radius:999px;background:rgba(47,111,224,.18);border:1px solid rgba(126,168,255,.45);color:var(--blue2)}
+#foot{position:absolute;right:44px;top:70px;font-size:15px;color:var(--fog);text-align:right}
+#fade{position:absolute;inset:0;background:#05080e;opacity:0}
+#dim{position:absolute;inset:0;background:radial-gradient(ellipse at 60% 50%,rgba(10,17,28,.55),rgba(10,17,28,.92));opacity:0}
+/* footage */
+#footwrap{position:absolute;left:60px;top:110px;width:486px;height:864px;border-radius:20px;overflow:hidden;border:2px solid var(--structure2);background:#000}
+#footwrap img{width:100%;height:100%;object-fit:cover;display:block}
+#footlab{position:absolute;left:16px;top:16px;background:rgba(5,8,14,.75);color:var(--chalk)}
+#footbadge{position:absolute;left:16px;right:16px;bottom:16px;padding:16px 18px;border-radius:14px;font-family:var(--semi);font-weight:700;font-size:24px;letter-spacing:.04em}
+#foothud{position:absolute;left:16px;right:16px;top:70px;padding:14px 16px;border-radius:14px;background:rgba(10,17,28,.86);border:1px solid rgba(52,229,138,.6);font-family:var(--semi);font-weight:600;font-size:22px;opacity:0}
+#foothud b{color:var(--free);font-size:30px;font-family:var(--cond)}
+/* twin header */
+#twinhead{position:absolute;left:640px;top:110px}
+#twinhead .state{font-family:var(--cond);font-weight:700;font-size:76px;line-height:.9}
+#twinhead .sub{font-size:24px;color:var(--chalk2);margin-top:8px}
+#clock{position:absolute;right:60px;top:110px;text-align:right;opacity:0}
+#clock .lab{font-family:var(--semi);font-weight:700;font-size:20px;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk2)}
+#clock .val{font-family:var(--cond);font-weight:700;font-size:96px;line-height:.95}
+#clock .val2{font-family:var(--semi);font-weight:600;font-size:24px;color:var(--chalk2)}
+#buildstats{position:absolute;left:640px;bottom:130px;display:flex;gap:16px}
+#buildstats .st{padding:16px 22px;border-radius:14px;background:rgba(13,22,36,.88);border:1px solid var(--structure2);opacity:0}
+#buildstats .n{font-family:var(--cond);font-weight:700;font-size:54px;line-height:1}
+#buildstats .l{font-size:18px;color:var(--chalk2)}
+#compare{position:absolute;left:640px;right:60px;bottom:120px;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;opacity:0}
+#compare .c{padding:18px 22px;border-radius:16px;background:rgba(13,22,36,.92);border:1px solid var(--structure2)}
+#compare .l{font-family:var(--semi);font-weight:700;font-size:19px;letter-spacing:.08em;text-transform:uppercase;color:var(--chalk2)}
+#compare .v{display:flex;align-items:baseline;gap:14px;margin-top:6px;font-family:var(--cond);font-weight:700}
+#compare .b{font-size:44px;color:var(--stop);text-decoration:line-through;text-decoration-thickness:3px}
+#compare .a{font-size:64px;color:var(--free)}
+#compare .n{font-size:15px;color:var(--fog);margin-top:4px}
+/* 3D anchored tags */
+.tag{position:absolute;transform:translate(-50%,-100%);white-space:nowrap;padding:10px 16px;border-radius:12px;background:rgba(10,17,28,.9);border:1.5px solid var(--chalk2);font-family:var(--semi);font-weight:700;font-size:22px;opacity:0}
+.tag:after{content:"";position:absolute;left:50%;bottom:-11px;width:2px;height:10px;background:inherit;border-left:2px solid currentColor;transform:translateX(-50%)}
+.tag small{display:block;font-weight:500;font-size:17px;color:var(--chalk2)}
+/* ledger */
+#ledger{position:absolute;left:120px;top:150px;width:1000px}
+#cells{display:grid;grid-template-columns:repeat(20,1fr);gap:7px;margin:26px 0 18px}
+#cells i{display:block;height:58px;border-radius:7px;background:#3a4559}
+.legend{display:flex;gap:26px;flex-wrap:wrap;font-family:var(--semi);font-weight:600;font-size:22px}
+.legend span{display:flex;align-items:center;gap:9px}
+.legend .sw{width:20px;height:20px;border-radius:5px}
+#eq{margin-top:24px;font-family:var(--cond);font-weight:600;font-size:40px}
+#eq b{color:var(--free)}
+#reqs{position:absolute;left:1180px;top:150px;width:640px;display:flex;flex-direction:column;gap:14px}
+.req{padding:16px 20px;border-radius:14px;background:rgba(13,22,36,.94);border:1px solid var(--structure2);display:flex;justify-content:space-between;align-items:center;opacity:0;font-size:22px}
+.req .who{font-family:var(--semi);font-weight:700;font-size:24px}
+.req .res{font-family:var(--semi);font-weight:700;font-size:22px;padding:6px 12px;border-radius:999px}
+.ok{background:rgba(52,229,138,.16);color:var(--free)}
+.no{background:rgba(255,178,31,.16);color:var(--wait)}
+#guar{position:absolute;left:120px;top:800px;width:1000px;padding:20px 24px;border-radius:14px;border:1.5px solid var(--free);background:rgba(52,229,138,.08);font-family:var(--semi);font-weight:700;font-size:28px;opacity:0}
+/* lifecycle */
+#s-life:before{content:"";position:absolute;left:0;right:0;top:0;height:330px;background:linear-gradient(#0a111c 55%,rgba(10,17,28,0))}
+#s-app:before{content:"";position:absolute;left:560px;top:0;bottom:0;width:560px;background:linear-gradient(90deg,#0a111c 40%,rgba(10,17,28,0))}
+#steps{position:absolute;left:60px;right:60px;top:118px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.step{padding:14px 16px;border-radius:14px;background:rgba(13,22,36,.9);border:1.5px solid var(--structure2);opacity:.35}
+.step .n{font-family:var(--semi);font-weight:700;font-size:17px;letter-spacing:.1em;color:var(--fog)}
+.step .t{font-family:var(--cond);font-weight:700;font-size:30px;line-height:1.05;margin-top:4px}
+.step .s{font-size:17px;color:var(--chalk2);margin-top:4px}
+.step.on{opacity:1;border-color:var(--held)}
+.step.done{opacity:.8;border-color:var(--structure2)}
+.step.on .n{color:var(--held)}
+#noshow{position:absolute;right:60px;top:300px;width:470px;opacity:0}
+#noshow .clk{font-family:var(--cond);font-weight:700;font-size:72px;line-height:1}
+/* rules */
+#rules{position:absolute;left:120px;right:120px;top:150px}
+#prices{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px}
+.price{padding:26px;border-radius:18px;background:rgba(13,22,36,.94);border:1.5px solid var(--structure2);opacity:0}
+.price .p{font-family:var(--cond);font-weight:700;font-size:84px;line-height:1}
+.price .w{font-family:var(--semi);font-weight:700;font-size:28px;margin-top:6px}
+.price .d{font-size:20px;color:var(--chalk2);margin-top:6px}
+#fair{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;margin-top:34px}
+.fr{display:flex;gap:14px;align-items:flex-start;font-size:25px;opacity:0;padding:14px 18px;border-radius:14px;background:rgba(13,22,36,.88);border:1px solid var(--structure)}
+.fr .k{flex:none;width:34px;height:34px;border-radius:50%;background:rgba(126,168,255,.18);color:var(--blue2);font-family:var(--cond);font-weight:700;font-size:22px;display:flex;align-items:center;justify-content:center}
+/* ML */
+#ml{position:absolute;left:80px;right:80px;top:150px}
+#pipe{position:relative;height:430px;margin-top:20px}
+.node{position:absolute;padding:16px 20px;border-radius:16px;background:rgba(13,22,36,.95);border:1.5px solid var(--structure2);opacity:0}
+.node .t{font-family:var(--cond);font-weight:700;font-size:30px;line-height:1.05}
+.node .s{font-size:18px;color:var(--chalk2);margin-top:4px;line-height:1.3}
+.node .big{font-family:var(--cond);font-weight:700;font-size:46px;line-height:1;margin-top:8px}
+.node.model{border-color:var(--blue2);background:rgba(20,36,66,.96)}
+.node.dec{border-color:var(--free)}
+#pipe svg{position:absolute;inset:0}
+#mlchart{position:absolute;right:80px;top:712px;width:760px;opacity:0}
+#mlnote{position:absolute;left:80px;top:880px;width:880px;font-size:19px;color:var(--fog);opacity:0;line-height:1.45}
+#mlrule{position:absolute;left:80px;top:735px;width:900px;font-family:var(--cond);font-weight:700;font-size:40px;line-height:1.05;opacity:0}
+/* phone */
+#phone{position:absolute;left:150px;top:120px;width:410px;height:850px;border-radius:54px;background:#05080e;border:3px solid #33415a;padding:16px;box-shadow:0 30px 80px rgba(0,0,0,.55)}
+#screen{position:relative;width:100%;height:100%;border-radius:40px;overflow:hidden;background:#0d1624}
+.scr{position:absolute;inset:0;padding:58px 22px 22px;opacity:0;font-size:17px}
+.sbar{position:absolute;left:0;right:0;top:0;height:44px;display:flex;justify-content:space-between;padding:14px 28px 0;font-family:var(--semi);font-weight:700;font-size:16px;color:var(--chalk)}
+.app-h{font-family:var(--cond);font-weight:700;font-size:34px;line-height:1}
+.app-s{font-size:16px;color:var(--chalk2);margin-top:4px}
+.box{margin-top:14px;padding:14px;border-radius:16px;background:#16233a;border:1px solid #2f4360}
+.btn{margin-top:14px;height:54px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--semi);font-weight:700;font-size:20px}
+.btn.p{background:#7b4fe0;color:#fff}.btn.b{background:var(--blue);color:#fff}.btn.g{background:#1d2c45;color:var(--chalk)}
+.slot{display:flex;justify-content:space-between;align-items:center;padding:11px 14px;border-radius:12px;background:#111b2a;border:1.5px solid #22324a;margin-top:8px;font-family:var(--semi);font-weight:700;font-size:19px}
+.slot.sel{border-color:var(--held);background:rgba(180,140,255,.14)}
+.slot.full{opacity:.45}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.bar{height:10px;border-radius:5px;background:#22324a;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--free)}
+#tap{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;border:3px solid #fff;background:rgba(255,255,255,.25);opacity:0}
+#appsteps{position:absolute;left:640px;top:110px}
+#appsteps .st{font-family:var(--cond);font-weight:700;font-size:70px;line-height:.95}
+#appsteps .sub{font-size:24px;color:var(--chalk2);margin-top:8px}
+#appdots{position:absolute;left:640px;top:270px;display:flex;flex-direction:column;gap:10px}
+#appdots div{font-family:var(--semi);font-weight:700;font-size:22px;color:var(--fog);display:flex;gap:12px;align-items:center}
+#appdots div i{width:30px;height:30px;border-radius:50%;border:2px solid var(--structure2);display:flex;align-items:center;justify-content:center;font-style:normal;font-size:16px}
+#appdots div.on{color:var(--chalk)}
+#appdots div.on i{background:var(--held);border-color:var(--held);color:#fff}
+/* dashboard */
+#dash{position:absolute;inset:0;background:transparent}
+#dashbg{position:absolute;inset:0;background:#0a111c}
+#side{position:absolute;left:0;top:0;bottom:0;width:260px;background:#0d1624;border-right:1px solid #22324a;padding:30px 22px}
+#side .logo{font-family:var(--cond);font-weight:700;font-size:34px}
+#side .site{font-size:16px;color:var(--chalk2);margin:4px 0 30px}
+.nav{padding:13px 16px;border-radius:12px;font-family:var(--semi);font-weight:700;font-size:20px;color:var(--chalk2);margin-bottom:6px}
+.nav.on{background:rgba(47,111,224,.2);color:var(--chalk);box-shadow:inset 3px 0 0 var(--blue2)}
+#side .tagp{position:absolute;left:22px;bottom:30px;font-size:14px;color:var(--fog);line-height:1.4}
+#kpis{position:absolute;left:290px;right:30px;top:96px;display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+.kpi{padding:14px 18px;border-radius:14px;background:#111b2a;border:1px solid #22324a}
+.kpi .l{font-family:var(--semi);font-weight:700;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--chalk2)}
+.kpi .v{font-family:var(--cond);font-weight:700;font-size:46px;line-height:1.05}
+.kpi .d{font-size:15px;color:var(--fog)}
+#dtitle{position:absolute;left:290px;top:30px;font-family:var(--cond);font-weight:700;font-size:44px}
+.tab{position:absolute;left:290px;right:30px;top:232px;bottom:110px;opacity:0}
+.panel{position:absolute;border-radius:16px;background:#111b2a;border:1px solid #22324a;padding:18px 20px}
+.panel .pt{font-family:var(--semi);font-weight:700;font-size:17px;letter-spacing:.08em;text-transform:uppercase;color:var(--chalk2);margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:17px}
+td{padding:8px 6px;border-bottom:1px solid #1d2c45}
+td.st{font-family:var(--semi);font-weight:700}
+.alert{padding:14px 16px;border-radius:12px;margin-bottom:12px;border:1.5px solid}
+.alert .h{font-family:var(--semi);font-weight:700;font-size:20px}
+.alert .b{font-size:16px;color:var(--chalk2);margin-top:3px}
+#cursor{position:absolute;width:26px;height:26px;opacity:0}
+/* end */
+#endc{position:absolute;left:0;right:0;top:300px;text-align:center}
+</style>
+</head>
+<body>
+<canvas id="gl"></canvas>
+<div class="layer" id="dim"></div>
+
+<!-- TITLE -->
+<div class="scene" id="s-title">
+  <div style="position:absolute;left:120px;top:330px">
+    <div class="kicker">ParkFlow · prototype walkthrough</div>
+    <div class="h1" style="margin-top:18px">KLGCC Mall<br>LG car park</div>
+    <div class="h3 muted" style="margin-top:26px;font-weight:500">Filmed 9 Nov 2026 &rarr; rebuilt as a digital twin</div>
+  </div>
+</div>
+
+<!-- BEFORE / AFTER (with footage) -->
+<div class="scene" id="s-ba">
+  <div id="footwrap"><img id="footimg" alt=""><div id="footlab" class="pill">Real footage · <span id="speed">3×</span></div>
+    <div id="foothud">ParkFlow guidance<br><b>&rarr; Aisle 1 · <span class="pocketN">38</span> free</b></div>
+    <div id="footbadge"></div></div>
+  <div id="twinhead"><div class="state" id="bastate">Digital twin</div><div class="sub" id="basub">LG level · rebuilt from the walkthrough</div></div>
+  <div id="clock"><div class="lab" id="clocklab">Searching</div><div class="val" id="clockval">0:00</div><div class="val2" id="clockval2">0 m driven</div></div>
+  <div id="buildstats">
+    <div class="st"><div class="n">16 × 6</div><div class="l">pillar grid D&ndash;U, rows 2&ndash;7</div></div>
+    <div class="st"><div class="n" id="nbays">258</div><div class="l">car bays</div></div>
+    <div class="st"><div class="n">3</div><div class="l">OKU bays (never bookable)</div></div>
+    <div class="st"><div class="n">2</div><div class="l">ramps: entry &amp; exit</div></div>
+  </div>
+  <div id="compare">
+    <div class="c"><div class="l">Gate to bay</div><div class="v"><span class="b" id="cmpT0">6:40</span><span class="a" id="cmpT1">0:58</span></div><div class="n">booked member, simulated</div></div>
+    <div class="c"><div class="l">Distance driven</div><div class="v"><span class="b" id="cmpD0">651 m</span><span class="a" id="cmpD1">180 m</span></div><div class="n">on the twin's aisles</div></div>
+    <div class="c"><div class="l">CO&#8322; per car</div><div class="v"><span class="b" id="cmpC0">117 g</span><span class="a" id="cmpC1">32 g</span></div><div class="n">at 180 g/km urban crawl</div></div>
+  </div>
+</div>
+
+<!-- LEDGER -->
+<div class="scene" id="s-ledger">
+  <div id="ledger" class="card">
+    <div class="kicker">Booking mechanism · 1</div>
+    <div class="h2" style="margin-top:8px">How a booking is accepted</div>
+    <div class="h3 muted" style="font-weight:500;font-size:28px;margin-top:6px">Priority Zone ledger · 40 bays · arrivals at 2:30 pm</div>
+    <div id="cells"></div>
+    <div class="legend">
+      <span><i class="sw" style="background:#5b6578"></i>Parked now <b id="lg-p">22</b></span>
+      <span><i class="sw" style="background:var(--held)"></i>Booked, arriving <b id="lg-b">9</b></span>
+      <span><i class="sw" style="background:var(--wait)"></i>Forecast walk-ins <b id="lg-f">5</b></span>
+      <span><i class="sw" style="background:var(--free)"></i>Can be promised <b id="lg-a">4</b></span>
+    </div>
+    <div id="eq">40 &minus; 22 parked &minus; <span id="eqb">9</span> booked &minus; 5 forecast = <b id="eqa">4</b> can be promised</div>
+  </div>
+  <div id="reqs"><div class="kicker" style="margin-bottom:4px">Incoming booking requests</div></div>
+  <div id="guar">A booking is accepted only when a bay is certain at arrival. When the count reaches 0, the app offers the next open slot.</div>
+</div>
+
+<!-- LIFECYCLE -->
+<div class="scene" id="s-life">
+  <div id="steps">
+    <div class="step"><div class="n">STEP 1</div><div class="t">Booked</div><div class="s">2:05 pm in the app</div></div>
+    <div class="step"><div class="n">STEP 2</div><div class="t">Held</div><div class="s">2:30 + 15 min + 10 min grace</div></div>
+    <div class="step"><div class="n">STEP 3</div><div class="t">Plate read at gate</div><div class="s">auto check-in, no ticket</div></div>
+    <div class="step"><div class="n">STEP 4</div><div class="t">Any bay in the zone</div><div class="s">capacity is held, not a bay</div></div>
+    <div class="step"><div class="n">STEP 5</div><div class="t">Exit plate read</div><div class="s">bay back to the pool</div></div>
+    <div class="step"><div class="n">IF NO-SHOW</div><div class="t">Released at 2:55</div><div class="s">open to everyone again</div></div>
+  </div>
+  <div id="noshow" class="card">
+    <div class="kicker" style="color:var(--wait)">Booking PZ-0423 · VBN 2210</div>
+    <div class="h3" style="margin-top:8px">Not arrived</div>
+    <div class="clk" id="nsclock">2:41 pm</div>
+    <div class="muted" id="nstext" style="font-size:22px;margin-top:6px">Held until 2:55 pm</div>
+  </div>
+</div>
+
+<!-- RULES -->
+<div class="scene" id="s-rules">
+  <div id="rules">
+    <div class="kicker">Booking mechanism · 3</div>
+    <div class="h2" style="margin-top:8px">Who pays, and the fair-use rules</div>
+    <div id="prices">
+      <div class="price" style="border-color:var(--gold)"><div class="p" style="color:var(--gold)">RM0</div><div class="w">Members</div><div class="d">Book free with a membership voucher</div></div>
+      <div class="price" style="border-color:var(--blue2)"><div class="p" style="color:var(--blue2)">RM0</div><div class="w">Care bookings</div><div class="d">OKU, seniors and prams</div></div>
+      <div class="price"><div class="p">RM4</div><div class="w">Everyone else</div><div class="d">Per booking</div></div>
+    </div>
+    <div id="fair">
+      <div class="fr"><span class="k">1</span><span>One active booking per plate</span></div>
+      <div class="fr"><span class="k">2</span><span>Held 15 min + 10 min grace, then released</span></div>
+      <div class="fr"><span class="k">3</span><span>Repeat no-shows pause booking for that account</span></div>
+      <div class="fr"><span class="k">4</span><span>Every bay not needed for a booking stays open to all</span></div>
+      <div class="fr"><span class="k">5</span><span>OKU bays are never bookable, always open</span></div>
+      <div class="fr"><span class="k">6</span><span>Booking checked by plate at entry and exit</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ML -->
+<div class="scene" id="s-ml">
+  <div id="ml">
+    <div class="kicker">Machine learning · briefly</div>
+    <div class="h2" style="margin-top:8px">Two models feed one rule</div>
+    <div id="pipe">
+      <svg width="1760" height="430" id="pipesvg"></svg>
+      <div class="node" style="left:0;top:0;width:300px"><div class="t">CCTV cameras</div><div class="s">existing, LG</div></div>
+      <div class="node" style="left:0;top:110px;width:300px"><div class="t">Plate cameras</div><div class="s">entry &amp; exit</div></div>
+      <div class="node" style="left:0;top:220px;width:300px"><div class="t">Bookings &amp; members</div><div class="s">from the app</div></div>
+      <div class="node" style="left:0;top:330px;width:300px"><div class="t">History &amp; events</div><div class="s">Saturdays, promotions</div></div>
+      <div class="node model" style="left:420px;top:0;width:470px"><div class="t">Bay detection</div><div class="s">MobileNetV3-Small reads each bay from CCTV</div><div class="big" style="color:var(--blue2)">99.05% <span style="font-size:22px;font-family:var(--body);font-weight:500;color:var(--chalk2)">correct on unseen cameras</span></div></div>
+      <div class="node model" style="left:420px;top:220px;width:470px"><div class="t">Occupancy forecast</div><div class="s">LightGBM + ensemble, 30 to 90 min ahead</div><div class="big" style="color:var(--blue2)">1.41% <span style="font-size:22px;font-family:var(--body);font-weight:500;color:var(--chalk2)">error at 30 min, vs 5.26% for &ldquo;last week&rdquo;</span></div></div>
+      <div class="node dec" style="left:1010px;top:120px;width:360px"><div class="t" style="color:var(--free)">Hold-back count</div><div class="s">how many zone bays booked drivers will use &rarr; available-to-promise</div></div>
+      <div class="node" style="left:1470px;top:0;width:290px"><div class="t">Zone sign</div><div class="s">green / amber each minute</div></div>
+      <div class="node" style="left:1470px;top:140px;width:290px"><div class="t">App slots</div><div class="s">bookable per arrival time</div></div>
+      <div class="node" style="left:1470px;top:280px;width:290px"><div class="t">Admin alerts</div><div class="s">busy-hour warnings</div></div>
+    </div>
+  </div>
+  <div id="mlrule">The forecast decides how many bays to hold back.<br><span style="color:var(--free)">The booking rule decides who gets one.</span></div>
+  <div id="mlnote">Tested on public datasets (CNRPark+EXT cameras, 30 car parks). The KLGCC pilot still needs labelled LG frames.</div>
+  <div id="mlchart" class="card" style="padding:18px 22px"><div class="kicker" style="font-size:16px">Forecast vs actual · one backtest day</div><svg id="mlsvg" width="716" height="170"></svg></div>
+</div>
+
+<!-- APP -->
+<div class="scene" id="s-app">
+  <div id="phone"><div id="screen">
+    <div class="sbar"><span>2:05</span><span>5G ▮▮▮</span></div>
+    <div class="scr" id="a1">
+      <div class="app-s">KLGCC Mall</div><div class="app-h">Good afternoon, Aina</div>
+      <div class="pill" style="margin-top:8px;background:rgba(227,195,90,.16);color:var(--gold);font-size:15px;padding:5px 12px">Gold member</div>
+      <div class="box"><div class="row" style="margin-top:0"><b style="font-family:var(--semi);font-size:19px">LG car park · live</b><b class="pocketTot" style="color:var(--free);font-family:var(--cond);font-size:30px">58 free</b></div>
+        <div class="row"><span>Aisle 1</span><span class="pocketN">38</span></div><div class="bar"><i style="width:70%"></i></div>
+        <div class="row"><span>Aisle 2</span><span>9</span></div><div class="bar"><i style="width:18%"></i></div>
+        <div class="row"><span>Aisle 3</span><span>11</span></div><div class="bar"><i style="width:22%"></i></div></div>
+      <div class="box"><b style="font-family:var(--semi);font-size:18px">Next hour</b><div class="app-s">Getting busy: about 89% full at 3 pm</div>
+        <svg width="320" height="50"><polyline points="0,40 40,36 80,30 120,24 160,18 200,12 240,9 280,8 320,10" fill="none" stroke="#ffb21f" stroke-width="3"/></svg></div>
+      <div class="btn p" id="a1btn">Book Priority Zone</div><div class="btn g">I'm on my way</div>
+    </div>
+    <div class="scr" id="a2">
+      <div class="app-s">Book · Sat 15 Nov</div><div class="app-h">Priority Zone</div><div class="app-s">LG, next to the lift lobby</div>
+      <div class="box" style="padding:10px 14px"><div class="row" style="margin-top:0"><span>Car</span><b style="font-family:var(--semi)">VKL 8821</b></div></div>
+      <div style="margin-top:12px;font-family:var(--semi);font-weight:700;color:var(--chalk2)">Arrival time</div>
+      <div class="slot"><span>2:00 pm</span><span style="color:var(--free)">6 left</span></div>
+      <div class="slot"><span>2:15 pm</span><span style="color:var(--free)">3 left</span></div>
+      <div class="slot" id="slot230"><span>2:30 pm</span><span style="color:var(--wait)">1 left</span></div>
+      <div class="slot"><span>2:45 pm</span><span style="color:var(--free)">6 left</span></div>
+      <div class="slot full"><span>3:00 pm</span><span>Full</span></div>
+      <div class="app-s" style="margin-top:10px">Held 15 min after your time, plus 10 min grace</div>
+      <div class="btn b" id="a2btn">Continue</div>
+    </div>
+    <div class="scr" id="a3">
+      <div class="app-s">Book · 2:30 pm</div><div class="app-h">Check membership</div>
+      <div class="box" id="a3chk"><span id="a3txt" style="font-family:var(--semi);font-weight:700;font-size:20px">Checking membership…</span></div>
+      <div class="box"><div class="row" style="margin-top:0"><span>Voucher</span><b style="color:var(--gold);font-family:var(--semi)">Gold · free booking</b></div>
+        <div class="row"><span>Booking fee</span><span><s style="color:var(--fog)">RM4.00</s> <b style="font-family:var(--cond);font-size:30px;color:var(--free)">RM0.00</b></span></div></div>
+      <div class="box"><div class="row" style="margin-top:0"><span>Arrive</span><b>2:30 pm</b></div><div class="row"><span>Held until</span><b>2:55 pm</b></div><div class="row"><span>Car</span><b>VKL 8821</b></div></div>
+      <div class="btn p" id="a3btn">Confirm booking</div>
+    </div>
+    <div class="scr" id="a4" style="text-align:center">
+      <div style="margin:30px auto 0;width:96px;height:96px;border-radius:50%;background:rgba(52,229,138,.16);display:flex;align-items:center;justify-content:center;font-size:56px;color:var(--free)">&#10003;</div>
+      <div class="app-h" style="margin-top:18px">Booked</div><div class="app-s">PZ-0417</div>
+      <div class="box" style="text-align:left"><div class="row" style="margin-top:0"><span>Arrive</span><b>2:30 pm</b></div><div class="row"><span>Held until</span><b>2:55 pm</b></div><div class="row"><span>Check-in</span><b>by plate, at the gate</b></div><div class="row"><span>Park</span><b>any free zone bay</b></div></div>
+      <div class="btn b" id="a4btn">I'm on my way</div>
+    </div>
+    <div class="scr" id="a5">
+      <div class="app-s">On the way</div><div class="app-h">ETA 2:27 pm</div><div class="app-s">4.2 km · enter LG via the main ramp</div>
+      <div class="box" style="height:300px;position:relative;padding:0;overflow:hidden;background:#101a2a">
+        <svg width="364" height="300"><path d="M30 270 C 90 230, 70 170, 150 150 S 250 90, 320 40" stroke="#2f4360" stroke-width="16" fill="none"/><path id="route" d="M30 270 C 90 230, 70 170, 150 150 S 250 90, 320 40" stroke="#7ea8ff" stroke-width="6" fill="none" stroke-dasharray="520" stroke-dashoffset="520"/><circle cx="320" cy="40" r="12" fill="#b48cff"/></svg></div>
+      <div class="box"><div class="row" style="margin-top:0"><span>Priority Zone</span><b style="color:var(--held)">held for you</b></div></div>
+    </div>
+    <div class="scr" id="a6">
+      <div class="app-s">LG gate · 2:28 pm</div><div class="app-h">Checked in</div>
+      <div class="box" style="border-color:var(--free)"><div style="font-family:var(--cond);font-weight:700;font-size:40px">VKL 8821 &#10003;</div><div class="app-s">Plate read at the gate. Barrier open.</div></div>
+      <div class="box"><b style="font-family:var(--cond);font-size:30px">&rarr; Straight on, aisle 3</b><div class="app-s">Then left at the end: Priority Zone, by the lifts</div></div>
+    </div>
+    <div class="scr" id="a7">
+      <div class="app-s">Parked 2:29 pm</div><div class="app-h">Priority Zone</div><div class="app-s" id="a7bay">LG-R101 · by the lift lobby</div>
+      <div class="box"><div class="row" style="margin-top:0"><span>Find my car</span><b>LG &rarr; aisle 2</b></div></div>
+      <div class="box" style="border-color:var(--gold)"><div class="row" style="margin-top:0"><span>On exit</span><b style="color:var(--gold)">First hour free</b></div><div class="app-s">Plate read at the exit ends the booking</div></div>
+      <div class="btn g">Done</div>
+    </div>
+    <div id="tap"></div>
+  </div></div>
+  <div id="appsteps"><div class="kicker">Member booking flow</div><div class="st" id="appst">See live space</div></div>
+  <div id="appdots"></div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="scene" id="s-dash">
+  <div id="dash"><div id="dashbg"></div>
+    <div id="side"><div class="logo">ParkFlow Admin</div><div class="site">KLGCC Mall · LG</div>
+      <div class="nav" id="nv0">Operations</div><div class="nav" id="nv1">Model performance</div><div class="nav" id="nv2">Maintenance</div><div class="nav">Data export</div>
+      <div class="tagp">Prototype · simulated data<br>Sat 15 Nov 2026, 2:40 pm</div></div>
+    <div id="dtitle">Operations</div>
+    <div id="kpis">
+      <div class="kpi"><div class="l">LG occupancy</div><div class="v" id="k-occ">78%</div><div class="d">forecast 89% at 3 pm</div></div>
+      <div class="kpi"><div class="l">Bookings today</div><div class="v">64</div><div class="d">58 members · 4 care · 2 paid</div></div>
+      <div class="kpi"><div class="l">Arrived / no-show</div><div class="v">51 / 6</div><div class="d">6 bays released on time</div></div>
+      <div class="kpi"><div class="l">Booking found no bay</div><div class="v" style="color:var(--free)">0</div><div class="d">promise kept 100%</div></div>
+      <div class="kpi"><div class="l">Gate to bay</div><div class="v">0:52</div><div class="d">median, booked drivers</div></div>
+    </div>
+    <div class="tab" id="t0">
+      <div class="panel" style="left:0;top:0;width:960px;bottom:0;background:transparent"><div class="pt">Live twin · LG</div></div>
+      <div class="panel" style="left:980px;right:0;top:0;height:210px"><div class="pt">Priority Zone ledger · 2:45 arrivals</div><div id="dcells" style="display:grid;grid-template-columns:repeat(20,1fr);gap:4px"></div>
+        <div class="legend" style="font-size:16px;margin-top:12px;gap:16px"><span><i class="sw" style="background:#5b6578"></i>Parked 24</span><span><i class="sw" style="background:var(--held)"></i>Booked 8</span><span><i class="sw" style="background:var(--wait)"></i>Forecast 4</span><span><i class="sw" style="background:var(--free)"></i>Promise 4</span></div></div>
+      <div class="panel" style="left:980px;right:0;top:230px;bottom:0"><div class="pt">Bookings</div>
+        <table><tr><td>2:30</td><td>VKL ••21</td><td>Gold</td><td class="st" style="color:var(--free)">Parked</td></tr>
+        <tr><td>2:30</td><td>VBN ••10</td><td>Member</td><td class="st" style="color:var(--wait)">Released 2:55</td></tr>
+        <tr><td>2:45</td><td>WTA ••07</td><td>Care · OKU</td><td class="st" style="color:var(--held)">Held</td></tr>
+        <tr><td>2:45</td><td>BME ••93</td><td>Platinum</td><td class="st" style="color:var(--held)">Held</td></tr>
+        <tr><td>2:45</td><td>VFF ••48</td><td>Paid RM4</td><td class="st" style="color:var(--held)">Held</td></tr>
+        <tr><td>3:00</td><td>PKA ••62</td><td>Gold</td><td class="st" style="color:var(--chalk2)">Upcoming</td></tr></table></div>
+    </div>
+    <div class="tab" id="t1">
+      <div class="panel" style="left:0;top:0;width:1000px;bottom:0"><div class="pt">Every forecast is logged against what happened</div><svg id="dsvg" width="960" height="470"></svg></div>
+      <div class="panel" style="left:1020px;right:0;top:0;height:150px"><div class="pt">Forecast error, 30 min ahead</div><div style="font-family:var(--cond);font-weight:700;font-size:54px">1.41% <span style="font-size:22px;color:var(--chalk2);font-family:var(--body);font-weight:500">of capacity · backtest</span></div></div>
+      <div class="panel" style="left:1020px;right:0;top:168px;height:150px"><div class="pt">80% range contains actual</div><div style="font-family:var(--cond);font-weight:700;font-size:54px">79.8% <span style="font-size:22px;color:var(--chalk2);font-family:var(--body);font-weight:500">target 80% · calibrated</span></div></div>
+      <div class="panel" style="left:1020px;right:0;top:336px;bottom:0"><div class="pt">Booking promise check</div><div style="font-size:19px;line-height:1.6">Accepted <b>64</b> · found a bay <b style="color:var(--free)">64</b><br>Over-promised slots this month <b style="color:var(--free)">0</b><br>Weekly accuracy report emailed to operations</div></div>
+    </div>
+    <div class="tab" id="t2">
+      <div class="panel" style="left:0;top:0;width:820px;bottom:0"><div class="pt">Camera health · bay detection confidence</div>
+        <table id="camtab"></table></div>
+      <div class="panel" style="left:840px;right:0;top:0;bottom:0"><div class="pt">Maintenance queue</div>
+        <div class="alert" style="border-color:var(--wait);background:rgba(255,178,31,.08)"><div class="h" style="color:var(--wait)">Camera LG-N3: confidence 97.1% &rarr; 88.4%</div><div class="b">Likely dirty lens. Ticket M-118 opened for the facilities team.</div></div>
+        <div class="alert" style="border-color:var(--stop);background:rgba(255,90,102,.07)"><div class="h" style="color:var(--stop)">Bay LG-R148 occupied 26 h</div><div class="b">Possible abandoned vehicle. Flagged for the guard round.</div></div>
+        <div class="alert" style="border-color:var(--blue2);background:rgba(126,168,255,.07)"><div class="h" style="color:var(--blue2)">Model retrain: Sun 16 Nov, 3:00 am</div><div class="b">Weekly, on new LG data. Drift check passed this week.</div></div>
+        <div class="alert" style="border-color:var(--free);background:rgba(52,229,138,.06)"><div class="h" style="color:var(--free)">Data export ready: 41,280 events</div><div class="b">Bookings, arrivals, forecasts, outcomes. Reusable for the next car park.</div></div>
+      </div>
+    </div>
+  </div>
+  <svg id="cursor" viewBox="0 0 26 26"><path d="M3 2 L3 21 L8 16 L12 24 L15 23 L11 15 L18 15 Z" fill="#fff" stroke="#000" stroke-width="1.5"/></svg>
+</div>
+
+<!-- END -->
+<div class="scene" id="s-end">
+  <div id="endc"><div class="kicker">ParkFlow</div><div class="h1" style="font-size:150px;margin-top:20px">Reserve capacity,<br>not bays.</div>
+  <div class="h3 muted" style="margin-top:34px;font-weight:500">KLGCC Mall LG prototype · the same system planned for the KL East pilot</div></div>
+</div>
+
+<div class="layer" id="tags"></div>
+<div class="layer">
+  <div id="brand"><b>ParkFlow</b> · KLGCC Mall LG</div>
+  <div id="chapter">Intro</div>
+  <div id="foot">Layout reconstructed from walkthrough footage, approximate · simulated data</div>
+</div>
+<div class="layer" id="fade"></div>
+<script type="module" src="comp.js"></script>
+</body>
+</html>

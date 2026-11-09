@@ -36,3 +36,8 @@ presentation/*.pdf
 # V2 embeds its SVG exhibits; standalone chart previews are regenerated.
 site-consulting/assets/graphics-preview/
 site-consulting/assets/v2-charts/
+
+# Full-res demo renders exceed GitHub's 100 MB limit; the web copy in video/web/ is tracked.
+video/ParkFlow-KLGCC-demo.mp4
+video/ParkFlow-KLGCC-demo-no-captions.mp4
+video/parking 3d modelling.MOV
