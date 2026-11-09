@@ -5,7 +5,7 @@ KL East Mall pilot concept · illustrative layout · simulated data.
 
 ## Current interactive prototype
 
-The driver and operator now share one 100-slot Priority Zone ledger per selected mall in the same browser and origin. KLGCC is the default demonstration selection, not a confirmed pilot site. The deck still discusses KL East as a proposed pilot candidate.
+The driver and operator now share one 100-slot Priority Zone ledger per selected mall in the same browser and origin. KLGCC is the default demonstration selection, not a confirmed pilot site. The current deck presents KLGCC as a proposed pilot candidate.
 
 - Driver: reserve zone access, display a demo QR reference and view Available / Reserved / Occupied counts. No membership tier or navigation step.
 - Operator: capacity guard, accepted bookings, simulated plate/window verification, walk-in control, sensor-fault recovery, shadow planning and a traceable demo event log. The 3D model mirrors the same ledger and remains illustrative.
