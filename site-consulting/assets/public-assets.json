@@ -61,5 +61,14 @@
     "date": "2026-11-07",
     "sha256": "157a9e77f7580246e97c769490e2e977ae94399f9d30f4556015c41fe8c28bac",
     "bytes": 4390
+  },
+  {
+    "file": "klgcc-mall-exterior.webp",
+    "url": null,
+    "source_page": null,
+    "purpose": "KLGCC Mall exterior photograph supplied by Team Hexa; replaces kl-east-exterior.jpg in the deck. Original source to be confirmed.",
+    "date": "2026-11-10",
+    "sha256": "f37abe0ad545e97d29bc850b02fc95757b3a4b45df4489c36ddbab93bc06819c",
+    "bytes": 86422
   }
 ]
