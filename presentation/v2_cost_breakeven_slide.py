@@ -29,9 +29,9 @@ STEPS = [  # label lines, value, colour, show share of upfront
     (('Power, network', '& works'), fm.CABLING_ALLOWANCE, '#4b4f56', True),
     (('Software', 'integration'), fm.INTEGRATION_ALLOWANCE, '#e3261c', True),
 ]
-W, BASE, TOP_VAL_Y = 900, 372, 112
+W, H, BASE, TOP_VAL_Y = 980, 476, 414, 92
 scale = (BASE - TOP_VAL_Y) / fm.FIRST_YEAR
-slot, bar_w, x0 = 108, 66, 44
+slot, bar_w, x0 = 118, 80, 44
 
 
 def k(v):
@@ -55,12 +55,12 @@ def bar(i, lo, hi, colour, label, circle=None):
         out.append(f'<line x1="{x - slot + bar_w}" y1="{prev_top:.1f}" x2="{x}" y2="{prev_top:.1f}" '
                    'stroke="#9a9ea5" stroke-width="1.5" stroke-dasharray="5 4"/>')
     cx = x + bar_w / 2
-    out.append(text(cx, y_top - 10, k(hi - lo), 18, 650))
+    out.append(text(cx, y_top - 11, k(hi - lo), 23, 700))
     if circle is not None:
-        out.append(f'<circle cx="{cx}" cy="{y_top - 52}" r="25" fill="#e3261c"/>')
-        out.append(text(cx, y_top - 46, f'{circle}%', 16, 800, '#fff'))
+        out.append(f'<circle cx="{cx}" cy="{y_top - 64}" r="30" fill="#e3261c"/>')
+        out.append(text(cx, y_top - 57, f'{circle}%', 19, 800, '#fff'))
     for j, line in enumerate(label):
-        out.append(text(cx, BASE + 26 + j * 20, line, 15, 400, '#3b3f45'))
+        out.append(text(cx, BASE + 28 + j * 22, line, 17, 400, '#3b3f45'))
     prev_top = y_top
     return out
 
@@ -73,7 +73,7 @@ for i, (label, v, colour, show) in enumerate(STEPS):
 parts += bar(5, 0, fm.UPFRONT, '#9a9ea5', ('Upfront', 'capital'))
 parts += bar(6, fm.UPFRONT, fm.FIRST_YEAR, '#7b8088', ('Year 1', 'running'))
 parts += bar(7, 0, fm.FIRST_YEAR, '#c9ccd1', ('First-year', 'priced total'))
-waterfall = (f'<svg viewBox="0 0 {W} 430" role="img" aria-label="Waterfall of reference zone cost: '
+waterfall = (f'<svg viewBox="0 0 {W} {H}" role="img" aria-label="Waterfall of reference zone cost: '
              f'upfront capital RM{fm.UPFRONT:,} plus Year 1 running RM{fm.ANNUAL_RUNNING:,} gives RM{fm.FIRST_YEAR:,}.">'
              '<g font-family="Public Sans,Arial,sans-serif">'
              f'<line x1="20" y1="{BASE}" x2="{W - 10}" y2="{BASE}" stroke="#1a1a1a" stroke-width="2"/>'
@@ -125,11 +125,12 @@ CSS = '''<style id="cost-breakeven-style">
 #investment .content { display:flex; flex-direction:column; gap:22px; }
 #investment .cb-label { font-size:13px; font-weight:750; letter-spacing:.08em; text-transform:uppercase; color:#1a1a1a; }
 #investment .cb-label em { font-style:normal; font-weight:500; letter-spacing:0; text-transform:none; color:#6b7280; margin-left:10px; font-size:14px; }
-#investment .cb-grid { display:grid; grid-template-columns:900px 1fr; gap:40px; flex:1; min-height:0; }
-#investment .cb-chart svg { display:block; width:100%; height:auto; margin-top:6px; }
-#investment .cb-sheet table { width:100%; border-collapse:collapse; margin-top:12px; font-size:16px; table-layout:auto; }
+#investment .cb-grid { display:grid; grid-template-columns:1fr 450px; gap:36px; flex:1; min-height:0; }
+#investment .cb-chart { display:flex; flex-direction:column; min-height:0; }
+#investment .cb-chart svg { display:block; width:100%; flex:1; min-height:0; margin-top:4px; }
+#investment .cb-sheet table { width:100%; border-collapse:collapse; margin-top:12px; font-size:15px; table-layout:auto; }
 #investment .cb-sheet th { font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:#6b7280; text-align:left; padding:0 6px 8px; border-bottom:2px solid #1a1a1a; background:none; }
-#investment .cb-sheet td { padding:8px 6px; border-bottom:1px solid #e5e7eb; vertical-align:middle; line-height:1.25; }
+#investment .cb-sheet td { padding:8px 5px; border-bottom:1px solid #e5e7eb; vertical-align:middle; line-height:1.25; }
 #investment .cb-sheet .num { text-align:right; font-variant-numeric:tabular-nums; font-weight:600; white-space:nowrap; }
 #investment .cb-sheet tr.hl td:first-child, #investment .cb-sheet tr.hl .num { color:#e3261c; font-weight:700; }
 #investment .cb-sheet tr.gap td { color:#6b7280; font-style:italic; }
@@ -139,10 +140,10 @@ CSS = '''<style id="cost-breakeven-style">
 #investment .cb-tag-listed { background:#1a1a1a; color:#fff; }
 #investment .cb-tag-allow { border:1.5px solid #9a9ea5; color:#4b4f56; }
 #investment .cb-tag-quote { border:1.5px solid #e3261c; color:#e3261c; }
-#investment .cb-be { flex:none; display:grid; grid-template-columns:300px 1fr; gap:40px; align-items:end; padding-top:16px; border-top:1px solid #e5e7eb; }
-#investment .cb-be-kpi strong { display:block; font-size:56px; line-height:1; font-weight:800; letter-spacing:-.03em; color:#e3261c; margin-top:8px; }
+#investment .cb-be { flex:none; display:grid; grid-template-columns:300px 1fr; gap:40px; align-items:end; padding-top:10px; border-top:1px solid #e5e7eb; }
+#investment .cb-be-kpi strong { display:block; font-size:48px; line-height:1; font-weight:800; letter-spacing:-.03em; color:#e3261c; margin-top:8px; }
 #investment .cb-be-kpi p { font-size:15px; line-height:1.35; color:#3b3f45; margin-top:6px; }
-#investment .cb-be-scale { position:relative; padding-top:70px; }
+#investment .cb-be-scale { position:relative; padding-top:66px; }
 #investment .cb-track { position:relative; height:14px; background:#e5e7eb; }
 #investment .cb-loss { position:absolute; left:0; top:0; bottom:0; background:repeating-linear-gradient(135deg,#fecaca 0 6px,#fee2e2 6px 12px); }
 #investment .cb-mark { position:absolute; bottom:-6px; width:0; }
