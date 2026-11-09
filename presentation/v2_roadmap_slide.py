@@ -17,7 +17,7 @@ rm = lambda v: f'RM{v / 1000:.1f}k'
 # name, months label, first column, span, owner, activities, highlight
 PHASES = [
     ('Mobilise &amp; survey', 'M1', 1, 1, 'SDP sponsor + operator', [
-        'Nominate KL East sponsor and operator counterpart',
+        'Nominate KLGCC sponsor and operator counterpart',
         'Site survey and zone boundary',
         'Controller, LPR and payment integration talks',
         'Baseline counts and member data']),

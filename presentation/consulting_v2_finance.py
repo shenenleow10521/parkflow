@@ -7,7 +7,7 @@ contract, development quotation or landlord capture rate has been supplied.
 
 CHECKED = '2026-11-09'
 SOURCES = {
-    'site': ('KL East: existing LPR and payment', 'https://www.simedarbyproperty.com/malls/kleast-mall/'),
+    'site': ('KLGCC Mall: official parking information', 'https://www.simedarbyproperty.com/malls/klgcc-mall/'),
     'lpr': ('Viskou: DS-TCG406-E ANPR camera', 'https://viskou.my/products/4mpintelligententranceanprcamerads-tcg406-e'),
     'landlord': ('SDP FY2025 annual report', 'https://www.simedarbyproperty.com/sites/default/files/2026-04/SDP%20IAR2025%20%28Website%29.pdf'),
     'led': ('Viskou: DS-TVL224 display', 'https://viskou.my/products/outdoorledguidancedisplayds-tvl224-4-5y2rows'),
