@@ -1,0 +1,15 @@
+
+body.edition-v2 #pilot-design .content { gap:14px; }
+body.edition-v2 #pilot-design .g2-plot.g2-gantt { height:438px; }
+body.edition-v2 #pilot-design .pv-strip { flex:none; display:grid; grid-template-columns:250px repeat(5,1fr); gap:14px; height:176px; }
+body.edition-v2 #pilot-design .pv-label { display:flex; flex-direction:column; justify-content:center; padding:0 0 0 18px; border-left:6px solid #b71c1c; }
+body.edition-v2 #pilot-design .pv-label span { font-size:12.5px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:#b71c1c; }
+body.edition-v2 #pilot-design .pv-label b { margin-top:8px; font-size:26px; line-height:1.15; font-weight:800; letter-spacing:-.02em; color:#102a43; }
+body.edition-v2 #pilot-design .pv-label p { margin:6px 0 0; font-size:15px!important; line-height:1.35; color:#53647a; }
+body.edition-v2 #pilot-design .pv-strip figure { position:relative; margin:0; min-width:0; border-radius:8px; overflow:hidden; background:#e8eef7; }
+body.edition-v2 #pilot-design .pv-strip img { display:block; width:100%; height:100%; object-fit:cover; }
+body.edition-v2 #pilot-design .pv-strip figcaption { position:absolute; left:0; right:0; bottom:0; padding:7px 12px; background:rgba(16,42,67,.88); color:#fff; font-size:14px; font-weight:700; line-height:1.25; }
+body.edition-v2.read-mode #pilot-design .g2-plot.g2-gantt { height:auto; }
+body.edition-v2.read-mode #pilot-design .pv-strip { grid-template-columns:repeat(2,1fr); height:auto; }
+body.edition-v2.read-mode #pilot-design .pv-label { grid-column:1 / -1; }
+body.edition-v2.read-mode #pilot-design .pv-strip figure { height:160px; }

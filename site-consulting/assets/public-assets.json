@@ -70,5 +70,50 @@
     "date": "2026-11-10",
     "sha256": "f37abe0ad545e97d29bc850b02fc95757b3a4b45df4489c36ddbab93bc06819c",
     "bytes": 86422
+  },
+  {
+    "file": "klgcc-visit-cctv-aisle.webp",
+    "url": null,
+    "source_page": null,
+    "purpose": "Team Hexa site-visit photograph, KLGCC Mall car park, 9 Nov 2026 (eight-week pilot slide).",
+    "date": "2026-11-09",
+    "sha256": "94bfe63a247397443a78531cf651d8843a713c6d25df154f408a7a8176eb4294",
+    "bytes": 21646
+  },
+  {
+    "file": "klgcc-visit-cctv-ceiling.webp",
+    "url": null,
+    "source_page": null,
+    "purpose": "Team Hexa site-visit photograph, KLGCC Mall car park, 9 Nov 2026 (eight-week pilot slide).",
+    "date": "2026-11-09",
+    "sha256": "0bd98aa51de62af12c7c28674c36b77e34bca6145b68145fa61873642069348d",
+    "bytes": 4284
+  },
+  {
+    "file": "klgcc-visit-camera-check.webp",
+    "url": null,
+    "source_page": null,
+    "purpose": "Team Hexa site-visit photograph, KLGCC Mall car park, 9 Nov 2026 (eight-week pilot slide).",
+    "date": "2026-11-09",
+    "sha256": "08d3450ac4c79528cdd78e43b8b1fefb2241a56a5f184c6cec845ec27005f1bc",
+    "bytes": 23894
+  },
+  {
+    "file": "klgcc-visit-entry-barrier.webp",
+    "url": null,
+    "source_page": null,
+    "purpose": "Team Hexa site-visit photograph, KLGCC Mall car park, 9 Nov 2026 (eight-week pilot slide).",
+    "date": "2026-11-09",
+    "sha256": "684360b254cbc8e8968a00c0fcf3dae8e555582b0875ad5d913fdbd3641d259f",
+    "bytes": 32226
+  },
+  {
+    "file": "klgcc-visit-rates-board.webp",
+    "url": null,
+    "source_page": null,
+    "purpose": "Team Hexa site-visit photograph, KLGCC Mall car park, 9 Nov 2026 (eight-week pilot slide).",
+    "date": "2026-11-09",
+    "sha256": "c4e2bb674245903f9a1593c44e26735d799825bf03b41689e00adea363dc8a8a",
+    "bytes": 38452
   }
 ]
