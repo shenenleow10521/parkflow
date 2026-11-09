@@ -6,6 +6,7 @@ What it does (idempotent; reruns give the same file):
   * Slide 4  (#problem)      NEW problem-statement slide, inserted after #executive
                              <- v2_redesign/problem.html + .css; pages are renumbered
   * Slide 6  (#alternatives) red market-context comparison table   <- v2_redesign/alternatives.html + .css
+  * Slide 7  (#service)      red "Introducing ParkFlow" Priority Zone layout <- v2_redesign/service.html + .css
   * Slide 25 (#horizons)     three-horizon area-curve roadmap      <- v2_redesign/horizons.html + .css
   * KL East exterior photo -> KLGCC Mall photo (assets/klgcc-mall-exterior.webp) on every slide
   * Pilot site KL East -> KLGCC in the deck text; KLGCC official parking page as site source
@@ -73,6 +74,7 @@ STYLES = [  # (style id, css file) in insertion order
     ('alternatives-v3-style', 'alternatives.css'),
     ('problem-v3-style', 'problem.css'),
     ('team-v3-style', 'team.css'),
+    ('service-v3-style', 'service.css'),
 ]
 # V2-only crop so the KLGCC sign is not cut off on the Thank-you slide (premium.css is shared with V1).
 PHOTO_CSS = '<style id="v2-photo-style">#thanks .thank-composition img { object-position:51% center; }</style>'
@@ -106,6 +108,7 @@ def main():
     h = splice(h, 'team', '<div class="frame">', '<div class="source">', part('team.html'))
     h = splice(h, 'executive', '<div class="frame">', '<div class="source">', part('executive.html'))
     h = splice(h, 'alternatives', '<div class="frame">', '<div class="source">', part('alternatives.html'), include_end_div=True)
+    h = splice(h, 'service', '<div class="frame">', '<div class="source">', part('service.html'), include_end_div=True)
     h = splice(h, 'horizons', '<div class="content">', '<div class="source">', part('horizons.html'))
 
     # New problem-statement slide right after #executive (Overview section, same footer pattern).
@@ -134,7 +137,7 @@ def main():
     assert 'kl-east-exterior' not in h
     assert KLE not in h, 'a KL East site-source link remains'
     for must in ['KLGCC Mall is a proposed first pilot.', 'KLGCC Mall parking', 'class="ex-steps"', 'class="mc-table"',
-                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"', 'class="tm-grid"']:
+                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"', 'class="tm-grid"', 'class="sv-main"']:
         assert must in h, must
 
     HTML.write_text(h, encoding='utf-8', newline='')
