@@ -70,14 +70,5 @@
     "date": "2026-11-10",
     "sha256": "f37abe0ad545e97d29bc850b02fc95757b3a4b45df4489c36ddbab93bc06819c",
     "bytes": 86422
-  },
-  {
-    "file": "priority-zone-floor.webp",
-    "url": null,
-    "source_page": null,
-    "purpose": "Illustrative Priority Zone floor render supplied by Team Hexa (slide 7). Slide-viewer arrow buttons removed from the screenshot edges.",
-    "date": "2026-11-10",
-    "sha256": "a41ba179733310dcb19a5c4c03e1a24efc9f963b1cacee8b4faa3dd2d6685040",
-    "bytes": 75412
   }
 ]
