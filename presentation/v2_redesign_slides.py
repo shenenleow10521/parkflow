@@ -9,7 +9,7 @@ What it does (idempotent; reruns give the same file):
   * Slide 6  (#alternatives) red market-context comparison table   <- v2_redesign/alternatives.html + .css
   * Slide 7  (#service)      red "Introducing ParkFlow" Priority Zone layout <- v2_redesign/service.html + .css
   * Slide 10 (#admission)    red forecasting & admission control: timeline + capacity guard <- v2_redesign/admission.html + .css
-  * Slide 22 (#pilot-design) Gantt kept; KLGCC site-visit photo strip added <- v2_redesign/pilot-visit.html + .css
+  * Slide 22 (#pilot-design) four-phase pilot visual + KLGCC site-visit photo strip <- v2_redesign/pilot.html, pilot-visit.html + .css
   * Slide 25 (#horizons)     three-horizon area-curve roadmap      <- v2_redesign/horizons.html + .css
   * KL East exterior photo -> KLGCC Mall photo (assets/klgcc-mall-exterior.webp) on every slide
   * Pilot site KL East -> KLGCC in the deck text; KLGCC official parking page as site source
@@ -81,6 +81,7 @@ STYLES = [  # (style id, css file) in insertion order
     ('cover-v3-style', 'cover.css'),
     ('admission-v3-style', 'admission.css'),
     ('pilot-visit-v3-style', 'pilot-visit.css'),
+    ('pilot-v3-style', 'pilot.css'),
 ]
 # V2-only crop so the KLGCC sign is not cut off on the Thank-you slide (premium.css is shared with V1).
 PHOTO_CSS = '<style id="v2-photo-style">#thanks .thank-composition img { object-position:51% center; }</style>'
@@ -123,14 +124,11 @@ def main():
     h = splice(h, 'alternatives', '<div class="frame">', '<div class="source">', part('alternatives.html'), include_end_div=True)
     h = splice(h, 'service', '<div class="frame">', '<div class="source">', part('service.html'), include_end_div=True)
     h = splice(h, 'admission', '<div class="frame">', '<div class="source">', part('admission.html'))
-    # Pilot schedule: site-visit strip replaces the bottom note; the note moves into the source line.
+    # Pilot schedule: phase visual + site-visit strip replace the Gantt; the bottom note moves into the source line.
+    h = splice(h, 'pilot-design', '<div class="frame">', '<div class="source">',
+               part('pilot.html').replace('{visit}', part('pilot-visit.html')))
     s, e = section_span(h, 'pilot-design')
     sec = h[s:e]
-    start = sec.find('<div class="pv-strip">')
-    if start < 0:
-        start = sec.index('<p class="g2-bottom-note">')
-    end = sec.index('</div><div class="source">', start)
-    sec = sec[:start] + part('pilot-visit.html') + sec[end:]
     i = sec.index('<div class="source">')
     j = sec.index('</div>', i) + len('</div>')
     sec = sec[:i] + PILOT_SOURCE + sec[j:]
@@ -163,7 +161,7 @@ def main():
     assert 'kl-east-exterior' not in h
     assert KLE not in h, 'a KL East site-source link remains'
     for must in ['KLGCC Mall is a proposed first pilot.', 'KLGCC Mall parking', 'class="ex-steps"', 'class="mc-table"',
-                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"', 'class="tm-grid"', 'class="sv-main"', 'class="cv-copy"', 'class="ad-guard"', 'class="pv-strip"']:
+                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"', 'class="tm-grid"', 'class="sv-main"', 'class="cv-copy"', 'class="ad-guard"', 'class="pv-strip"', 'class="pl-phases"']:
         assert must in h, must
 
     HTML.write_text(h, encoding='utf-8', newline='')
