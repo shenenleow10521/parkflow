@@ -132,7 +132,7 @@ const app = {
   resMsg: '',
   resErr: false,
   assistMsg: '',
-  resDraft: { type: 'ladies' as ResType, inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
+  resDraft: { type: 'member' as ResType, inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
   plan: { dest: 'cinema' as DestId, eta: 10, plate: '' },
   profile: loadJSON<Profile>('parkflow.driver.v2', { pace: 4 }),
   garage: loadJSON<CarProfile[]>('parkflow.garage', DEFAULT_GARAGE.map((c) => ({ ...c }))),
@@ -306,6 +306,11 @@ function target(v: Vehicle): { floor: number; zone: ZoneId; bay: Bay | null } | 
     const b = L.bays[v.bay];
     return { floor: b.floor, zone: b.zone, bay: b };
   }
+  const booking = v.resId ? app.sim.reservations.find((r) => r.id === v.resId && r.vehicle === v.i && (r.status === 'confirmed' || r.status === 'checked-in')) : null;
+  if (booking) {
+    const b = L.bays[booking.bay];
+    return { floor: b.floor, zone: b.zone, bay: b };
+  }
   if (v.target) return { floor: v.target.floor, zone: v.target.zone, bay: null };
   return null;
 }
@@ -316,14 +321,14 @@ function guidanceFor(v: Vehicle): Guidance {
   const lift = DEST_BY_ID[v.dest].lift;
   if (v.state === 'pending') {
     const res = myRes();
-    const rb = res && res.status === 'confirmed' ? L.bays[res.bay] : null;
+    const rb = res && res.vehicle === v.i && res.status === 'confirmed' ? L.bays[res.bay] : null;
     const pv = rb ? null : sim.previewAllocation(v.dest, v.elig);
     const z = rb ? { floor: rb.floor, zone: rb.zone } : pv && pv.chosen ? { floor: pv.chosen.floor, zone: pv.chosen.zone } : null;
     return {
       key: 'pending',
       picto: 'gate',
       title: `Arrive at about ${clk(v.arrivalT)}`,
-      sub: rb ? `Bay ${rb.id} is held for you. Use the main entrance.` : z ? `Right now that means ${FLOOR_NAMES[z.floor]}, Zone ${z.zone}. We confirm at the barrier.` : 'Use the main entrance. Guidance starts at the barrier.',
+      sub: rb ? `Use the main entrance, then follow the route to ${FLOOR_NAMES[rb.floor]}, Zone ${rb.zone}, bay ${rb.id}. Your booking is already linked.` : z ? `Right now that means ${FLOOR_NAMES[z.floor]}, Zone ${z.zone}. We confirm at the barrier.` : 'Use the main entrance. Guidance starts at the barrier.',
       step: 0,
       floor: z ? z.floor : 0,
       zone: z ? z.zone : null,
@@ -501,7 +506,7 @@ function busyHTML(): string {
   const ticks = `<text x="${bw / 2}" y="${H - 2}" class="b-t">Now</text><text x="${bw * 6 + bw / 2}" y="${H - 2}" class="b-t">${clk(sim.t + 30 * 60)}</text><text x="${W - bw / 2}" y="${H - 2}" class="b-t">${clk(sim.t + 55 * 60)}</text>`;
   return `<div class="busy-h"><span class="busy-dot t-${tone}"></span><div><b>${esc(head)}</b><p>${esc(advice)}</p></div></div>
     <svg class="busy-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Forecast occupancy for the next hour, five-minute steps">${svg}${ticks}</svg>
-    <p class="fine">Forecast from typical Saturdays plus cinema, dining, event and “I’m on my way” signals.</p>`;
+    <p class="fine">Forecast from typical Saturdays, cinema, dining, events and shared arrival times.</p>`;
 }
 
 // ---------------------------------------------------------------- tab: park
@@ -522,16 +527,24 @@ function renderPark() {
   setHTML($('#park-busy'), busyHTML());
   const ph = phase();
   const v = me();
+  const booking = myRes();
+  const hasBooking = booking && (booking.status === 'confirmed' || booking.status === 'checked-in');
   let cta: string;
-  if (ph === 'planned' || ph === 'gate' || ph === 'driving') {
+  if (hasBooking) {
+    const bay = sim.L.bays[booking.bay];
+    cta = `<button type="button" class="cta" data-act="res-go">${ic('nav', 20)}<span>${app.lastGuideKey ? 'Continue navigation' : 'Start navigation'}</span></button>
+      <p class="cta-sub">Booking ${esc(booking.id)} · ${FLOOR_NAMES[bay.floor]} · Zone ${bay.zone} · Bay ${bayNo(bay)}</p>
+      <button type="button" class="linkbtn booking-details" data-act="reserve-open">View booking details</button>`;
+  } else if (ph === 'planned' || ph === 'gate' || ph === 'driving') {
     const g = v ? guidanceFor(v) : null;
     cta = `<button type="button" class="trip-card" data-act="open-guide">
       <span class="trip-ic">${ic('nav', 20)}</span>
       <span class="trip-t"><b>${esc(tripPlate())} ${ph === 'planned' ? `on the way to ${esc(DEST_BY_ID[v!.dest].label)}` : 'guidance is on'}</b><span>${g ? esc(g.title) : ''}</span></span>
       <span class="trip-go">${ic('chev', 20)}</span></button>`;
   } else {
-    cta = `<button type="button" class="cta" data-act="plan">${ic('nav', 20)}<span>I’m on my way</span></button>
-      <p class="cta-sub">Tell us where you’re going in the mall. We’ll pick the level and zone nearest your lift.</p>`;
+    cta = `<button type="button" class="cta" data-act="reserve-open">${ic('ticket', 20)}<span>Book parking</span></button>
+      <p class="cta-sub">Reserve your bay, then start navigation straight from your booking.</p>
+      <button type="button" class="linkbtn booking-details" data-act="plan">Find general parking without booking</button>`;
   }
   // cars already in the car park: where, how long, how much
   const parked = app.stays.filter((st) => {
@@ -579,7 +592,7 @@ function renderReserve() {
   const sim = app.sim;
   const host = $('#tab-reserve');
   if (!host.dataset.built) {
-    host.innerHTML = `<header class="tab-h"><h1>Reserve a bay</h1><p>General parking needs no booking: the app guides you to a free zone. Book only Ladies' parking or a designated member bay.</p></header>
+    host.innerHTML = `<header class="tab-h"><h1>Book your parking</h1><p>Choose your bay type, arrival time and car. Once confirmed, start navigation to your reserved parking.</p></header>
       <div id="res-active"></div><div id="res-form"></div><div id="res-list"></div>`;
     host.dataset.built = '1';
   }
@@ -587,6 +600,7 @@ function renderReserve() {
   const active = r && (r.status === 'confirmed' || r.status === 'checked-in');
   if (active && r) {
     const b = sim.L.bays[r.bay];
+    const stay = app.stays.find((st) => st.vid === r.vehicle);
     const holdEnd = r.windowEnd + r.grace;
     const left = holdEnd - sim.t;
     const total = holdEnd - r.createdT;
@@ -595,14 +609,16 @@ function renderReserve() {
     setHTML(
       $('#res-active'),
       `<article class="ticket" aria-label="Your reservation">
-        <div class="ticket-top"><span class="ticket-ic sp-${r.type}">${ic(RES_ICON[r.type], 18)}</span><div><b>${RES_LABEL[r.type]} bay held</b><span>${esc(r.id)}, ${r.status === 'checked-in' ? 'checked in' : 'confirmed'}</span></div></div>
+        <div class="ticket-top"><span class="ticket-ic sp-${r.type}">${ic('check', 18)}</span><div><b>${r.status === 'checked-in' ? 'You’re checked in' : 'Booking confirmed'}</b><span>${esc(r.id)} · ${esc(RES_LABEL[r.type])}${stay ? ` · ${esc(stay.plate)}` : ''}</span></div></div>
+        <ol class="booking-journey" aria-label="Booking journey"><li class="done">${ic('check', 13)} Booked</li><li class="current">${ic('nav', 13)} Navigate</li><li>${ic('park', 13)} Park</li></ol>
         <div class="ticket-mid">
           <div class="ticket-bay"><span class="plate">${FLOOR_NAMES[b.floor]}</span><div><b>${esc(b.id)}</b><span>Zone ${b.zone}, near Lift ${b.zone}</span></div></div>
           <div class="ring" role="img" aria-label="Hold time left"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" class="ring-bg"/><circle cx="32" cy="32" r="26" class="ring-fg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - k)).toFixed(1)}"/></svg><span><b>${Math.max(0, Math.ceil(left / 60))}</b>min</span></div>
         </div>
         <dl class="ticket-facts"><div><dt>Arrive</dt><dd>${clk(r.windowStart)}–${clk(r.windowEnd)}</dd></div><div><dt>Held until</dt><dd>${clk(holdEnd)}</dd></div><div><dt>Stay</dt><dd>${Math.round(r.durationS / 60)} min</dd></div></dl>
         <p class="fine">If you’re not here 10 minutes after your window, the bay goes back to other ${typeText(r.type)} drivers.</p>
-        <div class="g-actions">${r.status === 'confirmed' ? `<button type="button" class="btn btn-primary btn-wide" data-act="res-go">${ic('nav', 16)} I’m on my way</button><button type="button" class="btn btn-ghost btn-wide" data-act="res-cancel">Cancel booking</button>` : `<button type="button" class="btn btn-primary btn-wide" data-act="open-guide">${ic('nav', 16)} Open guidance</button>`}</div>
+        <p class="booking-next">Your parking is ready. Navigation will take you from the entrance to ${FLOOR_NAMES[b.floor]}, Zone ${b.zone}, bay ${bayNo(b)}.</p>
+        <div class="g-actions"><button type="button" class="btn btn-primary btn-wide" data-act="res-go">${ic('nav', 16)} ${r.status === 'checked-in' || app.lastGuideKey ? 'Continue navigation' : 'Start navigation'}</button>${r.status === 'confirmed' ? `<button type="button" class="btn btn-ghost btn-wide" data-act="res-cancel">Cancel booking</button>` : ''}</div>
       </article>`
     );
   } else setHTML($('#res-active'), r && app.resMsg ? `<p class="note ${app.resErr ? 'warn' : ''}">${esc(app.resMsg)}</p>` : '');
@@ -788,7 +804,9 @@ function renderGuide() {
   if (!v) return;
   const g = guidanceFor(v);
   const lift = DEST_BY_ID[v.dest].lift;
-  setHTML($('#g-title'), `<b>${esc(DEST_BY_ID[v.dest].label)}</b><span>via Lift ${lift}</span>`);
+  const booking = v.resId ? sim.reservations.find((r) => r.id === v.resId && r.vehicle === v.i && (r.status === 'confirmed' || r.status === 'checked-in' || r.status === 'parked')) : null;
+  const bookedBay = booking ? sim.L.bays[booking.bay] : null;
+  setHTML($('#g-title'), booking ? `<b>Your reserved parking</b><span>${esc(tripPlate())} · ${esc(booking.id)}</span>` : `<b>${esc(DEST_BY_ID[v.dest].label)}</b><span>via Lift ${lift}</span>`);
   let eta = '';
   if (v.state === 'pending') eta = `${Math.max(1, Math.ceil((v.arrivalT - sim.t) / 60))} min away`;
   else if (v.state === 'driving' && v.parkT < 0) eta = `≈ ${fmtShortS(sim.routeLength(v) / 2.6 + 8)} to park`;
@@ -816,7 +834,7 @@ function renderGuide() {
   }
   const curF = v.state === 'pending' ? g.floor : sim.vehicleFloor(v);
   const freeHere = g.zone ? freeIn(g.floor, g.zone, v.resId ? ['general'] : v.elig) : 0;
-  setHTML($('#g-maph'), `<span><b>${FLOOR_NAMES[curF]}</b> ${v.state === 'pending' ? 'expected level' : 'you are here'}</span><span class="live-dot">Live</span>${g.zone && g.floor === curF ? `<span class="muted">${freeHere} free in Zone ${g.zone}</span>` : ''}`);
+  setHTML($('#g-maph'), `<span><b>${FLOOR_NAMES[curF]}</b> ${v.state === 'pending' ? 'destination level' : 'you are here'}</span><span class="live-dot">Demo</span>${bookedBay ? `<span class="muted">Reserved: ${esc(bookedBay.id)}</span>` : g.zone && g.floor === curF ? `<span class="muted">${freeHere} free in Zone ${g.zone}</span>` : ''}`);
   const steps = ['Entrance', g.floor >= 0 ? `Level ${FLOOR_NAMES[g.floor]}` : 'Level', g.zone ? `Zone ${g.zone}` : 'Zone', 'Park'];
   setHTML(
     $('#g-steps'),
@@ -831,8 +849,8 @@ function renderGuide() {
       : ''
   );
   let actions = '';
-  if (v.state === 'pending') actions = `<button type="button" class="btn btn-primary btn-wide" data-act="arrive">${ic('pin', 16)} I’m at the entrance</button><button type="button" class="btn btn-wide" data-act="dest">Change destination</button><button type="button" class="btn btn-ghost btn-wide" data-act="cancel-trip">Cancel trip</button>`;
-  else if (v.state === 'driving' && v.parkT < 0) actions = `<button type="button" class="btn" data-act="dest">Change destination</button>`;
+  if (v.state === 'pending') actions = `<button type="button" class="btn btn-primary btn-wide" data-act="arrive">${ic('pin', 16)} I’m at the entrance</button><p class="fine">Demo: tap above to simulate arrival and follow the indoor parking route.</p>${booking ? '' : `<button type="button" class="btn btn-wide" data-act="dest">Change destination</button>`}<button type="button" class="btn btn-ghost btn-wide" data-act="cancel-trip">${booking ? 'Cancel booking' : 'Cancel trip'}</button>`;
+  else if (v.state === 'driving' && v.parkT < 0 && !booking) actions = `<button type="button" class="btn" data-act="dest">Change destination</button>`;
   setHTML($('#g-actions'), actions);
 }
 
@@ -1184,6 +1202,32 @@ function toast(msg: string) {
 }
 
 // ---------------------------------------------------------------- actions
+/** Resume the booked vehicle directly: never create a separate general-parking trip. */
+function startReservationNavigation() {
+  const r = myRes();
+  if (!r || (r.status !== 'confirmed' && r.status !== 'checked-in')) {
+    toast('This booking is no longer active. Please check your booking details.');
+    goTab('reserve');
+    return;
+  }
+  const vehicle = app.sim.vehicles[r.vehicle];
+  const stay = app.stays.find((st) => st.vid === r.vehicle);
+  if (!vehicle || vehicle.resId !== r.id || !stay || !['pending', 'queued', 'driving', 'parking'].includes(vehicle.state)) {
+    toast('Navigation is unavailable for this booking. Please check My car.');
+    goTab('car');
+    return;
+  }
+  app.myId = vehicle.i;
+  app.carSel = stay.plate;
+  app.plan.plate = stay.plate;
+  app.plan.dest = vehicle.dest;
+  app.plan.eta = Math.max(0, Math.ceil((vehicle.arrivalT - app.sim.t) / 60));
+  app.parkedShown = false;
+  app.lastGuideKey = '';
+  app.lastNotice = '';
+  openGuide();
+}
+
 function startTrip() {
   const sim = app.sim;
   const car = app.plan.plate ? carOf(app.plan.plate) : null;
@@ -1233,6 +1277,9 @@ function act(el: HTMLElement) {
   switch (a) {
     case 'tab':
       goTab(el.dataset.tab as Tab);
+      break;
+    case 'reserve-open':
+      goTab('reserve');
       break;
     case 'plan':
       if (phase() === 'planned' || phase() === 'gate' || phase() === 'driving') openGuide();
@@ -1441,11 +1488,7 @@ function act(el: HTMLElement) {
       app.resDraft.dur = Number(el.dataset.v);
       break;
     case 'res-go': {
-      const r = myRes();
-      app.plan.eta = Math.max(0, Math.round(((r?.windowStart ?? sim.t) - sim.t) / 60));
-      const st = r ? app.stays.find((x) => x.vid === r.vehicle) : undefined;
-      if (st) app.plan.plate = st.plate;
-      openSheet('plan');
+      startReservationNavigation();
       break;
     }
     case 'res-cancel': {
@@ -1547,7 +1590,11 @@ function submitReservation() {
     if (d.type === 'ladies' && !app.account.ladies) app.account.ladies = true;
     persistProfile();
     app.stays.push({ plate: car.plate, vid: res.r.vehicle, demo: false, receipt: null });
-    if (!me() || ['left', 'cancelled', 'parked', 'paid'].includes(phase())) app.myId = res.r.vehicle;
+    app.myId = res.r.vehicle;
+    app.carSel = car.plate;
+    app.parkedShown = false;
+    app.lastGuideKey = '';
+    app.lastNotice = '';
     toast(`${RES_LABEL[d.type]} bay ${sim.L.bays[res.r.bay].id} held for ${car.plate}`);
   }
   app.dirty = true;
