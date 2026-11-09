@@ -6,10 +6,10 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const order = [
   'core/rng', 'core/layout', 'core/scenarios', 'core/allocation', 'core/forecast', 'core/sim', 'core/metrics',
-  'ui/dom', 'ui/store', 'render/scene3d', 'render/gl3d', 'ui/charts', 'ui/panels', 'ui/pages', 'ui/presentation', 'main'
+  'ui/dom', 'shared/priority', 'ui/store', 'render/scene3d', 'render/gl3d', 'ui/charts', 'ui/panels', 'ui/pages', 'ui/presentation', 'main'
 ];
 // Driver app: the same simulation core plus its own UI modules.
-export const driverOrder = ['core/rng', 'core/layout', 'core/scenarios', 'core/allocation', 'core/forecast', 'core/sim', 'ui/dom', 'mobile/motion', 'mobile/map', 'mobile/app'];
+export const driverOrder = ['core/rng', 'core/layout', 'core/scenarios', 'core/allocation', 'core/forecast', 'core/sim', 'ui/dom', 'shared/priority', 'mobile/motion', 'mobile/map', 'mobile/app'];
 export const adminOrder = order;
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
 const args = isMain ? process.argv.slice(2) : [];
