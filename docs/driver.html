@@ -185,12 +185,13 @@ a.btn { text-decoration: none; }
   background: linear-gradient(180deg, var(--housing-2), var(--housing)); color: var(--chalk); border-radius: 16px; padding: 13px 12px 10px;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 0 0 4px #0d1520, inset 0 0 0 5px #1c2738, 0 10px 24px rgba(5, 10, 20, 0.18);
 }
-.sign-h { display: flex; justify-content: space-between; align-items: baseline; padding: 0 6px 6px; }
+.sign-h { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 6px 9px; }
 .sign-h > span:first-child { font-family: var(--font-num); font-size: 16px; font-weight: 600; }
-.sign-total { font-size: 13px; color: var(--chalk-2); }
-.sign-total b { font-family: var(--font-num); font-size: 20px; color: #fff; margin-right: 3px; }
+.sign-total { display: flex; flex-direction: column; align-items: flex-end; font-size: 12px; color: var(--chalk-2); }
+.sign-total b { font-family: var(--font-num); font-size: 23px; color: #7db6ff; margin-right: 3px; }
+.sign-total small { font-size: 11px; }
 .sign-rows { display: flex; flex-direction: column; }
-.lvl { display: grid; grid-template-columns: auto auto minmax(0, 1fr); align-items: center; gap: 14px; padding: 7px 6px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+.lvl { display: grid; grid-template-columns: auto minmax(0, 1fr) minmax(0, 1.4fr); align-items: center; gap: 10px; padding: 11px 6px; border-top: 1px solid rgba(255, 255, 255, 0.06); }
 .plate {
   display: inline-grid; place-items: center; width: 40px; height: 30px; border-radius: 5px; flex: none;
   background: var(--sign); color: #fff; font: 700 17px/1 var(--font-num); letter-spacing: 0.02em;
@@ -199,18 +200,25 @@ a.btn { text-decoration: none; }
 .plate-sm { width: 34px; height: 26px; font-size: 15px; }
 .plate-lg { width: 64px; height: 52px; font-size: 28px; border-radius: 8px; box-shadow: inset 0 0 0 2.5px rgba(255, 255, 255, 0.9), inset 0 0 0 5px var(--sign); }
 .plate-warn { background: var(--amber); box-shadow: none; }
-.led { line-height: 0; color: var(--led-free); overflow: hidden; }
-.lvl-low .led { color: var(--led-low); }
-.lvl-full .led { color: var(--led-full); }
+.led { line-height: 0; color: #7db6ff; overflow: hidden; }
+.lvl-available { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+.lvl-state-label { display: inline-flex; align-items: center; gap: 4px; color: #a8ccff; font-size: 11px; line-height: 1.2; }
+.lvl-state-label i { background: #3b82f6; }
+.lvl-statuses { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.bay-state { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; min-width: 0; }
+.bay-state-label { display: inline-flex; align-items: center; gap: 4px; color: var(--chalk-2); font-size: 11px; line-height: 1.2; white-space: nowrap; }
+.bay-state b { font: 600 20px/1 var(--font-num); color: #fff; }
+.lvl-state-label i, .bay-state-label i { width: 6px; height: 6px; border-radius: 2px; flex: none; }
+.bay-state-reserved i { background: #facc15; }
+.bay-state-occupied i { background: #f87171; }
 .dm { display: block; background-image: radial-gradient(circle, var(--led-off) 0 1.35px, transparent 1.7px); background-size: var(--p) var(--p); }
 .dm g { fill: currentColor; filter: drop-shadow(0 0 2.4px currentColor); }
-.lvl-z { display: flex; justify-content: flex-end; gap: 10px; font: 600 15px/1 var(--font-num); color: #fff; }
 .zc { display: inline-flex; align-items: center; gap: 4px; }
 .zc i, .zkey i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
 .zc-a i, i.zc-a { background: var(--zone-a); }
 .zc-b i, i.zc-b { background: var(--zone-b); }
 .zc-c i, i.zc-c { background: var(--zone-c); }
-.sign-f { display: flex; justify-content: space-between; padding: 7px 6px 0; border-top: 1px solid rgba(255, 255, 255, 0.06); font-size: 12px; color: var(--chalk-2); }
+.sign-f { display: flex; flex-direction: column; gap: 4px; padding: 9px 6px 0; border-top: 1px solid rgba(255, 255, 255, 0.06); font-size: 11px; line-height: 1.4; color: var(--chalk-2); }
 .zkey { display: inline-flex; align-items: center; gap: 10px; }
 .zkey > span { display: inline-flex; align-items: center; gap: 4px; }
 
@@ -580,7 +588,9 @@ legend { font-family: var(--font-num); font-size: 17px; font-weight: 600; paddin
 }
 @media (max-width: 360px) {
   .opts { grid-template-columns: minmax(0, 1fr); }
-  .lvl-z { gap: 7px; font-size: 14px; }
+  .lvl { gap: 7px; }
+  .lvl-statuses { gap: 5px; }
+  .bay-state-label { font-size: 10px; gap: 3px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -3934,36 +3944,72 @@ function renderTabs() {
 }
 // Level board: the same dot-matrix sign that hangs at the mall entrance.
 function boardHTML(compact = false) {
-    const c = app.sim.counts();
-    const generalTotal = app.sim.L.bays.filter((b) => b.type === 'general' && b.flag === 'none').length;
-    const rows = [0, 1, 2]
-        .map((f) => {
-        const n = c.perFloor[f].generalFree;
+    const sim = app.sim;
+    const floors = [
+        0,
+        1,
+        2
+    ].map(()=>({
+            available: 0,
+            reserved: 0,
+            occupied: 0,
+            unavailable: 0
+        }));
+    for (const bay of sim.L.bays){
+        const status = sim.bayStatus(bay.idx);
+        const floor = floors[bay.floor];
+        if (status === 'available') floor.available++;
+        else if (status === 'reserved') floor.reserved++;
+        else if (status === 'occupied' || status === 'departing') floor.occupied++;
+        else floor.unavailable++;
+    }
+    const totalAvailable = floors.reduce((sum, floor)=>sum + floor.available, 0);
+    const totalUnavailable = floors.reduce((sum, floor)=>sum + floor.unavailable, 0);
+    const rows = [
+        0,
+        1,
+        2
+    ].map((f)=>{
+        const status = floors[f];
+        const n = status.available;
         const tone = n === 0 ? 'full' : n <= 8 ? 'low' : 'ok';
-        const zones = ZONES.map((z) => `<span class="zc zc-${z.toLowerCase()}"><i></i>${freeIn(f, z, ['general'])}</span>`).join('');
         return `<div class="lvl lvl-${tone}" data-floor="${f}">
         <span class="plate">${FLOOR_NAMES[f]}</span>
-        <span class="led">${dotMatrix(n === 0 ? 'FULL' : String(n), 4, compact ? 3.4 : 3.8, n === 0 ? 'Full' : `${n} free`)}</span>
-        <span class="lvl-z" aria-label="Free by zone">${zones}</span>
-        <span class="sr">${FLOOR_NAMES[f]}: ${n} general bays free.</span>
+        <span class="lvl-available"><span class="led">${dotMatrix(String(n), 4, compact ? 3.4 : 3.8, `${n} available`)}</span><span class="lvl-state-label"><i></i>Available</span></span>
+        <span class="lvl-statuses"><span class="bay-state bay-state-reserved"><span class="bay-state-label"><i></i>Reserved</span><b>${status.reserved}</b></span><span class="bay-state bay-state-occupied"><span class="bay-state-label"><i></i>Occupied</span><b>${status.occupied}</b></span></span>
+        <span class="sr">${FLOOR_NAMES[f]}: ${n} available, ${status.reserved} reserved, ${status.occupied} occupied, ${status.unavailable} unavailable. Special-bay eligibility applies.</span>
       </div>`;
-    })
-        .join('');
-    return `<div class="sign-h"><span>Parking available</span><span class="sign-total"><b id="board-total">${c.generalFree}</b> of ${generalTotal}</span></div>
+    }).join('');
+    return `<div class="sign-h"><span>Parking available</span><span class="sign-total"><span><b id="board-total">${totalAvailable}</b> available</span><small>${sim.L.bays.length} total bays</small></span></div>
     <div class="sign-rows">${rows}</div>
-    <div class="sign-f"><span>Free bays by zone</span><span class="zkey"><span><i class="zc-a"></i>A</span><span><i class="zc-b"></i>B</span><span><i class="zc-c"></i>C</span></span></div>`;
+    <div class="sign-f"><span>All bay types · Special-bay eligibility applies</span>${totalUnavailable ? `<span>${totalUnavailable} unavailable</span>` : ''}</div>`;
 }
 function animateBoardChanges(host) {
     const c = app.sim.counts();
-    for (let f = 0; f < 3; f++) {
-        const n = c.perFloor[f].generalFree;
+    for(let f = 0; f < 3; f++){
+        const n = c.perFloor[f].generalFree + c.perFloor[f].specialFree;
         if (app.boardVals[f] >= 0 && app.boardVals[f] !== n) {
             const led = host.querySelector(`.lvl[data-floor="${f}"] .dm`);
-            animate(led, { transform: [`translateY(${n > app.boardVals[f] ? 45 : -45}%)`, 'translateY(0%)'], opacity: [0, 1] }, { spring: { stiffness: 500, damping: 30 } });
+            animate(led, {
+                transform: [
+                    `translateY(${n > app.boardVals[f] ? 45 : -45}%)`,
+                    'translateY(0%)'
+                ],
+                opacity: [
+                    0,
+                    1
+                ]
+            }, {
+                spring: {
+                    stiffness: 500,
+                    damping: 30
+                }
+            });
         }
         app.boardVals[f] = n;
     }
 }
+
 function busyHTML() {
     const sim = app.sim;
     const f = sim.forecast;
@@ -4071,7 +4117,7 @@ function renderPark() {
         `<button type="button" class="sp" data-act="assist"><span class="sp-ic sp-oku">${ic('oku', 18)}</span><span class="sp-t"><b>Accessible (OKU)</b><span>Kept free for permit holders. Ask for help on arrival.</span></span>${ic('chev', 18)}</button>`);
     if (!app.booted) {
         const tot = document.getElementById('board-total');
-        const to = sim.counts().generalFree;
+        const to = sim.counts().generalFree + sim.counts().specialFree;
         if (tot)
             tweenNumber(0, to, 0.9, (x) => (tot.textContent = String(Math.round(x))));
         const rows = $$('#park-sign .lvl');

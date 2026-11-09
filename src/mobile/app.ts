@@ -416,32 +416,42 @@ function renderTabs() {
   carBadge.hidden = !app.stays.some((st) => ['parked', 'paid'].includes(phaseOf(vOf(st))));
 }
 
-// Level board: the same dot-matrix sign that hangs at the mall entrance.
+// Level board: show actual bay states, rather than colour-only zone counts.
 function boardHTML(compact = false): string {
-  const c = app.sim.counts();
-  const generalTotal = app.sim.L.bays.filter((b) => b.type === 'general' && b.flag === 'none').length;
+  const sim = app.sim;
+  const floors = [0, 1, 2].map(() => ({ available: 0, reserved: 0, occupied: 0, unavailable: 0 }));
+  for (const bay of sim.L.bays) {
+    const status = sim.bayStatus(bay.idx);
+    const floor = floors[bay.floor];
+    if (status === 'available') floor.available++;
+    else if (status === 'reserved') floor.reserved++;
+    else if (status === 'occupied' || status === 'departing') floor.occupied++;
+    else floor.unavailable++;
+  }
+  const totalAvailable = floors.reduce((sum, floor) => sum + floor.available, 0);
+  const totalUnavailable = floors.reduce((sum, floor) => sum + floor.unavailable, 0);
   const rows = [0, 1, 2]
     .map((f) => {
-      const n = c.perFloor[f].generalFree;
+      const status = floors[f];
+      const n = status.available;
       const tone = n === 0 ? 'full' : n <= 8 ? 'low' : 'ok';
-      const zones = ZONES.map((z) => `<span class="zc zc-${z.toLowerCase()}"><i></i>${freeIn(f, z, ['general'])}</span>`).join('');
       return `<div class="lvl lvl-${tone}" data-floor="${f}">
         <span class="plate">${FLOOR_NAMES[f]}</span>
-        <span class="led">${dotMatrix(n === 0 ? 'FULL' : String(n), 4, compact ? 3.4 : 3.8, n === 0 ? 'Full' : `${n} free`)}</span>
-        <span class="lvl-z" aria-label="Free by zone">${zones}</span>
-        <span class="sr">${FLOOR_NAMES[f]}: ${n} general bays free.</span>
+        <span class="lvl-available"><span class="led">${dotMatrix(String(n), 4, compact ? 3.4 : 3.8, `${n} available`)}</span><span class="lvl-state-label"><i></i>Available</span></span>
+        <span class="lvl-statuses"><span class="bay-state bay-state-reserved"><span class="bay-state-label"><i></i>Reserved</span><b>${status.reserved}</b></span><span class="bay-state bay-state-occupied"><span class="bay-state-label"><i></i>Occupied</span><b>${status.occupied}</b></span></span>
+        <span class="sr">${FLOOR_NAMES[f]}: ${n} available, ${status.reserved} reserved, ${status.occupied} occupied, ${status.unavailable} unavailable. Special-bay eligibility applies.</span>
       </div>`;
     })
     .join('');
-  return `<div class="sign-h"><span>Parking available</span><span class="sign-total"><b id="board-total">${c.generalFree}</b> of ${generalTotal}</span></div>
+  return `<div class="sign-h"><span>Parking available</span><span class="sign-total"><span><b id="board-total">${totalAvailable}</b> available</span><small>${sim.L.bays.length} total bays</small></span></div>
     <div class="sign-rows">${rows}</div>
-    <div class="sign-f"><span>Free bays by zone</span><span class="zkey"><span><i class="zc-a"></i>A</span><span><i class="zc-b"></i>B</span><span><i class="zc-c"></i>C</span></span></div>`;
+    <div class="sign-f"><span>All bay types · Special-bay eligibility applies</span>${totalUnavailable ? `<span>${totalUnavailable} unavailable</span>` : ''}</div>`;
 }
 
 function animateBoardChanges(host: HTMLElement) {
   const c = app.sim.counts();
   for (let f = 0; f < 3; f++) {
-    const n = c.perFloor[f].generalFree;
+    const n = c.perFloor[f].generalFree + c.perFloor[f].specialFree;
     if (app.boardVals[f] >= 0 && app.boardVals[f] !== n) {
       const led = host.querySelector(`.lvl[data-floor="${f}"] .dm`);
       animate(led, { transform: [`translateY(${n > app.boardVals[f] ? 45 : -45}%)`, 'translateY(0%)'], opacity: [0, 1] }, { spring: { stiffness: 500, damping: 30 } });
@@ -557,7 +567,7 @@ function renderPark() {
   );
   if (!app.booted) {
     const tot = document.getElementById('board-total');
-    const to = sim.counts().generalFree;
+    const to = sim.counts().generalFree + sim.counts().specialFree;
     if (tot) tweenNumber(0, to, 0.9, (x) => (tot.textContent = String(Math.round(x))));
     const rows = $$('#park-sign .lvl');
     rows.forEach((r, i) => animate(r, { opacity: [0, 1], transform: ['translateY(10px)', 'translateY(0px)'] }, { duration: 0.42, delay: 0.08 + i * 0.07 }));
