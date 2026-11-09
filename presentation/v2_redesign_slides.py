@@ -2,8 +2,10 @@
 
 What it does (idempotent; reruns give the same file):
   * Slide 3  (#executive)    red executive-recommendation layout   <- v2_redesign/executive.html + .css
-  * Slide 5  (#alternatives) red market-context comparison table   <- v2_redesign/alternatives.html + .css
-  * Slide 24 (#horizons)     three-horizon area-curve roadmap      <- v2_redesign/horizons.html + .css
+  * Slide 4  (#problem)      NEW problem-statement slide, inserted after #executive
+                             <- v2_redesign/problem.html + .css; pages are renumbered
+  * Slide 6  (#alternatives) red market-context comparison table   <- v2_redesign/alternatives.html + .css
+  * Slide 25 (#horizons)     three-horizon area-curve roadmap      <- v2_redesign/horizons.html + .css
   * KL East exterior photo -> KLGCC Mall photo (assets/klgcc-mall-exterior.webp) on every slide
   * Pilot site KL East -> KLGCC in the deck text; KLGCC official parking page as site source
     (KL East + Elmina annual-report occupancy facts are kept: they describe those malls, not the pilot).
@@ -68,6 +70,7 @@ STYLES = [  # (style id, css file) in insertion order
     ('horizons-v3-style', 'horizons.css'),
     ('executive-v3-style', 'executive.css'),
     ('alternatives-v3-style', 'alternatives.css'),
+    ('problem-v3-style', 'problem.css'),
 ]
 # V2-only crop so the KLGCC sign is not cut off on the Thank-you slide (premium.css is shared with V1).
 PHOTO_CSS = '<style id="v2-photo-style">#thanks .thank-composition img { object-position:51% center; }</style>'
@@ -102,6 +105,16 @@ def main():
     h = splice(h, 'alternatives', '<div class="frame">', '<div class="source">', part('alternatives.html'), include_end_div=True)
     h = splice(h, 'horizons', '<div class="content">', '<div class="source">', part('horizons.html'))
 
+    # New problem-statement slide right after #executive (Overview section, same footer pattern).
+    h = re.sub(r'<section[^>]*id="problem".*?</section>', '', h, flags=re.S)
+    s, e = section_span(h, 'executive')
+    footer = re.search(r'<footer class="footer">.*?</footer>', h[s:e], re.S).group(0)
+    h = h[:e] + part('problem.html').replace('{footer}', footer) + h[e:]
+    pages = re.findall(r'<span class="page">V2 · \d+ / \d+</span>', h)
+    counter = iter(range(1, len(pages) + 1))
+    h = re.sub(r'<span class="page">V2 · \d+ / \d+</span>',
+               lambda m: f'<span class="page">V2 · {next(counter):02d} / {len(pages)}</span>', h)
+
     for old, new in TEXT:
         h = h.replace(old, new)
     for pattern, repl in REGEX:
@@ -118,7 +131,7 @@ def main():
     assert 'kl-east-exterior' not in h
     assert KLE not in h, 'a KL East site-source link remains'
     for must in ['KLGCC Mall is a proposed first pilot.', 'KLGCC Mall parking', 'class="ex-steps"', 'class="mc-table"',
-                 'class="hz-lead"', 'Potential sites: Elmina + KL East']:
+                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"']:
         assert must in h, must
 
     HTML.write_text(h, encoding='utf-8', newline='')
