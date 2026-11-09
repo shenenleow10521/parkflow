@@ -8,6 +8,7 @@ What it does (idempotent; reruns give the same file):
                              <- v2_redesign/problem.html + .css; pages are renumbered
   * Slide 6  (#alternatives) red market-context comparison table   <- v2_redesign/alternatives.html + .css
   * Slide 7  (#service)      red "Introducing ParkFlow" Priority Zone layout <- v2_redesign/service.html + .css
+  * Slide 8  (#member)       red prototype slide: four live driver-app screens + functions <- v2_redesign/member.html + .css
   * Slide 10 (#admission)    red forecasting & admission control: timeline + capacity guard <- v2_redesign/admission.html + .css
   * Slide 22 (#pilot-design) four-phase pilot visual + KLGCC site-visit photo strip <- v2_redesign/pilot.html, pilot-visit.html + .css
   * Slide 25 (#horizons)     three-horizon area-curve roadmap      <- v2_redesign/horizons.html + .css
@@ -82,6 +83,7 @@ STYLES = [  # (style id, css file) in insertion order
     ('admission-v3-style', 'admission.css'),
     ('pilot-visit-v3-style', 'pilot-visit.css'),
     ('pilot-v3-style', 'pilot.css'),
+    ('member-v3-style', 'member.css'),
 ]
 # V2-only crop so the KLGCC sign is not cut off on the Thank-you slide (premium.css is shared with V1).
 PHOTO_CSS = '<style id="v2-photo-style">#thanks .thank-composition img { object-position:51% center; }</style>'
@@ -123,6 +125,7 @@ def main():
     h = splice(h, 'executive', '<div class="frame">', '<div class="source">', part('executive.html'))
     h = splice(h, 'alternatives', '<div class="frame">', '<div class="source">', part('alternatives.html'), include_end_div=True)
     h = splice(h, 'service', '<div class="frame">', '<div class="source">', part('service.html'), include_end_div=True)
+    h = splice(h, 'member', '<div class="frame">', '<div class="source">', part('member.html'), include_end_div=True)
     h = splice(h, 'admission', '<div class="frame">', '<div class="source">', part('admission.html'))
     # Pilot schedule: phase visual + site-visit strip replace the Gantt; the bottom note moves into the source line.
     h = splice(h, 'pilot-design', '<div class="frame">', '<div class="source">',
@@ -161,7 +164,7 @@ def main():
     assert 'kl-east-exterior' not in h
     assert KLE not in h, 'a KL East site-source link remains'
     for must in ['KLGCC Mall is a proposed first pilot.', 'KLGCC Mall parking', 'class="ex-steps"', 'class="mc-table"',
-                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"', 'class="tm-grid"', 'class="sv-main"', 'class="cv-copy"', 'class="ad-guard"', 'class="pv-strip"', 'class="pl-phases"']:
+                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"', 'class="tm-grid"', 'class="sv-main"', 'class="cv-copy"', 'class="ad-guard"', 'class="pv-strip"', 'class="pl-phases"', 'class="pt-phones"']:
         assert must in h, must
 
     HTML.write_text(h, encoding='utf-8', newline='')
