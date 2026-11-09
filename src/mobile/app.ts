@@ -1,6 +1,6 @@
 // ParkFlow driver prototype: reserve shared Priority Zone access, show a demo QR,
 // and inspect availability. Counts and forecasts are illustrative, not live site data.
-import { esc, dotMatrix } from '../ui/dom';
+import { esc } from '../ui/dom';
 
 type DriverPage = 'home' | 'reserve' | 'confirmed' | 'bookings' | 'zone' | 'profile';
 type DriverBayStatus = 'available' | 'reserved' | 'occupied';
@@ -150,7 +150,7 @@ function driverConfirmation(): string {
 }
 function driverBoard(): string {
   const pool = driverPool(), counts = driverCounts(pool);
-  const floors = [0, 1, 2].map((floor) => { const bays = pool.filter((b) => b.floor === floor), c = driverCounts(bays); return `<div class="status-row"><span class="floor-plate">B${floor + 1}</span><div class="available-count">${dotMatrix(String(c.available), 4, 3.7, `${c.available} available`)}<span><i></i>Available</span></div><div class="status-stat reserved"><span><i></i>Reserved</span><b>${c.reserved}</b></div><div class="status-stat occupied"><span><i></i>Occupied</span><b>${c.occupied}</b></div></div>`; }).join('');
+  const floors = [0, 1, 2].map((floor) => { const bays = pool.filter((b) => b.floor === floor), c = driverCounts(bays); return `<div class="status-row"><span class="floor-plate">B${floor + 1}</span><div class="available-count"><b class="bay-number" aria-label="${c.available} available">${c.available}</b><span><i></i>Available</span></div><div class="status-stat reserved"><span><i></i>Reserved</span><b>${c.reserved}</b></div><div class="status-stat occupied"><span><i></i>Occupied</span><b>${c.occupied}</b></div></div>`; }).join('');
   const free = pool.filter((b) => b.status === 'available');
   return `<section class="status-board" aria-label="Priority Zone availability by level"><div class="status-heading"><b>Parking available</b><span><strong>${counts.available}</strong> available<small>${counts.total} total priority bays</small></span></div>${floors}<div class="status-footer">Priority Zone only · Simulated availability</div></section><details class="available-details"><summary>See available bay numbers <span>${free.length}</span></summary><div class="available-list">${free.length ? free.map((b) => `<span>${b.id}</span>`).join('') : '<p>No bays available.</p>'}</div></details>`;
 }
