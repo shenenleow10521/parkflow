@@ -3681,6 +3681,13 @@ const SIGN_PICTO = {
 function picto(k) {
     return `<svg viewBox="0 0 48 48" width="52" height="52" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SIGN_PICTO[k] || SIGN_PICTO.zone}</svg>`;
 }
+function loadGarage() {
+    const saved = loadArray('parkflow.garage').filter((car)=>car && typeof car.plate === 'string' && typeof car.name === 'string');
+    return saved.length ? saved : DEFAULT_GARAGE.map((car)=>({
+            ...car
+        }));
+}
+
 const app = {
     L: buildLayout(),
     sim: null,
@@ -3694,7 +3701,7 @@ const app = {
     resDraft: { type: 'member', inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
     plan: { dest: 'cinema', eta: 10, plate: '' },
     profile: loadJSON('parkflow.driver.v2', { pace: 4 }),
-    garage: loadJSON('parkflow.garage', DEFAULT_GARAGE.map((c) => ({ ...c }))),
+    garage: loadGarage(),
     account: loadJSON('parkflow.account', { ...DEFAULT_ACCOUNT, cards: DEFAULT_ACCOUNT.cards.map((c) => ({ ...c })) }),
     stays: [],
     carSel: '',

@@ -7,7 +7,7 @@ import { SCENARIO_BY_ID, clockLabel } from '../core/scenarios';
 import { Sim, Vehicle, Reservation } from '../core/sim';
 import { DEFAULT_WEIGHTS } from '../core/allocation';
 import { DEFAULT_ASSUMPTIONS } from '../core/forecast';
-import { $, $$, esc, setHTML, icon, dotMatrix, loadJSON, saveJSON, fmtDist } from '../ui/dom';
+import { $, $$, esc, setHTML, icon, dotMatrix, loadJSON, loadArray, saveJSON, fmtDist } from '../ui/dom';
 import { animate, tweenNumber, SPRING_SHEET, SPRING_PUSH, reducedMotion, motionEngine } from './motion';
 import { FloorMap, vehiclePose, walkPath } from './map';
 
@@ -122,6 +122,11 @@ function picto(k: string): string {
   return `<svg viewBox="0 0 48 48" width="52" height="52" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SIGN_PICTO[k] || SIGN_PICTO.zone}</svg>`;
 }
 
+function loadGarage(): CarProfile[] {
+  const saved = loadArray<CarProfile>('parkflow.garage').filter((car) => car && typeof car.plate === 'string' && typeof car.name === 'string');
+  return saved.length ? saved : DEFAULT_GARAGE.map((car) => ({ ...car }));
+}
+
 const app = {
   L: buildLayout(),
   sim: null as unknown as Sim,
@@ -135,7 +140,7 @@ const app = {
   resDraft: { type: 'member' as ResType, inMin: 20, dur: 120, elig: false, touched: false, plate: '' },
   plan: { dest: 'cinema' as DestId, eta: 10, plate: '' },
   profile: loadJSON<Profile>('parkflow.driver.v2', { pace: 4 }),
-  garage: loadJSON<CarProfile[]>('parkflow.garage', DEFAULT_GARAGE.map((c) => ({ ...c }))),
+  garage: loadGarage(),
   account: loadJSON<Account>('parkflow.account', { ...DEFAULT_ACCOUNT, cards: DEFAULT_ACCOUNT.cards.map((c) => ({ ...c })) }),
   stays: [] as Stay[],
   carSel: '',
