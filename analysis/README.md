@@ -29,6 +29,27 @@ Tested with Python 3.12, numpy 2.4, pandas 3.0, scipy 1.17 and lightgbm 4.6.
 
 ## Forecast data
 
+The subsequent [decision-value experiment](benchmarks/decision_value/report.md) adds minute-resolution interleaving, mixed booking lead times and ten policies. Read its [predeclared protocol](benchmarks/decision_value/protocol.md): the synthetic predictive cue is an explicit assumption, and the results do not establish an ML advantage over all strong simple baselines.
+
+```powershell
+python -B analysis/test_decision_value.py
+python -B analysis/benchmark_decision_value.py
+python -B analysis/report_decision_value.py
+```
+
+This suite changes only request forecasts between the LP variants. It preserves the older V2 results and every presentation file. `scikit-learn` supplies the linear forecast comparator.
+
+The V2 HTML deck has a separate completed benchmark suite, [results](benchmarks/v2/report.md) and [protocol](benchmarks/v2/protocol.md). It leaves the earlier experiment files unchanged:
+
+```powershell
+python -B analysis/benchmark_occupancy_v2.py --download
+python -B analysis/test_benchmark_v2.py
+python -B analysis/benchmark_rolling_v2.py
+python -B analysis/report_benchmarks_v2.py
+```
+
+Run these commands from the repository root (unlike the older commands below). The occupancy test uses real public data; the request, departure and rolling-policy tests are synthetic. The main 100-bay result does **not** establish an optimizer or ML advantage over the guard-only baseline. Raw downloaded data and per-day output stay in the ignored `analysis/benchmark_data/` directory. Summary results are versioned. The new model learners use the existing numpy/pandas/scipy/lightgbm dependencies.
+
 The backtests use the public UCI Parking Birmingham dataset (CC BY 4.0), which is not stored here:
 
 ```

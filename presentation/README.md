@@ -4,6 +4,21 @@ The current property/product presentation is [site-consulting/index.html](../sit
 
 ## Current deck
 
+The separate [V2 HTML deck](../site-consulting/index-v2.html) revises the planning mechanism, validation protocol and commercial tests. It reuses the existing assets and leaves V1 and all PDFs unchanged. Build and check V2 without exporting a PDF:
+
+```powershell
+python -B presentation/build_consulting_v2.py
+python -B presentation/review_consulting_v2.py
+```
+
+[V2 revision notes](../site-consulting/v2-notes.md) describe the evidence boundaries.
+
+`v2_graphics.py` generates the data plots and roadmap as inline SVG. Standalone SVG exports and review renders are disposable, ignored build products. Earlier preview pages and draft graphics plans have been removed.
+
+V2 now reads the [completed offline benchmarks](../analysis/benchmarks/v2/report.md) through `consulting_v2_benchmarks.py`. Reproduction commands are in [analysis/README.md](../analysis/README.md). These experiments do not deploy the optimizer into the browser prototype or validate local customer behaviour.
+
+`consulting_v2_layout.py` adds the approved graphical revision and the [event-driven comparison](../analysis/benchmarks/decision_value/report.md): topic headings, ML forecasting architecture adapted from `site-vnext`, scatter/line/contour exhibits, a cost map, a task-level Gantt and connected horizon curves. V2 has 24 main slides followed continuously by 11 appendix slides (35 total). The member visits/spending slide is retained; pilot measures are in the appendix. `v2.js` provides navigation without floating controls; **R** toggles reading mode.
+
 ```powershell
 python presentation/build_consulting_deck.py
 python presentation/review_consulting_deck.py

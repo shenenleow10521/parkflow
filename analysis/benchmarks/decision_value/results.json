@@ -1,0 +1,4613 @@
+{
+  "date": "2026-11-08",
+  "quick_development_run": false,
+  "train_days": 160,
+  "calibration_days": 40,
+  "policy_day_runs": 3000,
+  "runtime_seconds": 285.2837468999205,
+  "code_sha256": "90f36b3792cd2ed2d36411fb95bc961133c376bf108bb5424c4f290da3dcb35f",
+  "protocol_sha256": "501382d7b1e317417bcf45b36433e8da3a6182a7eabeb7241606d0988ee5055b",
+  "environment": {
+    "python": "3.12.10",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "lightgbm": "4.6.0"
+  },
+  "data_kind": "synthetic only",
+  "calibrated_buffers": {
+    "100:1": {
+      "chosen": 0,
+      "calibration_scores": {
+        "0": 505.975,
+        "5": 470.475,
+        "10": 450.475,
+        "15": 430.15,
+        "20": 408.25,
+        "30": 363.325,
+        "40": 317.025
+      }
+    },
+    "100:5": {
+      "chosen": 5,
+      "calibration_scores": {
+        "0": 653.775,
+        "5": 689.375,
+        "10": 675.675,
+        "15": 661.75,
+        "20": 645.55,
+        "30": 611.725,
+        "40": 577.625
+      }
+    },
+    "100:10": {
+      "chosen": 5,
+      "calibration_scores": {
+        "0": 838.525,
+        "5": 963.0,
+        "10": 957.175,
+        "15": 951.25,
+        "20": 942.175,
+        "30": 922.225,
+        "40": 903.375
+      }
+    },
+    "50:5": {
+      "chosen": 5,
+      "calibration_scores": {
+        "0": 367.2,
+        "5": 414.725,
+        "10": 391.725,
+        "15": 373.325,
+        "20": 353.375,
+        "30": 313.2,
+        "40": 284.375
+      }
+    },
+    "150:5": {
+      "chosen": 5,
+      "calibration_scores": {
+        "0": 832.475,
+        "5": 858.05,
+        "10": 852.3,
+        "15": 844.675,
+        "20": 836.15,
+        "30": 819.475,
+        "40": 798.025
+      }
+    }
+  },
+  "settings": {
+    "mixed_100": {
+      "days": 60,
+      "capacity": 100,
+      "member_weight": 5.0,
+      "kind": "mixed",
+      "long_lead": false,
+      "fixed_buffer": 5,
+      "policies": {
+        "guard": {
+          "requests": 97.85,
+          "accepted": 41.583333333333336,
+          "rejected": 56.266666666666666,
+          "fulfilled": 36.68333333333333,
+          "valid_arrivals": 36.68333333333333,
+          "failed": 0.0,
+          "no_shows": 4.283333333333333,
+          "expired_late": 0.6166666666666667,
+          "walkins": 498.2,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 23.17138888888888,
+          "weighted_score": 681.6166666666667,
+          "rejection_rate": 0.44691454658980645,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 97.85,
+          "accepted": 64.76666666666667,
+          "rejected": 33.083333333333336,
+          "fulfilled": 57.15,
+          "valid_arrivals": 57.15,
+          "failed": 0.0,
+          "no_shows": 6.566666666666666,
+          "expired_late": 1.05,
+          "walkins": 436.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 62.000833333333325,
+          "weighted_score": 722.2166666666667,
+          "rejection_rate": 0.2046673421083166,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 97.85,
+          "accepted": 66.45,
+          "rejected": 31.4,
+          "fulfilled": 58.68333333333333,
+          "valid_arrivals": 58.68333333333333,
+          "failed": 0.0,
+          "no_shows": 6.716666666666667,
+          "expired_late": 1.05,
+          "walkins": 412.75,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 82.03444444444445,
+          "weighted_score": 706.1666666666666,
+          "rejection_rate": 0.19182005978407918,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 97.85,
+          "accepted": 64.76666666666667,
+          "rejected": 33.083333333333336,
+          "fulfilled": 57.15,
+          "valid_arrivals": 57.15,
+          "failed": 0.0,
+          "no_shows": 6.566666666666666,
+          "expired_late": 1.05,
+          "walkins": 436.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 62.000833333333325,
+          "weighted_score": 722.2166666666667,
+          "rejection_rate": 0.2046673421083166,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 97.85,
+          "accepted": 62.53333333333333,
+          "rejected": 35.31666666666667,
+          "fulfilled": 55.15,
+          "valid_arrivals": 55.15,
+          "failed": 0.0,
+          "no_shows": 6.4,
+          "expired_late": 0.9833333333333333,
+          "walkins": 448.8833333333333,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 57.03583333333334,
+          "weighted_score": 724.6333333333333,
+          "rejection_rate": 0.22444068255922459,
+          "mean_protection": 4.183974358974359,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 97.85,
+          "accepted": 50.333333333333336,
+          "rejected": 47.516666666666666,
+          "fulfilled": 44.4,
+          "valid_arrivals": 44.4,
+          "failed": 0.0,
+          "no_shows": 5.25,
+          "expired_late": 0.6833333333333333,
+          "walkins": 477.85,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 34.48333333333331,
+          "weighted_score": 699.85,
+          "rejection_rate": 0.33185689038009303,
+          "mean_protection": 1.6967948717948722,
+          "solver_ms_mean": 2.944523877298567
+        },
+        "lp_adaptive": {
+          "requests": 97.85,
+          "accepted": 49.4,
+          "rejected": 48.45,
+          "fulfilled": 43.516666666666666,
+          "valid_arrivals": 43.516666666666666,
+          "failed": 0.0,
+          "no_shows": 5.216666666666667,
+          "expired_late": 0.6666666666666666,
+          "walkins": 481.21666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 32.63555555555555,
+          "weighted_score": 698.8,
+          "rejection_rate": 0.34798677232416836,
+          "mean_protection": 1.2698717948717944,
+          "solver_ms_mean": 2.8859591024229303
+        },
+        "lp_linear": {
+          "requests": 97.85,
+          "accepted": 48.25,
+          "rejected": 49.6,
+          "fulfilled": 42.55,
+          "valid_arrivals": 42.55,
+          "failed": 0.0,
+          "no_shows": 5.033333333333333,
+          "expired_late": 0.6666666666666666,
+          "walkins": 483.48333333333335,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 31.098611111111108,
+          "weighted_score": 696.2333333333333,
+          "rejection_rate": 0.36125346842646855,
+          "mean_protection": 1.0602564102564103,
+          "solver_ms_mean": 2.884952755471786
+        },
+        "lp_ml": {
+          "requests": 97.85,
+          "accepted": 49.85,
+          "rejected": 48.0,
+          "fulfilled": 43.983333333333334,
+          "valid_arrivals": 43.983333333333334,
+          "failed": 0.0,
+          "no_shows": 5.2,
+          "expired_late": 0.6666666666666666,
+          "walkins": 479.0,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 34.86999999999999,
+          "weighted_score": 698.9166666666666,
+          "rejection_rate": 0.34461568614346283,
+          "mean_protection": 1.3932692307692307,
+          "solver_ms_mean": 2.8974865710971733
+        },
+        "request_oracle": {
+          "requests": 97.85,
+          "accepted": 53.9,
+          "rejected": 43.95,
+          "fulfilled": 47.56666666666667,
+          "valid_arrivals": 47.56666666666667,
+          "failed": 0.0,
+          "no_shows": 5.633333333333334,
+          "expired_late": 0.7,
+          "walkins": 469.85,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 43.43111111111113,
+          "weighted_score": 707.6833333333333,
+          "rejection_rate": 0.32127960392818466,
+          "mean_protection": 2.1698717948717947,
+          "solver_ms_mean": 2.86543688935359
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 7.3,
+          "ci95": [
+            6.15,
+            8.35
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": -19.2,
+          "ci95": [
+            -22.817083333333333,
+            -15.499583333333335
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 17.3,
+          "ci95": [
+            13.61625,
+            21.083749999999995
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": -13.166666666666666,
+          "ci95": [
+            -15.900416666666667,
+            -10.366666666666667
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 42.53333333333333,
+          "ci95": [
+            35.81666666666667,
+            49.38416666666666
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": -23.3,
+          "ci95": [
+            -30.916666666666668,
+            -15.55
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": -0.4166666666666667,
+          "ci95": [
+            -0.9166666666666666,
+            0.11666666666666667
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": 1.15,
+          "ci95": [
+            -1.2166666666666666,
+            3.3833333333333333
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": -0.9333333333333333,
+          "ci95": [
+            -2.966666666666667,
+            1.1337499999999976
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": 0.4666666666666667,
+          "ci95": [
+            -0.05,
+            1.0833333333333333
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": -2.216666666666667,
+          "ci95": [
+            -4.550416666666666,
+            -0.08333333333333333
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": 0.11666666666666667,
+          "ci95": [
+            -2.1670833333333333,
+            2.3
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": 1.4333333333333333,
+          "ci95": [
+            0.7666666666666667,
+            2.117083333333331
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": -4.483333333333333,
+          "ci95": [
+            -7.083333333333333,
+            -2.066666666666667
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 2.683333333333333,
+          "ci95": [
+            0.4166666666666667,
+            5.033333333333333
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.4483974358974359,
+        "lp_adaptive": 0.2983974358974359,
+        "lp_linear": 0.4695512820512821
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 1740,
+          "models": {
+            "mean": {
+              "mae": 6.035938828831198,
+              "wape": 1.1936053599461627
+            },
+            "adaptive": {
+              "mae": 5.250165778369322,
+              "wape": 1.038218940148042
+            },
+            "linear": {
+              "mae": 3.930703929364126,
+              "wape": 0.7772956969080099
+            },
+            "ml": {
+              "mae": 3.349445024403344,
+              "wape": 0.6623518970862392
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 1740,
+          "models": {
+            "mean": {
+              "mae": 11.649492797460919,
+              "wape": 1.1069308359317387
+            },
+            "adaptive": {
+              "mae": 10.737754436889155,
+              "wape": 1.0202977675943168
+            },
+            "linear": {
+              "mae": 8.848076949403243,
+              "wape": 0.8407412566602033
+            },
+            "ml": {
+              "mae": 8.131436808055222,
+              "wape": 0.7726463546317216
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 1740,
+          "models": {
+            "mean": {
+              "mae": 21.95049339365405,
+              "wape": 0.9907358694964603
+            },
+            "adaptive": {
+              "mae": 21.888312407729426,
+              "wape": 0.9879293297047859
+            },
+            "linear": {
+              "mae": 19.777254752209487,
+              "wape": 0.8926467087454153
+            },
+            "ml": {
+              "mae": 19.570628194684062,
+              "wape": 0.8833206157752138
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 1740,
+          "models": {
+            "mean": {
+              "mae": 30.283601181865208,
+              "wape": 0.8925800975090279
+            },
+            "adaptive": {
+              "mae": 31.917799057533397,
+              "wape": 0.940746512409725
+            },
+            "linear": {
+              "mae": 28.514831079395027,
+              "wape": 0.8404472953018945
+            },
+            "ml": {
+              "mae": 28.282675131084535,
+              "wape": 0.8336047214040331
+            }
+          }
+        }
+      ]
+    },
+    "quiet": {
+      "days": 30,
+      "capacity": 100,
+      "member_weight": 5.0,
+      "kind": "quiet",
+      "long_lead": false,
+      "fixed_buffer": 5,
+      "policies": {
+        "guard": {
+          "requests": 25.033333333333335,
+          "accepted": 22.966666666666665,
+          "rejected": 2.066666666666667,
+          "fulfilled": 20.433333333333334,
+          "valid_arrivals": 20.433333333333334,
+          "failed": 0.0,
+          "no_shows": 2.1666666666666665,
+          "expired_late": 0.36666666666666664,
+          "walkins": 356.03333333333336,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 1.7938888888888878,
+          "weighted_score": 458.2,
+          "rejection_rate": 0.059500094238863786,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 25.033333333333335,
+          "accepted": 25.033333333333335,
+          "rejected": 0.0,
+          "fulfilled": 22.133333333333333,
+          "valid_arrivals": 22.133333333333333,
+          "failed": 0.0,
+          "no_shows": 2.5,
+          "expired_late": 0.4,
+          "walkins": 347.6333333333333,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 4.853888888888889,
+          "weighted_score": 458.3,
+          "rejection_rate": 0.0,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 25.033333333333335,
+          "accepted": 25.033333333333335,
+          "rejected": 0.0,
+          "fulfilled": 22.133333333333333,
+          "valid_arrivals": 22.133333333333333,
+          "failed": 0.0,
+          "no_shows": 2.5,
+          "expired_late": 0.4,
+          "walkins": 341.4,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 7.839444444444445,
+          "weighted_score": 452.06666666666666,
+          "rejection_rate": 0.0,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 25.033333333333335,
+          "accepted": 25.033333333333335,
+          "rejected": 0.0,
+          "fulfilled": 22.133333333333333,
+          "valid_arrivals": 22.133333333333333,
+          "failed": 0.0,
+          "no_shows": 2.5,
+          "expired_late": 0.4,
+          "walkins": 347.6333333333333,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 4.853888888888889,
+          "weighted_score": 458.3,
+          "rejection_rate": 0.0,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 25.033333333333335,
+          "accepted": 24.866666666666667,
+          "rejected": 0.16666666666666666,
+          "fulfilled": 22.0,
+          "valid_arrivals": 22.0,
+          "failed": 0.0,
+          "no_shows": 2.5,
+          "expired_late": 0.36666666666666664,
+          "walkins": 350.76666666666665,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 3.772777777777778,
+          "weighted_score": 460.76666666666665,
+          "rejection_rate": 0.005552099237902613,
+          "mean_protection": 2.2826923076923076,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 25.033333333333335,
+          "accepted": 24.533333333333335,
+          "rejected": 0.5,
+          "fulfilled": 21.733333333333334,
+          "valid_arrivals": 21.733333333333334,
+          "failed": 0.0,
+          "no_shows": 2.433333333333333,
+          "expired_late": 0.36666666666666664,
+          "walkins": 352.2,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 3.0622222222222204,
+          "weighted_score": 460.8666666666667,
+          "rejection_rate": 0.014477466368183893,
+          "mean_protection": 2.330128205128205,
+          "solver_ms_mean": 3.2486147439041626
+        },
+        "lp_adaptive": {
+          "requests": 25.033333333333335,
+          "accepted": 24.166666666666668,
+          "rejected": 0.8666666666666667,
+          "fulfilled": 21.4,
+          "valid_arrivals": 21.4,
+          "failed": 0.0,
+          "no_shows": 2.4,
+          "expired_late": 0.36666666666666664,
+          "walkins": 353.6,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 2.5999999999999983,
+          "weighted_score": 460.6,
+          "rejection_rate": 0.026613898561569312,
+          "mean_protection": 1.2480769230769229,
+          "solver_ms_mean": 3.1916166657211784
+        },
+        "lp_linear": {
+          "requests": 25.033333333333335,
+          "accepted": 24.1,
+          "rejected": 0.9333333333333333,
+          "fulfilled": 21.366666666666667,
+          "valid_arrivals": 21.366666666666667,
+          "failed": 0.0,
+          "no_shows": 2.3666666666666667,
+          "expired_late": 0.36666666666666664,
+          "walkins": 353.26666666666665,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 2.64111111111111,
+          "weighted_score": 460.1,
+          "rejection_rate": 0.029802740740854865,
+          "mean_protection": 0.8724358974358973,
+          "solver_ms_mean": 3.2556389101769008
+        },
+        "lp_ml": {
+          "requests": 25.033333333333335,
+          "accepted": 24.133333333333333,
+          "rejected": 0.9,
+          "fulfilled": 21.366666666666667,
+          "valid_arrivals": 21.366666666666667,
+          "failed": 0.0,
+          "no_shows": 2.4,
+          "expired_late": 0.36666666666666664,
+          "walkins": 353.76666666666665,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 2.629444444444444,
+          "weighted_score": 460.6,
+          "rejection_rate": 0.028798684288744363,
+          "mean_protection": 1.0602564102564103,
+          "solver_ms_mean": 3.1509298079748613
+        },
+        "request_oracle": {
+          "requests": 25.033333333333335,
+          "accepted": 24.0,
+          "rejected": 1.0333333333333334,
+          "fulfilled": 21.233333333333334,
+          "valid_arrivals": 21.233333333333334,
+          "failed": 0.0,
+          "no_shows": 2.3666666666666667,
+          "expired_late": 0.4,
+          "walkins": 354.6,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 2.2305555555555547,
+          "weighted_score": 460.76666666666665,
+          "rejection_rate": 0.03212823173398694,
+          "mean_protection": 0.435897435897436,
+          "solver_ms_mean": 3.3055379471102824
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 0.9333333333333333,
+          "ci95": [
+            0.3,
+            1.7333333333333334
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": -2.2666666666666666,
+          "ci95": [
+            -3.8,
+            -1.0
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 2.4,
+          "ci95": [
+            0.36666666666666664,
+            5.100833333333329
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": -0.7666666666666667,
+          "ci95": [
+            -1.3,
+            -0.3333333333333333
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 6.133333333333334,
+          "ci95": [
+            3.6666666666666665,
+            8.90083333333333
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": 2.3,
+          "ci95": [
+            0.8666666666666667,
+            3.8
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": -0.36666666666666664,
+          "ci95": [
+            -0.6,
+            -0.16666666666666666
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": 1.5666666666666667,
+          "ci95": [
+            0.8666666666666667,
+            2.2666666666666666
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": -0.26666666666666666,
+          "ci95": [
+            -1.2,
+            0.5674999999999955
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": -0.03333333333333333,
+          "ci95": [
+            -0.16666666666666666,
+            0.1
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": 0.16666666666666666,
+          "ci95": [
+            -0.23333333333333334,
+            0.6008333333333288
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": 0.0,
+          "ci95": [
+            -0.6,
+            0.6
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            -0.16666666666666666,
+            0.16666666666666666
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": 0.5,
+          "ci95": [
+            -0.23333333333333334,
+            1.3333333333333333
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 0.5,
+          "ci95": [
+            -0.26666666666666666,
+            1.4
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.6461538461538462,
+        "lp_adaptive": 0.28205128205128205,
+        "lp_linear": 0.5461538461538461
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 4.42212314895184,
+              "wape": 4.200051462432424
+            },
+            "adaptive": {
+              "mae": 1.7886597011059613,
+              "wape": 1.69883617899802
+            },
+            "linear": {
+              "mae": 1.5854063824723974,
+              "wape": 1.5057899047499845
+            },
+            "ml": {
+              "mae": 1.6777927618721347,
+              "wape": 1.593536793481176
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 8.993142902233094,
+              "wape": 4.128778007885378
+            },
+            "adaptive": {
+              "mae": 3.4757800657506674,
+              "wape": 1.5957407162021533
+            },
+            "linear": {
+              "mae": 4.070666897192547,
+              "wape": 1.8688549871015914
+            },
+            "ml": {
+              "mae": 4.378342730862239,
+              "wape": 2.0101098553298935
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 19.00770842648851,
+              "wape": 4.031376482458557
+            },
+            "adaptive": {
+              "mae": 7.398331821178383,
+              "wape": 1.5691244964469022
+            },
+            "linear": {
+              "mae": 12.7506086651571,
+              "wape": 2.7042977910011405
+            },
+            "ml": {
+              "mae": 11.922569158989532,
+              "wape": 2.52867751543659
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 29.238876175947116,
+              "wape": 4.000286565981128
+            },
+            "adaptive": {
+              "mae": 11.855864405219153,
+              "wape": 1.6220478113761068
+            },
+            "linear": {
+              "mae": 21.301667864212103,
+              "wape": 2.91436563010922
+            },
+            "ml": {
+              "mae": 19.51870681323803,
+              "wape": 2.6704316602480085
+            }
+          }
+        }
+      ]
+    },
+    "unannounced": {
+      "days": 30,
+      "capacity": 100,
+      "member_weight": 5.0,
+      "kind": "unannounced",
+      "long_lead": false,
+      "fixed_buffer": 5,
+      "policies": {
+        "guard": {
+          "requests": 111.56666666666666,
+          "accepted": 45.5,
+          "rejected": 66.06666666666666,
+          "fulfilled": 39.9,
+          "valid_arrivals": 39.9,
+          "failed": 0.0,
+          "no_shows": 5.033333333333333,
+          "expired_late": 0.5666666666666667,
+          "walkins": 494.1333333333333,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 25.06055555555554,
+          "weighted_score": 693.6333333333333,
+          "rejection_rate": 0.47354127022872455,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 111.56666666666666,
+          "accepted": 70.06666666666666,
+          "rejected": 41.5,
+          "fulfilled": 62.4,
+          "valid_arrivals": 62.4,
+          "failed": 0.0,
+          "no_shows": 6.8,
+          "expired_late": 0.8666666666666667,
+          "walkins": 431.1,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 65.20555555555555,
+          "weighted_score": 743.1,
+          "rejection_rate": 0.2407849080549288,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 111.56666666666666,
+          "accepted": 71.83333333333333,
+          "rejected": 39.733333333333334,
+          "fulfilled": 64.0,
+          "valid_arrivals": 64.0,
+          "failed": 0.0,
+          "no_shows": 6.9,
+          "expired_late": 0.9333333333333333,
+          "walkins": 405.26666666666665,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 86.88055555555556,
+          "weighted_score": 725.2666666666667,
+          "rejection_rate": 0.22926244564711254,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 111.56666666666666,
+          "accepted": 70.06666666666666,
+          "rejected": 41.5,
+          "fulfilled": 62.4,
+          "valid_arrivals": 62.4,
+          "failed": 0.0,
+          "no_shows": 6.8,
+          "expired_late": 0.8666666666666667,
+          "walkins": 431.1,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 65.20555555555555,
+          "weighted_score": 743.1,
+          "rejection_rate": 0.2407849080549288,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 111.56666666666666,
+          "accepted": 68.13333333333334,
+          "rejected": 43.43333333333333,
+          "fulfilled": 60.53333333333333,
+          "valid_arrivals": 60.53333333333333,
+          "failed": 0.0,
+          "no_shows": 6.666666666666667,
+          "expired_late": 0.9333333333333333,
+          "walkins": 442.03333333333336,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 61.53888888888889,
+          "weighted_score": 744.7,
+          "rejection_rate": 0.2565896820691889,
+          "mean_protection": 4.373717948717949,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 111.56666666666666,
+          "accepted": 54.86666666666667,
+          "rejected": 56.7,
+          "fulfilled": 48.7,
+          "valid_arrivals": 48.7,
+          "failed": 0.0,
+          "no_shows": 5.433333333333334,
+          "expired_late": 0.7333333333333333,
+          "walkins": 473.5,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 36.203333333333305,
+          "weighted_score": 717.0,
+          "rejection_rate": 0.35673926585580357,
+          "mean_protection": 1.6397435897435897,
+          "solver_ms_mean": 2.9379779482648396
+        },
+        "lp_adaptive": {
+          "requests": 111.56666666666666,
+          "accepted": 53.7,
+          "rejected": 57.86666666666667,
+          "fulfilled": 47.46666666666667,
+          "valid_arrivals": 47.46666666666667,
+          "failed": 0.0,
+          "no_shows": 5.5,
+          "expired_late": 0.7333333333333333,
+          "walkins": 477.06666666666666,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 34.35611111111109,
+          "weighted_score": 714.4,
+          "rejection_rate": 0.37735751065959533,
+          "mean_protection": 1.2493589743589741,
+          "solver_ms_mean": 2.8931741653463967
+        },
+        "lp_linear": {
+          "requests": 111.56666666666666,
+          "accepted": 52.7,
+          "rejected": 58.86666666666667,
+          "fulfilled": 46.46666666666667,
+          "valid_arrivals": 46.46666666666667,
+          "failed": 0.0,
+          "no_shows": 5.5,
+          "expired_late": 0.7333333333333333,
+          "walkins": 478.93333333333334,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 33.081666666666656,
+          "weighted_score": 711.2666666666667,
+          "rejection_rate": 0.39083063740419965,
+          "mean_protection": 1.0698717948717948,
+          "solver_ms_mean": 2.837156665508444
+        },
+        "lp_ml": {
+          "requests": 111.56666666666666,
+          "accepted": 53.7,
+          "rejected": 57.86666666666667,
+          "fulfilled": 47.56666666666667,
+          "valid_arrivals": 47.56666666666667,
+          "failed": 0.0,
+          "no_shows": 5.4,
+          "expired_late": 0.7333333333333333,
+          "walkins": 475.3666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 36.49444444444446,
+          "weighted_score": 713.2,
+          "rejection_rate": 0.377260000374074,
+          "mean_protection": 1.4557692307692307,
+          "solver_ms_mean": 2.905210642329154
+        },
+        "request_oracle": {
+          "requests": 111.56666666666666,
+          "accepted": 58.8,
+          "rejected": 52.766666666666666,
+          "fulfilled": 52.3,
+          "valid_arrivals": 52.3,
+          "failed": 0.0,
+          "no_shows": 5.6,
+          "expired_late": 0.9,
+          "walkins": 462.9,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 46.80444444444444,
+          "weighted_score": 724.4,
+          "rejection_rate": 0.35105131990716276,
+          "mean_protection": 2.719230769230769,
+          "solver_ms_mean": 2.930819615721702
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 7.666666666666667,
+          "ci95": [
+            6.133333333333334,
+            9.366666666666667
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": -18.766666666666666,
+          "ci95": [
+            -25.333333333333332,
+            -13.532500000000004
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 19.566666666666666,
+          "ci95": [
+            12.765833333333335,
+            26.433333333333334
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": -14.833333333333334,
+          "ci95": [
+            -20.300833333333333,
+            -10.331666666666676
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 44.266666666666666,
+          "ci95": [
+            33.99916666666667,
+            56.702499999999986
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": -29.9,
+          "ci95": [
+            -45.634166666666665,
+            -16.365833333333338
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": -1.1333333333333333,
+          "ci95": [
+            -1.8333333333333333,
+            -0.4
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": 1.8666666666666667,
+          "ci95": [
+            -4.0,
+            5.900833333333329
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": -3.8,
+          "ci95": [
+            -8.833333333333334,
+            0.2
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": 0.1,
+          "ci95": [
+            -0.5,
+            0.7333333333333333
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": -1.7,
+          "ci95": [
+            -7.033333333333333,
+            1.8674999999999955
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": -1.2,
+          "ci95": [
+            -6.0008333333333335,
+            2.7666666666666666
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": 1.1,
+          "ci95": [
+            0.4,
+            1.7666666666666666
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": -3.566666666666667,
+          "ci95": [
+            -9.3,
+            0.4666666666666667
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 1.9333333333333333,
+          "ci95": [
+            -3.6333333333333333,
+            6.700833333333329
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.426923076923077,
+        "lp_adaptive": 0.29230769230769227,
+        "lp_linear": 0.4429487179487179
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 6.5103369367947606,
+              "wape": 1.132119355389055
+            },
+            "adaptive": {
+              "mae": 5.946201076311445,
+              "wape": 1.0340185761325118
+            },
+            "linear": {
+              "mae": 5.266759033861253,
+              "wape": 0.9158665519606816
+            },
+            "ml": {
+              "mae": 4.587400979585401,
+              "wape": 0.797729132968079
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 12.484545446574957,
+              "wape": 1.0482102430534852
+            },
+            "adaptive": {
+              "mae": 12.053950816299785,
+              "wape": 1.0120572486181059
+            },
+            "linear": {
+              "mae": 11.22051651095627,
+              "wape": 0.9420815831434042
+            },
+            "ml": {
+              "mae": 10.672266180222245,
+              "wape": 0.8960501425201075
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 23.671636111768674,
+              "wape": 0.9384089773643828
+            },
+            "adaptive": {
+              "mae": 24.6525593411932,
+              "wape": 0.9772954810370038
+            },
+            "linear": {
+              "mae": 22.002817945220734,
+              "wape": 0.8722524201377034
+            },
+            "ml": {
+              "mae": 21.895166288320137,
+              "wape": 0.8679848113933528
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 32.96851661888354,
+              "wape": 0.8504598665251937
+            },
+            "adaptive": {
+              "mae": 36.110187364667425,
+              "wape": 0.9315027873824545
+            },
+            "linear": {
+              "mae": 30.925947586738495,
+              "wape": 0.7977695072188368
+            },
+            "ml": {
+              "mae": 30.43299958930378,
+              "wape": 0.7850533606918784
+            }
+          }
+        }
+      ]
+    },
+    "shifted": {
+      "days": 30,
+      "capacity": 100,
+      "member_weight": 5.0,
+      "kind": "shifted",
+      "long_lead": false,
+      "fixed_buffer": 5,
+      "policies": {
+        "guard": {
+          "requests": 107.93333333333334,
+          "accepted": 43.666666666666664,
+          "rejected": 64.26666666666667,
+          "fulfilled": 38.46666666666667,
+          "valid_arrivals": 38.46666666666667,
+          "failed": 0.0,
+          "no_shows": 4.633333333333334,
+          "expired_late": 0.5666666666666667,
+          "walkins": 498.9,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 25.965555555555543,
+          "weighted_score": 691.2333333333333,
+          "rejection_rate": 0.48002956966653826,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 107.93333333333334,
+          "accepted": 67.5,
+          "rejected": 40.43333333333333,
+          "fulfilled": 60.1,
+          "valid_arrivals": 60.1,
+          "failed": 0.0,
+          "no_shows": 6.633333333333334,
+          "expired_late": 0.7666666666666667,
+          "walkins": 434.8,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 67.67722222222223,
+          "weighted_score": 735.3,
+          "rejection_rate": 0.24470758706237697,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 107.93333333333334,
+          "accepted": 69.43333333333334,
+          "rejected": 38.5,
+          "fulfilled": 61.766666666666666,
+          "valid_arrivals": 61.766666666666666,
+          "failed": 0.0,
+          "no_shows": 6.833333333333333,
+          "expired_late": 0.8333333333333334,
+          "walkins": 410.43333333333334,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 89.52555555555556,
+          "weighted_score": 719.2666666666667,
+          "rejection_rate": 0.23082628504057295,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 107.93333333333334,
+          "accepted": 67.5,
+          "rejected": 40.43333333333333,
+          "fulfilled": 60.1,
+          "valid_arrivals": 60.1,
+          "failed": 0.0,
+          "no_shows": 6.633333333333334,
+          "expired_late": 0.7666666666666667,
+          "walkins": 434.8,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 67.67722222222223,
+          "weighted_score": 735.3,
+          "rejection_rate": 0.24470758706237697,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 107.93333333333334,
+          "accepted": 66.0,
+          "rejected": 41.93333333333333,
+          "fulfilled": 58.86666666666667,
+          "valid_arrivals": 58.86666666666667,
+          "failed": 0.0,
+          "no_shows": 6.433333333333334,
+          "expired_late": 0.7,
+          "walkins": 445.8666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 64.71944444444442,
+          "weighted_score": 740.2,
+          "rejection_rate": 0.258588965965196,
+          "mean_protection": 4.416025641025641,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 107.93333333333334,
+          "accepted": 52.86666666666667,
+          "rejected": 55.06666666666667,
+          "fulfilled": 47.13333333333333,
+          "valid_arrivals": 47.13333333333333,
+          "failed": 0.0,
+          "no_shows": 5.166666666666667,
+          "expired_late": 0.5666666666666667,
+          "walkins": 476.8,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 38.418888888888894,
+          "weighted_score": 712.4666666666667,
+          "rejection_rate": 0.363608843022136,
+          "mean_protection": 1.5942307692307691,
+          "solver_ms_mean": 2.897486218269198
+        },
+        "lp_adaptive": {
+          "requests": 107.93333333333334,
+          "accepted": 51.96666666666667,
+          "rejected": 55.96666666666667,
+          "fulfilled": 46.166666666666664,
+          "valid_arrivals": 46.166666666666664,
+          "failed": 0.0,
+          "no_shows": 5.233333333333333,
+          "expired_late": 0.5666666666666667,
+          "walkins": 481.0,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 36.620000000000005,
+          "weighted_score": 711.8333333333334,
+          "rejection_rate": 0.3830329187162579,
+          "mean_protection": 1.2294871794871796,
+          "solver_ms_mean": 2.8326507046585903
+        },
+        "lp_linear": {
+          "requests": 107.93333333333334,
+          "accepted": 50.63333333333333,
+          "rejected": 57.3,
+          "fulfilled": 44.93333333333333,
+          "valid_arrivals": 44.93333333333333,
+          "failed": 0.0,
+          "no_shows": 5.133333333333334,
+          "expired_late": 0.5666666666666667,
+          "walkins": 483.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 35.02833333333333,
+          "weighted_score": 708.1333333333333,
+          "rejection_rate": 0.39835569912266633,
+          "mean_protection": 1.0525641025641024,
+          "solver_ms_mean": 2.845014297800402
+        },
+        "lp_ml": {
+          "requests": 107.93333333333334,
+          "accepted": 51.9,
+          "rejected": 56.03333333333333,
+          "fulfilled": 46.06666666666667,
+          "valid_arrivals": 46.06666666666667,
+          "failed": 0.0,
+          "no_shows": 5.2,
+          "expired_late": 0.6333333333333333,
+          "walkins": 480.03333333333336,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 38.12166666666668,
+          "weighted_score": 710.3666666666667,
+          "rejection_rate": 0.3826436418556684,
+          "mean_protection": 1.3724358974358972,
+          "solver_ms_mean": 2.829866219037332
+        },
+        "request_oracle": {
+          "requests": 107.93333333333334,
+          "accepted": 56.96666666666667,
+          "rejected": 50.96666666666667,
+          "fulfilled": 50.333333333333336,
+          "valid_arrivals": 50.333333333333336,
+          "failed": 0.0,
+          "no_shows": 5.8,
+          "expired_late": 0.8333333333333334,
+          "walkins": 466.8,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 52.31611111111113,
+          "weighted_score": 718.4666666666667,
+          "rejection_rate": 0.35324004102804457,
+          "mean_protection": 2.5564102564102558,
+          "solver_ms_mean": 2.895979357746023
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 7.6,
+          "ci95": [
+            6.0,
+            9.266666666666667
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": -18.866666666666667,
+          "ci95": [
+            -23.40083333333333,
+            -14.665833333333337
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 19.133333333333333,
+          "ci95": [
+            12.999166666666667,
+            25.368333333333325
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": -14.033333333333333,
+          "ci95": [
+            -18.533333333333335,
+            -10.232500000000003
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 45.233333333333334,
+          "ci95": [
+            35.56583333333334,
+            56.0
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": -24.933333333333334,
+          "ci95": [
+            -38.266666666666666,
+            -14.0
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": -1.0666666666666667,
+          "ci95": [
+            -1.6333333333333333,
+            -0.5
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": 3.2333333333333334,
+          "ci95": [
+            0.5983333333333334,
+            5.7
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": -2.1,
+          "ci95": [
+            -4.7,
+            0.36666666666666664
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": -0.1,
+          "ci95": [
+            -0.6,
+            0.4
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": -0.9666666666666667,
+          "ci95": [
+            -3.9,
+            1.5666666666666667
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": -1.4666666666666666,
+          "ci95": [
+            -4.6,
+            1.2674999999999954
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": 1.1333333333333333,
+          "ci95": [
+            0.5658333333333334,
+            1.7
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": -3.433333333333333,
+          "ci95": [
+            -6.433333333333334,
+            -0.7991666666666712
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 2.2333333333333334,
+          "ci95": [
+            -0.7008333333333332,
+            5.033333333333333
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.4179487179487179,
+        "lp_adaptive": 0.2852564102564103,
+        "lp_linear": 0.43974358974358974
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 6.3824754289521906,
+              "wape": 1.1353002705353519
+            },
+            "adaptive": {
+              "mae": 5.869073446785681,
+              "wape": 1.0439774890009288
+            },
+            "linear": {
+              "mae": 6.742643546381354,
+              "wape": 1.1993661593440559
+            },
+            "ml": {
+              "mae": 6.155771728744067,
+              "wape": 1.094974729913584
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 12.25328826814663,
+              "wape": 1.0491448472874292
+            },
+            "adaptive": {
+              "mae": 11.606981009968239,
+              "wape": 0.9938070542931176
+            },
+            "linear": {
+              "mae": 12.933237921914676,
+              "wape": 1.107363152452098
+            },
+            "ml": {
+              "mae": 12.175938785409862,
+              "wape": 1.0425220690194448
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 23.34919470089517,
+              "wape": 0.9454435162328398
+            },
+            "adaptive": {
+              "mae": 23.55951077590555,
+              "wape": 0.9539595259721599
+            },
+            "linear": {
+              "mae": 19.41087984401226,
+              "wape": 0.7859753078418816
+            },
+            "ml": {
+              "mae": 17.902838757412066,
+              "wape": 0.7249124880828678
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 32.35327073305452,
+              "wape": 0.8557505027896581
+            },
+            "adaptive": {
+              "mae": 34.73352335265279,
+              "wape": 0.9187086621916553
+            },
+            "linear": {
+              "mae": 27.851915983510384,
+              "wape": 0.7366887664372502
+            },
+            "ml": {
+              "mae": 26.685003208587204,
+              "wape": 0.7058236893916717
+            }
+          }
+        }
+      ]
+    },
+    "size_50": {
+      "days": 30,
+      "capacity": 50,
+      "member_weight": 5.0,
+      "kind": "mixed",
+      "long_lead": false,
+      "fixed_buffer": 5,
+      "policies": {
+        "guard": {
+          "requests": 108.56666666666666,
+          "accepted": 21.966666666666665,
+          "rejected": 86.6,
+          "fulfilled": 19.1,
+          "valid_arrivals": 19.1,
+          "failed": 0.0,
+          "no_shows": 2.566666666666667,
+          "expired_late": 0.3,
+          "walkins": 277.6666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 26.498888888888914,
+          "weighted_score": 373.1666666666667,
+          "rejection_rate": 0.7383727404751952,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 108.56666666666666,
+          "accepted": 57.1,
+          "rejected": 51.46666666666667,
+          "fulfilled": 50.06666666666667,
+          "valid_arrivals": 50.06666666666667,
+          "failed": 0.0,
+          "no_shows": 5.966666666666667,
+          "expired_late": 1.0666666666666667,
+          "walkins": 188.33333333333334,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 89.96666666666653,
+          "weighted_score": 438.6666666666667,
+          "rejection_rate": 0.3164053635263995,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 108.56666666666666,
+          "accepted": 59.2,
+          "rejected": 49.36666666666667,
+          "fulfilled": 52.0,
+          "valid_arrivals": 52.0,
+          "failed": 0.0,
+          "no_shows": 6.1,
+          "expired_late": 1.1,
+          "walkins": 154.4,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 121.80999999999982,
+          "weighted_score": 414.4,
+          "rejection_rate": 0.30133883898513447,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 108.56666666666666,
+          "accepted": 57.1,
+          "rejected": 51.46666666666667,
+          "fulfilled": 50.06666666666667,
+          "valid_arrivals": 50.06666666666667,
+          "failed": 0.0,
+          "no_shows": 5.966666666666667,
+          "expired_late": 1.0666666666666667,
+          "walkins": 188.33333333333334,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 89.96666666666653,
+          "weighted_score": 438.6666666666667,
+          "rejection_rate": 0.3164053635263995,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 108.56666666666666,
+          "accepted": 54.766666666666666,
+          "rejected": 53.8,
+          "fulfilled": 47.86666666666667,
+          "valid_arrivals": 47.86666666666667,
+          "failed": 0.0,
+          "no_shows": 6.0,
+          "expired_late": 0.9,
+          "walkins": 207.66666666666666,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 77.74944444444432,
+          "weighted_score": 447.0,
+          "rejection_rate": 0.345190322742285,
+          "mean_protection": 4.398717948717948,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 108.56666666666666,
+          "accepted": 33.7,
+          "rejected": 74.86666666666666,
+          "fulfilled": 29.566666666666666,
+          "valid_arrivals": 29.566666666666666,
+          "failed": 0.0,
+          "no_shows": 3.7,
+          "expired_late": 0.43333333333333335,
+          "walkins": 253.46666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 42.37277777777776,
+          "weighted_score": 401.3,
+          "rejection_rate": 0.5666137136899815,
+          "mean_protection": 1.1576923076923078,
+          "solver_ms_mean": 2.173518654308282
+        },
+        "lp_adaptive": {
+          "requests": 108.56666666666666,
+          "accepted": 31.766666666666666,
+          "rejected": 76.8,
+          "fulfilled": 27.933333333333334,
+          "valid_arrivals": 27.933333333333334,
+          "failed": 0.0,
+          "no_shows": 3.4,
+          "expired_late": 0.43333333333333335,
+          "walkins": 259.5,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 37.60166666666667,
+          "weighted_score": 399.1666666666667,
+          "rejection_rate": 0.5971702281052591,
+          "mean_protection": 0.7019230769230769,
+          "solver_ms_mean": 2.060276281628877
+        },
+        "lp_linear": {
+          "requests": 108.56666666666666,
+          "accepted": 32.6,
+          "rejected": 75.96666666666667,
+          "fulfilled": 28.4,
+          "valid_arrivals": 28.4,
+          "failed": 0.0,
+          "no_shows": 3.7333333333333334,
+          "expired_late": 0.4666666666666667,
+          "walkins": 256.0,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 42.37833333333329,
+          "weighted_score": 398.0,
+          "rejection_rate": 0.5981782793710255,
+          "mean_protection": 1.0666666666666667,
+          "solver_ms_mean": 2.128396153775378
+        },
+        "lp_ml": {
+          "requests": 108.56666666666666,
+          "accepted": 32.3,
+          "rejected": 76.26666666666667,
+          "fulfilled": 28.233333333333334,
+          "valid_arrivals": 28.233333333333334,
+          "failed": 0.0,
+          "no_shows": 3.6,
+          "expired_late": 0.4666666666666667,
+          "walkins": 257.8666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 39.49388888888888,
+          "weighted_score": 399.03333333333336,
+          "rejection_rate": 0.5949390450684326,
+          "mean_protection": 0.7775641025641025,
+          "solver_ms_mean": 2.0317056387191252
+        },
+        "request_oracle": {
+          "requests": 108.56666666666666,
+          "accepted": 32.3,
+          "rejected": 76.26666666666667,
+          "fulfilled": 28.1,
+          "valid_arrivals": 28.1,
+          "failed": 0.0,
+          "no_shows": 3.7666666666666666,
+          "expired_late": 0.43333333333333335,
+          "walkins": 258.7,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 39.99499999999998,
+          "weighted_score": 399.2,
+          "rejection_rate": 0.613744549712774,
+          "mean_protection": 0.9487179487179488,
+          "solver_ms_mean": 1.977463205082294
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 9.133333333333333,
+          "ci95": [
+            8.065833333333334,
+            10.2
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": -19.8,
+          "ci95": [
+            -22.733333333333334,
+            -16.666666666666668
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 25.866666666666667,
+          "ci95": [
+            21.1,
+            30.7
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": -21.833333333333332,
+          "ci95": [
+            -25.366666666666667,
+            -18.633333333333333
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 69.53333333333333,
+          "ci95": [
+            60.899166666666666,
+            78.9
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": -39.63333333333333,
+          "ci95": [
+            -50.3,
+            -29.966666666666665
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": -1.3333333333333333,
+          "ci95": [
+            -2.2666666666666666,
+            -0.36666666666666664
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": 4.4,
+          "ci95": [
+            1.2333333333333334,
+            7.433333333333334
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": -2.2666666666666666,
+          "ci95": [
+            -5.066666666666666,
+            0.2349999999999909
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": 0.3,
+          "ci95": [
+            -0.3333333333333333,
+            0.9666666666666667
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": -1.6333333333333333,
+          "ci95": [
+            -3.8,
+            0.10083333333332879
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": -0.13333333333333333,
+          "ci95": [
+            -2.6666666666666665,
+            2.1333333333333333
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": -0.16666666666666666,
+          "ci95": [
+            -1.2333333333333334,
+            0.7666666666666667
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": 1.8666666666666667,
+          "ci95": [
+            -0.3,
+            4.400833333333329
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 1.0333333333333334,
+          "ci95": [
+            -2.6,
+            4.5
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.23333333333333334,
+        "lp_adaptive": 0.19423076923076918,
+        "lp_linear": 0.2929487179487179
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 6.394479953005953,
+              "wape": 1.1279800403720963
+            },
+            "adaptive": {
+              "mae": 5.773217407300497,
+              "wape": 1.018389931944735
+            },
+            "linear": {
+              "mae": 3.900603902176315,
+              "wape": 0.6880627321357246
+            },
+            "ml": {
+              "mae": 3.3856318263482117,
+              "wape": 0.5972221591490154
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 12.299878131109883,
+              "wape": 1.047259147980583
+            },
+            "adaptive": {
+              "mae": 11.729768697274755,
+              "wape": 0.998717828012237
+            },
+            "linear": {
+              "mae": 8.631281687150368,
+              "wape": 0.7349006721296556
+            },
+            "ml": {
+              "mae": 7.927095215544916,
+              "wape": 0.6749435151227321
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 23.45780530787238,
+              "wape": 0.9444784625068943
+            },
+            "adaptive": {
+              "mae": 24.120466168736773,
+              "wape": 0.9711590876897904
+            },
+            "linear": {
+              "mae": 19.867655610296254,
+              "wape": 0.7999287477303656
+            },
+            "ml": {
+              "mae": 19.5071881073742,
+              "wape": 0.7854152931051257
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 32.62482881366334,
+              "wape": 0.8575106062805773
+            },
+            "adaptive": {
+              "mae": 35.679973023763125,
+              "wape": 0.9378119797786681
+            },
+            "linear": {
+              "mae": 28.795713436927898,
+              "wape": 0.7568661839917605
+            },
+            "ml": {
+              "mae": 28.14656307003283,
+              "wape": 0.739803923593008
+            }
+          }
+        }
+      ]
+    },
+    "size_150": {
+      "days": 30,
+      "capacity": 150,
+      "member_weight": 5.0,
+      "kind": "mixed",
+      "long_lead": false,
+      "fixed_buffer": 5,
+      "policies": {
+        "guard": {
+          "requests": 108.56666666666666,
+          "accepted": 58.53333333333333,
+          "rejected": 50.03333333333333,
+          "fulfilled": 51.53333333333333,
+          "valid_arrivals": 51.53333333333333,
+          "failed": 0.0,
+          "no_shows": 6.066666666666666,
+          "expired_late": 0.9333333333333333,
+          "walkins": 642.4,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 20.01944444444445,
+          "weighted_score": 900.0666666666667,
+          "rejection_rate": 0.32221413349520683,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 108.56666666666666,
+          "accepted": 77.16666666666667,
+          "rejected": 31.4,
+          "fulfilled": 68.06666666666666,
+          "valid_arrivals": 68.06666666666666,
+          "failed": 0.0,
+          "no_shows": 7.766666666666667,
+          "expired_late": 1.3333333333333333,
+          "walkins": 598.1333333333333,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 48.339999999999996,
+          "weighted_score": 938.4666666666667,
+          "rejection_rate": 0.17999855718087848,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 108.56666666666666,
+          "accepted": 78.8,
+          "rejected": 29.766666666666666,
+          "fulfilled": 69.56666666666666,
+          "valid_arrivals": 69.56666666666666,
+          "failed": 0.0,
+          "no_shows": 7.9,
+          "expired_late": 1.3333333333333333,
+          "walkins": 582.0333333333333,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 61.17166666666665,
+          "weighted_score": 929.8666666666667,
+          "rejection_rate": 0.1689570194035822,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 108.56666666666666,
+          "accepted": 77.16666666666667,
+          "rejected": 31.4,
+          "fulfilled": 68.06666666666666,
+          "valid_arrivals": 68.06666666666666,
+          "failed": 0.0,
+          "no_shows": 7.766666666666667,
+          "expired_late": 1.3333333333333333,
+          "walkins": 598.1333333333333,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 48.339999999999996,
+          "weighted_score": 938.4666666666667,
+          "rejection_rate": 0.17999855718087848,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 108.56666666666666,
+          "accepted": 73.96666666666667,
+          "rejected": 34.6,
+          "fulfilled": 65.23333333333333,
+          "valid_arrivals": 65.23333333333333,
+          "failed": 0.0,
+          "no_shows": 7.466666666666667,
+          "expired_late": 1.2666666666666666,
+          "walkins": 602.7333333333333,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 47.72611111111111,
+          "weighted_score": 928.9,
+          "rejection_rate": 0.20006268183396483,
+          "mean_protection": 4.398717948717948,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 108.56666666666666,
+          "accepted": 64.8,
+          "rejected": 43.766666666666666,
+          "fulfilled": 57.166666666666664,
+          "valid_arrivals": 57.166666666666664,
+          "failed": 0.0,
+          "no_shows": 6.533333333333333,
+          "expired_late": 1.1,
+          "walkins": 627.4666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 27.71277777777776,
+          "weighted_score": 913.3,
+          "rejection_rate": 0.2615374653768254,
+          "mean_protection": 2.021153846153846,
+          "solver_ms_mean": 3.2718332052284564
+        },
+        "lp_adaptive": {
+          "requests": 108.56666666666666,
+          "accepted": 64.36666666666666,
+          "rejected": 44.2,
+          "fulfilled": 56.766666666666666,
+          "valid_arrivals": 56.766666666666666,
+          "failed": 0.0,
+          "no_shows": 6.533333333333333,
+          "expired_late": 1.0666666666666667,
+          "walkins": 628.9,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 26.990555555555556,
+          "weighted_score": 912.7333333333333,
+          "rejection_rate": 0.26670421470890976,
+          "mean_protection": 1.6032051282051283,
+          "solver_ms_mean": 3.1416792936700713
+        },
+        "lp_linear": {
+          "requests": 108.56666666666666,
+          "accepted": 64.06666666666666,
+          "rejected": 44.5,
+          "fulfilled": 56.36666666666667,
+          "valid_arrivals": 56.36666666666667,
+          "failed": 0.0,
+          "no_shows": 6.633333333333334,
+          "expired_late": 1.0666666666666667,
+          "walkins": 629.4666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 26.574999999999996,
+          "weighted_score": 911.3,
+          "rejection_rate": 0.26672637434284574,
+          "mean_protection": 1.4724358974358978,
+          "solver_ms_mean": 3.264465513086926
+        },
+        "lp_ml": {
+          "requests": 108.56666666666666,
+          "accepted": 65.8,
+          "rejected": 42.766666666666666,
+          "fulfilled": 57.9,
+          "valid_arrivals": 57.9,
+          "failed": 0.0,
+          "no_shows": 6.766666666666667,
+          "expired_late": 1.1333333333333333,
+          "walkins": 626.5666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 28.930555555555543,
+          "weighted_score": 916.0666666666667,
+          "rejection_rate": 0.2579613239818369,
+          "mean_protection": 1.6532051282051283,
+          "solver_ms_mean": 3.1294778819966065
+        },
+        "request_oracle": {
+          "requests": 108.56666666666666,
+          "accepted": 73.86666666666666,
+          "rejected": 34.7,
+          "fulfilled": 65.1,
+          "valid_arrivals": 65.1,
+          "failed": 0.0,
+          "no_shows": 7.433333333333334,
+          "expired_late": 1.3333333333333333,
+          "walkins": 604.9,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 50.33999999999997,
+          "weighted_score": 930.4,
+          "rejection_rate": 0.20683420654637447,
+          "mean_protection": 3.423076923076923,
+          "solver_ms_mean": 3.172222115785982
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 6.366666666666666,
+          "ci95": [
+            4.666666666666667,
+            8.4
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": -15.833333333333334,
+          "ci95": [
+            -22.1,
+            -10.899166666666671
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 16.0,
+          "ci95": [
+            11.5,
+            21.169999999999984
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": -10.166666666666666,
+          "ci95": [
+            -14.033333333333333,
+            -6.3
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 28.433333333333334,
+          "ci95": [
+            19.266666666666666,
+            38.1
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": -22.4,
+          "ci95": [
+            -32.97,
+            -12.130833333333346
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": 0.7333333333333333,
+          "ci95": [
+            -0.3333333333333333,
+            2.0008333333333286
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": -0.9,
+          "ci95": [
+            -3.7333333333333334,
+            1.5666666666666667
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": 2.7666666666666666,
+          "ci95": [
+            -0.6674999999999999,
+            7.034166666666662
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": 1.1333333333333333,
+          "ci95": [
+            0.1,
+            2.433333333333333
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": -2.3333333333333335,
+          "ci95": [
+            -5.134166666666667,
+            0.06666666666666667
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": 3.3333333333333335,
+          "ci95": [
+            -0.10083333333333329,
+            7.800833333333329
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": 1.5333333333333334,
+          "ci95": [
+            0.4,
+            2.933333333333333
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": -2.9,
+          "ci95": [
+            -6.033333333333333,
+            -0.3
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 4.766666666666667,
+          "ci95": [
+            1.0333333333333334,
+            9.034166666666662
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.5115384615384616,
+        "lp_adaptive": 0.3660256410256411,
+        "lp_linear": 0.5262820512820513
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 6.394479953005953,
+              "wape": 1.1279800403720963
+            },
+            "adaptive": {
+              "mae": 5.773217407300497,
+              "wape": 1.018389931944735
+            },
+            "linear": {
+              "mae": 3.900603902176315,
+              "wape": 0.6880627321357246
+            },
+            "ml": {
+              "mae": 3.3856318263482117,
+              "wape": 0.5972221591490154
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 12.299878131109883,
+              "wape": 1.047259147980583
+            },
+            "adaptive": {
+              "mae": 11.729768697274755,
+              "wape": 0.998717828012237
+            },
+            "linear": {
+              "mae": 8.631281687150368,
+              "wape": 0.7349006721296556
+            },
+            "ml": {
+              "mae": 7.927095215544916,
+              "wape": 0.6749435151227321
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 23.45780530787238,
+              "wape": 0.9444784625068943
+            },
+            "adaptive": {
+              "mae": 24.120466168736773,
+              "wape": 0.9711590876897904
+            },
+            "linear": {
+              "mae": 19.867655610296254,
+              "wape": 0.7999287477303656
+            },
+            "ml": {
+              "mae": 19.5071881073742,
+              "wape": 0.7854152931051257
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 32.62482881366334,
+              "wape": 0.8575106062805773
+            },
+            "adaptive": {
+              "mae": 35.679973023763125,
+              "wape": 0.9378119797786681
+            },
+            "linear": {
+              "mae": 28.795713436927898,
+              "wape": 0.7568661839917605
+            },
+            "ml": {
+              "mae": 28.14656307003283,
+              "wape": 0.739803923593008
+            }
+          }
+        }
+      ]
+    },
+    "long_lead": {
+      "days": 30,
+      "capacity": 100,
+      "member_weight": 5.0,
+      "kind": "mixed",
+      "long_lead": true,
+      "fixed_buffer": 5,
+      "policies": {
+        "guard": {
+          "requests": 108.56666666666666,
+          "accepted": 41.13333333333333,
+          "rejected": 67.43333333333334,
+          "fulfilled": 35.96666666666667,
+          "valid_arrivals": 35.96666666666667,
+          "failed": 0.0,
+          "no_shows": 4.5,
+          "expired_late": 0.6666666666666666,
+          "walkins": 496.3666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 32.1677777777778,
+          "weighted_score": 676.2,
+          "rejection_rate": 0.5020014322159593,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 108.56666666666666,
+          "accepted": 67.5,
+          "rejected": 41.06666666666667,
+          "fulfilled": 59.46666666666667,
+          "valid_arrivals": 59.46666666666667,
+          "failed": 0.0,
+          "no_shows": 6.766666666666667,
+          "expired_late": 1.2666666666666666,
+          "walkins": 420.6,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 87.37666666666668,
+          "weighted_score": 717.9333333333333,
+          "rejection_rate": 0.24966236644389783,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 108.56666666666666,
+          "accepted": 69.63333333333334,
+          "rejected": 38.93333333333333,
+          "fulfilled": 61.43333333333333,
+          "valid_arrivals": 61.43333333333333,
+          "failed": 0.0,
+          "no_shows": 6.933333333333334,
+          "expired_late": 1.2666666666666666,
+          "walkins": 394.03333333333336,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 112.08444444444443,
+          "weighted_score": 701.2,
+          "rejection_rate": 0.23410606300364326,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 108.56666666666666,
+          "accepted": 67.5,
+          "rejected": 41.06666666666667,
+          "fulfilled": 59.46666666666667,
+          "valid_arrivals": 59.46666666666667,
+          "failed": 0.0,
+          "no_shows": 6.766666666666667,
+          "expired_late": 1.2666666666666666,
+          "walkins": 420.6,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 87.37666666666668,
+          "weighted_score": 717.9333333333333,
+          "rejection_rate": 0.24966236644389783,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 108.56666666666666,
+          "accepted": 65.13333333333334,
+          "rejected": 43.43333333333333,
+          "fulfilled": 57.2,
+          "valid_arrivals": 57.2,
+          "failed": 0.0,
+          "no_shows": 6.8,
+          "expired_late": 1.1333333333333333,
+          "walkins": 435.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 80.18055555555557,
+          "weighted_score": 721.4666666666667,
+          "rejection_rate": 0.26824142649125327,
+          "mean_protection": 4.398717948717948,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 108.56666666666666,
+          "accepted": 50.8,
+          "rejected": 57.766666666666666,
+          "fulfilled": 44.7,
+          "valid_arrivals": 44.7,
+          "failed": 0.0,
+          "no_shows": 5.333333333333333,
+          "expired_late": 0.7666666666666667,
+          "walkins": 472.53333333333336,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 47.33444444444447,
+          "weighted_score": 696.0333333333333,
+          "rejection_rate": 0.38089560855371324,
+          "mean_protection": 1.6019230769230766,
+          "solver_ms_mean": 2.8822269238448
+        },
+        "lp_adaptive": {
+          "requests": 108.56666666666666,
+          "accepted": 49.96666666666667,
+          "rejected": 58.6,
+          "fulfilled": 43.86666666666667,
+          "valid_arrivals": 43.86666666666667,
+          "failed": 0.0,
+          "no_shows": 5.333333333333333,
+          "expired_late": 0.7666666666666667,
+          "walkins": 476.06666666666666,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 45.29111111111113,
+          "weighted_score": 695.4,
+          "rejection_rate": 0.3978611715085558,
+          "mean_protection": 1.230128205128205,
+          "solver_ms_mean": 2.8130451259083853
+        },
+        "lp_linear": {
+          "requests": 108.56666666666666,
+          "accepted": 48.4,
+          "rejected": 60.166666666666664,
+          "fulfilled": 42.4,
+          "valid_arrivals": 42.4,
+          "failed": 0.0,
+          "no_shows": 5.233333333333333,
+          "expired_late": 0.7666666666666667,
+          "walkins": 480.06666666666666,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 42.51555555555557,
+          "weighted_score": 692.0666666666667,
+          "rejection_rate": 0.4156277108481871,
+          "mean_protection": 1.0038461538461538,
+          "solver_ms_mean": 2.8204832695430526
+        },
+        "lp_ml": {
+          "requests": 108.56666666666666,
+          "accepted": 50.166666666666664,
+          "rejected": 58.4,
+          "fulfilled": 44.1,
+          "valid_arrivals": 44.1,
+          "failed": 0.0,
+          "no_shows": 5.3,
+          "expired_late": 0.7666666666666667,
+          "walkins": 472.73333333333335,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 47.86166666666671,
+          "weighted_score": 693.2333333333333,
+          "rejection_rate": 0.39556987694421386,
+          "mean_protection": 1.385897435897436,
+          "solver_ms_mean": 2.8204392942522345
+        },
+        "request_oracle": {
+          "requests": 108.56666666666666,
+          "accepted": 55.03333333333333,
+          "rejected": 53.53333333333333,
+          "fulfilled": 48.4,
+          "valid_arrivals": 48.4,
+          "failed": 0.0,
+          "no_shows": 5.733333333333333,
+          "expired_late": 0.9,
+          "walkins": 460.53333333333336,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 61.213333333333395,
+          "weighted_score": 702.5333333333333,
+          "rejection_rate": 0.3695187485150363,
+          "mean_protection": 2.4730769230769227,
+          "solver_ms_mean": 2.8371036526573916
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 8.133333333333333,
+          "ci95": [
+            6.699166666666667,
+            9.7
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": -23.633333333333333,
+          "ci95": [
+            -29.700833333333332,
+            -18.365833333333338
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 17.033333333333335,
+          "ci95": [
+            11.865833333333335,
+            22.466666666666665
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": -15.366666666666667,
+          "ci95": [
+            -19.90083333333333,
+            -11.133333333333333
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 52.13333333333333,
+          "ci95": [
+            41.39833333333333,
+            63.53333333333333
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": -24.7,
+          "ci95": [
+            -37.035,
+            -12.766666666666667
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": -0.6,
+          "ci95": [
+            -1.4,
+            0.2341666666666621
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": 0.2,
+          "ci95": [
+            -3.6666666666666665,
+            3.4341666666666617
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": -2.8,
+          "ci95": [
+            -6.435833333333333,
+            0.5674999999999955
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": 0.23333333333333334,
+          "ci95": [
+            -0.6,
+            1.1333333333333333
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": -3.3333333333333335,
+          "ci95": [
+            -7.200833333333334,
+            -0.23333333333333334
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": -2.1666666666666665,
+          "ci95": [
+            -6.4,
+            1.8674999999999955
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": 1.7,
+          "ci95": [
+            1.0333333333333334,
+            2.5
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": -7.333333333333333,
+          "ci95": [
+            -11.6,
+            -4.033333333333333
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 1.1666666666666667,
+          "ci95": [
+            -2.4341666666666666,
+            4.500833333333329
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.42307692307692313,
+        "lp_adaptive": 0.29038461538461546,
+        "lp_linear": 0.44166666666666676
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 6.394479953005953,
+              "wape": 1.1279800403720963
+            },
+            "adaptive": {
+              "mae": 5.773217407300497,
+              "wape": 1.018389931944735
+            },
+            "linear": {
+              "mae": 3.900603902176315,
+              "wape": 0.6880627321357246
+            },
+            "ml": {
+              "mae": 3.3856318263482117,
+              "wape": 0.5972221591490154
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 12.299878131109883,
+              "wape": 1.047259147980583
+            },
+            "adaptive": {
+              "mae": 11.729768697274755,
+              "wape": 0.998717828012237
+            },
+            "linear": {
+              "mae": 8.631281687150368,
+              "wape": 0.7349006721296556
+            },
+            "ml": {
+              "mae": 7.927095215544916,
+              "wape": 0.6749435151227321
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 23.45780530787238,
+              "wape": 0.9444784625068943
+            },
+            "adaptive": {
+              "mae": 24.120466168736773,
+              "wape": 0.9711590876897904
+            },
+            "linear": {
+              "mae": 19.867655610296254,
+              "wape": 0.7999287477303656
+            },
+            "ml": {
+              "mae": 19.5071881073742,
+              "wape": 0.7854152931051257
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 32.62482881366334,
+              "wape": 0.8575106062805773
+            },
+            "adaptive": {
+              "mae": 35.679973023763125,
+              "wape": 0.9378119797786681
+            },
+            "linear": {
+              "mae": 28.795713436927898,
+              "wape": 0.7568661839917605
+            },
+            "ml": {
+              "mae": 28.14656307003283,
+              "wape": 0.739803923593008
+            }
+          }
+        }
+      ]
+    },
+    "weight_1": {
+      "days": 30,
+      "capacity": 100,
+      "member_weight": 1.0,
+      "kind": "mixed",
+      "long_lead": false,
+      "fixed_buffer": 0,
+      "policies": {
+        "guard": {
+          "requests": 108.56666666666666,
+          "accepted": 41.6,
+          "rejected": 66.96666666666667,
+          "fulfilled": 36.166666666666664,
+          "valid_arrivals": 36.166666666666664,
+          "failed": 0.0,
+          "no_shows": 4.666666666666667,
+          "expired_late": 0.7666666666666667,
+          "walkins": 506.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.505555555555542,
+          "weighted_score": 542.6333333333333,
+          "rejection_rate": 0.49959348001584597,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 108.56666666666666,
+          "accepted": 67.86666666666666,
+          "rejected": 40.7,
+          "fulfilled": 59.63333333333333,
+          "valid_arrivals": 59.63333333333333,
+          "failed": 0.0,
+          "no_shows": 6.966666666666667,
+          "expired_late": 1.2666666666666666,
+          "walkins": 439.1666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 67.65277777777776,
+          "weighted_score": 498.8,
+          "rejection_rate": 0.2468525897647786,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 108.56666666666666,
+          "accepted": 69.83333333333333,
+          "rejected": 38.733333333333334,
+          "fulfilled": 61.5,
+          "valid_arrivals": 61.5,
+          "failed": 0.0,
+          "no_shows": 7.066666666666666,
+          "expired_late": 1.2666666666666666,
+          "walkins": 414.3,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 88.71166666666664,
+          "weighted_score": 475.8,
+          "rejection_rate": 0.23223381685528505,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 108.56666666666666,
+          "accepted": 41.6,
+          "rejected": 66.96666666666667,
+          "fulfilled": 36.166666666666664,
+          "valid_arrivals": 36.166666666666664,
+          "failed": 0.0,
+          "no_shows": 4.666666666666667,
+          "expired_late": 0.7666666666666667,
+          "walkins": 506.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.505555555555542,
+          "weighted_score": 542.6333333333333,
+          "rejection_rate": 0.49959348001584597,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 108.56666666666666,
+          "accepted": 65.7,
+          "rejected": 42.86666666666667,
+          "fulfilled": 57.56666666666667,
+          "valid_arrivals": 57.56666666666667,
+          "failed": 0.0,
+          "no_shows": 6.933333333333334,
+          "expired_late": 1.2,
+          "walkins": 452.0,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 63.21388888888887,
+          "weighted_score": 509.56666666666666,
+          "rejection_rate": 0.26511235406903905,
+          "mean_protection": 4.398717948717948,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 108.56666666666666,
+          "accepted": 41.6,
+          "rejected": 66.96666666666667,
+          "fulfilled": 36.166666666666664,
+          "valid_arrivals": 36.166666666666664,
+          "failed": 0.0,
+          "no_shows": 4.666666666666667,
+          "expired_late": 0.7666666666666667,
+          "walkins": 506.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.505555555555542,
+          "weighted_score": 542.6333333333333,
+          "rejection_rate": 0.49959348001584597,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 2.7027241678950262
+        },
+        "lp_adaptive": {
+          "requests": 108.56666666666666,
+          "accepted": 41.6,
+          "rejected": 66.96666666666667,
+          "fulfilled": 36.166666666666664,
+          "valid_arrivals": 36.166666666666664,
+          "failed": 0.0,
+          "no_shows": 4.666666666666667,
+          "expired_late": 0.7666666666666667,
+          "walkins": 506.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.505555555555542,
+          "weighted_score": 542.6333333333333,
+          "rejection_rate": 0.49959348001584597,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 2.5511592962385086
+        },
+        "lp_linear": {
+          "requests": 108.56666666666666,
+          "accepted": 41.6,
+          "rejected": 66.96666666666667,
+          "fulfilled": 36.166666666666664,
+          "valid_arrivals": 36.166666666666664,
+          "failed": 0.0,
+          "no_shows": 4.666666666666667,
+          "expired_late": 0.7666666666666667,
+          "walkins": 506.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.505555555555542,
+          "weighted_score": 542.6333333333333,
+          "rejection_rate": 0.49959348001584597,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 2.6555146162326517
+        },
+        "lp_ml": {
+          "requests": 108.56666666666666,
+          "accepted": 41.6,
+          "rejected": 66.96666666666667,
+          "fulfilled": 36.166666666666664,
+          "valid_arrivals": 36.166666666666664,
+          "failed": 0.0,
+          "no_shows": 4.666666666666667,
+          "expired_late": 0.7666666666666667,
+          "walkins": 506.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.505555555555542,
+          "weighted_score": 542.6333333333333,
+          "rejection_rate": 0.49959348001584597,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 2.6863623097037466
+        },
+        "request_oracle": {
+          "requests": 108.56666666666666,
+          "accepted": 41.6,
+          "rejected": 66.96666666666667,
+          "fulfilled": 36.166666666666664,
+          "valid_arrivals": 36.166666666666664,
+          "failed": 0.0,
+          "no_shows": 4.666666666666667,
+          "expired_late": 0.7666666666666667,
+          "walkins": 506.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.505555555555542,
+          "weighted_score": 542.6333333333333,
+          "rejection_rate": 0.49959348001584597,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 2.781500447786246
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.0,
+        "lp_adaptive": 0.0,
+        "lp_linear": 0.0
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 6.394479953005953,
+              "wape": 1.1279800403720963
+            },
+            "adaptive": {
+              "mae": 5.773217407300497,
+              "wape": 1.018389931944735
+            },
+            "linear": {
+              "mae": 3.900603902176315,
+              "wape": 0.6880627321357246
+            },
+            "ml": {
+              "mae": 3.3856318263482117,
+              "wape": 0.5972221591490154
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 12.299878131109883,
+              "wape": 1.047259147980583
+            },
+            "adaptive": {
+              "mae": 11.729768697274755,
+              "wape": 0.998717828012237
+            },
+            "linear": {
+              "mae": 8.631281687150368,
+              "wape": 0.7349006721296556
+            },
+            "ml": {
+              "mae": 7.927095215544916,
+              "wape": 0.6749435151227321
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 23.45780530787238,
+              "wape": 0.9444784625068943
+            },
+            "adaptive": {
+              "mae": 24.120466168736773,
+              "wape": 0.9711590876897904
+            },
+            "linear": {
+              "mae": 19.867655610296254,
+              "wape": 0.7999287477303656
+            },
+            "ml": {
+              "mae": 19.5071881073742,
+              "wape": 0.7854152931051257
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 32.62482881366334,
+              "wape": 0.8575106062805773
+            },
+            "adaptive": {
+              "mae": 35.679973023763125,
+              "wape": 0.9378119797786681
+            },
+            "linear": {
+              "mae": 28.795713436927898,
+              "wape": 0.7568661839917605
+            },
+            "ml": {
+              "mae": 28.14656307003283,
+              "wape": 0.739803923593008
+            }
+          }
+        }
+      ]
+    },
+    "weight_10": {
+      "days": 30,
+      "capacity": 100,
+      "member_weight": 10.0,
+      "kind": "mixed",
+      "long_lead": false,
+      "fixed_buffer": 5,
+      "policies": {
+        "guard": {
+          "requests": 108.56666666666666,
+          "accepted": 41.6,
+          "rejected": 66.96666666666667,
+          "fulfilled": 36.166666666666664,
+          "valid_arrivals": 36.166666666666664,
+          "failed": 0.0,
+          "no_shows": 4.666666666666667,
+          "expired_late": 0.7666666666666667,
+          "walkins": 506.46666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 24.505555555555542,
+          "weighted_score": 868.1333333333333,
+          "rejection_rate": 0.49959348001584597,
+          "mean_protection": 0.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed5": {
+          "requests": 108.56666666666666,
+          "accepted": 67.86666666666666,
+          "rejected": 40.7,
+          "fulfilled": 59.63333333333333,
+          "valid_arrivals": 59.63333333333333,
+          "failed": 0.0,
+          "no_shows": 6.966666666666667,
+          "expired_late": 1.2666666666666666,
+          "walkins": 439.1666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 67.65277777777776,
+          "weighted_score": 1035.5,
+          "rejection_rate": 0.2468525897647786,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "fixed10": {
+          "requests": 108.56666666666666,
+          "accepted": 69.83333333333333,
+          "rejected": 38.733333333333334,
+          "fulfilled": 61.5,
+          "valid_arrivals": 61.5,
+          "failed": 0.0,
+          "no_shows": 7.066666666666666,
+          "expired_late": 1.2666666666666666,
+          "walkins": 414.3,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 88.71166666666664,
+          "weighted_score": 1029.3,
+          "rejection_rate": 0.23223381685528505,
+          "mean_protection": 10.0,
+          "solver_ms_mean": 0.0
+        },
+        "calibrated_fixed": {
+          "requests": 108.56666666666666,
+          "accepted": 67.86666666666666,
+          "rejected": 40.7,
+          "fulfilled": 59.63333333333333,
+          "valid_arrivals": 59.63333333333333,
+          "failed": 0.0,
+          "no_shows": 6.966666666666667,
+          "expired_late": 1.2666666666666666,
+          "walkins": 439.1666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 67.65277777777776,
+          "weighted_score": 1035.5,
+          "rejection_rate": 0.2468525897647786,
+          "mean_protection": 5.0,
+          "solver_ms_mean": 0.0
+        },
+        "reactive": {
+          "requests": 108.56666666666666,
+          "accepted": 65.7,
+          "rejected": 42.86666666666667,
+          "fulfilled": 57.56666666666667,
+          "valid_arrivals": 57.56666666666667,
+          "failed": 0.0,
+          "no_shows": 6.933333333333334,
+          "expired_late": 1.2,
+          "walkins": 452.0,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 63.21388888888887,
+          "weighted_score": 1027.6666666666667,
+          "rejection_rate": 0.26511235406903905,
+          "mean_protection": 4.398717948717948,
+          "solver_ms_mean": 0.0
+        },
+        "lp_mean": {
+          "requests": 108.56666666666666,
+          "accepted": 51.666666666666664,
+          "rejected": 56.9,
+          "fulfilled": 45.233333333333334,
+          "valid_arrivals": 45.233333333333334,
+          "failed": 0.0,
+          "no_shows": 5.533333333333333,
+          "expired_late": 0.9,
+          "walkins": 484.1666666666667,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 36.93555555555554,
+          "weighted_score": 936.5,
+          "rejection_rate": 0.3757066556768867,
+          "mean_protection": 1.632692307692308,
+          "solver_ms_mean": 2.9501372439345013
+        },
+        "lp_adaptive": {
+          "requests": 108.56666666666666,
+          "accepted": 50.43333333333333,
+          "rejected": 58.13333333333333,
+          "fulfilled": 44.03333333333333,
+          "valid_arrivals": 44.03333333333333,
+          "failed": 0.0,
+          "no_shows": 5.533333333333333,
+          "expired_late": 0.8666666666666667,
+          "walkins": 488.26666666666665,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 34.84388888888888,
+          "weighted_score": 928.6,
+          "rejection_rate": 0.3973058292674374,
+          "mean_protection": 1.2564102564102566,
+          "solver_ms_mean": 2.8971567938778886
+        },
+        "lp_linear": {
+          "requests": 108.56666666666666,
+          "accepted": 49.0,
+          "rejected": 59.56666666666667,
+          "fulfilled": 42.766666666666666,
+          "valid_arrivals": 42.766666666666666,
+          "failed": 0.0,
+          "no_shows": 5.4,
+          "expired_late": 0.8333333333333334,
+          "walkins": 491.26666666666665,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 33.132777777777775,
+          "weighted_score": 918.9333333333333,
+          "rejection_rate": 0.41200814182245804,
+          "mean_protection": 1.0237179487179486,
+          "solver_ms_mean": 2.9420342309048206
+        },
+        "lp_ml": {
+          "requests": 108.56666666666666,
+          "accepted": 50.9,
+          "rejected": 57.666666666666664,
+          "fulfilled": 44.53333333333333,
+          "valid_arrivals": 44.53333333333333,
+          "failed": 0.0,
+          "no_shows": 5.5,
+          "expired_late": 0.8666666666666667,
+          "walkins": 485.96666666666664,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 37.18222222222221,
+          "weighted_score": 931.3,
+          "rejection_rate": 0.39279909856313583,
+          "mean_protection": 1.3955128205128207,
+          "solver_ms_mean": 2.8938555769855157
+        },
+        "request_oracle": {
+          "requests": 108.56666666666666,
+          "accepted": 55.9,
+          "rejected": 52.666666666666664,
+          "fulfilled": 49.1,
+          "valid_arrivals": 49.1,
+          "failed": 0.0,
+          "no_shows": 5.866666666666666,
+          "expired_late": 0.9333333333333333,
+          "walkins": 473.53333333333336,
+          "claim_violations": 0.0,
+          "physical_violations": 0.0,
+          "solver_failures": 0.0,
+          "idle_protected_bay_hours": 48.731111111111126,
+          "weighted_score": 964.5333333333333,
+          "rejection_rate": 0.3633349236436202,
+          "mean_protection": 2.4923076923076923,
+          "solver_ms_mean": 2.7956782035732597
+        }
+      },
+      "paired": [
+        {
+          "comparator": "guard",
+          "metric": "fulfilled",
+          "mean_delta": 8.366666666666667,
+          "ci95": [
+            6.933333333333334,
+            9.9
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "walkins",
+          "mean_delta": -20.5,
+          "ci95": [
+            -26.134166666666665,
+            -15.665000000000008
+          ]
+        },
+        {
+          "comparator": "guard",
+          "metric": "weighted_score",
+          "mean_delta": 63.166666666666664,
+          "ci95": [
+            51.266666666666666,
+            75.43666666666665
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "fulfilled",
+          "mean_delta": -15.1,
+          "ci95": [
+            -19.266666666666666,
+            -11.066666666666666
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "walkins",
+          "mean_delta": 46.8,
+          "ci95": [
+            37.13333333333333,
+            56.73666666666665
+          ]
+        },
+        {
+          "comparator": "calibrated_fixed",
+          "metric": "weighted_score",
+          "mean_delta": -104.2,
+          "ci95": [
+            -136.87583333333333,
+            -71.9325
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "fulfilled",
+          "mean_delta": -0.7,
+          "ci95": [
+            -1.5,
+            0.2
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "walkins",
+          "mean_delta": 1.8,
+          "ci95": [
+            -1.6,
+            4.733333333333333
+          ]
+        },
+        {
+          "comparator": "lp_mean",
+          "metric": "weighted_score",
+          "mean_delta": -5.2,
+          "ci95": [
+            -11.401666666666667,
+            1.8
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "fulfilled",
+          "mean_delta": 0.5,
+          "ci95": [
+            -0.3,
+            1.5
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "walkins",
+          "mean_delta": -2.3,
+          "ci95": [
+            -5.6,
+            0.36666666666666664
+          ]
+        },
+        {
+          "comparator": "lp_adaptive",
+          "metric": "weighted_score",
+          "mean_delta": 2.7,
+          "ci95": [
+            -4.4675,
+            11.333333333333334
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "fulfilled",
+          "mean_delta": 1.7666666666666666,
+          "ci95": [
+            0.9333333333333333,
+            2.7666666666666666
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "walkins",
+          "mean_delta": -5.3,
+          "ci95": [
+            -9.133333333333333,
+            -2.2991666666666712
+          ]
+        },
+        {
+          "comparator": "lp_linear",
+          "metric": "weighted_score",
+          "mean_delta": 12.366666666666667,
+          "ci95": [
+            5.099166666666666,
+            20.534999999999993
+          ]
+        }
+      ],
+      "different_action_fraction": {
+        "lp_mean": 0.4237179487179487,
+        "lp_adaptive": 0.28782051282051285,
+        "lp_linear": 0.4467948717948718
+      },
+      "forecast_errors": [
+        {
+          "minutes": 30,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 6.394479953005953,
+              "wape": 1.1279800403720963
+            },
+            "adaptive": {
+              "mae": 5.773217407300497,
+              "wape": 1.018389931944735
+            },
+            "linear": {
+              "mae": 3.900603902176315,
+              "wape": 0.6880627321357246
+            },
+            "ml": {
+              "mae": 3.3856318263482117,
+              "wape": 0.5972221591490154
+            }
+          }
+        },
+        {
+          "minutes": 60,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 12.299878131109883,
+              "wape": 1.047259147980583
+            },
+            "adaptive": {
+              "mae": 11.729768697274755,
+              "wape": 0.998717828012237
+            },
+            "linear": {
+              "mae": 8.631281687150368,
+              "wape": 0.7349006721296556
+            },
+            "ml": {
+              "mae": 7.927095215544916,
+              "wape": 0.6749435151227321
+            }
+          }
+        },
+        {
+          "minutes": 120,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 23.45780530787238,
+              "wape": 0.9444784625068943
+            },
+            "adaptive": {
+              "mae": 24.120466168736773,
+              "wape": 0.9711590876897904
+            },
+            "linear": {
+              "mae": 19.867655610296254,
+              "wape": 0.7999287477303656
+            },
+            "ml": {
+              "mae": 19.5071881073742,
+              "wape": 0.7854152931051257
+            }
+          }
+        },
+        {
+          "minutes": 180,
+          "n": 870,
+          "models": {
+            "mean": {
+              "mae": 32.62482881366334,
+              "wape": 0.8575106062805773
+            },
+            "adaptive": {
+              "mae": 35.679973023763125,
+              "wape": 0.9378119797786681
+            },
+            "linear": {
+              "mae": 28.795713436927898,
+              "wape": 0.7568661839917605
+            },
+            "ml": {
+              "mae": 28.14656307003283,
+              "wape": 0.739803923593008
+            }
+          }
+        }
+      ]
+    }
+  },
+  "first_seed_trace": [
+    {
+      "policy": "lp_adaptive",
+      "trace": [
+        {
+          "minute": 0,
+          "occupied": 0,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 15,
+          "occupied": 12,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 30,
+          "occupied": 24,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 45,
+          "occupied": 36,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 60,
+          "occupied": 39,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 75,
+          "occupied": 46,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 90,
+          "occupied": 54,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 105,
+          "occupied": 59,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 120,
+          "occupied": 66,
+          "pending": 2,
+          "protection": 1
+        },
+        {
+          "minute": 135,
+          "occupied": 77,
+          "pending": 5,
+          "protection": 2
+        },
+        {
+          "minute": 150,
+          "occupied": 87,
+          "pending": 5,
+          "protection": 2
+        },
+        {
+          "minute": 165,
+          "occupied": 88,
+          "pending": 6,
+          "protection": 2
+        },
+        {
+          "minute": 180,
+          "occupied": 88,
+          "pending": 7,
+          "protection": 3
+        },
+        {
+          "minute": 195,
+          "occupied": 90,
+          "pending": 6,
+          "protection": 2
+        },
+        {
+          "minute": 210,
+          "occupied": 91,
+          "pending": 5,
+          "protection": 2
+        },
+        {
+          "minute": 225,
+          "occupied": 90,
+          "pending": 7,
+          "protection": 1
+        },
+        {
+          "minute": 240,
+          "occupied": 89,
+          "pending": 8,
+          "protection": 1
+        },
+        {
+          "minute": 255,
+          "occupied": 88,
+          "pending": 8,
+          "protection": 2
+        },
+        {
+          "minute": 270,
+          "occupied": 89,
+          "pending": 8,
+          "protection": 1
+        },
+        {
+          "minute": 285,
+          "occupied": 90,
+          "pending": 7,
+          "protection": 1
+        },
+        {
+          "minute": 300,
+          "occupied": 89,
+          "pending": 5,
+          "protection": 3
+        },
+        {
+          "minute": 315,
+          "occupied": 86,
+          "pending": 6,
+          "protection": 2
+        },
+        {
+          "minute": 330,
+          "occupied": 88,
+          "pending": 9,
+          "protection": 1
+        },
+        {
+          "minute": 345,
+          "occupied": 88,
+          "pending": 7,
+          "protection": 2
+        },
+        {
+          "minute": 360,
+          "occupied": 88,
+          "pending": 8,
+          "protection": 2
+        },
+        {
+          "minute": 375,
+          "occupied": 88,
+          "pending": 9,
+          "protection": 1
+        },
+        {
+          "minute": 390,
+          "occupied": 90,
+          "pending": 8,
+          "protection": 0
+        },
+        {
+          "minute": 405,
+          "occupied": 90,
+          "pending": 8,
+          "protection": 0
+        },
+        {
+          "minute": 420,
+          "occupied": 86,
+          "pending": 10,
+          "protection": 2
+        },
+        {
+          "minute": 435,
+          "occupied": 85,
+          "pending": 12,
+          "protection": 1
+        },
+        {
+          "minute": 450,
+          "occupied": 85,
+          "pending": 11,
+          "protection": 2
+        },
+        {
+          "minute": 465,
+          "occupied": 84,
+          "pending": 12,
+          "protection": 2
+        },
+        {
+          "minute": 480,
+          "occupied": 86,
+          "pending": 11,
+          "protection": 1
+        },
+        {
+          "minute": 495,
+          "occupied": 87,
+          "pending": 11,
+          "protection": 0
+        },
+        {
+          "minute": 510,
+          "occupied": 90,
+          "pending": 8,
+          "protection": 0
+        },
+        {
+          "minute": 525,
+          "occupied": 93,
+          "pending": 4,
+          "protection": 1
+        },
+        {
+          "minute": 540,
+          "occupied": 91,
+          "pending": 6,
+          "protection": 1
+        },
+        {
+          "minute": 555,
+          "occupied": 92,
+          "pending": 6,
+          "protection": 0
+        },
+        {
+          "minute": 570,
+          "occupied": 85,
+          "pending": 5,
+          "protection": 2
+        },
+        {
+          "minute": 585,
+          "occupied": 90,
+          "pending": 6,
+          "protection": 2
+        },
+        {
+          "minute": 600,
+          "occupied": 88,
+          "pending": 9,
+          "protection": 0
+        },
+        {
+          "minute": 615,
+          "occupied": 82,
+          "pending": 8,
+          "protection": 0
+        },
+        {
+          "minute": 630,
+          "occupied": 85,
+          "pending": 6,
+          "protection": 0
+        },
+        {
+          "minute": 645,
+          "occupied": 86,
+          "pending": 5,
+          "protection": 0
+        },
+        {
+          "minute": 660,
+          "occupied": 86,
+          "pending": 5,
+          "protection": 0
+        },
+        {
+          "minute": 675,
+          "occupied": 83,
+          "pending": 5,
+          "protection": 0
+        },
+        {
+          "minute": 690,
+          "occupied": 91,
+          "pending": 2,
+          "protection": 0
+        },
+        {
+          "minute": 705,
+          "occupied": 94,
+          "pending": 1,
+          "protection": 0
+        },
+        {
+          "minute": 720,
+          "occupied": 93,
+          "pending": 1,
+          "protection": 0
+        },
+        {
+          "minute": 735,
+          "occupied": 94,
+          "pending": 0,
+          "protection": 0
+        },
+        {
+          "minute": 750,
+          "occupied": 89,
+          "pending": 0,
+          "protection": 0
+        },
+        {
+          "minute": 765,
+          "occupied": 93,
+          "pending": 0,
+          "protection": 0
+        }
+      ]
+    },
+    {
+      "policy": "lp_ml",
+      "trace": [
+        {
+          "minute": 0,
+          "occupied": 0,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 15,
+          "occupied": 12,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 30,
+          "occupied": 24,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 45,
+          "occupied": 36,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 60,
+          "occupied": 39,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 75,
+          "occupied": 46,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 90,
+          "occupied": 54,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 105,
+          "occupied": 59,
+          "pending": 0,
+          "protection": 1
+        },
+        {
+          "minute": 120,
+          "occupied": 66,
+          "pending": 2,
+          "protection": 1
+        },
+        {
+          "minute": 135,
+          "occupied": 77,
+          "pending": 5,
+          "protection": 2
+        },
+        {
+          "minute": 150,
+          "occupied": 87,
+          "pending": 5,
+          "protection": 2
+        },
+        {
+          "minute": 165,
+          "occupied": 88,
+          "pending": 6,
+          "protection": 2
+        },
+        {
+          "minute": 180,
+          "occupied": 88,
+          "pending": 7,
+          "protection": 2
+        },
+        {
+          "minute": 195,
+          "occupied": 91,
+          "pending": 6,
+          "protection": 1
+        },
+        {
+          "minute": 210,
+          "occupied": 92,
+          "pending": 5,
+          "protection": 1
+        },
+        {
+          "minute": 225,
+          "occupied": 91,
+          "pending": 6,
+          "protection": 1
+        },
+        {
+          "minute": 240,
+          "occupied": 90,
+          "pending": 7,
+          "protection": 1
+        },
+        {
+          "minute": 255,
+          "occupied": 89,
+          "pending": 7,
+          "protection": 2
+        },
+        {
+          "minute": 270,
+          "occupied": 90,
+          "pending": 7,
+          "protection": 1
+        },
+        {
+          "minute": 285,
+          "occupied": 91,
+          "pending": 6,
+          "protection": 1
+        },
+        {
+          "minute": 300,
+          "occupied": 90,
+          "pending": 4,
+          "protection": 2
+        },
+        {
+          "minute": 315,
+          "occupied": 88,
+          "pending": 5,
+          "protection": 5
+        },
+        {
+          "minute": 330,
+          "occupied": 87,
+          "pending": 8,
+          "protection": 2
+        },
+        {
+          "minute": 345,
+          "occupied": 88,
+          "pending": 6,
+          "protection": 4
+        },
+        {
+          "minute": 360,
+          "occupied": 87,
+          "pending": 7,
+          "protection": 4
+        },
+        {
+          "minute": 375,
+          "occupied": 87,
+          "pending": 8,
+          "protection": 3
+        },
+        {
+          "minute": 390,
+          "occupied": 88,
+          "pending": 8,
+          "protection": 2
+        },
+        {
+          "minute": 405,
+          "occupied": 88,
+          "pending": 10,
+          "protection": 0
+        },
+        {
+          "minute": 420,
+          "occupied": 84,
+          "pending": 12,
+          "protection": 2
+        },
+        {
+          "minute": 435,
+          "occupied": 83,
+          "pending": 14,
+          "protection": 1
+        },
+        {
+          "minute": 450,
+          "occupied": 83,
+          "pending": 13,
+          "protection": 2
+        },
+        {
+          "minute": 465,
+          "occupied": 82,
+          "pending": 14,
+          "protection": 2
+        },
+        {
+          "minute": 480,
+          "occupied": 84,
+          "pending": 13,
+          "protection": 1
+        },
+        {
+          "minute": 495,
+          "occupied": 85,
+          "pending": 13,
+          "protection": 0
+        },
+        {
+          "minute": 510,
+          "occupied": 88,
+          "pending": 10,
+          "protection": 0
+        },
+        {
+          "minute": 525,
+          "occupied": 91,
+          "pending": 6,
+          "protection": 1
+        },
+        {
+          "minute": 540,
+          "occupied": 89,
+          "pending": 8,
+          "protection": 1
+        },
+        {
+          "minute": 555,
+          "occupied": 91,
+          "pending": 7,
+          "protection": 0
+        },
+        {
+          "minute": 570,
+          "occupied": 85,
+          "pending": 6,
+          "protection": 1
+        },
+        {
+          "minute": 585,
+          "occupied": 91,
+          "pending": 6,
+          "protection": 1
+        },
+        {
+          "minute": 600,
+          "occupied": 89,
+          "pending": 8,
+          "protection": 0
+        },
+        {
+          "minute": 615,
+          "occupied": 83,
+          "pending": 7,
+          "protection": 0
+        },
+        {
+          "minute": 630,
+          "occupied": 86,
+          "pending": 5,
+          "protection": 0
+        },
+        {
+          "minute": 645,
+          "occupied": 86,
+          "pending": 4,
+          "protection": 0
+        },
+        {
+          "minute": 660,
+          "occupied": 88,
+          "pending": 4,
+          "protection": 0
+        },
+        {
+          "minute": 675,
+          "occupied": 84,
+          "pending": 4,
+          "protection": 0
+        },
+        {
+          "minute": 690,
+          "occupied": 92,
+          "pending": 2,
+          "protection": 0
+        },
+        {
+          "minute": 705,
+          "occupied": 94,
+          "pending": 1,
+          "protection": 0
+        },
+        {
+          "minute": 720,
+          "occupied": 93,
+          "pending": 1,
+          "protection": 0
+        },
+        {
+          "minute": 735,
+          "occupied": 94,
+          "pending": 0,
+          "protection": 0
+        },
+        {
+          "minute": 750,
+          "occupied": 88,
+          "pending": 0,
+          "protection": 0
+        },
+        {
+          "minute": 765,
+          "occupied": 92,
+          "pending": 0,
+          "protection": 0
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Synthetic cue relationships are assumptions, not measured local behaviour.",
+    "Operating score is a service preference, not money.",
+    "Models share as-of information; only request forecasts change between LP variants.",
+    "Oracle is a request-count reference, not a global upper bound.",
+    "Accurate observed counts and independent ledger are assumed.",
+    "Exploratory paired intervals do not correct for multiple comparisons."
+  ]
+}

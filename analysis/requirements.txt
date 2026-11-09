@@ -2,6 +2,7 @@ numpy>=2.0
 pandas>=2.2
 scipy>=1.13
 lightgbm>=4.0
+scikit-learn>=1.4
 # camera bay detection (cv_benchmark.py)
 torch>=2.2
 torchvision>=0.17
