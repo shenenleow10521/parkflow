@@ -1,0 +1,29 @@
+
+#horizons .content { gap:0; }
+#horizons .hz-lead { margin:0; font-size:28px; line-height:1.2; font-weight:700; letter-spacing:-.02em; color:#102a43; }
+#horizons .hz-heads { display:grid; grid-template-columns:repeat(3,1fr); margin-top:20px; }
+#horizons .hz-head { padding:0 28px; border-left:1px solid #d5dde7; }
+#horizons .hz-head:first-child { padding-left:0; border-left:0; }
+#horizons .hz-tag { margin:0; font-size:25px; line-height:1.15; font-weight:800; letter-spacing:.02em; color:#102a43; }
+#horizons .hz-tag i { font-style:normal; font-weight:300; color:#8a9bb0; margin:0 10px; }
+#horizons .hz-name { margin:6px 0 0; font-size:19px; line-height:1.3; font-weight:600; color:#102a43; }
+#horizons .hz-when { margin:2px 0 0; font-size:17px; line-height:1.3; color:#53647a; }
+#horizons .hz-sites { margin:2px 0 0; font-size:14px; line-height:1.3; color:#53647a; }
+#horizons .hz-chart { margin:14px 0 0; }
+#horizons .hz-chart svg { display:block; width:100%; height:auto; overflow:visible; }
+#horizons .hz-axis { margin-top:10px; }
+#horizons .hz-axis-labels { display:grid; grid-template-columns:repeat(3,1fr); font-size:17px; font-weight:700; color:#102a43; }
+#horizons .hz-axis-labels span { padding-left:56px; }
+#horizons .hz-axis-labels span:nth-child(2) { text-align:center; padding-left:0; }
+#horizons .hz-axis-labels span:nth-child(3) { text-align:right; padding:0 56px 0 0; }
+#horizons .hz-axis svg { display:block; width:100%; height:12px; margin-top:6px; }
+#horizons .hz-axis p { margin:4px 0 0; text-align:center; font-size:14px; color:#53647a; }
+#horizons .hz-gates { display:grid; grid-template-columns:repeat(3,1fr); margin-top:20px; }
+#horizons .hz-gate { display:grid; grid-template-columns:18px 1fr; column-gap:12px; padding:2px 28px; border-left:1px solid #d5dde7; }
+#horizons .hz-gate:first-child { padding-left:0; border-left:0; }
+#horizons .hz-gate svg { width:16px; height:16px; margin-top:2px; color:#102a43; }
+#horizons .hz-gate span { font-size:13px; line-height:1.4; font-weight:750; letter-spacing:.08em; text-transform:uppercase; color:#102a43; }
+#horizons .hz-gate b { grid-column:2; font-size:18px; line-height:1.35; font-weight:700; color:#102a43; }
+body.edition-v2.read-mode #horizons .hz-heads,body.edition-v2.read-mode #horizons .hz-gates,body.edition-v2.read-mode #horizons .hz-axis-labels { grid-template-columns:1fr; gap:14px; }
+body.edition-v2.read-mode #horizons .hz-head,body.edition-v2.read-mode #horizons .hz-gate { padding-left:0; border-left:0; }
+body.edition-v2.read-mode #horizons .hz-axis-labels span { text-align:left; padding:0; }
