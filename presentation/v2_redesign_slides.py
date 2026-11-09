@@ -1,6 +1,7 @@
 """Apply the 10 Nov 2026 V2 redesign and the KLGCC pilot switch to index-v2.html.
 
 What it does (idempotent; reruns give the same file):
+  * Slide 1  (#cover)        red cover: slanted KLGCC photo, red kicker, steps <- v2_redesign/cover.html + .css
   * Slide 2  (#team)         red team layout: five member cards     <- v2_redesign/team.html + .css
   * Slide 3  (#executive)    red executive-recommendation layout   <- v2_redesign/executive.html + .css
   * Slide 4  (#problem)      NEW problem-statement slide, inserted after #executive
@@ -75,6 +76,7 @@ STYLES = [  # (style id, css file) in insertion order
     ('problem-v3-style', 'problem.css'),
     ('team-v3-style', 'team.css'),
     ('service-v3-style', 'service.css'),
+    ('cover-v3-style', 'cover.css'),
 ]
 # V2-only crop so the KLGCC sign is not cut off on the Thank-you slide (premium.css is shared with V1).
 PHOTO_CSS = '<style id="v2-photo-style">#thanks .thank-composition img { object-position:51% center; }</style>'
@@ -105,6 +107,7 @@ def main():
     assert ASSET.exists(), f'missing {ASSET}'
     h = HTML.read_text(encoding='utf-8')
 
+    h = splice(h, 'cover', '<div class="content">', '<div class="source">', part('cover.html'))
     h = splice(h, 'team', '<div class="frame">', '<div class="source">', part('team.html'))
     h = splice(h, 'executive', '<div class="frame">', '<div class="source">', part('executive.html'))
     h = splice(h, 'alternatives', '<div class="frame">', '<div class="source">', part('alternatives.html'), include_end_div=True)
@@ -137,7 +140,7 @@ def main():
     assert 'kl-east-exterior' not in h
     assert KLE not in h, 'a KL East site-source link remains'
     for must in ['KLGCC Mall is a proposed first pilot.', 'KLGCC Mall parking', 'class="ex-steps"', 'class="mc-table"',
-                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"', 'class="tm-grid"', 'class="sv-main"']:
+                 'class="hz-lead"', 'Potential sites: Elmina + KL East', 'id="problem"', 'class="ps-stats"', 'class="tm-grid"', 'class="sv-main"', 'class="cv-copy"']:
         assert must in h, must
 
     HTML.write_text(h, encoding='utf-8', newline='')
