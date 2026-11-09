@@ -4,9 +4,11 @@
   "description": "ParkFlow Priority Zone operating prototype: shared booking ledger, capacity guard and simulated LPR verification",
   "scripts": {
     "build": "node tools/build.mjs",
-    "test:operator": "python3 tools/functional.py",
-    "test:driver": "python3 tools/driver_flow.py /tmp/parkflow-driver-shots",
-    "test:priority": "node tools/priority_test.mjs"
+    "test:priority": "node tools/priority_test.mjs",
+    "test:operator:legacy": "python3 tools/functional.py",
+    "test:driver:legacy": "python3 tools/driver_flow.py /tmp/parkflow-driver-shots",
+    "test:operator": "node tools/priority_test.mjs",
+    "test:driver": "node tools/priority_test.mjs"
   },
   "keywords": [],
   "author": "",

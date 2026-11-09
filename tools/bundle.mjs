@@ -6,10 +6,10 @@ import path from 'node:path';
 const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const order = [
   'core/rng', 'core/layout', 'core/scenarios', 'core/allocation', 'core/forecast', 'core/sim', 'core/metrics',
-  'ui/dom', 'shared/priority', 'ui/store', 'render/scene3d', 'render/gl3d', 'ui/charts', 'ui/panels', 'ui/pages', 'ui/presentation', 'main'
+  'ui/dom', 'shared/priority', 'ui/store', 'render/scene3d', 'render/gl3d', 'main'
 ];
-// Driver app: the same simulation core plus its own UI modules.
-export const driverOrder = ['core/rng', 'core/layout', 'core/scenarios', 'core/allocation', 'core/forecast', 'core/sim', 'ui/dom', 'shared/priority', 'mobile/motion', 'mobile/map', 'mobile/app'];
+// Driver and operator share the ledger; only the operator needs the 3D core.
+export const driverOrder = ['ui/dom', 'shared/priority', 'mobile/app'];
 export const adminOrder = order;
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
 const args = isMain ? process.argv.slice(2) : [];
