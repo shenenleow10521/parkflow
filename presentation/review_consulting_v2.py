@@ -54,9 +54,9 @@ def main():
     assert finance.required_bookings(3) > finance.required_bookings(5) > finance.required_bookings()
     assert finance.required_bookings(5,extra_annual=12000) > finance.required_bookings(5)
     assert finance.required_bookings(5,upfront=finance.UPFRONT+10000) > finance.required_bookings(5)
-    for selector in ['#executive .budget-reference','#investment .g2-cost-envelope','#decision .decision-budget']:
+    for selector in ['#executive .ex-kpi','#capex-opex .co-pill','#decision .decision-budget']:
         assert 'RM90' in html.select_one(selector).get_text(), selector
-    financial_ids=['executive','investment','booking-return','booking-sensitivity','retention','decision','a-cost','a-finance','recovery']
+    financial_ids=['executive','investment','booking-return','decision','a-cost','a-finance','recovery']
     for name in financial_ids:
         slide=html.find(id=name)
         assert slide['data-financial-model']=='v2-2026-11-09'
@@ -76,10 +76,7 @@ def main():
     assert html.select_one('#member-value a[href="https://doi.org/10.1086/500480"]')
     assert html.select_one('#member-value a[href="https://doi.org/10.1016/j.jretai.2021.08.001"]')
     assert 'No retention cash is assumed' in html.find(id='member-value').get_text()
-    rent_slide=html.find(id='retention')
-    assert rent_slide.select_one('.g2-rent-sensitivity svg')
-    assert rent_slide.select_one('a[href$="TROP-AN20241203A3-1.pdf#page=32"]')
-    assert 'Below a floor, extra rent can be RM0' in rent_slide.get_text()
+    assert not html.find(id='retention')
     assert finance.LEASE_RATE_LOW==.05 and finance.LEASE_RATE_HIGH==.15
     assert 'not a cost or demand average across SDP malls' in html.find(id='executive').get_text()
     # Independent lease cases: no top-up below floor; partial rent at crossing;
@@ -105,16 +102,20 @@ def main():
         page.wait_for_function('window.__consultingReady === true')
         ids = page.locator('section.slide').evaluate_all('ss => ss.map(s => s.id)')
         assert len(ids) == 34 and len(set(ids)) == 34 and ids[1] == 'team', ids
-        assert ids.index('thanks')==23, '24 main slides including standalone Thank You'
+        assert ids.index('thanks')==22, '23 main slides including standalone Thank You'
         assert ids[10:13]==['ml-stack','forecast','simulation'], 'Architecture precedes prediction and operating results'
+        assert ids[14:18]==['must-be-true','capex-opex','booking-return','investment'], 'Value, cost, income and break-even order'
+        assert ids[19:22]==['roadmap','horizons','decision'], 'Six-month plan precedes three-horizon plan and decision'
+        assert ids[ids.index('thanks')+1]=='risk' and html.find(id='risk')['data-appendix']=='true'
         assert 'member-value' in ids[:ids.index('thanks')], 'Retain the former slide 13'
+        assert not set(ids)&{'context','booking-sensitivity','retention'}
         assert ids.index('recovery')>ids.index('thanks') and ids.index('scorecard')>ids.index('thanks')
         assert not set(ids)&{'commercial','sanity-checks','a-partners','a-historical-policy','a-evidence','a-audit'}
         dom_ids=page.locator('[id]').evaluate_all('es=>es.map(e=>e.id)')
         assert len(dom_ids)==len(set(dom_ids)), 'Duplicate inline SVG or section IDs'
-        assert ids[ids.index('thanks') + 1] == 'a-cost'
+        assert ids[ids.index('thanks') + 2] == 'a-cost'
         assert page.evaluate('Array.from(document.images).every(i => i.complete && i.naturalWidth > 0)')
-        crossings=page.locator('#horizons .content svg').evaluate('''svg=>{
+        crossings=page.locator('#horizons .hz-chart svg').evaluate('''svg=>{
           const paths=[...svg.querySelectorAll('path')].filter(p=>p.getAttribute('stroke-width')==='4.5');
           const labels=[...svg.querySelectorAll('text')].filter(t=>{const r=t.getBBox();return r.y>130&&r.y+r.height<440;});
           return labels.filter(t=>{const r=t.getBBox();return paths.some(p=>{
@@ -136,15 +137,16 @@ def main():
               const source = s.querySelector('.source');
               const title = s.querySelector('.slide-title');
               return {id:s.id, overflow, sourceOverflow:source.scrollHeight > source.clientHeight + 1,
-                titleOverflow:title ? title.scrollHeight > title.clientHeight + 1 || title.getBoundingClientRect().bottom > cr.top - 8 : false};
+                titleOverflow:title ? title.scrollHeight > title.clientHeight + 1 || title.getBoundingClientRect().bottom > cr.top - 8 : false,
+                titleMetrics:title ? {scrollHeight:title.scrollHeight,clientHeight:title.clientHeight,bottom:Math.round(title.getBoundingClientRect().bottom),contentTop:Math.round(cr.top)} : null};
             }''')
             rows.append(data)
-            if slide_id in ['cover','executive','ml-stack','admission','simulation','forecast','must-be-true','investment','booking-sensitivity','retention','pilot-design','horizons','scorecard','a-decision-study']:
+            if slide_id in ['cover','executive','ml-stack','admission','simulation','forecast','must-be-true','capex-opex','booking-return','investment','pilot-design','horizons','scorecard','a-decision-study']:
                 page.screenshot(path=str(OUT / f'{i:02d}-{slide_id}.png'), style='.controls{visibility:hidden}')
         page.goto(url + '#thanks')
         page.wait_for_function('window.__consultingReady === true')
         page.keyboard.press('ArrowRight')
-        assert page.url.endswith('#a-cost'), page.url
+        assert page.url.endswith('#risk'), page.url
         for width, height in [(1280,720), (1366,768), (1920,1080)]:
             page.set_viewport_size({'width':width, 'height':height})
             page.wait_for_timeout(70)
@@ -153,7 +155,10 @@ def main():
         page.set_viewport_size({'width':390, 'height':844})
         page.keyboard.press('r')
         assert page.locator('body').evaluate("b => b.classList.contains('read-mode')")
-        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), 'Reading mode horizontal overflow'
+        horizontal_overflow=page.locator('body *').evaluate_all('''els=>els.filter(e=>{
+          const r=e.getBoundingClientRect();return r.width&&r.right>innerWidth+1;
+        }).map(e=>({slide:e.closest('section')?.id||'',tag:e.tagName,id:e.id,cls:e.className?.baseVal||e.className||'',right:Math.round(e.getBoundingClientRect().right),width:Math.round(e.getBoundingClientRect().width)})).slice(0,20)''')
+        assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), ('Reading mode horizontal overflow',horizontal_overflow)
         for slide_id in ['a-forecast-results','a-stress-results']:
             columns=page.locator('#'+slide_id+' .cols').evaluate("e => getComputedStyle(e).gridTemplateColumns.split(' ').length")
             assert columns==1, (slide_id, 'Phone reading mode must stack exhibit columns')

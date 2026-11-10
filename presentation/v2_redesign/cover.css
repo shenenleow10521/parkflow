@@ -35,3 +35,4 @@ body.edition-v2.read-mode #cover .cv-copy { position:static; width:auto; padding
 body.edition-v2.read-mode #cover .cv-kicker { margin-top:24px; }
 body.edition-v2.read-mode #cover h1 { font-size:46px; }
 body.edition-v2.read-mode #cover .cv-steps { flex-wrap:wrap; }
+body.edition-v2.read-mode #cover .source { width:auto; }

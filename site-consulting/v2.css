@@ -171,6 +171,7 @@ body.edition-v2 #a-sources .g2-source-entry p { margin:6px 0 0; font-size:17px; 
 .g2-retention-measure>span { flex:1; font-size:21px; font-weight:550; }
 .g2-retention-measure>b { color:#245bd8; font-size:29px; font-weight:400; }
 body.edition-v2.read-mode .slide:not(.premium-cover):not(.premium-thank) .content { position:static; }
+body.edition-v2.read-mode .frame { box-sizing:border-box; max-width:100%; }
 body.edition-v2.read-mode .slide .frame:before { display:none; }
 body.edition-v2.read-mode .slide-title { font-size:28px; }
 body.edition-v2.read-mode .g2-plot { height:auto; min-height:260px; flex:none; overflow-x:auto; }

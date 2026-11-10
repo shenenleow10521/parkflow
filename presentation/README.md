@@ -8,6 +8,11 @@ The separate [V2 HTML deck](../site-consulting/index-v2.html) revises the planni
 
 ```powershell
 python -B presentation/build_consulting_v2.py
+python -B presentation/v2_cost_breakeven_slide.py
+python -B presentation/v2_capex_opex_slide.py
+python -B presentation/v2_roadmap_slide.py
+python -B presentation/v2_redesign_slides.py
+python -B presentation/v2_narrative_order.py
 python -B presentation/review_consulting_v2.py
 ```
 
@@ -17,7 +22,7 @@ python -B presentation/review_consulting_v2.py
 
 V2 now reads the [completed offline benchmarks](../analysis/benchmarks/v2/report.md) through `consulting_v2_benchmarks.py`. Reproduction commands are in [analysis/README.md](../analysis/README.md). These experiments do not deploy the optimizer into the browser prototype or validate local customer behaviour.
 
-`consulting_v2_layout.py` adds the approved graphical revision and the [event-driven comparison](../analysis/benchmarks/decision_value/report.md): topic headings, ML forecasting architecture adapted from `site-vnext`, scatter/line/contour exhibits, a cost map, a task-level Gantt and connected horizon curves. V2 has 24 main slides followed continuously by 11 appendix slides (35 total). The member visits/spending slide is retained; pilot measures are in the appendix. `v2.js` provides navigation without floating controls; **R** toggles reading mode.
+`consulting_v2_layout.py` adds the approved graphical revision and the [event-driven comparison](../analysis/benchmarks/decision_value/report.md): topic headings, ML forecasting architecture adapted from `site-vnext`, scatter/line/contour exhibits, a cost map, a task-level Gantt and connected horizon curves. The final narrative pass keeps 23 main slides followed continuously by 11 appendix slides (34 total). It removes the standalone site-context, booking-sensitivity and turnover-rent slides, retains the six-month implementation plan, and moves exception/fault handling to the appendix. The retained business sequence is commercial model, CAPEX/OPEX, booking economics, then cost and break-even. The member visits/spending slide is retained; pilot measures are in the appendix. `v2.js` provides navigation without floating controls; **R** toggles reading mode.
 
 ```powershell
 python presentation/build_consulting_deck.py

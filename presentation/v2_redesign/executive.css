@@ -10,7 +10,7 @@ body.edition-v2 #executive .ex-topbar i { width:1px; height:26px; background:#c5
 body.edition-v2 #executive .ex-visual { position:absolute; top:26px; right:76px; width:430px; height:auto; }
 body.edition-v2 #executive .ex-kicker { position:absolute; top:108px; left:64px; margin:0; display:flex; align-items:center; gap:18px; font-size:15px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--ex-red); }
 body.edition-v2 #executive .ex-kicker::after { content:""; width:130px; height:2px; background:var(--ex-red); }
-body.edition-v2 #executive .slide-title { top:140px; right:auto; width:1010px; font-size:47px; line-height:1.12; font-weight:800; letter-spacing:-.03em; color:#102a43; }
+body.edition-v2 #executive .slide-title { top:140px; right:auto; width:1010px; padding-bottom:2px; font-size:47px; line-height:1.12; font-weight:800; letter-spacing:-.03em; color:#102a43; }
 body.edition-v2 #executive .slide-title em { font-style:normal; color:var(--ex-red); }
 body.edition-v2 #executive .ex-sub { position:absolute; top:262px; left:64px; right:520px; margin:0; font-size:20px; line-height:1.4; font-weight:500; color:#53647a; }
 body.edition-v2 #executive .content { top:328px; bottom:108px; gap:0; }
@@ -45,4 +45,5 @@ body.edition-v2.read-mode #executive .ex-sub { margin-bottom:20px; }
 body.edition-v2.read-mode #executive .ex-steps,body.edition-v2.read-mode #executive .ex-kpis { grid-template-columns:1fr; height:auto; gap:12px; }
 body.edition-v2.read-mode #executive .ex-step,body.edition-v2.read-mode #executive .ex-step:first-child { margin:0; padding:20px; clip-path:none; }
 body.edition-v2.read-mode #executive .ex-step>i { margin:0; }
-body.edition-v2.read-mode #executive .ex-kpi,body.edition-v2.read-mode #executive .ex-kpi:first-child { padding:0; border:0; }
+body.edition-v2.read-mode #executive .ex-kpi,body.edition-v2.read-mode #executive .ex-kpi:first-child { min-width:0; grid-template-columns:56px minmax(0,1fr); column-gap:16px; padding:0; border:0; }
+body.edition-v2.read-mode #executive .ex-kpi>div { min-width:0; }
