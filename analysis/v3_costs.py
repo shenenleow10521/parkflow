@@ -17,23 +17,23 @@ DAY_RATE = SALARY * (1 + ONCOST) / PROD_DAYS   # = ~RM623 per productive person-
 # ---- software build: work breakdown (person-days). ASSUMED effort, itemised so it can be challenged line by line.
 # (work package, production days, pilot days). The pilot runs assisted service, so barrier/controller integration and the full console come later.
 WBS = [
-    ('Member identity and entitlement API (SDP membership)', 10, 10),
-    ('Booking service and capacity guard (prototype core exists)', 12, 12),
-    ('Deposit, refund, no-show and reconciliation via payment gateway', 10, 10),
-    ('LPR count ingest, plate ledger, barrier/controller integration', 15, 7),
-    ('Operator console, incident log, audit trail', 10, 5),
+    ('Member identity and entitlement API', 10, 10),
+    ('Booking service and capacity guard', 12, 12),
+    ('Deposit, refund, no-show, reconciliation', 12, 12),   # SOURCED cross-check: a payment-gateway integration takes 2-3 weeks (10-15 working days) incl. sandbox, certification, error handling (Malaysian vendor guide, e-commerce context)
+    ('LPR ingest, plate ledger, barrier control', 15, 7),
+    ('Operator console, incident log, audit', 10, 5),
     ('Security, deployment, monitoring', 6, 4),
     ('Test, UAT, fault drills, commissioning', 12, 8),
 ]
 PM_UPLIFT = 0.15      # ASSUMED: project management and QA on top of build days
 BUILD_DAYS = sum(w[1] for w in WBS) * (1 + PM_UPLIFT)
 PILOT_DAYS = sum(w[2] for w in WBS) * (1 + PM_UPLIFT)
-INTEGRATION = round(BUILD_DAYS * DAY_RATE, -2)
-PILOT_BUILD = round(PILOT_DAYS * DAY_RATE, -2)
+INTEGRATION = int(round(BUILD_DAYS * DAY_RATE, -2))
+PILOT_BUILD = int(round(PILOT_DAYS * DAY_RATE, -2))
 
 # ---- site hardware --------------------------------------------------------------------------------------------
 CAM_HW = 750          # SOURCED: Hikvision DS-2CD2046G2-IU/SL 4MP, Lapasar B2B listing (a RM199 TP-Link consumer listing is the floor)
-CAM_CABLE = 40 * 10   # DERIVED: RM100 per extra 10 m (Alienvoip installer price list) x ASSUMED 40 m extra run per camera in a multi-level car park
+CAM_CABLE = 40 * 10   # ANCHORED: RM100 per extra 10 m (an installer's list as reported by search; listed under its 32-channel bundle, page not verifiable) x ASSUMED 40 m extra run per camera in a multi-level car park
 CAM_LABOUR = 350      # ASSUMED: about half a technician-day per camera. Cross-check: Alienvoip's RM2,599 complete 4-camera + NVR bundle is RM650 per camera all-in, so RM1,500 is 2.3x that
 CAM = CAM_HW + CAM_CABLE + CAM_LABOUR
 WORKS = 7_500         # ASSUMED allowance (PoE switch, UPS, trunking, signage). Camera cabling is now in the camera line, so no overlap. No survey.
@@ -41,14 +41,20 @@ DISPLAY = 2_033       # SOURCED: Viskou DS-TVL224-4-5Y 2-row display, tax extra
 N_CAM = 4
 CAPEX = INTEGRATION + WORKS + N_CAM * CAM + DISPLAY
 CAPEX_LO = INTEGRATION + WORKS                       # no CCTV, no display
-CAPEX_HI = INTEGRATION + WORKS + 10 * CAM + DISPLAY  # 10 cameras + display
+OVERRUN = 0.35        # SOURCED: surveys put the average software effort overrun at 30-40% (Molokken-Ostvold & Jorgensen, 2003 review of estimation surveys; figure as summarised by the authors). Applied to the high end only.
+CAPEX_HI = INTEGRATION * (1 + OVERRUN) + WORKS + 10 * CAM + DISPLAY  # 10 cameras + display + typical overrun on the build
 LPR_CAM = 3_226       # SOURCED: Viskou DS-TCG406-E, only if the zone has no LPR
 
 # ---- running cost (per year) ---------------------------------------------------------------------------------
-MAINT_RATE = 0.15     # SOURCED as a heuristic: 15-20% of build cost a year (vendor guidance, no authoritative study); low end used
-USD_MYR = 4.3         # ASSUMED exchange rate
-HOSTING = round(2 * 0.0475 * 730 * 12 * USD_MYR, -2)  # DERIVED: 2 x EC2 t3.medium, AWS Malaysia region, USD0.0475/h on demand, 24x7 (aws-pricing.com)
-RUN = round(MAINT_RATE * INTEGRATION + HOSTING, -2)
+# DERIVED. Studies put maintenance at 60-90% of total software cost (Erlikh 2000, Eastwood 1993, Huff 1990 ... as tabulated in the Univ. of Cantabria OCW notes); use the lowest, 60%, over a 5-year life:
+#   all maintenance = (0.60/0.40)/5 = 30% of build a year. Only corrective + adaptive work (21.7% + 23.6% = 45% of maintenance, Lientz & Swanson split) is in the base case, because enhancements are new features priced separately:
+#   0.45 x 30% = 13.6%, rounded up to 15%. If enhancements are also funded, use MAINT_ALL.
+MAINT_ALL = 0.30
+MAINT_RATE = 0.15
+USD_MYR = 4.1         # SOURCED: about 4.06 MYR per USD on 1 Nov 2026 (exchangerate.guru reference rate, as reported by search; not an official BNM rate), rounded up
+HOSTING = int(round(2 * 0.0475 * 730 * 12 * USD_MYR, -2))  # DERIVED: 2 x EC2 t3.medium, AWS Malaysia region, USD0.0475/h on demand, 24x7 (aws-pricing.com)
+RUN = int(round(MAINT_RATE * INTEGRATION + HOSTING, -2))
+RUN_ALL = int(round(MAINT_ALL * INTEGRATION + HOSTING, -2))  # if enhancements are also funded
 
 if __name__ == '__main__':
     print(f'day rate RM{DAY_RATE:.0f}; build {BUILD_DAYS:.1f} d -> RM{INTEGRATION:,.0f}; pilot {PILOT_DAYS:.1f} d -> RM{PILOT_BUILD:,.0f}')
