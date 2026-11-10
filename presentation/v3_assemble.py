@@ -64,13 +64,7 @@ edit('service',
      ('Utilisation, member value and booking income to test in the pilot.', 'Booking income from non-members, member engagement and tenant sales to test in the pilot.'),
      ('Proposed service. ~100 bays matches the reference zone used in the offline simulations; zone size, layout, LPR placement and live deployment remain to be confirmed in the site audit. Benefits are pilot hypotheses, not measured results.',
       'Proposed service. A whole level of about 200 bays is the planning size (Team Hexa site visit; level not named). Offline simulations were rerun at 200 bays (appendix). LPR and CCTV are site observations, to be confirmed with the mall. Benefits are pilot hypotheses, not measured results.'))
-edit('member',
-     ('<h2 class="slide-title">Member booking journey</h2>', '<h2 class="slide-title">Customer booking journey</h2>'),
-     ('Choose a mall and arrival time, with the fee and registered plate visible.', 'Choose an arrival window. Fee, plate and the no-show rule are shown before paying.'),
-     ('Zone LPR checks the registered plate and valid arrival window.', 'LPR checks the registered plate and the arrival window.'),
-     ('See availability by level and use any available eligible bay in the zone.', 'Use any free bay in the zone. Members’ fee is credited to the parking bill; non-members pay the fee plus parking.'),
-     ('RM4 weekday / RM5 peak is a proposed pricing test, additional to normal parking charges.',
-      'RM4 weekday / RM5 peak is a proposed pricing test. Fee is non-refundable if the customer does not arrive (15-minute grace after the window).'))
+# (the member slide is rebuilt in full further down, so the V2 member slide is not edited here)
 edit('operator',
      ('<div><dt>Audit</dt>', '<div><dt>Revenue</dt><dd>Track paid vs credited bookings, no-shows and voucher use (proposed addition).</dd></div><div><dt>Audit</dt>'))
 edit('admission',
@@ -281,7 +275,7 @@ D['a-method-notes'] = compact('a-method-notes', 'Commercial and value derivation
 <li><b>Gross per booking:</b> RM{G[50]:.2f} at 50% members, from the 200-bay simulation (40 synthetic days per volume; deposits credited to members’ bills).</li>
 <li><b>Displaced parking revenue:</b> cars sent to other levels pay the same KLGCC tariff, so only walk-ins who leave the mall are a loss. The pilot measures it.</li>
 <li><b>Break-even at 50% members:</b> running cost at {be_op:.0f} bookings a day, 5-year recovery at {be_5:.0f}, 3-year at {be_3:.0f}.</li></ul></div>
-<div class="col"><h3 class="module-title">Value to SDP · slide 11</h3><ul>
+<div class="col"><h3 class="module-title">Value to SDP · slide 12</h3><ul>
 <li><b>Gap:</b> RM{CAPEX/1000:.1f}k ÷ 5 − RM{low/1000:.1f}k contribution at ≈{rows_n[0]:.0f} bookings a day = RM{gap/1000:.1f}k a year.</li>
 <li><b>Sales needed:</b> gap ÷ rent clause (5–15%, Tropicana valuation) = RM{gto_lo/1000:.0f}k–{gto_hi/1000:.0f}k. Turnover rent has a floor: extra sales below it add zero.</li>
 <li><b>Voucher:</b> RM{fee_mix:.1f} fee forgone per booking (RM23,430 gross ÷ 5,077.5 paid bookings in the reference mix; an upper bound, as members’ fee is credited) ÷ (RM260 mean recalled trip spend × rent clause).</li>
@@ -681,8 +675,8 @@ D['service'] = re.sub(r'<svg aria-hidden="true" class="sv-map__lines".*?</svg>',
     '<ellipse cx="56.5" cy="33" rx="1.1" ry="1.95" fill="#102a43" stroke="#fff" stroke-width="1.5" vector-effect="non-scaling-stroke"></ellipse></svg>',
     D['service'], count=1, flags=re.S)
 D['service'] = D['service'].replace('Illustrative concept only. Not a surveyed or approved KLGCC floor plan.', 'Illustrative 3D layout of a whole level. Not a surveyed or approved KLGCC floor plan.')
-MAIN = ['cover', 'team', 'problem', 'alternatives', 'service', 'member', 'mechanism', 'operator', 'admission',
-        'revenue', 'value', 'cost', 'integration', 'pilot-design', 'thanks']
+MAIN = ['cover', 'team', 'problem', 'alternatives', 'service', 'member', 'mechanism', 'admission', 'operator',
+        'revenue', 'cost', 'value', 'integration', 'pilot-design', 'thanks']
 SECTION = {'cover': 'Overview', 'team': 'Overview', 'problem': 'Overview', 'thanks': 'Overview',
            'alternatives': 'Product', 'service': 'Product', 'member': 'Product', 'mechanism': 'Product', 'operator': 'Product', 'admission': 'Product', 'integration': 'Product',
            'paths': 'Business', 'revenue': 'Business', 'cost': 'Business', 'value': 'Business',
