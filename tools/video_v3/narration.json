@@ -1,0 +1,10 @@
+[
+ [0.5,  7.6,  "This is KLGCC Mall's car park, rebuilt in 3D. Existing bays, with untapped potential."],
+ [8.6,  17.6, "With ParkFlow, shoppers book before they arrive. Tap, pick a time, confirm. Members have the fee credited to their bill, and non-members can book too."],
+ [18.4, 23.9, "Grey is taken. Amber is held for bookings. Green is open to walk-ins."],
+ [24.4, 31.0, "At nine, ParkFlow forecasts the next three hours. It's quiet, so a hundred spaces stay open to walk-ins."],
+ [31.5, 38.9, "By ten-thirty, bookings are building. The forecast updates, and ParkFlow protects more capacity, so walk-in space shrinks."],
+ [39.5, 46.0, "At noon, walk-in entry closes. Walk-ins go to general parking, and the remaining space is kept for bookings."],
+ [46.5, 53.9, "A booked driver arrives. The plate is read, the booking is verified, the barrier opens, and the car takes any free bay."],
+ [54.8, 59.4, "ParkFlow. Same bays. Greater value."]
+]
