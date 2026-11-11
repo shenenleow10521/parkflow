@@ -1,0 +1,68 @@
+# Architecture test v3: ML stay forecast in the commitment planner
+
+Synthetic (stay marginal calibrated to Mueller et al. 2026; feature effects assumed). 100 bays, advance bookings 30%, evening pulse 100, stay shock sd 0.15. Knobs tuned on 150 calibration days to breach <= 1%; test = 200 fresh days. `!` = test breach above 1%. Score = W x bookings honoured + walk-ins.
+
+## Summary by informativeness rho (share of log-stay variance explained by features)
+
+| rho | ML out-of-sample R^2 | Pooled commit score | ML commit score | Best simple | Oracle | ML - simple (W=5) | ML - pooled (W=5) | ML - simple W=1 | ML - simple W=10 |
+|---|---|---|---|---|---|---|---|---|---|
+| 0.0 | 0.00 | 951.2 | 945.4 | 941.1 (P1_quota) | 1002.8 | +4.3 [+1.7, +6.8] | -5.8 [-6.6, -5.0] | -24.5 [-26.1, -22.8] | +40.2 [+34.5, +45.9] |
+| 0.15 | 0.10 | 985.4 | 985.5 | 968.5 (P1_quota) | 1040.6 | +16.9 [+14.2, +19.6] | +0.0 [-0.6, +0.6] | -25.8 [-27.9, -23.7] | +70.3 [+64.3, +76.3] |
+| 0.3 | 0.22 | 1004.2 | 1007.1 | 979.1 (P1_quota) | 1055.0 | +28.0 [+25.4, +30.5] | +2.9 [+2.1, +3.7] | -25.4 [-27.6, -23.2] | +94.8 [+88.7, +100.5] |
+| 0.5 | 0.38 | 1012.2 | 1017.5 | 988.1 (P1_quota) | 1065.3 | +29.4 [+26.7, +32.1] | +5.3 [+4.3, +6.3] | -27.4 [-29.8, -25.0] | +100.4 [+93.8, +106.9] |
+| 0.75 | 0.59 | 1011.2 | 1024.2 | 993.7 (P1_quota) | 1077.3 | +30.5 [+27.4, +33.8] | +13.1 [+10.1, +15.8] | -46.7 [-49.2, -43.9] | +127.0 [+120.6, +133.5] |
+
+## rho = 0.0  (ML R^2 0.00; residual sd 0.92 vs pooled sd 0.92)
+
+| Policy | Honoured/day | Walk-ins/day | Score | Test breach | Chosen |
+|---|---|---|---|---|---|
+| P0_strict | 93.9 | 141.1 | 610.5 | 0.00% |  |
+| P1_quota | 110.4 | 389.2 | 941.1 | 0.23% | Q=60 m=0 |
+| P1b_buffer | 109.6 | 377.8 | 926.0 | 0.92% | Q=60 m=15 |
+| C_pooled | 118.6 | 358.4 | 951.2 | 1.68% ! | H=180 z=1.5 |
+| C_ml | 117.6 | 357.5 | 945.4 | 1.36% ! | H=180 z=2.0 |
+| Oracle | 128.7 | 359.4 | 1002.8 | 0.02% |  |
+
+## rho = 0.15  (ML R^2 0.10; residual sd 0.87 vs pooled sd 0.91)
+
+| Policy | Honoured/day | Walk-ins/day | Score | Test breach | Chosen |
+|---|---|---|---|---|---|
+| P0_strict | 94.5 | 141.2 | 613.8 | 0.00% |  |
+| P1_quota | 110.4 | 416.4 | 968.5 | 0.21% | Q=60 m=0 |
+| P1b_buffer | 109.3 | 406.8 | 953.5 | 1.19% ! | Q=60 m=15 |
+| C_pooled | 121.3 | 378.9 | 985.4 | 1.43% ! | H=180 z=1.0 |
+| C_ml | 121.1 | 380.0 | 985.5 | 1.40% ! | H=180 z=1.5 |
+| Oracle | 130.6 | 387.5 | 1040.6 | 0.02% |  |
+
+## rho = 0.3  (ML R^2 0.22; residual sd 0.81 vs pooled sd 0.91)
+
+| Policy | Honoured/day | Walk-ins/day | Score | Test breach | Chosen |
+|---|---|---|---|---|---|
+| P0_strict | 94.9 | 143.1 | 617.5 | 0.00% |  |
+| P1_quota | 110.4 | 427.1 | 979.1 | 0.22% | Q=60 m=0 |
+| P1b_buffer | 109.3 | 420.1 | 966.5 | 1.23% ! | Q=60 m=15 |
+| C_pooled | 123.6 | 386.4 | 1004.2 | 1.29% ! | H=180 z=0.5 |
+| C_ml | 123.8 | 388.3 | 1007.1 | 1.36% ! | H=180 z=1.0 |
+| Oracle | 131.5 | 397.4 | 1055.0 | 0.02% |  |
+
+## rho = 0.5  (ML R^2 0.38; residual sd 0.72 vs pooled sd 0.90)
+
+| Policy | Honoured/day | Walk-ins/day | Score | Test breach | Chosen |
+|---|---|---|---|---|---|
+| P0_strict | 95.7 | 144.3 | 622.7 | 0.00% |  |
+| P1_quota | 110.4 | 435.9 | 988.1 | 0.19% | Q=60 m=0 |
+| P1b_buffer | 109.5 | 412.4 | 960.1 | 1.01% ! | Q=60 m=20 |
+| C_pooled | 124.3 | 390.8 | 1012.2 | 1.29% ! | H=180 z=0.5 |
+| C_ml | 124.6 | 394.3 | 1017.5 | 1.43% ! | H=180 z=1.0 |
+| Oracle | 132.0 | 405.2 | 1065.3 | 0.01% |  |
+
+## rho = 0.75  (ML R^2 0.59; residual sd 0.59 vs pooled sd 0.90)
+
+| Policy | Honoured/day | Walk-ins/day | Score | Test breach | Chosen |
+|---|---|---|---|---|---|
+| P0_strict | 96.2 | 144.9 | 625.8 | 0.00% |  |
+| P1_quota | 110.3 | 442.2 | 993.7 | 0.32% | Q=60 m=0 |
+| P1b_buffer | 109.3 | 423.4 | 969.8 | 1.24% ! | Q=60 m=20 |
+| C_pooled | 123.7 | 392.5 | 1011.2 | 1.23% ! | H=180 z=1.0 |
+| C_ml | 129.6 | 376.2 | 1024.2 | 0.98% | H=9999 z=0.0 |
+| Oracle | 132.5 | 414.6 | 1077.3 | 0.02% |  |

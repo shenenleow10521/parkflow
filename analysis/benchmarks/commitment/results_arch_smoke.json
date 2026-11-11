@@ -1,0 +1,356 @@
+{
+ "0.0": {
+  "res": {
+   "P0_strict": {
+    "cfg": {
+     "kind": "strict"
+    },
+    "test": {
+     "honored": 93.2,
+     "wi": 131.9,
+     "breach": 0.0,
+     "acc": 103.2,
+     "req": 161.3,
+     "den_free": 525.4,
+     "score": 597.9
+    },
+    "cal_ok": true
+   },
+   "P1_quota": {
+    "cfg": {
+     "kind": "quota",
+     "Q": 60,
+     "margin": 4
+    },
+    "test": {
+     "honored": 110.4,
+     "wi": 350.9,
+     "breach": 0.0,
+     "acc": 122.7,
+     "req": 161.3,
+     "den_free": 302.5,
+     "score": 902.9
+    },
+    "cal_ok": true
+   },
+   "P1b_buffer": {
+    "cfg": {
+     "kind": "buffer",
+     "Q": 40,
+     "margin": 10
+    },
+    "test": {
+     "honored": 90.4,
+     "wi": 393.8,
+     "breach": 0.0,
+     "acc": 101.3,
+     "req": 161.3,
+     "den_free": 262.3,
+     "score": 845.8
+    },
+    "cal_ok": true
+   },
+   "C_pooled": {
+    "cfg": {
+     "kind": "commit",
+     "H": 300,
+     "z": 0.0,
+     "model": "pooled"
+    },
+    "test": {
+     "honored": 122.3,
+     "wi": 292.5,
+     "breach": 0.02549800796812749,
+     "acc": 138.7,
+     "req": 161.3,
+     "den_free": 308.8,
+     "score": 904.0
+    },
+    "cal_ok": true
+   },
+   "C_ml": {
+    "cfg": {
+     "kind": "commit",
+     "H": 300,
+     "z": 0.0,
+     "model": "ml"
+    },
+    "test": {
+     "honored": 121.7,
+     "wi": 297.2,
+     "breach": 0.027955271565495207,
+     "acc": 138.4,
+     "req": 161.3,
+     "den_free": 301.1,
+     "score": 905.7
+    },
+    "cal_ok": true
+   },
+   "Oracle": {
+    "cfg": {
+     "kind": "oracle",
+     "H": 9999
+    },
+    "test": {
+     "honored": 126.3,
+     "wi": 323.8,
+     "breach": 0.0,
+     "acc": 139.7,
+     "req": 161.3,
+     "den_free": 278.8,
+     "score": 955.3
+    },
+    "cal_ok": true
+   }
+  },
+  "simple": "P1_quota",
+  "r2": 0.004937805720267363,
+  "sd_ml": 0.9224086341312698,
+  "sd0": 0.9185905011889599,
+  "diffs": {
+   "1": {
+    "ml_vs_simple": [
+     -42.4,
+     -55.5,
+     -32.3
+    ],
+    "pooled_vs_simple": [
+     -46.5,
+     -60.805,
+     -35.1
+    ],
+    "ml_vs_pooled": [
+     4.1,
+     1.5,
+     6.7
+    ],
+    "oracle_vs_pooled": [
+     35.3,
+     15.2,
+     56.202499999999986
+    ]
+   },
+   "5": {
+    "ml_vs_simple": [
+     2.8,
+     -11.1,
+     15.7
+    ],
+    "pooled_vs_simple": [
+     1.1,
+     -13.5025,
+     15.0
+    ],
+    "ml_vs_pooled": [
+     1.7,
+     -1.7,
+     5.2
+    ],
+    "oracle_vs_pooled": [
+     51.3,
+     29.1,
+     72.6
+    ]
+   },
+   "10": {
+    "ml_vs_simple": [
+     59.3,
+     35.597500000000004,
+     80.8
+    ],
+    "pooled_vs_simple": [
+     60.6,
+     36.4,
+     82.7
+    ],
+    "ml_vs_pooled": [
+     -1.3,
+     -7.1,
+     4.4
+    ],
+    "oracle_vs_pooled": [
+     71.3,
+     44.8975,
+     96.40249999999999
+    ]
+   }
+  }
+ },
+ "0.5": {
+  "res": {
+   "P0_strict": {
+    "cfg": {
+     "kind": "strict"
+    },
+    "test": {
+     "honored": 94.9,
+     "wi": 127.5,
+     "breach": 0.0,
+     "acc": 104.9,
+     "req": 161.3,
+     "den_free": 529.4,
+     "score": 602.0
+    },
+    "cal_ok": true
+   },
+   "P1_quota": {
+    "cfg": {
+     "kind": "quota",
+     "Q": 60,
+     "margin": 4
+    },
+    "test": {
+     "honored": 110.2,
+     "wi": 380.3,
+     "breach": 0.0018115942028985507,
+     "acc": 122.7,
+     "req": 161.3,
+     "den_free": 277.0,
+     "score": 931.3
+    },
+    "cal_ok": true
+   },
+   "P1b_buffer": {
+    "cfg": {
+     "kind": "buffer",
+     "Q": 60,
+     "margin": 15
+    },
+    "test": {
+     "honored": 107.5,
+     "wi": 380.1,
+     "breach": 0.026268115942028984,
+     "acc": 122.7,
+     "req": 161.3,
+     "den_free": 233.1,
+     "score": 917.6
+    },
+    "cal_ok": true
+   },
+   "C_pooled": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 0.0,
+     "model": "pooled"
+    },
+    "test": {
+     "honored": 121.3,
+     "wi": 368.5,
+     "breach": 0.03192338387869114,
+     "acc": 138.6,
+     "req": 161.3,
+     "den_free": 212.2,
+     "score": 975.0
+    },
+    "cal_ok": true
+   },
+   "C_ml": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 0.0,
+     "model": "ml"
+    },
+    "test": {
+     "honored": 122.1,
+     "wi": 371.8,
+     "breach": 0.042352941176470586,
+     "acc": 141.1,
+     "req": 161.3,
+     "den_free": 207.0,
+     "score": 982.3
+    },
+    "cal_ok": true
+   },
+   "Oracle": {
+    "cfg": {
+     "kind": "oracle",
+     "H": 9999
+    },
+    "test": {
+     "honored": 128.9,
+     "wi": 343.5,
+     "breach": 0.0007751937984496124,
+     "acc": 142.8,
+     "req": 161.3,
+     "den_free": 262.9,
+     "score": 988.0
+    },
+    "cal_ok": true
+   }
+  },
+  "simple": "P1b_buffer",
+  "r2": 0.38017331377867747,
+  "sd_ml": 0.7228062308501126,
+  "sd0": 0.9032356040703028,
+  "diffs": {
+   "1": {
+    "ml_vs_simple": [
+     6.3,
+     -3.905,
+     16.60249999999999
+    ],
+    "pooled_vs_simple": [
+     2.2,
+     -9.6,
+     14.402499999999987
+    ],
+    "ml_vs_pooled": [
+     4.1,
+     1.3,
+     7.3
+    ],
+    "oracle_vs_pooled": [
+     -17.4,
+     -41.2,
+     4.3
+    ]
+   },
+   "5": {
+    "ml_vs_simple": [
+     64.7,
+     49.0,
+     80.70249999999999
+    ],
+    "pooled_vs_simple": [
+     57.4,
+     40.7975,
+     75.10249999999998
+    ],
+    "ml_vs_pooled": [
+     7.3,
+     2.1,
+     13.3
+    ],
+    "oracle_vs_pooled": [
+     13.0,
+     -13.807500000000001,
+     42.4
+    ]
+   },
+   "10": {
+    "ml_vs_simple": [
+     137.7,
+     109.39750000000001,
+     165.1025
+    ],
+    "pooled_vs_simple": [
+     126.4,
+     99.4975,
+     154.11249999999993
+    ],
+    "ml_vs_pooled": [
+     11.3,
+     2.8,
+     21.0
+    ],
+    "oracle_vs_pooled": [
+     51.0,
+     16.197499999999998,
+     93.7
+    ]
+   }
+  }
+ }
+}

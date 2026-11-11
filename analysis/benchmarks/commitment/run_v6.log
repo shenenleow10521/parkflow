@@ -1,0 +1,40 @@
+10 worlds 74s
+20 worlds 146s
+30 worlds 212s
+40 worlds 286s
+50 worlds 360s
+60 worlds 429s
+# v6: Monte Carlo over assumptions
+
+60 random worlds x 30 days per policy; settings = nominal-world v5 picks, not retuned. Ranges: {'show': (0.75, 0.95), 'shock': (0.05, 0.3), 'sigscale': (0.8, 1.2), 'bscale': (0.6, 1.5), 'pulse': (50, 150), 'oversd': (0.15, 0.4), 'rho': (0.0, 0.75), 'adv': (0.1, 0.5)}.
+
+## Failure target 1.0%
+
+| Variant | Beats quota (share of worlds) | Median score diff [p10, p90] | Failures <= target (share) | Median / p90 failure rate | Beats quota at 10 per failure |
+|---|---|---|---|---|---|
+| quota | - | - | 95% | 0.10% / 0.71% | - |
+| V0_reference | 42% | -22.6 [-47.5, +49.7] | 70% | 0.53% / 1.99% | 38% |
+| V1_hard_bookings | 28% | -58.9 [-77.8, +26.0] | 98% | 0.03% / 0.44% | 30% |
+| V2_separate_risk | 62% | +10.0 [-37.9, +43.7] | 72% | 0.37% / 1.77% | 57% |
+| V3_hybrid | 100% | +19.5 [+11.2, +29.1] | 82% | 0.50% / 1.50% | 98% |
+
+## Failure target 0.5%
+
+| Variant | Beats quota (share of worlds) | Median score diff [p10, p90] | Failures <= target (share) | Median / p90 failure rate | Beats quota at 10 per failure |
+|---|---|---|---|---|---|
+| quota | - | - | 78% | 0.10% / 0.71% | - |
+| V0_reference | 35% | -40.2 [-60.4, +37.1] | 70% | 0.21% / 1.16% | 33% |
+| V1_hard_bookings | 28% | -58.9 [-77.8, +26.0] | 93% | 0.03% / 0.44% | 30% |
+| V2_separate_risk | 53% | +2.0 [-44.6, +30.9] | 75% | 0.18% / 0.91% | 50% |
+| V3_hybrid | 97% | +17.5 [+8.2, +25.2] | 77% | 0.17% / 0.84% | 98% |
+
+## Failure target 0.1%
+
+| Variant | Beats quota (share of worlds) | Median score diff [p10, p90] | Failures <= target (share) | Median / p90 failure rate | Beats quota at 10 per failure |
+|---|---|---|---|---|---|
+| quota | - | - | 55% | 0.08% / 0.53% | - |
+| V0_reference | 32% | -81.8 [-163.2, +37.3] | 78% | 0.00% / 0.29% | 32% |
+| V1_hard_bookings | 27% | -112.8 [-182.9, +28.2] | 88% | 0.00% / 0.12% | 27% |
+| V2_separate_risk | 30% | -66.5 [-158.0, +35.5] | 82% | 0.00% / 0.24% | 32% |
+| V3_hybrid | 93% | +17.5 [+2.8, +30.1] | 77% | 0.00% / 0.34% | 95% |
+

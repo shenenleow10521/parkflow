@@ -1,0 +1,1067 @@
+{
+ "L0": {
+  "res": {
+   "P0_strict": {
+    "cfg": {
+     "kind": "strict"
+    },
+    "test": {
+     "honored": 45.42,
+     "wi": 500.915,
+     "breach": 0.0,
+     "acc": 50.5,
+     "req": 59.805,
+     "den_free": 157.445,
+     "score": 728.015
+    },
+    "cal_feasible": true
+   },
+   "P2_expected_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.74,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.17,
+     "score": 779.64
+    },
+    "cal_feasible": true
+   },
+   "P4_fullinfo": {
+    "cfg": {
+     "kind": "oracle",
+     "H": 9999,
+     "z": 0.0
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.695,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.245,
+     "score": 779.595
+    },
+    "cal_feasible": true
+   },
+   "P1_quota": {
+    "cfg": {
+     "kind": "quota",
+     "Q": 25,
+     "margin": 0
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 489.82,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 168.075,
+     "score": 758.72
+    },
+    "cal_feasible": true
+   },
+   "P1b_buffer": {
+    "cfg": {
+     "kind": "buffer",
+     "Q": 25,
+     "margin": 0
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.74,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.0,
+     "score": 779.64
+    },
+    "cal_feasible": true
+   },
+   "P3_H60": {
+    "cfg": {
+     "kind": "commit",
+     "H": 60,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.74,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.17,
+     "score": 779.64
+    },
+    "cal_feasible": true
+   },
+   "P3_H120": {
+    "cfg": {
+     "kind": "commit",
+     "H": 120,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.74,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.17,
+     "score": 779.64
+    },
+    "cal_feasible": true
+   },
+   "P3_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.74,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.17,
+     "score": 779.64
+    },
+    "cal_feasible": true
+   },
+   "P3_H300": {
+    "cfg": {
+     "kind": "commit",
+     "H": 300,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.74,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.17,
+     "score": 779.64
+    },
+    "cal_feasible": true
+   },
+   "P3_H480": {
+    "cfg": {
+     "kind": "commit",
+     "H": 480,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.74,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.17,
+     "score": 779.64
+    },
+    "cal_feasible": true
+   },
+   "P3_H9999": {
+    "cfg": {
+     "kind": "commit",
+     "H": 9999,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.74,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.17,
+     "score": 779.64
+    },
+    "cal_feasible": true
+   }
+  },
+  "simple": "P1b_buffer",
+  "best_commit_by_cal": "P3_H60",
+  "diff_best_commit_vs_simple": [
+   0.0,
+   -0.05,
+   0.05
+  ],
+  "diff_H180_vs_simple": [
+   0.0,
+   -0.05,
+   0.05
+  ],
+  "diff_H9999_vs_H180": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "L1": {
+  "res": {
+   "P0_strict": {
+    "cfg": {
+     "kind": "strict"
+    },
+    "test": {
+     "honored": 46.94,
+     "wi": 478.025,
+     "breach": 0.0,
+     "acc": 52.29,
+     "req": 59.805,
+     "den_free": 181.03,
+     "score": 712.725
+    },
+    "cal_feasible": true
+   },
+   "P2_expected_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.765,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.2,
+     "score": 779.665
+    },
+    "cal_feasible": true
+   },
+   "P4_fullinfo": {
+    "cfg": {
+     "kind": "oracle",
+     "H": 9999,
+     "z": 0.0
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.705,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.25,
+     "score": 779.605
+    },
+    "cal_feasible": true
+   },
+   "P1_quota": {
+    "cfg": {
+     "kind": "quota",
+     "Q": 25,
+     "margin": 0
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 488.62,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 169.385,
+     "score": 757.52
+    },
+    "cal_feasible": true
+   },
+   "P1b_buffer": {
+    "cfg": {
+     "kind": "buffer",
+     "Q": 25,
+     "margin": 0
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.76,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 0.0,
+     "score": 779.66
+    },
+    "cal_feasible": true
+   },
+   "P3_H60": {
+    "cfg": {
+     "kind": "commit",
+     "H": 60,
+     "z": 1.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.675,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 5.925,
+     "score": 779.575
+    },
+    "cal_feasible": true
+   },
+   "P3_H120": {
+    "cfg": {
+     "kind": "commit",
+     "H": 120,
+     "z": 1.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.675,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 5.925,
+     "score": 779.575
+    },
+    "cal_feasible": true
+   },
+   "P3_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 1.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.675,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 5.925,
+     "score": 779.575
+    },
+    "cal_feasible": true
+   },
+   "P3_H300": {
+    "cfg": {
+     "kind": "commit",
+     "H": 300,
+     "z": 1.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.675,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 5.925,
+     "score": 779.575
+    },
+    "cal_feasible": true
+   },
+   "P3_H480": {
+    "cfg": {
+     "kind": "commit",
+     "H": 480,
+     "z": 1.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.675,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 5.925,
+     "score": 779.575
+    },
+    "cal_feasible": true
+   },
+   "P3_H9999": {
+    "cfg": {
+     "kind": "commit",
+     "H": 9999,
+     "z": 1.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 53.78,
+     "wi": 510.675,
+     "breach": 0.0,
+     "acc": 59.805,
+     "req": 59.805,
+     "den_free": 5.925,
+     "score": 779.575
+    },
+    "cal_feasible": true
+   }
+  },
+  "simple": "P1b_buffer",
+  "best_commit_by_cal": "P3_H60",
+  "diff_best_commit_vs_simple": [
+   -0.085,
+   -0.345,
+   0.18
+  ],
+  "diff_H180_vs_simple": [
+   -0.085,
+   -0.345,
+   0.18
+  ],
+  "diff_H9999_vs_H180": [
+   0.0,
+   0.0,
+   0.0
+  ]
+ },
+ "L2": {
+  "res": {
+   "P0_strict": {
+    "cfg": {
+     "kind": "strict"
+    },
+    "test": {
+     "honored": 93.295,
+     "wi": 142.335,
+     "breach": 0.0,
+     "acc": 103.74,
+     "req": 159.805,
+     "den_free": 514.075,
+     "score": 608.81
+    },
+    "cal_feasible": true
+   },
+   "P2_expected_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 120.775,
+     "wi": 356.3,
+     "breach": 0.021153300644324673,
+     "acc": 137.38,
+     "req": 159.805,
+     "den_free": 214.975,
+     "score": 960.175
+    },
+    "cal_feasible": true
+   },
+   "P4_fullinfo": {
+    "cfg": {
+     "kind": "oracle",
+     "H": 9999,
+     "z": 0.0
+    },
+    "test": {
+     "honored": 127.765,
+     "wi": 351.93,
+     "breach": 0.0,
+     "acc": 142.215,
+     "req": 159.805,
+     "den_free": 246.11,
+     "score": 990.755
+    },
+    "cal_feasible": true
+   },
+   "P1_quota": {
+    "cfg": {
+     "kind": "quota",
+     "Q": 60,
+     "margin": 0
+    },
+    "test": {
+     "honored": 109.595,
+     "wi": 386.395,
+     "breach": 9.12367136535742e-05,
+     "acc": 121.8,
+     "req": 159.805,
+     "den_free": 267.645,
+     "score": 934.37
+    },
+    "cal_feasible": true
+   },
+   "P1b_buffer": {
+    "cfg": {
+     "kind": "buffer",
+     "Q": 60,
+     "margin": 10
+    },
+    "test": {
+     "honored": 108.515,
+     "wi": 395.165,
+     "breach": 0.009944801788239588,
+     "acc": 121.8,
+     "req": 159.805,
+     "den_free": 220.195,
+     "score": 937.74
+    },
+    "cal_feasible": true
+   },
+   "P3_H60": {
+    "cfg": {
+     "kind": "commit",
+     "H": 60,
+     "z": 3.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 108.73,
+     "wi": 409.51,
+     "breach": 0.054686141540601634,
+     "acc": 127.98,
+     "req": 159.805,
+     "den_free": 177.16,
+     "score": 953.16
+    },
+    "cal_feasible": false
+   },
+   "P3_H120": {
+    "cfg": {
+     "kind": "commit",
+     "H": 120,
+     "z": 3.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 113.66,
+     "wi": 380.245,
+     "breach": 0.013368055555555555,
+     "acc": 128.19,
+     "req": 159.805,
+     "den_free": 230.22,
+     "score": 948.545
+    },
+    "cal_feasible": false
+   },
+   "P3_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 1.5,
+     "signal": false
+    },
+    "test": {
+     "honored": 118.535,
+     "wi": 355.02,
+     "breach": 0.007618569215957135,
+     "acc": 132.895,
+     "req": 159.805,
+     "den_free": 230.655,
+     "score": 947.695
+    },
+    "cal_feasible": true
+   },
+   "P3_H300": {
+    "cfg": {
+     "kind": "commit",
+     "H": 300,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 124.785,
+     "wi": 299.93,
+     "breach": 0.0022787239146078195,
+     "acc": 139.22,
+     "req": 159.805,
+     "den_free": 315.285,
+     "score": 923.855
+    },
+    "cal_feasible": true
+   },
+   "P3_H480": {
+    "cfg": {
+     "kind": "commit",
+     "H": 480,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 124.875,
+     "wi": 296.965,
+     "breach": 0.002277085330776606,
+     "acc": 139.325,
+     "req": 159.805,
+     "den_free": 319.705,
+     "score": 921.34
+    },
+    "cal_feasible": true
+   },
+   "P3_H9999": {
+    "cfg": {
+     "kind": "commit",
+     "H": 9999,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 124.875,
+     "wi": 296.965,
+     "breach": 0.002277085330776606,
+     "acc": 139.325,
+     "req": 159.805,
+     "den_free": 319.705,
+     "score": 921.34
+    },
+    "cal_feasible": true
+   }
+  },
+  "simple": "P1b_buffer",
+  "best_commit_by_cal": "P3_H60",
+  "diff_best_commit_vs_simple": [
+   15.42,
+   12.5095,
+   18.495125
+  ],
+  "diff_H180_vs_simple": [
+   9.955,
+   7.599125,
+   12.405499999999996
+  ],
+  "diff_H9999_vs_H180": [
+   -26.355,
+   -28.435499999999998,
+   -24.339750000000002
+  ]
+ },
+ "L3 no class signal": {
+  "res": {
+   "P0_strict": {
+    "cfg": {
+     "kind": "strict"
+    },
+    "test": {
+     "honored": 91.785,
+     "wi": 129.36,
+     "breach": 0.0,
+     "acc": 102.215,
+     "req": 159.54,
+     "den_free": 524.79,
+     "score": 588.285
+    },
+    "cal_feasible": true
+   },
+   "P2_expected_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 116.765,
+     "wi": 316.12,
+     "breach": 0.039919421147837524,
+     "acc": 135.535,
+     "req": 159.54,
+     "den_free": 216.7,
+     "score": 899.945
+    },
+    "cal_feasible": true
+   },
+   "P4_fullinfo": {
+    "cfg": {
+     "kind": "oracle",
+     "H": 9999,
+     "z": 0.0
+    },
+    "test": {
+     "honored": 126.2,
+     "wi": 309.51,
+     "breach": 0.0004752098843655948,
+     "acc": 140.72,
+     "req": 159.54,
+     "den_free": 263.2,
+     "score": 940.51
+    },
+    "cal_feasible": true
+   },
+   "P1_quota": {
+    "cfg": {
+     "kind": "quota",
+     "Q": 60,
+     "margin": 0
+    },
+    "test": {
+     "honored": 108.745,
+     "wi": 336.565,
+     "breach": 0.005077767612076852,
+     "acc": 121.97,
+     "req": 159.54,
+     "den_free": 304.715,
+     "score": 880.29
+    },
+    "cal_feasible": true
+   },
+   "P1b_buffer": {
+    "cfg": {
+     "kind": "buffer",
+     "Q": 40,
+     "margin": 0
+    },
+    "test": {
+     "honored": 89.79,
+     "wi": 395.025,
+     "breach": 0.005537711817477018,
+     "acc": 100.81,
+     "req": 159.54,
+     "den_free": 0.0,
+     "score": 843.975
+    },
+    "cal_feasible": true
+   },
+   "P3_H60": {
+    "cfg": {
+     "kind": "commit",
+     "H": 60,
+     "z": 3.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 104.05,
+     "wi": 355.6,
+     "breach": 0.08382495377300343,
+     "acc": 126.545,
+     "req": 159.54,
+     "den_free": 229.78,
+     "score": 875.85
+    },
+    "cal_feasible": false
+   },
+   "P3_H120": {
+    "cfg": {
+     "kind": "commit",
+     "H": 120,
+     "z": 3.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 109.93,
+     "wi": 331.745,
+     "breach": 0.033837229741606606,
+     "acc": 126.775,
+     "req": 159.54,
+     "den_free": 272.79,
+     "score": 881.395
+    },
+    "cal_feasible": false
+   },
+   "P3_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 3.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 112.985,
+     "wi": 307.21,
+     "breach": 0.010249222548289607,
+     "acc": 127.18,
+     "req": 159.54,
+     "den_free": 315.82,
+     "score": 872.135
+    },
+    "cal_feasible": true
+   },
+   "P3_H300": {
+    "cfg": {
+     "kind": "commit",
+     "H": 300,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 122.635,
+     "wi": 268.39,
+     "breach": 0.007446076646028085,
+     "acc": 137.725,
+     "req": 159.54,
+     "den_free": 320.93,
+     "score": 881.565
+    },
+    "cal_feasible": true
+   },
+   "P3_H480": {
+    "cfg": {
+     "kind": "commit",
+     "H": 480,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 122.9,
+     "wi": 264.585,
+     "breach": 0.0067482927223501835,
+     "acc": 137.925,
+     "req": 159.54,
+     "den_free": 327.85,
+     "score": 879.085
+    },
+    "cal_feasible": true
+   },
+   "P3_H9999": {
+    "cfg": {
+     "kind": "commit",
+     "H": 9999,
+     "z": 0.0,
+     "signal": false
+    },
+    "test": {
+     "honored": 122.9,
+     "wi": 264.585,
+     "breach": 0.0067482927223501835,
+     "acc": 137.925,
+     "req": 159.54,
+     "den_free": 327.85,
+     "score": 879.085
+    },
+    "cal_feasible": true
+   }
+  },
+  "simple": "P1_quota",
+  "best_commit_by_cal": "P3_H120",
+  "diff_best_commit_vs_simple": [
+   1.105,
+   -2.0052499999999998,
+   4.165249999999999
+  ],
+  "diff_H180_vs_simple": [
+   -8.155,
+   -10.82025,
+   -5.625
+  ],
+  "diff_H9999_vs_H180": [
+   6.95,
+   5.04,
+   8.915374999999997
+  ]
+ },
+ "L3 with class signal": {
+  "res": {
+   "P0_strict": {
+    "cfg": {
+     "kind": "strict"
+    },
+    "test": {
+     "honored": 91.785,
+     "wi": 129.36,
+     "breach": 0.0,
+     "acc": 102.215,
+     "req": 159.54,
+     "den_free": 524.79,
+     "score": 588.285
+    },
+    "cal_feasible": true
+   },
+   "P2_expected_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 0.0,
+     "signal": true
+    },
+    "test": {
+     "honored": 116.775,
+     "wi": 316.105,
+     "breach": 0.03975824356549626,
+     "acc": 135.545,
+     "req": 159.54,
+     "den_free": 216.445,
+     "score": 899.98
+    },
+    "cal_feasible": true
+   },
+   "P4_fullinfo": {
+    "cfg": {
+     "kind": "oracle",
+     "H": 9999,
+     "z": 0.0
+    },
+    "test": {
+     "honored": 126.2,
+     "wi": 309.51,
+     "breach": 0.0004752098843655948,
+     "acc": 140.72,
+     "req": 159.54,
+     "den_free": 263.2,
+     "score": 940.51
+    },
+    "cal_feasible": true
+   },
+   "P1_quota": {
+    "cfg": {
+     "kind": "quota",
+     "Q": 60,
+     "margin": 0
+    },
+    "test": {
+     "honored": 108.745,
+     "wi": 336.565,
+     "breach": 0.005077767612076852,
+     "acc": 121.97,
+     "req": 159.54,
+     "den_free": 304.715,
+     "score": 880.29
+    },
+    "cal_feasible": true
+   },
+   "P1b_buffer": {
+    "cfg": {
+     "kind": "buffer",
+     "Q": 40,
+     "margin": 0
+    },
+    "test": {
+     "honored": 89.79,
+     "wi": 395.025,
+     "breach": 0.005537711817477018,
+     "acc": 100.81,
+     "req": 159.54,
+     "den_free": 0.0,
+     "score": 843.975
+    },
+    "cal_feasible": true
+   },
+   "P3_H60": {
+    "cfg": {
+     "kind": "commit",
+     "H": 60,
+     "z": 3.0,
+     "signal": true
+    },
+    "test": {
+     "honored": 103.975,
+     "wi": 356.1,
+     "breach": 0.08452564384767774,
+     "acc": 126.545,
+     "req": 159.54,
+     "den_free": 226.13,
+     "score": 875.975
+    },
+    "cal_feasible": false
+   },
+   "P3_H120": {
+    "cfg": {
+     "kind": "commit",
+     "H": 120,
+     "z": 3.0,
+     "signal": true
+    },
+    "test": {
+     "honored": 109.8,
+     "wi": 332.245,
+     "breach": 0.0350645926707092,
+     "acc": 126.785,
+     "req": 159.54,
+     "den_free": 269.6,
+     "score": 881.245
+    },
+    "cal_feasible": false
+   },
+   "P3_H180": {
+    "cfg": {
+     "kind": "commit",
+     "H": 180,
+     "z": 3.0,
+     "signal": true
+    },
+    "test": {
+     "honored": 112.95,
+     "wi": 307.525,
+     "breach": 0.010339087006045737,
+     "acc": 127.15,
+     "req": 159.54,
+     "den_free": 313.16,
+     "score": 872.275
+    },
+    "cal_feasible": true
+   },
+   "P3_H300": {
+    "cfg": {
+     "kind": "commit",
+     "H": 300,
+     "z": 0.0,
+     "signal": true
+    },
+    "test": {
+     "honored": 122.65,
+     "wi": 269.165,
+     "breach": 0.007364842991259307,
+     "acc": 137.74,
+     "req": 159.54,
+     "den_free": 320.405,
+     "score": 882.415
+    },
+    "cal_feasible": true
+   },
+   "P3_H480": {
+    "cfg": {
+     "kind": "commit",
+     "H": 480,
+     "z": 0.0,
+     "signal": true
+    },
+    "test": {
+     "honored": 122.915,
+     "wi": 265.845,
+     "breach": 0.006827731092436975,
+     "acc": 137.965,
+     "req": 159.54,
+     "den_free": 327.155,
+     "score": 880.42
+    },
+    "cal_feasible": true
+   },
+   "P3_H9999": {
+    "cfg": {
+     "kind": "commit",
+     "H": 9999,
+     "z": 0.0,
+     "signal": true
+    },
+    "test": {
+     "honored": 122.915,
+     "wi": 265.845,
+     "breach": 0.006827731092436975,
+     "acc": 137.965,
+     "req": 159.54,
+     "den_free": 327.155,
+     "score": 880.42
+    },
+    "cal_feasible": true
+   }
+  },
+  "simple": "P1_quota",
+  "best_commit_by_cal": "P3_H120",
+  "diff_best_commit_vs_simple": [
+   0.955,
+   -2.1801250000000003,
+   3.9456249999999966
+  ],
+  "diff_H180_vs_simple": [
+   -8.015,
+   -10.690249999999999,
+   -5.389875
+  ],
+  "diff_H9999_vs_H180": [
+   8.145,
+   6.20975,
+   10.180374999999998
+  ]
+ }
+}

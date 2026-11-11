@@ -160,5 +160,14 @@
     "date": "2026-11-10",
     "sha256": "f4a661daf16f196dc5885053038b179ff5cebacd31a9b90179f98506bf28f612",
     "bytes": 49970
+  },
+  {
+    "file": "klgcc-site-observation.webp",
+    "url": null,
+    "source_page": null,
+    "purpose": "Team Hexa site-visit photograph, KLGCC Mall car park, 9 Nov 2026 (problem slide). Date as stated by the team; the image has no EXIF data.",
+    "date": "2026-11-09",
+    "sha256": "6533aa61facc8326dcdf73efe9320c18e5b115f6a9a873e99035b8cd56901ae4",
+    "bytes": 24720
   }
 ]

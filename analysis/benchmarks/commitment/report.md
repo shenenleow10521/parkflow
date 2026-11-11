@@ -1,0 +1,135 @@
+# Commitment-ledger + stay-risk admission: results
+
+Synthetic, 100 bays. See protocol.md for calibration vs assumptions. Score = 5 x bookings honoured + walk-ins admitted. Breach = shown-up booking with no bay within 30 min. Knobs tuned on calibration days to breach <= 1%; test breach shown (flagged with ! if above 1%).
+
+## L0
+
+| Policy | Honoured/day | Walk-ins/day | Score (W=5) | Score W=1 | Score W=10 | Test breach | Walk-ins denied with a free bay/day | Chosen knob |
+|---|---|---|---|---|---|---|---|---|
+| P0_strict | 45.4 | 500.9 | 728.0 | 546.3 | 955.1 | 0.00% | 157.4 |  |
+| P2_expected_H180 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+| P4_fullinfo | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+| P1_quota | 53.8 | 489.8 | 758.7 | 543.6 | 1027.6 | 0.00% | 168.1 | Q=25 margin=0 |
+| P1b_buffer | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.0 | Q=25 margin=0 |
+| P3_H60 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+| P3_H120 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+| P3_H180 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+| P3_H300 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+| P3_H480 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+| P3_H9999 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+
+Simple comparator (better on calibration): **P1b_buffer**. Best commit policy on calibration: **P3_H60**.
+Paired score difference, best commit minus simple: **+0.0/day** (95% CI -0.1 to +0.1). Fixed 3-hour commit minus simple: +0.0 (-0.1 to +0.1).
+
+- P3_H60 vs P1b_buffer: +0.0 bookings/day, +0.0 walk-ins/day.
+- P3_H120 vs P1b_buffer: +0.0 bookings/day, +0.0 walk-ins/day.
+- P3_H180 vs P1b_buffer: +0.0 bookings/day, +0.0 walk-ins/day.
+- P3_H300 vs P1b_buffer: +0.0 bookings/day, +0.0 walk-ins/day.
+- P3_H480 vs P1b_buffer: +0.0 bookings/day, +0.0 walk-ins/day.
+- P3_H9999 vs P1b_buffer: +0.0 bookings/day, +0.0 walk-ins/day.
+
+End-of-day horizon minus 3-hour horizon: +0.0/day (+0.0 to +0.0).
+
+## L1
+
+| Policy | Honoured/day | Walk-ins/day | Score (W=5) | Score W=1 | Score W=10 | Test breach | Walk-ins denied with a free bay/day | Chosen knob |
+|---|---|---|---|---|---|---|---|---|
+| P0_strict | 46.9 | 478.0 | 712.7 | 525.0 | 947.4 | 0.00% | 181.0 |  |
+| P2_expected_H180 | 53.8 | 510.8 | 779.7 | 564.5 | 1048.6 | 0.00% | 0.2 | z=0.0 |
+| P4_fullinfo | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 0.2 | z=0.0 |
+| P1_quota | 53.8 | 488.6 | 757.5 | 542.4 | 1026.4 | 0.00% | 169.4 | Q=25 margin=0 |
+| P1b_buffer | 53.8 | 510.8 | 779.7 | 564.5 | 1048.6 | 0.00% | 0.0 | Q=25 margin=0 |
+| P3_H60 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 5.9 | z=1.0 |
+| P3_H120 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 5.9 | z=1.0 |
+| P3_H180 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 5.9 | z=1.0 |
+| P3_H300 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 5.9 | z=1.0 |
+| P3_H480 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 5.9 | z=1.0 |
+| P3_H9999 | 53.8 | 510.7 | 779.6 | 564.5 | 1048.5 | 0.00% | 5.9 | z=1.0 |
+
+Simple comparator (better on calibration): **P1b_buffer**. Best commit policy on calibration: **P3_H60**.
+Paired score difference, best commit minus simple: **-0.1/day** (95% CI -0.3 to +0.2). Fixed 3-hour commit minus simple: -0.1 (-0.3 to +0.2).
+
+- P3_H60 vs P1b_buffer: +0.0 bookings/day, -0.1 walk-ins/day.
+- P3_H120 vs P1b_buffer: +0.0 bookings/day, -0.1 walk-ins/day.
+- P3_H180 vs P1b_buffer: +0.0 bookings/day, -0.1 walk-ins/day.
+- P3_H300 vs P1b_buffer: +0.0 bookings/day, -0.1 walk-ins/day.
+- P3_H480 vs P1b_buffer: +0.0 bookings/day, -0.1 walk-ins/day.
+- P3_H9999 vs P1b_buffer: +0.0 bookings/day, -0.1 walk-ins/day.
+
+End-of-day horizon minus 3-hour horizon: +0.0/day (+0.0 to +0.0).
+
+## L2
+
+| Policy | Honoured/day | Walk-ins/day | Score (W=5) | Score W=1 | Score W=10 | Test breach | Walk-ins denied with a free bay/day | Chosen knob |
+|---|---|---|---|---|---|---|---|---|
+| P0_strict | 93.3 | 142.3 | 608.8 | 235.6 | 1075.3 | 0.00% | 514.1 |  |
+| P2_expected_H180 | 120.8 | 356.3 | 960.2 | 477.1 | 1564.0 | 2.12% ! | 215.0 | z=0.0 |
+| P4_fullinfo | 127.8 | 351.9 | 990.8 | 479.7 | 1629.6 | 0.00% | 246.1 | z=0.0 |
+| P1_quota | 109.6 | 386.4 | 934.4 | 496.0 | 1482.3 | 0.01% | 267.6 | Q=60 margin=0 |
+| P1b_buffer | 108.5 | 395.2 | 937.7 | 503.7 | 1480.3 | 0.99% | 220.2 | Q=60 margin=10 |
+| P3_H60 | 108.7 | 409.5 | 953.2 | 518.2 | 1496.8 | 5.47% ! | 177.2 | z=3.0 |
+| P3_H120 | 113.7 | 380.2 | 948.5 | 493.9 | 1516.8 | 1.34% ! | 230.2 | z=3.0 |
+| P3_H180 | 118.5 | 355.0 | 947.7 | 473.6 | 1540.4 | 0.76% | 230.7 | z=1.5 |
+| P3_H300 | 124.8 | 299.9 | 923.9 | 424.7 | 1547.8 | 0.23% | 315.3 | z=0.0 |
+| P3_H480 | 124.9 | 297.0 | 921.3 | 421.8 | 1545.7 | 0.23% | 319.7 | z=0.0 |
+| P3_H9999 | 124.9 | 297.0 | 921.3 | 421.8 | 1545.7 | 0.23% | 319.7 | z=0.0 |
+
+Simple comparator (better on calibration): **P1b_buffer**. Best commit policy on calibration: **P3_H60**.
+Paired score difference, best commit minus simple: **+15.4/day** (95% CI +12.5 to +18.5). Fixed 3-hour commit minus simple: +10.0 (+7.6 to +12.4).
+
+- P3_H180 vs P1b_buffer: +10.0 bookings/day, -40.1 walk-ins/day; break-even booking weight = 4.0 (commit wins only if a booking is worth more than this many walk-ins).
+- P3_H300 vs P1b_buffer: +16.3 bookings/day, -95.2 walk-ins/day; break-even booking weight = 5.9 (commit wins only if a booking is worth more than this many walk-ins).
+- P3_H480 vs P1b_buffer: +16.4 bookings/day, -98.2 walk-ins/day; break-even booking weight = 6.0 (commit wins only if a booking is worth more than this many walk-ins).
+- P3_H9999 vs P1b_buffer: +16.4 bookings/day, -98.2 walk-ins/day; break-even booking weight = 6.0 (commit wins only if a booking is worth more than this many walk-ins).
+
+End-of-day horizon minus 3-hour horizon: -26.4/day (-28.4 to -24.3).
+
+## L3 no class signal
+
+| Policy | Honoured/day | Walk-ins/day | Score (W=5) | Score W=1 | Score W=10 | Test breach | Walk-ins denied with a free bay/day | Chosen knob |
+|---|---|---|---|---|---|---|---|---|
+| P0_strict | 91.8 | 129.4 | 588.3 | 221.1 | 1047.2 | 0.00% | 524.8 |  |
+| P2_expected_H180 | 116.8 | 316.1 | 899.9 | 432.9 | 1483.8 | 3.99% ! | 216.7 | z=0.0 |
+| P4_fullinfo | 126.2 | 309.5 | 940.5 | 435.7 | 1571.5 | 0.05% | 263.2 | z=0.0 |
+| P1_quota | 108.7 | 336.6 | 880.3 | 445.3 | 1424.0 | 0.51% | 304.7 | Q=60 margin=0 |
+| P1b_buffer | 89.8 | 395.0 | 844.0 | 484.8 | 1292.9 | 0.55% | 0.0 | Q=40 margin=0 |
+| P3_H60 | 104.0 | 355.6 | 875.9 | 459.7 | 1396.1 | 8.38% ! | 229.8 | z=3.0 |
+| P3_H120 | 109.9 | 331.7 | 881.4 | 441.7 | 1431.0 | 3.38% ! | 272.8 | z=3.0 |
+| P3_H180 | 113.0 | 307.2 | 872.1 | 420.2 | 1437.1 | 1.02% ! | 315.8 | z=3.0 |
+| P3_H300 | 122.6 | 268.4 | 881.6 | 391.0 | 1494.7 | 0.74% | 320.9 | z=0.0 |
+| P3_H480 | 122.9 | 264.6 | 879.1 | 387.5 | 1493.6 | 0.67% | 327.9 | z=0.0 |
+| P3_H9999 | 122.9 | 264.6 | 879.1 | 387.5 | 1493.6 | 0.67% | 327.9 | z=0.0 |
+
+Simple comparator (better on calibration): **P1_quota**. Best commit policy on calibration: **P3_H120**.
+Paired score difference, best commit minus simple: **+1.1/day** (95% CI -2.0 to +4.2). Fixed 3-hour commit minus simple: -8.2 (-10.8 to -5.6).
+
+- P3_H300 vs P1_quota: +13.9 bookings/day, -68.2 walk-ins/day; break-even booking weight = 4.9 (commit wins only if a booking is worth more than this many walk-ins).
+- P3_H480 vs P1_quota: +14.2 bookings/day, -72.0 walk-ins/day; break-even booking weight = 5.1 (commit wins only if a booking is worth more than this many walk-ins).
+- P3_H9999 vs P1_quota: +14.2 bookings/day, -72.0 walk-ins/day; break-even booking weight = 5.1 (commit wins only if a booking is worth more than this many walk-ins).
+
+End-of-day horizon minus 3-hour horizon: +7.0/day (+5.0 to +8.9).
+
+## L3 with class signal
+
+| Policy | Honoured/day | Walk-ins/day | Score (W=5) | Score W=1 | Score W=10 | Test breach | Walk-ins denied with a free bay/day | Chosen knob |
+|---|---|---|---|---|---|---|---|---|
+| P0_strict | 91.8 | 129.4 | 588.3 | 221.1 | 1047.2 | 0.00% | 524.8 |  |
+| P2_expected_H180 | 116.8 | 316.1 | 900.0 | 432.9 | 1483.9 | 3.98% ! | 216.4 | z=0.0 |
+| P4_fullinfo | 126.2 | 309.5 | 940.5 | 435.7 | 1571.5 | 0.05% | 263.2 | z=0.0 |
+| P1_quota | 108.7 | 336.6 | 880.3 | 445.3 | 1424.0 | 0.51% | 304.7 | Q=60 margin=0 |
+| P1b_buffer | 89.8 | 395.0 | 844.0 | 484.8 | 1292.9 | 0.55% | 0.0 | Q=40 margin=0 |
+| P3_H60 | 104.0 | 356.1 | 876.0 | 460.1 | 1395.8 | 8.45% ! | 226.1 | z=3.0 |
+| P3_H120 | 109.8 | 332.2 | 881.2 | 442.0 | 1430.2 | 3.51% ! | 269.6 | z=3.0 |
+| P3_H180 | 113.0 | 307.5 | 872.3 | 420.5 | 1437.0 | 1.03% ! | 313.2 | z=3.0 |
+| P3_H300 | 122.7 | 269.2 | 882.4 | 391.8 | 1495.7 | 0.74% | 320.4 | z=0.0 |
+| P3_H480 | 122.9 | 265.8 | 880.4 | 388.8 | 1495.0 | 0.68% | 327.2 | z=0.0 |
+| P3_H9999 | 122.9 | 265.8 | 880.4 | 388.8 | 1495.0 | 0.68% | 327.2 | z=0.0 |
+
+Simple comparator (better on calibration): **P1_quota**. Best commit policy on calibration: **P3_H120**.
+Paired score difference, best commit minus simple: **+1.0/day** (95% CI -2.2 to +3.9). Fixed 3-hour commit minus simple: -8.0 (-10.7 to -5.4).
+
+- P3_H300 vs P1_quota: +13.9 bookings/day, -67.4 walk-ins/day; break-even booking weight = 4.8 (commit wins only if a booking is worth more than this many walk-ins).
+- P3_H480 vs P1_quota: +14.2 bookings/day, -70.7 walk-ins/day; break-even booking weight = 5.0 (commit wins only if a booking is worth more than this many walk-ins).
+- P3_H9999 vs P1_quota: +14.2 bookings/day, -70.7 walk-ins/day; break-even booking weight = 5.0 (commit wins only if a booking is worth more than this many walk-ins).
+
+End-of-day horizon minus 3-hour horizon: +8.1/day (+6.2 to +10.2).
