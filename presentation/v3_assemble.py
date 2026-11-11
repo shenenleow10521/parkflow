@@ -191,16 +191,13 @@ D['revenue'] = new('revenue', 'Booking revenue model', 'Business', 'false', 'Com
     'Revenue depends on <em>who books</em>, not just how many.',
     f'''<div class="v3-rev">
 <section><h3 class="module-title red">What one booking adds to the mall</h3>
-<table class="v3-tbl"><thead><tr><th></th><th>Weekday<small>fee RM4 · bill RM3</small></th><th>Weekend<small>fee RM5 · bill RM3–10</small></th></tr></thead><tbody>
-<tr><th scope="row">Non-member</th><td><b>RM4</b><small>fee on top of the bill</small></td><td><b>RM5</b><small>fee on top of the bill</small></td></tr>
-<tr><th scope="row">Member</th><td><b>RM1</b><small>pays RM4 in total; RM3 was already the bill</small></td><td><b>RM0–2</b><small>pays max(fee, bill); ≥4h stays add nothing</small></td></tr>
-<tr><th scope="row">No-show</th><td><b>RM4</b><small>deposit kept</small></td><td><b>RM5</b><small>deposit kept</small></td></tr></tbody></table>
-<p class="v3-note">Non-members carry the revenue; members carry the engagement. Fee levels {A} · KLGCC tariff {S}</p></section>
+<table class="v3-tbl"><thead><tr><th></th><th>Weekday</th><th>Weekend</th></tr></thead><tbody><tr><th scope="row">Non-member or no-show</th><td><b>RM4</b></td><td><b>RM5</b></td></tr><tr><th scope="row">Member, up to 3 hours</th><td><b>RM1</b></td><td><b>RM2</b></td></tr><tr><th scope="row">Member, over 3 hours</th><td><b>RM1</b></td><td><b>RM0</b></td></tr></tbody></table>
+<p class="v3-note">Booking fee RM4 weekday, RM5 weekend. A member’s fee is credited to the parking bill, so only any excess counts. A no-show pays the fee, like a non-member.</p></section>
 <section><h3 class="module-title red">Annual contribution by volume and member share</h3>
 <table class="v3-tbl v3-sens"><thead><tr><th>Accepted bookings</th><th>30% members</th><th>50% members</th><th>70% members</th></tr></thead><tbody>{sens}</tbody></table>
 <p class="v3-note">After 6% SST, 20% operator allocation, card fees and RM10.5k running; payback on RM{CAPEX/1000:.1f}k upfront. Capacity at 200 bays {M} · volume and member share {A}</p></section></div>
-<div class="v3-sowhat"><span>So what</span><p>At 50% members, about <b>{be_op:.0f} bookings a day</b> cover running cost and <b>{be_5:.0f}</b> recover the capital in 5 years. Capacity is not the limit (the 200-bay simulation accepted every request to ~120 a day): <b>demand and willingness to pay are</b>.</p></div>''',
-    'Contribution = accepted bookings × gross per booking × 365 × net factor − running cost. Gross per booking from the 200-bay simulation (<a href="../analysis/v3_zone200.py">v3_zone200.py</a>). Volume and member share are scenarios; the 20% operator allocation is unagreed. Tax treatment and derivation: appendix.')
+<div class="v3-sowhat"><span>So what</span><p>At 50% members, about <b>{be_op:.0f} bookings a day</b> cover running cost, <b>{be_5:.0f}</b> recover the capital in 5 years and <b>{be_3:.0f}</b> in 3. Capacity is not the limit: <b>demand and willingness to pay are</b>.</p></div>''',
+    'Contribution = accepted bookings × gross per booking × 365 × net factor − running cost, from the 200-bay simulation. Volume and member share are scenarios; the 20% operator share is unagreed. Derivation: appendix.')
 
 bars = [('Software and integration', INTEGRATION, 'a', f'RM{DAY_RATE:.0f}/day × {BUILD_DAYS:.0f} days; quote before G1'),
         ('Power, network and works', 7_500, 'a', 'Allowance; survey firms it up'),
@@ -340,7 +337,7 @@ def _axes(W, H, L, R, T, B, X, Y, xt, yt, xfmt, yfmt, xtitle, ytitle):
     return o
 
 def rev_chart():
-    W, H, L, R, T, B = 760, 330, 62, 122, 14, 44
+    W, H, L, R, T, B = 760, 420, 62, 168, 14, 44
     xmax, ymin, ymax = 120, -20000, 120000
     X = lambda n: L + (W - L - R) * n / xmax
     Y = lambda v: T + (H - T - B) * (ymax - v) / (ymin * -1 + ymax)
@@ -359,7 +356,6 @@ def rev_chart():
         o.append(f'<circle cx="{W-R+10}" cy="{ye:.1f}" r="5" fill="{col}"/><text x="{W-R+20}" y="{ye+4.5:.1f}" class="lab">{lab}</text>')
     for n, v in ((be_op, 0), (be_5, CAPEX / 5), (be_3, CAPEX / 3)):
         o.append(f'<circle cx="{X(n):.1f}" cy="{Y(v):.1f}" r="6" fill="{RED}" stroke="#fff" stroke-width="2"><title>{n:.0f} bookings/day at 50% members</title></circle>')
-        o.append(f'<text x="{X(n)+9:.1f}" y="{Y(v)+19:.1f}" class="dl">{n:.0f}/day</text>')
     o.append('</svg>')
     return ''.join(o)
 
@@ -406,15 +402,12 @@ def donut(items, total, size=250, r=84, sw=40, label='upfront'):
 D['revenue'] = new('revenue', 'Booking revenue model', 'Business', 'false', '', 'Revenue depends on who books.',
     f"""<div class="v3-rev v3-rev--chart">
 <section><h3 class="module-title red">What one booking adds to the mall</h3>
-<table class="v3-tbl"><thead><tr><th></th><th>Weekday<small>fee RM4 · bill RM3</small></th><th>Weekend<small>fee RM5 · bill RM3–10</small></th></tr></thead><tbody>
-<tr><th scope="row">Non-member</th><td><b>RM4</b><small>fee on top of the bill</small></td><td><b>RM5</b><small>fee on top of the bill</small></td></tr>
-<tr><th scope="row">Member</th><td><b>RM1</b><small>pays RM4 in total; RM3 was already the bill</small></td><td><b>RM0–2</b><small>pays max(fee, bill); ≥4h stays add nothing</small></td></tr>
-<tr><th scope="row">No-show</th><td><b>RM4</b><small>deposit kept</small></td><td><b>RM5</b><small>deposit kept</small></td></tr></tbody></table>
-<p class="v3-note">Non-members carry the revenue; members carry the engagement. Fee levels {A} · KLGCC tariff {S}</p></section>
+<table class="v3-tbl"><thead><tr><th></th><th>Weekday</th><th>Weekend</th></tr></thead><tbody><tr><th scope="row">Non-member or no-show</th><td><b>RM4</b></td><td><b>RM5</b></td></tr><tr><th scope="row">Member, up to 3 hours</th><td><b>RM1</b></td><td><b>RM2</b></td></tr><tr><th scope="row">Member, over 3 hours</th><td><b>RM1</b></td><td><b>RM0</b></td></tr></tbody></table>
+<p class="v3-note">Booking fee RM4 weekday, RM5 weekend. A member’s fee is credited to the parking bill, so only any excess counts. A no-show pays the fee, like a non-member.</p></section>
 <section><h3 class="module-title red">Annual contribution by volume and member share</h3>{rev_chart()}
-<p class="v3-note">After 6% SST, 20% operator allocation, card fees and RM10.5k running. Capacity at 200 bays {M} · volume and member share {A}</p></section></div>
-<div class="v3-sowhat"><span>So what</span><p>At 50% members, about <b>{be_op:.0f} bookings a day</b> cover running cost and <b>{be_5:.0f}</b> recover the capital in 5 years. Capacity is not the limit (the 200-bay simulation accepted every request to ~120 a day): <b>demand and willingness to pay are</b>.</p></div>""",
-    'Contribution = accepted bookings × gross per booking × 365 × net factor − running cost. Gross per booking from the 200-bay simulation (<a href="../analysis/v3_zone200.py">v3_zone200.py</a>). Volume and member share are scenarios; the 20% operator allocation is unagreed. Tax treatment and derivation: appendix.')
+<p class="v3-note">After 6% SST, 20% operator share, card fees and RM10.5k running cost.</p></section></div>
+<div class="v3-sowhat"><span>So what</span><p>At 50% members, about <b>{be_op:.0f} bookings a day</b> cover running cost, <b>{be_5:.0f}</b> recover the capital in 5 years and <b>{be_3:.0f}</b> in 3. Capacity is not the limit: <b>demand and willingness to pay are</b>.</p></div>""",
+    'Contribution = accepted bookings × gross per booking × 365 × net factor − running cost, from the 200-bay simulation. Volume and member share are scenarios; the 20% operator share is unagreed. Derivation: appendix.')
 
 # ---- value: rent-versus-sales chart replaces the big numbers
 bar = lambda pct, col: f'<span class="vz-track"><i style="width:{min(pct,100):.1f}%;background:{col}"></i></span>'
@@ -630,9 +623,11 @@ LABELS['pilot-design'] = 'Pilot and ask'
 def _bill(hours, weekend):
     return 3 if not weekend else min(10, 3 if hours <= 3 else 3 + 2 * (hours - 3))
 def _price_row(label, weekend, hours):
-    fee = 5 if weekend else 4; b = _bill(hours, weekend)
+    if label == '1–3 hours':      # the only stay length where weekday and weekend both apply: slash = weekday / weekend
+        return f'<tr><th scope="row">{label}</th><td>RM3</td><td class="mc-mem"><b>RM4 / 5</b></td><td>RM7 / 8</td></tr>'
+    fee = 5; b = _bill(hours, True)
     return f'<tr><th scope="row">{label}</th><td>RM{b}</td><td class="mc-mem"><b>RM{max(fee, b)}</b></td><td>RM{fee + b}</td></tr>'
-price_rows = ''.join(_price_row(*r) for r in (('Weekday, any stay', False, 2), ('Weekend, 2 h', True, 2), ('Weekend, 4 h', True, 4), ('Weekend, 6 h', True, 6), ('Weekend, 7 h+', True, 7)))
+price_rows = ''.join(_price_row(*r) for r in (('1–3 hours', True, 2), ('Weekend 4 h', True, 4), ('Weekend 6 h', True, 6), ('Weekend 7 h+', True, 7)))
 def _ic(paths): return f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{paths}</svg>'
 IC_ID = _ic('<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6.2 15a3 3 0 0 1 5.6 0M16 10h2M16 14h2"/>')
 IC_CARD = _ic('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>')
@@ -658,8 +653,9 @@ D['mechanism'] = new('mechanism', 'How it works and what it costs', 'Product', '
 {_node('CCTV', 'Audit only; covers blind spots.', 'Existing', 'ex', _img('klgcc-cctv-crop', '50% 50%'))}
 {_node('Operator dashboard', 'Plan, verify, audit.', 'New', 'new', _img('op-overview', '0% 0%'))}</div></div></section>
 <section class="mc-price"><h4 class="mc-tab"><span>What the customer pays per visit</span></h4>
-<div class="mc-tblwrap"><table class="v3-tbl mc-tbl"><thead><tr><th>Stay</th><th>No ParkFlow</th><th>Member books</th><th>Non-member books</th></tr></thead><tbody>{price_rows}</tbody></table></div>
-<p class="v3-note">Booking fee RM4 weekday, RM5 weekend and peak. Kept on a no-show.</p></section></div>
+<p class="v3-note mc-fee">Booking fee RM4 weekday, RM5 weekend; kept on a no-show. Slashes show weekday / weekend. Weekday parking is RM3 at any length.</p>
+<div class="mc-tblwrap"><table class="v3-tbl mc-tbl"><thead><tr><th>Stay</th><th>Normal parking rate</th><th>Member booking</th><th>Non-member booking</th></tr></thead><tbody>{price_rows}</tbody></table></div>
+</section></div>
 <div class="v3-sowhat"><span>The rule</span><p>A member never pays more than the <b>larger of the fee and the parking bill</b>. A non-member pays <b>both</b>. That gap, RM3–10 a visit, is the reason to join.</p></div>""",
     'KLGCC tariff: RM3 weekday; weekend RM3 for the first 3 hours, then RM2 an hour, capped at RM10, excluding 6% SST (<a href="https://www.simedarbyproperty.com/malls/klgcc-mall/">official page</a>). Weekend hours round up. Booking-service tax is unconfirmed. The member credit is a proposed rule, not an SDP policy. LPR and CCTV are site observations, to be confirmed with the mall.')
 TITLES['mechanism'] = 'Behind the booking: <em>the parts and the price.</em>'
@@ -958,12 +954,12 @@ D['member'] = rep_html(D['member'], '<b>See the zone</b><p>Occupied, reserved an
 D['mechanism'] = rep_html(D['mechanism'], '<li><b>Capacity guard</b>verified free bays decide</li><li><b>Buffer plan</b>rolling, every 15 minutes</li>',
     '<li><b>Stay forecast and planner</b>re-plans every 15 minutes</li><li><b>Safety guard</b>verified free bays decide</li>')
 # slide 7: a second way in, shown as a small box under the fee table
-D['mechanism'] = rep_html(D['mechanism'], 'Kept on a no-show.</p></section>',
-    f'Kept on a no-show.</p>'
+D['mechanism'] = rep_html(D['mechanism'], '</table></div>\n</section>',
+    f'</table></div>'
     f'<div class="v4-box"><h4>Another way in: earn a booking</h4>'
     f'<div class="v4-box__row"><b>Earn</b><span>Spend above a set amount in store, get one booking.</span></div>'
     f'<div class="v4-box__row"><b>Cost</b><span>Fee forgone; pays back if 1 in {1/vo_5:.0f} to 1 in {1/vo_15:.0f} visit again.</span></div>'
-    f'<div class="v4-box__row"><b>Pilot</b><span>Tested against the paid booking. Store-issued tickets later.</span></div></div></section>')
+    f'<div class="v4-box__row"><b>Pilot</b><span>Tested against the paid booking. Store-issued tickets later.</span></div></div>\n</section>')
 
 # ---- slides 12, 14: finding-led titles; caveat bars become plain notes; slides 10, 11 likewise
 TITLES['value'] = f'Extra tenant sales of <em>RM{gto_lo/1000:.0f}k\u2013{gto_hi/1000:.0f}k</em> a year would cover the gap'
@@ -1042,7 +1038,6 @@ _MID = [
     ('ParkMobile, 2024 \u00b7 US survey', 'ParkMobile, 2024, US survey'),
     ('1 \u00b7 Home', '1. Home'), ('2 \u00b7 Reserve', '2. Reserve'), ('3 \u00b7 Confirm', '3. Confirm'), ('4 \u00b7 Zone', '4. Zone'),
     ('fee RM4 \u00b7 bill RM3', 'fee RM4, bill RM3'), ('fee RM5 \u00b7 bill RM3', 'fee RM5, bill RM3'),
-    (' \u00b7 KLGCC tariff', ', KLGCC tariff'), (' \u00b7 volume and member share', ', volume and member share'),
     ('5-year recovery \u00b7 RM', '5-year recovery: RM'), ('3-year recovery \u00b7 RM', '3-year recovery: RM'),
     ('Voucher break-even \u00b7 share of holders who must return', 'Voucher break-even: share of holders who must return'),
     ('Spend gap \u00b7 association only', 'Spend gap (association only)'),
