@@ -1,4 +1,4 @@
-// ParkFlow driver prototype: reserve shared Priority Zone access, show a demo QR,
+// ParkFlow driver prototype: reserve shared Priority Zone access, show a plate-based entry pass,
 // and inspect availability. Counts and forecasts are illustrative, not live site data.
 import { esc } from '../ui/dom';
 import { priorityRead, priorityPool, priorityCounts, priorityReady, prioritySeedPool, priorityReserve, priorityCancel, prioritySavePlate, prioritySubscribe, priorityEnsure, PRIORITY_KEY, PRIORITY_MALLS, PriorityBay, PriorityBooking, PriorityData } from '../shared/priority';
@@ -46,45 +46,6 @@ function driverTimeLabel(time: string): string { const [h, m] = time.split(':').
 function driverGo(page: DriverPage) { DRV_APP.page = page; DRV_APP.error = ''; driverRender(); document.getElementById('driver-scroll')!.scrollTop = 0; }
 function driverSelected(): DriverBooking | undefined { return DRV_APP.data.bookings.find((b) => b.id === DRV_APP.selected); }
 
-// Standards-compliant QR Model 2, version 4-L, byte mode, mask 0.
-// Payload is a demo booking reference, never a real gate credential or payment token.
-function driverQrMatrix(payload: string): boolean[][] {
-  const bytes = Array.from(new TextEncoder().encode(payload));
-  if (bytes.length > 78) throw new Error('Demo QR payload is too long.');
-  const bits: number[] = [];
-  const append = (value: number, count: number) => { for (let i = count - 1; i >= 0; i--) bits.push((value >>> i) & 1); };
-  append(4, 4); append(bytes.length, 8); bytes.forEach((b) => append(b, 8));
-  append(0, Math.min(4, 640 - bits.length)); while (bits.length % 8) bits.push(0);
-  const data: number[] = []; for (let i = 0; i < bits.length; i += 8) data.push(bits.slice(i, i + 8).reduce((a, b) => a * 2 + b, 0));
-  for (let pad = 0; data.length < 80; pad++) data.push(pad % 2 ? 0x11 : 0xec);
-  const mul = (a: number, b: number): number => { let r = 0; for (let i = 0; i < 8; i++) { if (b & 1) r ^= a; a = (a << 1) ^ ((a & 0x80) ? 0x11d : 0); b >>>= 1; } return r; };
-  let gen = [1], root = 1;
-  for (let i = 0; i < 20; i++) { const next = Array(gen.length + 1).fill(0); gen.forEach((v, j) => { next[j] ^= v; next[j + 1] ^= mul(v, root); }); gen = next; root = mul(root, 2); }
-  const remainder = data.concat(Array(20).fill(0));
-  for (let i = 0; i < 80; i++) { const factor = remainder[i]; for (let j = 0; j < gen.length; j++) remainder[i + j] ^= mul(gen[j], factor); }
-  const words = data.concat(remainder.slice(80)), size = 33;
-  const matrix = Array.from({ length: size }, () => Array(size).fill(false));
-  const fixed = Array.from({ length: size }, () => Array(size).fill(false));
-  const put = (x: number, y: number, value: boolean) => { if (x >= 0 && y >= 0 && x < size && y < size) { matrix[y][x] = value; fixed[y][x] = true; } };
-  for (const [cx, cy] of [[3, 3], [size - 4, 3], [3, size - 4]]) for (let dy = -4; dy <= 4; dy++) for (let dx = -4; dx <= 4; dx++) { const distance = Math.max(Math.abs(dx), Math.abs(dy)); put(cx + dx, cy + dy, distance !== 2 && distance !== 4); }
-  for (let i = 8; i < size - 8; i++) { put(6, i, i % 2 === 0); put(i, 6, i % 2 === 0); }
-  for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) put(26 + dx, 26 + dy, Math.max(Math.abs(dx), Math.abs(dy)) !== 1);
-  let rem = 8; for (let i = 0; i < 10; i++) rem = (rem << 1) ^ ((rem >>> 9) * 0x537);
-  const format = ((8 << 10) | rem) ^ 0x5412, bit = (i: number) => ((format >>> i) & 1) !== 0;
-  for (let i = 0; i <= 5; i++) put(8, i, bit(i)); put(8, 7, bit(6)); put(8, 8, bit(7)); put(7, 8, bit(8));
-  for (let i = 9; i < 15; i++) put(14 - i, 8, bit(i));
-  for (let i = 0; i < 8; i++) put(size - 1 - i, 8, bit(i));
-  for (let i = 8; i < 15; i++) put(8, size - 15 + i, bit(i)); put(8, size - 8, true);
-  let index = 0;
-  for (let right = size - 1; right >= 1; right -= 2) { if (right === 6) right = 5; for (let vertical = 0; vertical < size; vertical++) { const y = ((right + 1) & 2) === 0 ? size - 1 - vertical : vertical; for (let j = 0; j < 2; j++) { const x = right - j; if (fixed[y][x]) continue; const value = index < words.length * 8 && ((words[index >>> 3] >>> (7 - (index & 7))) & 1) !== 0; matrix[y][x] = value !== ((x + y) % 2 === 0); index++; } } }
-  return matrix;
-}
-function driverQr(booking: DriverBooking): string {
-  const payload = `PF|${booking.id}|${booking.mall}|${booking.date}|${booking.time}|${booking.plate}`;
-  const matrix = driverQrMatrix(payload);
-  const path = matrix.flatMap((row, y) => row.map((dark, x) => dark ? `M${x} ${y}h1v1h-1z` : '')).join('');
-  return `<svg class="booking-qr" viewBox="-4 -4 41 41" role="img" aria-label="Demo booking QR for ${esc(booking.id)}" shape-rendering="crispEdges"><rect x="-4" y="-4" width="41" height="41" fill="white"/><path d="${path}" fill="#111"/></svg>`;
-}
 async function driverBook(): Promise<boolean> {
   DRV_APP.error = '';
   try {
@@ -108,7 +69,7 @@ function driverForm(): string {
 function driverConfirmation(): string {
   const booking = driverSelected(); if (!booking) return `${driverHeader('My Booking')}<div class="empty">No booking selected.</div>`;
   const active = booking.status === 'confirmed' || booking.status === 'checked-in';
-  return `${driverHeader('My Booking', 'bookings')}<div class="page-content confirmation"><div class="confirmation-mark ${active ? '' : 'cancelled'}">${driverIcon(active ? 'check' : 'info', 48)}</div><h2>${booking.status === 'confirmed' ? 'Booking Confirmed!' : booking.status === 'checked-in' ? 'Entry Verified' : booking.status === 'completed' ? 'Visit Complete' : booking.status === 'expired' ? 'Booking Expired' : 'Booking Cancelled'}</h2><div class="booking-facts"><p>${driverIcon('pin')}<b>${DRV_MALLS[booking.mall]}</b></p><p>${driverIcon('calendar')}<b>${driverDateLabel(booking.date)}, ${driverTimeLabel(booking.time)}</b></p><p>${driverIcon('car')}<b>Priority Zone Access</b></p><small>${esc(booking.plate)} · ${esc(booking.id)}</small></div>${active ? `${driverQr(booking)}<p class="qr-caption">Show this QR at the zone entrance ${driverIcon('info', 15)}</p><p class="fine center">Demo entry pass. No live gate connection.</p>` : ''}<button class="button button-red" data-driver="view-zone" data-mall="${booking.mall}">View Priority Zone</button>${booking.status === 'confirmed' ? `<button class="text-btn cancel-booking" data-driver="cancel" data-id="${esc(booking.id)}">Cancel booking</button>` : ''}</div>`;
+  return `${driverHeader('My Booking', 'bookings')}<div class="page-content confirmation"><div class="confirmation-mark ${active ? '' : 'cancelled'}">${driverIcon(active ? 'check' : 'info', 48)}</div><h2>${booking.status === 'confirmed' ? 'Booking Confirmed!' : booking.status === 'checked-in' ? 'Entry Verified' : booking.status === 'completed' ? 'Visit Complete' : booking.status === 'expired' ? 'Booking Expired' : 'Booking Cancelled'}</h2><div class="booking-facts"><p>${driverIcon('pin')}<b>${DRV_MALLS[booking.mall]}</b></p><p>${driverIcon('calendar')}<b>${driverDateLabel(booking.date)}, ${driverTimeLabel(booking.time)}</b></p><p>${driverIcon('car')}<b>Priority Zone Access</b></p><small>${esc(booking.plate)} · ${esc(booking.id)}</small></div>${active ? `<div class="plate-pass"><small>Your entry pass</small><b>${esc(booking.plate)}</b><p>Drive in: your plate is read at the zone entrance ${driverIcon('info', 15)}</p></div><p class="fine center">Demo only. No live gate connection.</p>` : ''}<button class="button button-red" data-driver="view-zone" data-mall="${booking.mall}">View Priority Zone</button>${booking.status === 'confirmed' ? `<button class="text-btn cancel-booking" data-driver="cancel" data-id="${esc(booking.id)}">Cancel booking</button>` : ''}</div>`;
 }
 function driverBoard(): string {
   const pool = driverPool(), counts = driverCounts(pool);

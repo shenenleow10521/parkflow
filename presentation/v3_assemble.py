@@ -132,13 +132,13 @@ def remove_div(html, marker):
 
 # customer journey: new prototype screens (origin/main, driver prototype)
 phones = [('1 · Home', 'proto-home', 'Prototype home screen'), ('2 · Reserve', 'proto-reserve', 'Reserve screen with arrival time and fee'),
-          ('3 · Confirm', 'proto-confirmed', 'Booking confirmed with QR entry pass'), ('4 · Zone', 'proto-zone', 'Zone capacity by level')]
+          ('3 · Confirm', 'proto-confirmed', 'Booking confirmed, with the plate as the entry pass'), ('4 · Zone', 'proto-zone', 'Zone capacity by level')]
 ph = '<li class="v3-arr" aria-hidden="true"></li>'.join(f'<li><span>{a}</span><figure><img alt="{c}" src="assets/{b}.webp"/></figure></li>' for a, b, c in phones)
 D['member'] = new('member', 'Customer booking journey', 'Product', 'false', '', 'Customer journey: <em>reserve, enter, park.</em>',
     f"""<div class="v3-jr"><ol class="v3-phones">{ph}</ol>
 <div class="v3-fns"><h3>What the prototype shows</h3>
 <div class="v3-fn"><b>Reserve</b><p>Pick a mall, date and arrival time. The fee and the no-show rule are shown before confirming.</p></div>
-<div class="v3-fn"><b>Enter</b><p>A QR entry pass after booking. The LPR check is simulated, with no live gate connection.</p></div>
+<div class="v3-fn"><b>Enter</b><p>The plate is the entry pass after booking. The LPR check is simulated, with no live gate connection.</p></div>
 <div class="v3-fn"><b>See the zone</b><p>Occupied, reserved and available bays by level, with safety bays protected.</p></div></div></div>
 <div class="v3-sowhat"><span>Pricing test</span><p>RM4 weekday / RM5 peak. Members’ fee is credited to their parking bill; non-members pay it on top. It is kept if the customer does not arrive (15-minute grace).</p></div>""",
     'Screens captured from the ParkFlow driver prototype, simulated data (it shows 100 bays and a RM5 demo fee). No payment processing or live gate connection. Offline simulation results are separate.')
@@ -642,7 +642,7 @@ ARROW2 = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
 D['mechanism'] = new('mechanism', 'How it works and what it costs', 'Product', 'false', '', 'Behind the booking: the parts and the price.',
     f"""<div class="mc"><section class="mc-parts">
 <div class="mc-grid"><div class="mc-col"><h4 class="mc-tab"><span>Customer side</span></h4>
-{_node('Booking app', 'Book and get a QR pass.', 'New', 'new', _img('proto-confirmed', '50% 62%'))}
+{_node('Booking app', 'Book; the plate is the pass.', 'New', 'new', _img('proto-confirmed', '50% 62%'))}
 {_node('Mall membership', 'Identity and member rate.', 'Existing', 'ex', IC_ID)}
 {_node('Payment', 'Fee by card or e-wallet.', 'Existing', 'ex', IC_CARD)}</div>
 <div class="mc-arr">{ARROW}{ARROW}{ARROW}</div>
@@ -957,8 +957,8 @@ TITLES['member'] = 'The prototype: <em>what is built, what is simulated.</em>'
 D['member'] = rep_html(D['member'], '<h3>What the prototype shows</h3>', '<h3>What exists today</h3>')
 D['member'] = rep_html(D['member'], '<b>Reserve</b><p>Pick a mall, date and arrival time. The fee and the no-show rule are shown before confirming.</p>',
     '<b>Built</b><p>A booking flow: mall, date and arrival time, with the fee and no-show rule shown before confirming.</p>')
-D['member'] = rep_html(D['member'], '<b>Enter</b><p>A QR entry pass after booking. The LPR check is simulated, with no live gate connection.</p>',
-    '<b>Simulated</b><p>The QR entry pass and the LPR check. No live gate, payment or controller connection.</p>')
+D['member'] = rep_html(D['member'], '<b>Enter</b><p>The plate is the entry pass after booking. The LPR check is simulated, with no live gate connection.</p>',
+    '<b>Simulated</b><p>The plate-based entry and the LPR check. No live gate, payment or controller connection.</p>')
 D['member'] = rep_html(D['member'], '<b>See the zone</b><p>Occupied, reserved and available bays by level, with safety bays protected.</p>',
     '<b>Zone view</b><p>Occupied, reserved and available bays by level, with safety bays protected (simulated data).</p>')
 D['mechanism'] = rep_html(D['mechanism'], '<li><b>Capacity guard</b>verified free bays decide</li><li><b>Buffer plan</b>rolling, every 15 minutes</li>',
