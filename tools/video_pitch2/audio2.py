@@ -10,7 +10,8 @@ import edge_tts, imageio_ffmpeg
 FF = imageio_ffmpeg.get_ffmpeg_exe()
 HERE = pathlib.Path(__file__).resolve().parent
 work = pathlib.Path(sys.argv[1]).resolve()
-voice = sys.argv[2] if len(sys.argv) > 2 else 'en-US-AndrewNeural'
+voice = next((a for a in sys.argv[2:] if not a.startswith('--')), 'en-US-AndrewNeural')
+REUSE = '--reuse-voice' in sys.argv and (work / 'voice.wav').exists()  # keep the narration already generated
 SR, DUR = 48000, 120.0
 lines = json.loads((HERE / 'narration2.json').read_text(encoding='utf-8'))
 vo = work / 'vo'; vo.mkdir(exist_ok=True)
@@ -31,21 +32,22 @@ async def synth(text, path, rate):
     raise RuntimeError(f'no audio for: {text}')
 
 # ---------------------------------------------------------------- narration, each line fitted to its slot
-placed = []
-for i, (t0, t1, text) in enumerate(lines):
-    p, rate = vo / f'l{i:02d}.mp3', -3
-    for _ in range(7):
-        asyncio.run(synth(text, p, rate)); d = dur(p)
-        if d <= (t1 - t0) or rate >= 20: break
-        rate += max(3, int(((d / (t1 - t0)) - 1) * 100) + 2)
-    print(f'{t0:6.1f}-{t1:6.1f}  {d:5.2f}s  {rate:+d}%  {text}', flush=True)
-    placed.append((t0, p))
-inputs, chains = [], []
-for i, (t0, p) in enumerate(placed):
-    inputs += ['-i', str(p)]; ms = int(t0 * 1000)
-    chains.append(f'[{i}:a]aresample={SR},adelay={ms}|{ms},apad=whole_dur={DUR}[v{i}]')
-fc = ';'.join(chains) + ';' + ''.join(f'[v{i}]' for i in range(len(placed))) + f'amix=inputs={len(placed)}:normalize=0,atrim=0:{DUR},loudnorm=I=-16:TP=-1.5:LRA=7[o]'
-subprocess.run([FF, '-y', '-loglevel', 'error', *inputs, '-filter_complex', fc, '-map', '[o]', '-ac', '2', '-ar', str(SR), str(work / 'voice.wav')], check=True)
+if not REUSE:
+    placed = []
+    for i, (t0, t1, text) in enumerate(lines):
+        p, rate = vo / f'l{i:02d}.mp3', -3
+        for _ in range(7):
+            asyncio.run(synth(text, p, rate)); d = dur(p)
+            if d <= (t1 - t0) or rate >= 20: break
+            rate += max(3, int(((d / (t1 - t0)) - 1) * 100) + 2)
+        print(f'{t0:6.1f}-{t1:6.1f}  {d:5.2f}s  {rate:+d}%  {text}', flush=True)
+        placed.append((t0, p))
+    inputs, chains = [], []
+    for i, (t0, p) in enumerate(placed):
+        inputs += ['-i', str(p)]; ms = int(t0 * 1000)
+        chains.append(f'[{i}:a]aresample={SR},adelay={ms}|{ms},apad=whole_dur={DUR}[v{i}]')
+    fc = ';'.join(chains) + ';' + ''.join(f'[v{i}]' for i in range(len(placed))) + f'amix=inputs={len(placed)}:normalize=0,atrim=0:{DUR},loudnorm=I=-16:TP=-1.5:LRA=7[o]'
+    subprocess.run([FF, '-y', '-loglevel', 'error', *inputs, '-filter_complex', fc, '-map', '[o]', '-ac', '2', '-ar', str(SR), str(work / 'voice.wav')], check=True)
 
 # ---------------------------------------------------------------- sound effects
 rng = np.random.default_rng(11)
@@ -95,6 +97,11 @@ for t in (37.6, 38.4, 39.2, 40.0, 54.8, 55.4, 56.0, 56.6, 104.4, 110.7):  # modu
     put(t, tone(1760, 0.18, 0.04, 0.05, (1, 0.2)))
 for t in (95.8, 97.6, 99.4, 101.2):  # revenue streams light up
     coin(t, 0.07)
+# transitions: impact ring, flash cuts, light sweeps
+put(45.8, tone(55, 0.9, 0.3, 0.45, (1, 0.5, 0.2)) + (rng.standard_normal(int(0.9 * SR)) * np.exp(-np.arange(int(0.9 * SR)) / SR / 0.06) * 0.12).astype(np.float32))
+for t in (81.9, 83.5):
+    put(t, whoosh(0.35, 6000, 1500, 0.3))
+put(108.8, whoosh(0.6, 400, 3200, 0.3)); put(102.65, whoosh(0.5, 600, 3600, 0.22)); put(13.65, whoosh(0.5, 700, 4200, 0.2))
 for i, f in enumerate((523, 659, 784, 1046)):  # end-card shimmer and the four chips
     put(118.0 + i * 0.09, tone(f, 1.6, 0.6, 0.07)); put(115.25 + i * 0.12, tone(f * 2, 0.4, 0.12, 0.05))
 fx = np.clip(fx, -1, 1)

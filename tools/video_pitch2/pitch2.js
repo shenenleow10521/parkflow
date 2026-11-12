@@ -291,6 +291,34 @@ function drawEnd(t) {
   op($('shine'), win(t, 118.0, 119.3, 0.3)); $('shine').style.transform = `translateX(${lerp(-1400, 1400, seg(t, 118.0, 119.3)).toFixed(0)}px)`;
 }
 
+// ---------------------------------------------------------------- transitions
+// sweep: a diagonal light band wipes across and hides the cut; flash: a quick white-out; ring: a shockwave where the beam lands
+const TRANS = [['sweep', 19.95], ['sweep', 50.95], ['sweep', 102.75], ['sweep', 108.95], ['sweep', 13.75],
+  ['flash', 81.95], ['flash', 83.55], ['flash', 3.98], ['ring', 45.82, 960, 1010]];
+function drawTrans(t) {
+  let wo = 0, wx = 0, w2 = 0, fo = 0, ro = 0;
+  for (const [k, a, x, y] of TRANS) {
+    if (k === 'sweep' && t >= a - 0.32 && t < a + 0.32) {
+      const u = seg(t, a - 0.32, a + 0.32); wo = Math.max(wo, Math.sin(u * Math.PI)); wx = lerp(-1700, 2500, sm(u)); w2 = Math.sin(u * Math.PI) * 0.9;
+      fo = Math.max(fo, 0.22 * Math.max(0, 1 - Math.abs(t - a) / 0.12));
+    }
+    if (k === 'flash' && t >= a - 0.12 && t < a + 0.35) fo = Math.max(fo, t < a ? sm(seg(t, a - 0.12, a)) * 0.85 : 0.85 * (1 - sm(seg(t, a, a + 0.35))));
+    if (k === 'ring' && t >= a && t < a + 0.9) {
+      const u = seg(t, a, a + 0.9), r = $('ring'); ro = (1 - u) * 0.95; css(r, 'left', x + 'px'); css(r, 'top', y + 'px');
+      css(r, 'transform', `scale(${(0.2 + eo(u) * 9).toFixed(3)}) scaleY(.38)`); fo = Math.max(fo, 0.35 * (1 - sm(seg(t, a, a + 0.25))));
+    }
+  }
+  op($('wipe'), wo); css($('wipe'), 'transform', `translateX(${wx.toFixed(0)}px) rotate(14deg)`);
+  op($('wipe2'), w2); css($('wipe2'), 'transform', `translateX(${(wx + 460).toFixed(0)}px) rotate(14deg)`);
+  op($('flash'), fo); op($('ring'), ro);
+  // push-zoom: the planning chart zooms through into the 3D clock
+  const pz = ei(seg(t, 57.6, 58.4));
+  if (t >= 57.0 && t < 58.6) { css(plan, 'transform', `scale(${(1 + 0.35 * pz).toFixed(4)})`); css(plan, 'filter', `blur(${(pz * 10).toFixed(1)}px)`); }
+  else { css(plan, 'transform', 'none'); css(plan, 'filter', 'none'); }
+  // zone -> phone: a quick zoom punch on the 3D before the blur
+  if (t >= 19.6 && t < 20.4) { const u = sm(seg(t, 19.6, 20.0)) * (1 - sm(seg(t, 20.0, 20.4))); css(twin, 'scale', (1 + 0.06 * u).toFixed(4)); } else css(twin, 'scale', '1');
+}
+
 // ---------------------------------------------------------------- entry
 const ready = (async () => {
   await document.fonts.ready;
@@ -301,7 +329,7 @@ const ready = (async () => {
 })();
 window.seek = async (t) => {
   await ready; pend = [];
-  drawFoot(t); drawTwin(t); drawSvc(t); drawApp(t); drawSys(t); drawPlan(t); drawFlights(t); drawGate(t); drawOps(t); drawTrail(t); drawDots(t); drawTagline(t); drawEnd(t);
+  drawFoot(t); drawTwin(t); drawSvc(t); drawApp(t); drawSys(t); drawPlan(t); drawFlights(t); drawGate(t); drawOps(t); drawTrail(t); drawDots(t); drawTagline(t); drawEnd(t); drawTrans(t);
   op($('fade'), Math.max(1 - seg(t, 0, 0.35), seg(t, 119.35, 120)));
   if (pend.length) await Promise.all(pend);
   return true;
