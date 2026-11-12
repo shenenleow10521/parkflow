@@ -1,3 +1,6 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ParkFlow KLGCC Demo</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap">
@@ -30,12 +33,17 @@ video{display:block;width:100%;height:auto;aspect-ratio:16/9;max-width:100%}
 .notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;color:var(--muted);font-size:15px}
 .notes h2{margin:0 0 4px;font-family:var(--display);font-weight:600;font-size:22px;color:var(--fg)}
 .notes p{margin:0}
+.speed{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.speed button{all:unset;cursor:pointer;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--fg);font-variant-numeric:tabular-nums;font-weight:600}
+.speed button:hover{border-color:var(--accent)}
+.speed button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.speed button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--bg)}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">ParkFlow · prototype video · 2:55</div>
+    <div class="eyebrow">ParkFlow · prototype video · 2:55, about 2 min at 1.5×</div>
     <h1>KLGCC Mall LG car park, with ParkFlow</h1>
     <p class="sub">Our 9 Nov 2026 walkthrough of the LG level, rebuilt as a 3D digital twin. Before and after, how a Priority Zone booking is accepted, the machine learning behind it, the member booking flow and the admin dashboard.</p>
   </header>
@@ -43,6 +51,8 @@ video{display:block;width:100%;height:auto;aspect-ratio:16/9;max-width:100%}
   <div class="film">
     <video id="v" controls playsinline preload="metadata" src="ParkFlow-KLGCC-demo.mp4"></video>
   </div>
+
+  <div class="speed" id="sp" role="group" aria-label="Playback speed"><span>Speed</span></div>
 
   <nav class="chapters" id="ch" aria-label="Chapters"></nav>
 
@@ -60,4 +70,11 @@ const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 const btns=CH.map(([s,n,k])=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="t">${fmt(s)}</span><span class="n${k?' key':''}">${n}</span>`;b.addEventListener('click',()=>{v.currentTime=s;v.play().catch(()=>{});});box.appendChild(b);return b;});
 v.addEventListener('timeupdate',()=>{let i=0;CH.forEach(([s],j)=>{if(v.currentTime>=s)i=j;});btns.forEach((b,j)=>b.classList.toggle('on',j===i));});
 btns[0].classList.add('on');
+// Playback speed: starts at 1.5x (about 1:57 instead of 2:55); browsers keep voice pitch natural.
+const SPEEDS=[1,1.25,1.5,1.75,2],DEF=1.5,sp=document.getElementById('sp');
+let rate=DEF;try{const s=parseFloat(localStorage.getItem('pf-speed'));if(SPEEDS.includes(s))rate=s;}catch(e){}
+const sbtn=SPEEDS.map(r=>{const b=document.createElement('button');b.type='button';b.textContent=r+'×';b.addEventListener('click',()=>setRate(r));sp.appendChild(b);return [r,b];});
+function setRate(r){rate=r;v.playbackRate=r;v.defaultPlaybackRate=r;sbtn.forEach(([x,b])=>b.setAttribute('aria-pressed',String(x===r)));try{localStorage.setItem('pf-speed',String(r));}catch(e){}}
+v.addEventListener('loadedmetadata',()=>setRate(rate));v.addEventListener('play',()=>{if(v.playbackRate!==rate)v.playbackRate=rate;});
+setRate(rate);
 </script>
