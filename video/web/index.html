@@ -43,13 +43,13 @@ video{display:block;width:100%;height:auto;aspect-ratio:16/9;max-width:100%}
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">ParkFlow · prototype video · 2:55, about 2 min at 1.5×</div>
+    <div class="eyebrow">ParkFlow · prototype video · 2:00</div>
     <h1>KLGCC Mall LG car park, with ParkFlow</h1>
     <p class="sub">Our 9 Nov 2026 walkthrough of the LG level, rebuilt as a 3D digital twin. Before and after, how a Priority Zone booking is accepted, the machine learning behind it, the member booking flow and the admin dashboard.</p>
   </header>
 
   <div class="film">
-    <video id="v" controls playsinline preload="metadata" src="ParkFlow-KLGCC-demo.mp4"></video>
+    <video id="v" controls playsinline preload="metadata" src="ParkFlow-KLGCC-demo-2min.mp4"></video>
   </div>
 
   <div class="speed" id="sp" role="group" aria-label="Playback speed"><span>Speed</span></div>
@@ -64,17 +64,18 @@ video{display:block;width:100%;height:auto;aspect-ratio:16/9;max-width:100%}
 </div>
 
 <script>
-const CH=[[0,'Intro'],[5,'Before vs after',1],[50,'How a booking is accepted',1],[65,'Booking lifecycle',1],[82,'Prices and fair use',1],[95,'Machine learning'],[115,'Member booking flow'],[145,'Admin dashboard'],[170,'Close']];
+// Chapter times for the 2:00 cut (the 2:55 film sped up 1.46x).
+const CH=[[0,'Intro'],[3,'Before vs after',1],[34,'How a booking is accepted',1],[45,'Booking lifecycle',1],[56,'Prices and fair use',1],[65,'Machine learning'],[79,'Member booking flow'],[99,'Admin dashboard'],[117,'Close']];
 const v=document.getElementById('v'),box=document.getElementById('ch');
 const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 const btns=CH.map(([s,n,k])=>{const b=document.createElement('button');b.type='button';b.innerHTML=`<span class="t">${fmt(s)}</span><span class="n${k?' key':''}">${n}</span>`;b.addEventListener('click',()=>{v.currentTime=s;v.play().catch(()=>{});});box.appendChild(b);return b;});
 v.addEventListener('timeupdate',()=>{let i=0;CH.forEach(([s],j)=>{if(v.currentTime>=s)i=j;});btns.forEach((b,j)=>b.classList.toggle('on',j===i));});
 btns[0].classList.add('on');
-// Playback speed: starts at 1.5x (about 1:57 instead of 2:55); browsers keep voice pitch natural.
-const SPEEDS=[1,1.25,1.5,1.75,2],DEF=1.5,sp=document.getElementById('sp');
-let rate=DEF;try{const s=parseFloat(localStorage.getItem('pf-speed'));if(SPEEDS.includes(s))rate=s;}catch(e){}
+// Playback speed: the file is already the 2:00 cut, so it starts at 1x.
+const SPEEDS=[1,1.25,1.5,1.75,2],DEF=1,sp=document.getElementById('sp');
+let rate=DEF;try{const s=parseFloat(localStorage.getItem('pf-speed-2min'));if(SPEEDS.includes(s))rate=s;}catch(e){}
 const sbtn=SPEEDS.map(r=>{const b=document.createElement('button');b.type='button';b.textContent=r+'×';b.addEventListener('click',()=>setRate(r));sp.appendChild(b);return [r,b];});
-function setRate(r){rate=r;v.playbackRate=r;v.defaultPlaybackRate=r;sbtn.forEach(([x,b])=>b.setAttribute('aria-pressed',String(x===r)));try{localStorage.setItem('pf-speed',String(r));}catch(e){}}
+function setRate(r){rate=r;v.playbackRate=r;v.defaultPlaybackRate=r;sbtn.forEach(([x,b])=>b.setAttribute('aria-pressed',String(x===r)));try{localStorage.setItem('pf-speed-2min',String(r));}catch(e){}}
 v.addEventListener('loadedmetadata',()=>setRate(rate));v.addEventListener('play',()=>{if(v.playbackRate!==rate)v.playbackRate=rate;});
 setRate(rate);
 </script>
