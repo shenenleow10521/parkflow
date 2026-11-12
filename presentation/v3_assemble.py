@@ -17,10 +17,10 @@ acc = [r['fulfilled'] + r['noshow'] + r['expired'] for r in sweep]
 G = {s: sum(r[f'gross_per_day_s{s}'] / a for r, a in zip(sweep, acc)) / len(sweep) for s in (30, 50, 70)}  # gross RM per accepted booking
 def contrib(n, s): return n * G[s] * 365 * NET - RUN
 def need(n_years, s): return (RUN + (CAPEX / n_years if n_years else 0)) / (G[s] * 365 * NET)
-THR = {sh: (need(0, sh), need(5, sh), need(3, sh)) for sh in (30, 50, 70)}
+THR = {sh: (need(0, sh), need(3, sh), need(2, sh)) for sh in (30, 50, 70)}
 rows_n = acc[:4]
-be_op, be_5, be_3 = need(0, 50), need(5, 50), need(3, 50)
-low = contrib(rows_n[0], 50); gap = max(0, CAPEX / 5 - low)
+be_op, be_3, be_2 = need(0, 50), need(3, 50), need(2, 50)   # bookings a day for 3-year and 2-year recovery
+low = contrib(rows_n[0], 50); gap = max(0, CAPEX / 3 - low)
 gto_hi, gto_lo = gap / .05, gap / .15
 fee_mix = 23_430 / 5_077.5
 vo_5, vo_15 = fee_mix / (260 * .05), fee_mix / (260 * .15)
@@ -86,7 +86,7 @@ edit('team', ('building a member parking proposition', 'building a parking propo
 edit('roadmap',
      ('2 new zone LPR cameras, LED sign, works', 'Blind-spot CCTV (if surveyed), display, works'),
      ('CAPEX RM80.0k', f'CAPEX RM{CAPEX/1000:.1f}k'),
-     ('hardware &amp; works RM20.0k + integration RM60.0k', f'hardware &amp; works RM{(CAPEX-INTEGRATION)/1000:.1f}k + integration RM{INTEGRATION/1000:.1f}k'))
+     ('hardware &amp; works RM20.0k + integration RM60.0k', f'hardware &amp; works RM{(CAPEX-INTEGRATION)/1000:.1f}k + third-party integration RM{INTEGRATION/1000:.1f}k'))
 D['decision'] = D['decision'].replace('<a href="../presentation/consulting_v2_finance.py">V2 calculation</a>; <a href="financial-sources.md">Sources, scope and unresolved costs</a>', '<a href="../analysis/v3_zone200.py">V3 simulation</a>; data register in the appendix')
 D['roadmap'] = D['roadmap'].replace('<a href="../presentation/consulting_v2_finance.py">V2 calculation</a>; <a href="financial-sources.md">Sources, scope and unresolved costs</a>', '<a href="../analysis/v3_zone200.py">V3 simulation</a>; data register in the appendix')
 edit('pilot-design',
@@ -196,7 +196,7 @@ D['revenue'] = new('revenue', 'Booking revenue model', 'Business', 'false', 'Com
 <section><h3 class="module-title red">Annual contribution by volume and member share</h3>
 <table class="v3-tbl v3-sens"><thead><tr><th>Accepted bookings</th><th>30% members</th><th>50% members</th><th>70% members</th></tr></thead><tbody>{sens}</tbody></table>
 <p class="v3-note">After 6% SST, 20% operator allocation, card fees and RM10.5k running; payback on RM{CAPEX/1000:.1f}k upfront. Capacity at 200 bays {M} · volume and member share {A}</p></section></div>
-<div class="v3-sowhat"><span>So what</span><p>At 50% members, about <b>{be_op:.0f} bookings a day</b> cover running cost, <b>{be_5:.0f}</b> recover the capital in 5 years and <b>{be_3:.0f}</b> in 3. Capacity is not the limit: <b>demand and willingness to pay are</b>.</p></div>''',
+<div class="v3-sowhat"><span>So what</span><p>At 50% members, about <b>{be_op:.0f} paying customers a day</b> (one booking each) cover running cost, <b>{be_3:.0f}</b> recover the capital in 3 years and <b>{be_2:.0f}</b> in 2: about <b>{be_op*30:.0f}, {be_3*30:.0f} and {be_2*30:.0f} a month</b>. Capacity is not the limit: <b>demand and willingness to pay are</b>.</p></div>''',
     'Contribution = accepted bookings × gross per booking × 365 × net factor − running cost, from the 200-bay simulation. Volume and member share are scenarios; the 20% operator share is unagreed. Derivation: appendix.')
 
 bars = [('Software and integration', INTEGRATION, 'a', f'RM{DAY_RATE:.0f}/day × {BUILD_DAYS:.0f} days; quote before G1'),
@@ -214,17 +214,17 @@ D['cost'] = new('cost', 'KLGCC zone cost', 'Business', 'false', 'Cost per zone',
 <aside><h3 class="module-title">Other malls: same template, different inputs</h3>
 <ol class="v3-ready"><li><b>LPR at the zone?</b><span>If absent: +RM3.2k per camera</span></li><li><b>Counts from LPR?</b><span>If not: add a counting method</span></li><li><b>CCTV blind spots?</b><span>0 / 4 / 10 cameras = RM0 / {N_CAM*CAM/1000:.0f}k / {10*CAM/1000:.0f}k</span></li><li><b>Member API and payment?</b><span>Drives the integration quote</span></li></ol>
 <p class="v3-note">The platform build is paid once; later malls pay site integration only.</p></aside></div>
-<div class="v3-sowhat"><span>So what</span><p>Integration is <b>{INTEGRATION/CAPEX*100:.0f}% of upfront cost</b> and is an effort estimate, not a quote: that is the biggest risk. A pilot-scope build is about <b>RM{PILOT_BUILD/1000:.0f}k</b>.</p></div>''',
+<div class="v3-sowhat"><span>So what</span><p>Third-party items are <b>{INTEGRATION/CAPEX*100:.0f}% of upfront cost</b> and are allowances, not quotes. The in-house build (about <b>RM{INHOUSE_VALUE/1000:.0f}k</b> at market rate) is not charged: SDP is assumed to have the talent.</p></div>''',
     'Later malls pay site integration only; the platform build is paid once. Sources: <a href="https://viskou.my/products/outdoorledguidancedisplayds-tvl224-4-5y2rows">Viskou display</a>; <a href="https://mall.lapasar.com/office-management/it-electronics/products/hikvision-ds-2cd2046g2-iusl-4mp/121">Hikvision 4MP</a>; <a href="https://www.payscale.com/research/MY/Job=Senior_Software_Developer/Salary">Payscale</a>; <a href="https://aws-pricing.com/ap-southeast-5.html">AWS Malaysia</a>. Effort days, cable run and labour are assumptions. Who funds the build is not yet agreed: these are zone costs, not a quote. Derivation: appendix.')
 
 D['value'] = new('value', 'Value to SDP', 'Business', 'false', 'Value to SDP',
     'For SDP, the bar is <em>low</em>; the evidence is directional.',
     f'''<div class="v3-val">
-<article><span class="v3-eyebrow">GTO break-even</span><b>RM{gto_lo/1000:.0f}–{gto_hi/1000:.0f}k</b><p>extra eligible tenant sales a year closes the 5-year capital gap at 15% to 5% rent clauses, in the low-volume case (≈{rows_n[0]:.0f} bookings/day, 50% members).</p><div class="v3-meas"><b>Pilot measure</b>Eligible tenant sales of members versus control, tenant by tenant and above the rent floor.</div></article>
+<article><span class="v3-eyebrow">GTO break-even</span><b>RM{gto_lo/1000:.0f}–{gto_hi/1000:.0f}k</b><p>extra eligible tenant sales a year closes the 3-year capital gap at 15% to 5% rent clauses, in the low-volume case (≈{rows_n[0]:.0f} bookings/day, 50% members).</p><div class="v3-meas"><b>Pilot measure</b>Eligible tenant sales of members versus control, tenant by tenant and above the rent floor.</div></article>
 <article><span class="v3-eyebrow">Voucher break-even</span><b>1 in {1/vo_5:.0f}–{1/vo_15:.0f}</b><p>voucher holders must make a visit they would not otherwise make for a RM{fee_mix:.1f} voucher to pay back through turnover rent.</p><div class="v3-meas"><b>Pilot measure</b>Voucher redemption, and the share of holders whose return visit is incremental versus control.</div></article>
 <article><span class="v3-eyebrow">Spend gap · association only</span><div class="v3-cmp"><div><i style="height:{195/327*100:.0f}%"></i><span>RM195<small>1–2 visits / month</small></span></div><div><i class="hi" style="height:100%"></i><span>RM327<small>5+ visits / month</small></span></div></div><p>Recalled trip spend, +68%. It does not show that parking causes either.</p><div class="v3-meas"><b>Pilot measure</b>30/60/90-day return rate and visits per member versus an eligible control cohort.</div></article></div>
 <div class="v3-sowhat"><span>Caveat</span><p>Gross turnover rent has a floor: extra sales below it add <b>zero</b> rent. Count it tenant by tenant, and net out vouchers, support and displacement before calling it profit.</p></div>''',
-    f'Gap = RM{CAPEX/1000:.1f}k ÷ 5 − RM{low/1000:.1f}k contribution. Sales needed = gap ÷ rent rate. Sources: <a href="https://www.vase.ai/resources/insights-report/malaysia-shopping-mall-report-2026">Vase.ai (N=500)</a>; <a href="https://www.insage.com.my/BursaNews/Attachment/202412/20241203/TROP-AN20241203A3-1.pdf#page=32">Tropicana lease terms</a>; <a href="https://www.simedarbyproperty.com/sites/default/files/2024-05/Reply%20Letter%20to%20MSWG%20%2817052024%29.pdf">SDP reply to MSWG</a>. No SDP-specific rent rate or retention effect is claimed. Derivation: appendix.')
+    f'Gap = RM{CAPEX/1000:.1f}k ÷ 3 − RM{low/1000:.1f}k contribution. Sales needed = gap ÷ rent rate. Sources: <a href="https://www.vase.ai/resources/insights-report/malaysia-shopping-mall-report-2026">Vase.ai (N=500)</a>; <a href="https://www.insage.com.my/BursaNews/Attachment/202412/20241203/TROP-AN20241203A3-1.pdf#page=32">Tropicana lease terms</a>; <a href="https://www.simedarbyproperty.com/sites/default/files/2024-05/Reply%20Letter%20to%20MSWG%20%2817052024%29.pdf">SDP reply to MSWG</a>. No SDP-specific rent rate or retention effect is claimed. Derivation: appendix.')
 
 reg = [('Reservation fee RM4 weekday / RM5 peak', A, 'Price test. Local anchor: Sunway ParkEasy reservations reported at 6–8 credits (RM1 each) per booking; verify current price.'),
        ('Standard parking bill', S, 'KLGCC official tariff: RM3 weekday; weekend RM3 to 3h, then RM2/h, cap RM10.'),
@@ -235,7 +235,7 @@ reg = [('Reservation fee RM4 weekday / RM5 peak', A, 'Price test. Local anchor: 
        ('LPR and CCTV at KLGCC', S, 'Team Hexa site visit, 9 Nov 2026. Vendor, data access and blind spots unconfirmed.'),
        ('CCTV and site works', A, f'RM{CAM:,} a camera = RM{CAM_HW} camera (sourced) + RM{CAM_CABLE} cable (RM100 per 10 m, 40 m assumed, unverified) + RM{CAM_LABOUR} labour (half-day, assumed). Power, network and works RM{WORKS:,} is a flat allowance for switch, UPS, trunking and signage; no survey yet.'),
        ('LPR miss rate 0.5–3%', M, 'Count-drift simulation; real read accuracy is a pilot measurement.'),
-       (f'Software RM{INTEGRATION/1000:.1f}k, running RM{RUN/1000:.1f}k/yr', A, f'{BUILD_DAYS:.0f} person-days × RM{DAY_RATE:.0f}/day; running = 15% of build + hosting. Appendix.'),
+       (f'Third-party software items RM{INTEGRATION/1000:.1f}k, running RM{RUN/1000:.1f}k/yr', A, f'Vendor interface and gateway/pen-test allowances; no quotes yet. In-house build ({BUILD_DAYS:.0f} person-days × RM{DAY_RATE:.0f} = RM{INHOUSE_VALUE/1000:.1f}k at market rate) is not charged. Running = 15% of third-party build + hosting. Appendix.'),
        ('Service tax on the booking fee', S, 'Parking is taxed at 6% (Customs guide). A reservation fee is not listed as exempt; treated as tax-inclusive: conservative.'),
        ('Willingness to pay', A, 'Directional only: ParkMobile 67% (US). No local test; first pilot measure.')]
 D['a-register'] = compact('a-register', 'Data register', 'Data register: what is sourced, simulated or assumed',
@@ -243,23 +243,23 @@ D['a-register'] = compact('a-register', 'Data register', 'Data register: what is
     + ''.join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td></tr>' for a, b, c in reg) + '</tbody></table>',
     'Order of preference: web sources, then simulation, then assumptions as a last resort. Web-derived items come from search results and must be opened and checked before submission. Nothing here is a measured KLGCC demand or price response.')
 
+ext_rows = ''.join(f'<tr><td>{n}</td><td>{v:,}</td></tr>' for n, v in EXTERNAL)
 rows_w = ''.join(f'<tr><td>{n}</td><td>{d}</td><td>{pd_}</td></tr>' for n, d, pd_ in WBS)
 D['a-build-estimate'] = compact('a-build-estimate', 'Build effort and running cost', 'How the software and running costs are derived',
     f'''<div class="cols"><div class="col"><h3 class="module-title">Work breakdown · person-days (assumed effort)</h3>
 <table><colgroup><col style="width:58%"/><col style="width:22%"/><col style="width:20%"/></colgroup><thead><tr><th>Work package</th><th>Production</th><th>Pilot</th></tr></thead><tbody>{rows_w}
 <tr><td>Project management and QA, +{PM_UPLIFT*100:.0f}%</td><td>{BUILD_DAYS-sum(w[1] for w in WBS):.1f}</td><td>{PILOT_DAYS-sum(w[2] for w in WBS):.1f}</td></tr>
 <tr><td><b>Total person-days</b></td><td><b>{BUILD_DAYS:.0f}</b></td><td><b>{PILOT_DAYS:.0f}</b></td></tr>
-<tr><td><b>× RM{DAY_RATE:.0f} a day</b></td><td><b>RM{INTEGRATION:,.0f}</b></td><td><b>RM{PILOT_BUILD:,.0f}</b></td></tr></tbody></table>
+<tr><td><b>× RM{DAY_RATE:.0f} a day: market value, not charged</b></td><td><b>RM{INHOUSE_VALUE:,.0f}</b></td><td><b>RM{PILOT_BUILD:,.0f}</b></td></tr></tbody></table>
 <p class="note"><b>Cross-checks.</b> Vendor pages price a comparable app (payment, admin) at RM50–150k, which includes their margin; the prototype here already exists. Payment integration takes 2–3 weeks per vendor guidance (we use 12 days). Surveys put average software overrun at 30–40%: the high-end range adds {OVERRUN*100:.0f}%. All maintenance, enhancements included, would be 30% of build a year (running RM{RUN_ALL/1000:.1f}k).</p></div>
-<div class="col"><h3 class="module-title">Day rate · sourced inputs</h3>
-<table><colgroup><col style="width:74%"/><col style="width:26%"/></colgroup><thead><tr><th>Step</th><th>Value</th></tr></thead><tbody>
-<tr><td>Senior software developer, annual base (Payscale, 2026)</td><td>RM{SALARY:,}</td></tr>
-<tr><td>Employer on-costs: EPF 12% + SOCSO/EIS (capped)</td><td>+{ONCOST*100:.0f}%</td></tr>
-<tr><td>Productive days a year (assumed)</td><td>{PROD_DAYS}</td></tr>
-<tr><td><b>Cost per person-day, no agency margin</b></td><td><b>RM{DAY_RATE:.0f}</b></td></tr></tbody></table>
+<div class="col"><h3 class="module-title">In-house build: market value, not charged</h3>
+<p class="note">RM{SALARY:,} a year (Payscale, 2026) + {ONCOST*100:.0f}% employer on-costs (EPF, SOCSO/EIS) ÷ {PROD_DAYS} productive days (assumed) = <b>RM{DAY_RATE:.0f} a person-day</b>, no agency margin. Shown for transparency only: SDP is assumed to have the talent.</p>
+<h3 class="module-title">Third-party cash items (assumed allowances)</h3>
+<table><colgroup><col style="width:74%"/><col style="width:26%"/></colgroup><thead><tr><th>Item</th><th>RM</th></tr></thead><tbody>
+{ext_rows}<tr><td><b>Software cash cost</b></td><td><b>{INTEGRATION:,.0f}</b></td></tr></tbody></table>
 <h3 class="module-title">Running cost a year</h3>
 <table><colgroup><col style="width:74%"/><col style="width:26%"/></colgroup><thead><tr><th>Item</th><th>RM</th></tr></thead><tbody>
-<tr><td>Maintenance: {MAINT_RATE*100:.0f}% of build (derived, see note)</td><td>{MAINT_RATE*INTEGRATION:,.0f}</td></tr>
+<tr><td>Maintenance: {MAINT_RATE*100:.0f}% of third-party build (derived, see note)</td><td>{MAINT_RATE*INTEGRATION:,.0f}</td></tr>
 <tr><td>Hosting: 2 × t3.medium, AWS Malaysia, 24×7, at RM{USD_MYR}/USD</td><td>{HOSTING:,.0f}</td></tr>
 <tr><td><b>Running</b></td><td><b>{RUN:,.0f}</b></td></tr></tbody></table></div></div>''',
     'Effort per work package is an assumption: it is itemised so a vendor can replace each line with a quote. Payscale and AWS figures were opened and checked. Maintenance: studies put it at 60–90% of software cost; at the lowest, 60% over 5 years, that is 30% of build a year, and corrective plus adaptive work (45%) gives 13.6%, rounded up to 15%. Enhancements are excluded. A vendor quote would add its margin on top of this cost basis.')
@@ -270,9 +270,9 @@ D['a-method-notes'] = compact('a-method-notes', 'Commercial and value derivation
 <li><b>Service tax 6%:</b> parking is taxed at 6% (Customs guide). A reservation fee is not listed as exempt, so the fee is treated as tax-inclusive. If untaxed, contribution is about 6% higher.</li>
 <li><b>Gross per booking:</b> RM{G[50]:.2f} at 50% members, from the 200-bay simulation (40 synthetic days per volume; deposits credited to members’ bills).</li>
 <li><b>Displaced parking revenue:</b> cars sent to other levels pay the same KLGCC tariff, so only walk-ins who leave the mall are a loss. The pilot measures it.</li>
-<li><b>Break-even at 50% members:</b> running cost at {be_op:.0f} bookings a day, 5-year recovery at {be_5:.0f}, 3-year at {be_3:.0f}.</li></ul></div>
+<li><b>Break-even at 50% members:</b> running cost at {be_op:.0f} paying customers (bookings) a day, 3-year recovery at {be_3:.0f}, 2-year at {be_2:.0f}; customers a month = daily bookings × 30.</li></ul></div>
 <div class="col"><h3 class="module-title">Value to SDP · slide 12</h3><ul>
-<li><b>Gap:</b> RM{CAPEX/1000:.1f}k ÷ 5 − RM{low/1000:.1f}k contribution at ≈{rows_n[0]:.0f} bookings a day = RM{gap/1000:.1f}k a year.</li>
+<li><b>Gap:</b> RM{CAPEX/1000:.1f}k ÷ 3 − RM{low/1000:.1f}k contribution at ≈{rows_n[0]:.0f} bookings a day = RM{gap/1000:.1f}k a year.</li>
 <li><b>Sales needed:</b> gap ÷ rent clause (5–15%, Tropicana valuation) = RM{gto_lo/1000:.0f}k–{gto_hi/1000:.0f}k. Turnover rent has a floor: extra sales below it add zero.</li>
 <li><b>Voucher:</b> RM{fee_mix:.1f} fee forgone per booking (RM23,430 gross ÷ 5,077.5 paid bookings in the reference mix; an upper bound, as members’ fee is credited) ÷ (RM260 mean recalled trip spend × rent clause).</li>
 <li><b>Spend gap:</b> RM195 against RM327 recalled trip spend (Vase.ai, N=500), +68%. Association only.</li>
@@ -338,24 +338,25 @@ def _axes(W, H, L, R, T, B, X, Y, xt, yt, xfmt, yfmt, xtitle, ytitle):
 
 def rev_chart():
     W, H, L, R, T, B = 760, 420, 62, 168, 14, 44
-    xmax, ymin, ymax = 120, -20000, 120000
+    xmax, ymin = 80, -20000
+    ymax = int(math.ceil(contrib(xmax, 30) / 20000) * 20000)
     X = lambda n: L + (W - L - R) * n / xmax
     Y = lambda v: T + (H - T - B) * (ymax - v) / (ymin * -1 + ymax)
     k = lambda v: f'{"−" if v < 0 else ""}{abs(v)//1000}k'
-    o = [f'<svg class="v3-ch" viewBox="0 0 {W} {H}" role="img" aria-label="Annual contribution against accepted bookings per day, for 30, 50 and 70 percent member share. At 50 percent members, running cost is covered at {be_op:.0f} bookings a day and capital is recovered in 5 years at {be_5:.0f} and in 3 years at {be_3:.0f}.">']
-    o += _axes(W, H, L, R, T, B, X, Y, range(0, 121, 20), range(-20000, 120001, 20000), lambda v: str(v), k, 'Accepted bookings per day', 'Annual contribution, RM')
+    o = [f'<svg class="v3-ch" viewBox="0 0 {W} {H}" role="img" aria-label="Annual contribution against accepted bookings per day, for 30, 50 and 70 percent member share. At 50 percent members, running cost is covered at {be_op:.0f} bookings a day and capital is recovered in 3 years at {be_3:.0f} and in 2 years at {be_2:.0f}.">']
+    o += _axes(W, H, L, R, T, B, X, Y, range(0, xmax + 1, 10), range(-20000, ymax + 1, 20000), lambda v: str(v), k, 'Accepted bookings per day', 'Annual contribution, RM')
     o.append(f'<line x1="{L}" x2="{W-R}" y1="{Y(0):.1f}" y2="{Y(0):.1f}" stroke="{NAVY}" stroke-width="1.5"/>')
     o.append(f'<text x="{W-R-4}" y="{Y(0)+15:.1f}" text-anchor="end" class="ref0">running cost covered</text>')
-    for v, name in ((CAPEX / 5, '5-year recovery'), (CAPEX / 3, '3-year recovery')):
+    for v, name in ((CAPEX / 3, '3-year recovery'), (CAPEX / 2, '2-year recovery')):
         o.append(f'<line x1="{L}" x2="{W-R}" y1="{Y(v):.1f}" y2="{Y(v):.1f}" stroke="{RED}" stroke-width="1.2" stroke-dasharray="5 4"/>')
         o.append(f'<text x="{W-R-4}" y="{Y(v)-5:.1f}" text-anchor="end" class="ref">{name} · RM{v/1000:.1f}k</text>')
     for sh, col, lab in ((30, STEEL, '30% members'), (50, RED, '50% members'), (70, NAVY, '70% members')):
-        pts = ' '.join(f'{X(n):.1f},{Y(contrib(n, sh)):.1f}' for n in range(0, 121, 2))
+        pts = ' '.join(f'{X(n):.1f},{Y(contrib(n, sh)):.1f}' for n in range(0, xmax + 1, 2))
         o.append(f'<polyline points="{pts}" fill="none" stroke="{col}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><title>{lab}: RM{contrib(rows_n[0],sh)/1000:.1f}k at {rows_n[0]:.0f}/day, RM{contrib(rows_n[2],sh)/1000:.1f}k at {rows_n[2]:.0f}/day</title></polyline>')
-        ye = Y(contrib(120, sh))
+        ye = Y(contrib(xmax, sh))
         o.append(f'<circle cx="{W-R+10}" cy="{ye:.1f}" r="5" fill="{col}"/><text x="{W-R+20}" y="{ye+4.5:.1f}" class="lab">{lab}</text>')
-    for n, v in ((be_op, 0), (be_5, CAPEX / 5), (be_3, CAPEX / 3)):
-        o.append(f'<circle cx="{X(n):.1f}" cy="{Y(v):.1f}" r="6" fill="{RED}" stroke="#fff" stroke-width="2"><title>{n:.0f} bookings/day at 50% members</title></circle>')
+    for n, v in ((be_op, 0), (be_3, CAPEX / 3), (be_2, CAPEX / 2)):
+        o.append(f'<circle cx="{X(n):.1f}" cy="{Y(v):.1f}" r="6" fill="{RED}" stroke="#fff" stroke-width="2"><title>{n:.0f} bookings/day at 50% members</title></circle><text x="{X(n)+11:.1f}" y="{Y(v)+22:.1f}" class="ref" font-weight="800" stroke="#fff" stroke-width="4" paint-order="stroke">{n:.0f} a day</text>')
     o.append('</svg>')
     return ''.join(o)
 
@@ -406,7 +407,7 @@ D['revenue'] = new('revenue', 'Booking revenue model', 'Business', 'false', '', 
 <p class="v3-note">Booking fee RM4 weekday, RM5 weekend. A member’s fee is credited to the parking bill, so only any excess counts. A no-show pays the fee, like a non-member.</p></section>
 <section><h3 class="module-title red">Annual contribution by volume and member share</h3>{rev_chart()}
 <p class="v3-note">After 6% SST, 20% operator share, card fees and RM10.5k running cost.</p></section></div>
-<div class="v3-sowhat"><span>So what</span><p>At 50% members, about <b>{be_op:.0f} bookings a day</b> cover running cost, <b>{be_5:.0f}</b> recover the capital in 5 years and <b>{be_3:.0f}</b> in 3. Capacity is not the limit: <b>demand and willingness to pay are</b>.</p></div>""",
+<div class="v3-sowhat"><span>So what</span><p>At 50% members, about <b>{be_op:.0f} paying customers a day</b> (one booking each) cover running cost, <b>{be_3:.0f}</b> recover the capital in 3 years and <b>{be_2:.0f}</b> in 2: about <b>{be_op*30:.0f}, {be_3*30:.0f} and {be_2*30:.0f} a month</b>. Capacity is not the limit: <b>demand and willingness to pay are</b>.</p></div>""",
     'Contribution = accepted bookings × gross per booking × 365 × net factor − running cost, from the 200-bay simulation. Volume and member share are scenarios; the 20% operator share is unagreed. Derivation: appendix.')
 
 # ---- value: rent-versus-sales chart replaces the big numbers
@@ -421,10 +422,10 @@ D['value'] = new('value', 'Value to SDP', 'Business', 'false', '', 'For SDP the 
 <div class="vz-row"><span>1–2 visits / month</span>{bar(195/327*100, '#9aa8bb')}<b>RM195</b></div><div class="vz-row"><span>5+ visits / month</span>{bar(100, RED)}<b>RM327</b></div>
 <p class="vz-note">Recalled trip spend, +68%. Association only, not proof that parking causes it.</p></section></div></div>
 <div class="v3-sowhat"><span>Caveat</span><p>Gross turnover rent has a floor: extra sales below it add <b>zero</b> rent. Count it tenant by tenant, and net out vouchers, support and displacement before calling it profit.</p></div>""",
-    f'Gap = RM{CAPEX/1000:.1f}k ÷ 5 − RM{low/1000:.1f}k contribution. Sales needed = gap ÷ rent rate. Sources: <a href="https://www.vase.ai/resources/insights-report/malaysia-shopping-mall-report-2026">Vase.ai (N=500)</a>; <a href="https://www.insage.com.my/BursaNews/Attachment/202412/20241203/TROP-AN20241203A3-1.pdf#page=32">Tropicana lease terms</a>; <a href="https://www.simedarbyproperty.com/sites/default/files/2024-05/Reply%20Letter%20to%20MSWG%20%2817052024%29.pdf">SDP reply to MSWG</a>. No SDP-specific rent rate or retention effect is claimed. Derivation: appendix.')
+    f'Gap = RM{CAPEX/1000:.1f}k ÷ 3 − RM{low/1000:.1f}k contribution. Sales needed = gap ÷ rent rate. Sources: <a href="https://www.vase.ai/resources/insights-report/malaysia-shopping-mall-report-2026">Vase.ai (N=500)</a>; <a href="https://www.insage.com.my/BursaNews/Attachment/202412/20241203/TROP-AN20241203A3-1.pdf#page=32">Tropicana lease terms</a>; <a href="https://www.simedarbyproperty.com/sites/default/files/2024-05/Reply%20Letter%20to%20MSWG%20%2817052024%29.pdf">SDP reply to MSWG</a>. No SDP-specific rent rate or retention effect is claimed. Derivation: appendix.')
 
 # ---- cost: donut + legend replaces the bar list
-slices = [('Software and integration', INTEGRATION, RED, 'a', f'RM{DAY_RATE:.0f}/day × {BUILD_DAYS:.0f} days; quote before G1'),
+slices = [('Third-party integration and security', INTEGRATION, RED, 'a', 'Vendor interface + gateway and pen test; in-house build not charged'),
           ('Blind-spot CCTV, 4 cameras', N_CAM * CAM, NAVY, 'a', f'RM{CAM:,} each; quote after survey'),
           ('Power, network and works', 7_500, STEEL, 'a', 'Allowance; survey firms it up'),
           ('Guidance display (optional)', 2_033, '#c5ced9', 's', 'Viskou list price, tax extra')]
@@ -437,10 +438,10 @@ D['cost'] = new('cost', 'KLGCC zone cost', 'Business', 'false', '', f'KLGCC zone
 <div class="v3-total"><span>Total upfront</span><b>RM{CAPEX:,}</b><em>range RM{CAPEX_LO/1000:.1f}k to RM{CAPEX_HI/1000:.1f}k (high: 10 cameras, +{OVERRUN*100:.0f}% overrun)</em></div>
 <p class="v4-unpriced"><b>Not yet priced</b> gate work and equipment SST.</p></section>
 <aside><h3 class="module-title red v4-band"><b>OPEX</b><span>Recurring, every year</span></h3>
-<p class="v3-note v3-frame">Hosting is priced; maintenance is 15% of the build estimate, so it moves with it.</p>
-<div class="v3-runrow">{donut([('Maintenance', int(MAINT_RATE*INTEGRATION), RED), ('Hosting', HOSTING, NAVY)], RUN, size=210, r=72, sw=34, label='')}<ul class="v3-dleg v3-dleg--s"><li><i style="background:{RED}"></i><div><b>Maintenance</b><small>15% of the build a year</small></div><span>RM{int(MAINT_RATE*INTEGRATION):,}</span></li><li><i style="background:{NAVY}"></i><div><b>Hosting</b><small>2 servers, AWS Malaysia, 24×7</small></div><span>RM{HOSTING:,}{S}</span></li></ul></div><div class="v3-total"><span>Total running</span><b>RM{RUN:,} a year</b><em>maintenance 15% of the build, plus hosting</em></div>
+<p class="v3-note v3-frame">Hosting is priced; maintenance covers the third-party build only (15% a year). In-house support is not charged.</p>
+<div class="v3-runrow">{donut([('Maintenance', int(MAINT_RATE*INTEGRATION), RED), ('Hosting', HOSTING, NAVY)], RUN, size=210, r=72, sw=34, label='')}<ul class="v3-dleg v3-dleg--s"><li><i style="background:{RED}"></i><div><b>Maintenance</b><small>15% of third-party build a year</small></div><span>RM{int(MAINT_RATE*INTEGRATION):,}</span></li><li><i style="background:{NAVY}"></i><div><b>Hosting</b><small>2 servers, AWS Malaysia, 24×7</small></div><span>RM{HOSTING:,}{S}</span></li></ul></div><div class="v3-total"><span>Total running</span><b>RM{RUN:,} a year</b><em>maintenance 15% of third-party build, plus hosting</em></div>
 <p class="v4-unpriced"><b>Not yet priced</b> central support.</p></aside></div>
-<div class="v3-sowhat"><span>So what</span><p>Integration is <b>{INTEGRATION/CAPEX*100:.0f}% of upfront cost</b> and is an effort estimate, not a quote: that is the biggest risk. A pilot-scope build is about <b>RM{PILOT_BUILD/1000:.0f}k</b>.</p></div>""",
+<div class="v3-sowhat"><span>So what</span><p>Third-party items are <b>{INTEGRATION/CAPEX*100:.0f}% of upfront cost</b> and are allowances, not quotes. The in-house build (about <b>RM{INHOUSE_VALUE/1000:.0f}k</b> at market rate) is not charged: SDP is assumed to have the talent.</p></div>""",
     'Later malls pay site integration only; the platform build is paid once. Sources: <a href="https://viskou.my/products/outdoorledguidancedisplayds-tvl224-4-5y2rows">Viskou display</a>; <a href="https://mall.lapasar.com/office-management/it-electronics/products/hikvision-ds-2cd2046g2-iusl-4mp/121">Hikvision 4MP</a>; <a href="https://www.payscale.com/research/MY/Job=Senior_Software_Developer/Salary">Payscale</a>; <a href="https://aws-pricing.com/ap-southeast-5.html">AWS Malaysia</a>. Effort days, cable run and labour are assumptions. Who funds the build is not yet agreed: these are zone costs, not a quote. Derivation: appendix.')
 
 LABELS = {'team': 'The team', 'problem': 'Problem statement', 'alternatives': 'Market context', 'service': 'Introducing ParkFlow', 'member': 'Prototype demo',
@@ -594,7 +595,7 @@ TITLES['integration'] = 'Three site checks come <em>before any capex</em>'
 # ---- pilot slide now carries the ask
 D['pilot-design'] = D['pilot-design'].replace('<em>Month-6 review</em>', '<em>Month-6 review, then other SDP malls</em>', 1)
 D['pilot-design'] = D['pilot-design'].replace('</div><div class="source">',
-    '<div class="v3-ask"><span>The ask</span><p>Nominate a KLGCC sponsor and operator counterpart, and enable the site survey, integration talks and baseline counts. <b>Reference upfront RM' + f'{CAPEX/1000:.1f}' + 'k</b> (range RM' + f'{CAPEX_LO/1000:.1f}–{CAPEX_HI/1000:.1f}' + 'k) plus RM10.5k a year. Pilot-scope software build alone: about <b>RM' + f'{PILOT_BUILD/1000:.0f}' + 'k</b> (assisted service, no barrier integration).</p></div></div><div class="source">', 1)
+    '<div class="v3-ask"><span>The ask</span><p>Nominate a KLGCC sponsor and operator counterpart, and enable the site survey, integration talks and baseline counts. <b>Reference upfront RM' + f'{CAPEX/1000:.1f}' + 'k</b> (range RM' + f'{CAPEX_LO/1000:.1f}–{CAPEX_HI/1000:.1f}' + 'k) plus RM10.5k a year. In-house build is not charged (about <b>RM' + f'{INHOUSE_VALUE/1000:.0f}' + 'k</b> at market rate).</p></div></div><div class="source">', 1)
 # pilot slide: Gantt replaces the phase arrows, cards and lane bars
 def gantt():
     rows = [('n', 'Member baseline, price and voucher arms', 'Loyalty', 1, 2), ('n', 'LPR counts, integration, guard readiness', 'Operator · IT', 1, 2),
@@ -665,10 +666,18 @@ LABELS['mechanism'] = 'How it works'
 ICON_OPEN = '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'
 STAT_ICONS = [
     ICON_OPEN + '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>',
-    ICON_OPEN + '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/><circle cx="18" cy="6" r="4.4" fill="#fff"/><path d="M15 9l6-6"/></svg>',
+    ICON_OPEN + '<path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>',
     ICON_OPEN + '<path d="M8 2v4M16 2v4"/><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M3 10h18"/><path d="m9 16 2 2 4-4"/></svg>']
 _it = iter(STAT_ICONS)
 D['problem'] = re.sub(r'(<div class="ps-num">.*?)<svg.*?</svg>', lambda m: m.group(1) + next(_it), D['problem'], flags=re.S)
+_ps = [('80%', 'of Malaysian urban trips rely on private vehicles; 87.3% drive alone in Klang Valley', 'MOT / Malay Mail, 2025; Cent-GPS'),
+       ('2.6<small>M</small>', 'users on Smart Selangor Parking, backed by 89%+ Malaysian smartphone adoption', 'UUM JDSD, 2025; MyGov')]
+_stats = re.findall(r'<div class="ps-stat">.*?</span></div>', D['problem'], re.S)
+for _old, (_n, _t, _src) in zip(_stats[1:3], _ps):
+    _new = re.sub(r'(<div class="ps-num"><b>).*?(</b>)', lambda m: m.group(1) + _n + m.group(2), _old, count=1, flags=re.S)
+    _new = re.sub(r'(</svg></div><p>).*?(</p><span>).*?(</span></div>)', lambda m: m.group(1) + _t + m.group(2) + _src + m.group(3), _new, count=1, flags=re.S)
+    D['problem'] = D['problem'].replace(_old, _new, 1)
+D['problem'] = re.sub(r'<div class="source">Sources: .*?</div>', lambda m: '<div class="source">Sources: <a href="https://says.com/my/news/people-in-kl-waste-this-much-time-everyday-looking-for-parking" rel="noopener" target="_blank">BCG for Uber (SAYS)</a> · <a href="https://www.malaymail.com/news/malaysia/2025/06/05/malaysias-public-transport-usage-only-at-20pc-says-transport-minister-as-he-pushes-road-to-rail-initiative/179305" rel="noopener" target="_blank">MOT / Malay Mail (2025)</a> · <a href="https://www.nst.com.my/news/nation/2019/11/535758/carpooling-survey-klang-valley-drivers-worst-world" rel="noopener" target="_blank">Cent-GPS / NST</a> · <a href="https://e-journal.uum.edu.my/index.php/jdsd/article/download/26472/4694/94189" rel="noopener" target="_blank">UUM Smart Selangor Parking Study (2025)</a>. Malaysian market benchmarks, not KLGCC measurements. Site photo: one Team Hexa visit, not a bay-occupancy count.</div>', D['problem'], count=1, flags=re.S)
 
 # service: new 3D whole-level layout with fresh leader lines
 D['service'] = D['service'].replace('assets/priority-zone-pilot-concept.png', 'assets/klgcc-zone-3d.webp')
@@ -915,7 +924,7 @@ D['a-method'] = rep_html(D['a-method'], 'Sources: <a href="../analysis/benchmark
 
 # appendix: deployment options, from the existing cost sheet (analysis/v3_costs.py); nothing new is priced here
 RUN_HI = int(round(MAINT_RATE * INTEGRATION * (1 + OVERRUN) + HOSTING, -2))
-def _need5(cap, run): return (run + cap / 5) / (G[50] * 365 * NET)
+def _need5(cap, run): return (run + cap / 3) / (G[50] * 365 * NET)
 def _pay(cap, run, n):
     c_ = contrib_opt(n, run)
     return f'{cap/c_:.1f} yr' if c_ > 0 else 'n/a'
@@ -928,13 +937,14 @@ _opts = [
 _orows = ''.join(f"<tr><td><b>{n}</b></td><td>RM{cap/1000:.1f}k</td><td>RM{run/1000:.1f}k</td><td>{_need5(cap, run):.0f}</td><td>{_pay(cap, run, rows_n[0])} / {_pay(cap, run, rows_n[1])}</td><td>{adds}</td><td>{risk}</td></tr>" for n, cap, run, adds, risk in _opts)
 _orows += '<tr><td><b>Bay-level sensing or a digital twin</b></td><td colspan="4">Not costed: no quote or source.</td><td>Per-bay occupancy and guidance.</td><td>Not tested. The guarantee here is checked at zone level from counts, not per bay.</td></tr>'
 D['a-options'] = compact('a-options', 'Deployment options', 'Deployment options: what each spends, earns and risks',
-    f"""<div class="v4-small"><table><thead><tr><th>Option</th><th>Upfront</th><th>Running a year</th><th>Bookings a day for 5-year recovery</th><th>Payback at {rows_n[0]:.0f} / {rows_n[1]:.0f} bookings a day</th><th>What it adds</th><th>Main risk</th></tr></thead><tbody>{_orows}</tbody></table>
-<p class="v4-lead" style="margin-top:10px;font-size:15.5px">What it earns is the same under every option: RM{G[50]:.2f} gross per accepted booking at 50% members, {NET:.3f} net of tax, operator share and card fees (slide 10). The options differ in cost and in how well the count can be trusted. Upfront cost is a scenario: RM{DAY_RATE:.0f}/day build rate sourced, effort and site works assumed, hardware from listed prices.</p></div>""",
+    f"""<div class="v4-small"><table><thead><tr><th>Option</th><th>Upfront</th><th>Running a year</th><th>Bookings a day for 3-year recovery</th><th>Payback at {rows_n[0]:.0f} / {rows_n[1]:.0f} bookings a day</th><th>What it adds</th><th>Main risk</th></tr></thead><tbody>{_orows}</tbody></table>
+<p class="v4-lead" style="margin-top:10px;font-size:15.5px">What it earns is the same under every option: RM{G[50]:.2f} gross per accepted booking at 50% members, {NET:.3f} net of tax, operator share and card fees (slide 10). The options differ in cost and in how well the count can be trusted. Upfront cost is a scenario: third-party items and site works assumed, in-house build not charged, hardware from listed prices.</p></div>""",
     'Derived from <a href="../analysis/v3_costs.py">v3_costs.py</a> (each input marked sourced, derived or assumed) and <a href="../analysis/v3_zone200.py">v3_zone200.py</a>. Break-even uses the same net factor and gross per booking as the revenue slide. Not a quote.')
 
 APX_TAKE = {
     'risk': 'A booking we cannot honour is refunded and logged as a failure; the pilot reports failed bookings per 100.',
     'a-guarantee': 'Keeping the simple rule\u2019s booking cap and adding the stay-risk check on walk-ins gave about 1 to 2% more score at near-zero failures.',
+    'a-edge': 'A surprised model can only make the zone more cautious, never less: verified counts decide every admission.',
     'a-robust': 'It scores higher in almost every world, but the failure ceiling must be recalibrated on pilot stay data.',
     'a-sim200': 'Capacity is not the limit at this scale: demand and willingness to pay are.',
     'a-options': 'Revenue is the same under every option; the choice is how much count accuracy to buy.',
@@ -985,11 +995,62 @@ SECTION = {'cover': 'Overview', 'team': 'Overview', 'problem': 'Overview', 'than
            'alternatives': 'Product', 'service': 'Product', 'member': 'Product', 'mechanism': 'Product', 'operator': 'Product', 'admission': 'Product', 'integration': 'Product',
            'paths': 'Business', 'revenue': 'Business', 'cost': 'Business', 'value': 'Business',
            'pilot-design': 'Implementation', 'decision': 'Implementation'}
-APPX = ['ml-stack', 'a-planner', 'a-buffer', 'risk', 'forecast', 'simulation', 'a-guarantee', 'a-robust', 'a-sim200', 'a-register', 'a-method-notes',
+APPX = ['a-index', 'ml-stack', 'a-planner', 'a-buffer', 'a-edge', 'risk', 'forecast', 'simulation', 'a-guarantee', 'a-robust', 'a-sim200', 'a-register', 'a-method-notes',
         'a-build-estimate', 'a-options', 'roadmap', 'horizons', 'scorecard', 'a-method', 'a-sources', 'a-sources-cost']
 for _k in ('member', 'admission', 'integration'):
     D[_k] = re.sub(r'<div class="v3-sowhat">.*?</p></div>', '', D[_k], flags=re.S)
 order = MAIN + APPX
+
+# ---- appendix: edge cases (events outside the training data)
+D['a-edge'] = compact('a-edge', 'Edge cases: events outside the training data', 'Unfamiliar events: live counts overrule the model',
+    f"""<div class="edge-flow">
+<article class="edge-step"><header><i>1</i><b>Detect<small>Notice the model is out of its depth</small></b></header><ul>
+<li><b>Arrival-rate shift:</b> a 30-minute sliding window of booking requests, smoothed, re-sets the buffer every 15-minute control cycle.</li>
+<li><b>Residual drift (out-of-distribution flag):</b> actuals outside the 80% prediction interval for k consecutive checks; a CUSUM test on forecast residuals {A}. Nominal coverage is 79.8% on holdout.</li>
+<li><b>Sensor drift:</b> LPR miss rate and plate-ledger reconciliation errors (ghost and unseen cars, p99) raise the uncertain-count flag.</li></ul></article>
+<article class="edge-step"><header><i>2</i><b>Contain<small>Commit less, automatically</small></b></header><ul>
+<li><b>Admission control:</b> an hourly booking cap limits commitments in a crowded window. Removing it cost up to 58 score a day in the stress test {M}</li>
+<li><b>Chance-constrained margin, z × σ:</b> expected occupancy plus z standard deviations must fit capacity at every 15-minute check; a wider σ accepts fewer bookings.</li>
+<li><b>Clamped reserve:</b> the walk-in buffer B = clamp(rate × hold time, floor, cap) rises to its 10% cap.</li></ul></article>
+<article class="edge-step"><header><i>3</i><b>Fall back<small>Never trust a forecast over a count</small></b></header><ul>
+<li><b>Count-gated admission:</b> verified counts decide entry; the plan is a monotone restriction and can never relax the gate.</li>
+<li><b>Fail-safe mode:</b> uncertain counts pause new commitments; assisted verification, egress preserved, incident logged.</li>
+<li><b>Shadow-mode baseline:</b> the simple buffer rule runs beside the planner as the champion-challenger comparison and the fallback {A}</li></ul></article>
+<article class="edge-step"><header><i>4</i><b>Learn<small>Fix it before the next one</small></b></header><ul>
+<li><b>Closed loop:</b> log actuals, track error, retrain on a rolling window and validate on a holdout before deployment.</li>
+<li><b>Failure remediation:</b> fee refunded, nearest-level bay at no extra charge, failure logged.</li>
+<li><b>Recalibration:</b> failures per 100 bookings are reported, and z, the cap and the stay model refit on observed stays.</li></ul></article>
+</div>
+<div class="edge-ev">
+<div><b>Stress test {M}</b>{V6['n_worlds']} random worlds redrawing pulse size, stay shock, volume and overstay noise; settings not retuned. Hybrid planner scored higher in 93 to 100% of worlds.</div>
+<div><b>Why events are not a model input {S}</b>Weather and event covariates added no accuracy across 28 UK car parks (rolling-origin holdouts), so the design reacts to live state instead of forecasting the event.</div>
+<div><b>Not yet shown</b>A real unseen event at KLGCC. If stays are worse than assumed, failures can exceed the ceiling; the pilot measures this and recalibrates.</div></div>""",
+    'Sources: <a href="../analysis/simulate_mc.py">simulate_mc.py</a> (60-world stress test, ranges fixed before the run); weather and event test on 28 UK car parks; planner and buffer slides in this appendix. Triggers marked Assumed are proposals whose thresholds the pilot sets; the 200-bay simulation uses synthetic demand.')
+
+# ---- appendix index (clickable). Page numbers come from the final slide order.
+APX_INDEX = [
+    ('Technical design', [('ml-stack', 'Architecture: four layers', 'What is tested and what is proposed'), ('a-planner', 'How the planner decides', 'Accept rule, stay model, safeguards'),
+                          ('a-buffer', 'Baseline buffer rule', 'The simple rule the planner is compared with'), ('a-edge', 'Edge cases and unseen events', 'Detect, contain, fall back, learn'),
+                          ('forecast', 'Occupancy forecasting', '28 UK car parks, six weekly holdouts')]),
+    ('Operations and risk', [('risk', 'Exceptions and fault handling', 'Uncertain counts, refunds, data incidents')]),
+    ('Evidence', [('simulation', 'Parking policy comparison', 'Planner against simple rules'), ('a-guarantee', 'Booking failures vs walk-ins', 'What the booking guarantee costs'),
+                  ('a-robust', 'Robustness to assumptions', '60 random worlds'), ('a-sim200', '200-bay zone simulation', 'Capacity, grace period, count drift')]),
+    ('Commercial and cost', [('a-method-notes', 'Commercial and value derivations', 'Net factor, break-even, value to SDP'), ('a-build-estimate', 'Software and running cost', 'Third-party items, in-house value, running'),
+                             ('a-options', 'Deployment options', 'Upfront, running, payback by option')]),
+    ('Plan', [('roadmap', 'Implementation roadmap', 'Phases and spend'), ('horizons', 'Three-horizon roadmap', 'One site to external operators'), ('scorecard', 'Pilot measures', 'Metrics and owners')]),
+    ('Sources and data', [('a-register', 'Data register', 'Sourced, simulated or assumed'), ('a-method', 'Benchmark methods and scope', 'What is real data'),
+                          ('a-sources', 'Public sources', 'Links and checks'), ('a-sources-cost', 'Cost sources', 'Price listings and rates')])]
+def _ix_cols():
+    pageno = lambda i: order.index(i) + 1
+    out_ = []
+    for grp in ([0, 1], [2, 3], [4, 5]):
+        h_ = ''
+        for g in grp:
+            name, items = APX_INDEX[g]
+            h_ += f'<h3>{name}</h3>' + ''.join(f'<a href="#{i}"><span>{pageno(i):02d}</span><div><b>{t}</b><small>{d}</small></div></a>' for i, t, d in items)
+        out_.append(f'<div class="ix-col">{h_}</div>')
+    return ''.join(out_)
+D['a-index'] = compact('a-index', 'Appendix index', 'Appendix index: click an entry to jump to it', _ix_cols(), 'Slide numbers are positions in this deck. Each appendix slide has an index link in its footer.')
 TABS = ['Overview', 'Product', 'Business', 'Implementation', 'Appendix']
 out = []
 for n, i in enumerate(order, 1):
@@ -1002,7 +1063,8 @@ for n, i in enumerate(order, 1):
     p = re.sub(r'data-section="[^"]*"', f'data-section="{sec}"', p, count=1)
     if i in APX_TAKE:
         p = rep_html(p, '</div><div class="source">', f'<div class="apx-take"><span>Takeaway</span><p>{APX_TAKE[i]}</p></div></div><div class="source">')
-    footer = f'<footer class="footer">{BRAND}<span class="page">{"" if i in MAIN else "Appendix · "}{n:02d} / {len(order)}</span></footer>'
+    back = '' if (i in MAIN or i == 'a-index') else '<a class="apx-back" href="#a-index">↑ Appendix index</a>'
+    footer = f'<footer class="footer">{BRAND}{back}<span class="page">{"" if i in MAIN else "Appendix · "}{n:02d} / {len(order)}</span></footer>'
     p = re.sub(r'<footer class="footer">.*?</footer>', lambda m: footer, p, count=1, flags=re.S)
     out.append(p)
 
@@ -1038,7 +1100,7 @@ _MID = [
     ('ParkMobile, 2024 \u00b7 US survey', 'ParkMobile, 2024, US survey'),
     ('1 \u00b7 Home', '1. Home'), ('2 \u00b7 Reserve', '2. Reserve'), ('3 \u00b7 Confirm', '3. Confirm'), ('4 \u00b7 Zone', '4. Zone'),
     ('fee RM4 \u00b7 bill RM3', 'fee RM4, bill RM3'), ('fee RM5 \u00b7 bill RM3', 'fee RM5, bill RM3'),
-    ('5-year recovery \u00b7 RM', '5-year recovery: RM'), ('3-year recovery \u00b7 RM', '3-year recovery: RM'),
+    ('3-year recovery \u00b7 RM', '3-year recovery: RM'), ('2-year recovery \u00b7 RM', '2-year recovery: RM'),
     ('Voucher break-even \u00b7 share of holders who must return', 'Voucher break-even: share of holders who must return'),
     ('Spend gap \u00b7 association only', 'Spend gap (association only)'),
     ('Workstream \u00b7 owner', 'Workstream and owner'),
@@ -1054,7 +1116,7 @@ _MID = [
     ('Grace period \u00b7 90 requests/day', 'Grace period at 90 requests/day'),
     ('LPR count drift \u00b7 plate ledger', 'LPR count drift: plate ledger'),
     ('Commercial model \u00b7 slide 10', 'Commercial model (slide 10)'), ('Value to SDP \u00b7 slide 12', 'Value to SDP (slide 12)'),
-    ('Work breakdown \u00b7 person-days', 'Work breakdown: person-days'), ('Day rate \u00b7 sourced inputs', 'Day rate: sourced inputs'),
+    ('Work breakdown \u00b7 person-days', 'Work breakdown: person-days'),
     ('Illustrative expansion of scope \u00b7 planning windows', 'Illustrative expansion of scope; planning windows'),
     ('Gate 1 \u00b7 Before expansion', 'Gate 1: before expansion'), ('Gate 2 \u00b7 Before wider deployment', 'Gate 2: before wider deployment'), ('Gate 3 \u00b7 Before external rollout', 'Gate 3: before external rollout'),
     ('Commercial sources \u00b7 checked', 'Commercial sources, checked'),
@@ -1067,4 +1129,4 @@ for _o, _n in _MID:
         print('MIDDOT NOT FOUND:', _o)
 body = re.sub(r'<span aria-label="ParkFlow" class="wordmark">park<span>flow</span><svg.*?</svg></span>', '<span aria-label="ParkFlow" class="wordmark pf2">parkflow<b>//</b></span>', body, flags=re.S)
 (SITE / 'index-v3.html').write_text((h + body + tail).replace('RM10.5k', f'RM{RUN/1000:.1f}k'), encoding='utf-8')  # running cost token, one source: analysis/v3_costs.py
-print('slides', len(order), 'main', len(MAIN), 'capex', CAPEX, 'be', round(be_op, 1), round(be_5, 1), round(be_3, 1), 'gap', round(gap), 'gto', round(gto_lo), round(gto_hi), 'vo', round(1/vo_5, 1), round(1/vo_15, 1))
+print('slides', len(order), 'main', len(MAIN), 'capex', CAPEX, 'be', round(be_op, 1), round(be_3, 1), round(be_2, 1), 'gap', round(gap), 'gto', round(gto_lo), round(gto_hi), 'vo', round(1/vo_5, 1), round(1/vo_15, 1))

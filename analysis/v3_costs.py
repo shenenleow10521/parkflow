@@ -28,8 +28,12 @@ WBS = [
 PM_UPLIFT = 0.15      # ASSUMED: project management and QA on top of build days
 BUILD_DAYS = sum(w[1] for w in WBS) * (1 + PM_UPLIFT)
 PILOT_DAYS = sum(w[2] for w in WBS) * (1 + PM_UPLIFT)
-INTEGRATION = int(round(BUILD_DAYS * DAY_RATE, -2))
+INHOUSE_VALUE = int(round(BUILD_DAYS * DAY_RATE, -2))   # DERIVED: market value of the in-house build effort. NOT charged: SDP is assumed to have the talent already
 PILOT_BUILD = int(round(PILOT_DAYS * DAY_RATE, -2))
+# Cash cost of software = only what the in-house team cannot supply (third parties). ASSUMED allowances, to be replaced by vendor quotes.
+EXTERNAL = [('Parking-system and barrier vendor interface', 15_000),   # ASSUMED: vendor integration fee for the existing LPR / controller; no published price
+            ('Payment gateway onboarding and security test', 7_500)]   # ASSUMED: gateway set-up plus an external penetration test; no published price
+INTEGRATION = sum(v for _, v in EXTERNAL)
 
 # ---- site hardware --------------------------------------------------------------------------------------------
 CAM_HW = 750          # SOURCED: Hikvision DS-2CD2046G2-IU/SL 4MP, Lapasar B2B listing (a RM199 TP-Link consumer listing is the floor)
@@ -57,5 +61,5 @@ RUN = int(round(MAINT_RATE * INTEGRATION + HOSTING, -2))
 RUN_ALL = int(round(MAINT_ALL * INTEGRATION + HOSTING, -2))  # if enhancements are also funded
 
 if __name__ == '__main__':
-    print(f'day rate RM{DAY_RATE:.0f}; build {BUILD_DAYS:.1f} d -> RM{INTEGRATION:,.0f}; pilot {PILOT_DAYS:.1f} d -> RM{PILOT_BUILD:,.0f}')
+    print(f'day rate RM{DAY_RATE:.0f}; build {BUILD_DAYS:.1f} d -> in-house value RM{INHOUSE_VALUE:,.0f} (not charged); external cash RM{INTEGRATION:,.0f}; pilot {PILOT_DAYS:.1f} d -> RM{PILOT_BUILD:,.0f}')
     print(f'camera RM{CAM:,} x{N_CAM}; capex RM{CAPEX:,.0f} (range {CAPEX_LO:,.0f}-{CAPEX_HI:,.0f}); running RM{RUN:,.0f} (hosting {HOSTING:,.0f}); NET {NET:.4f}')
