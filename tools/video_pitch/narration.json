@@ -1,0 +1,18 @@
+[
+ [0.4, 3.5, "Your parking data tells you more than you think."],
+ [4.5, 11.6, "ParkFlow makes one parking zone bookable: reserve ahead, get verified at the gate, and park in any free bay."],
+ [12.6, 22.6, "This is the LG level at KLGCC Mall, filmed on site and rebuilt in 3D. The whole level becomes the Priority Zone."],
+ [24.0, 30.0, "Our prototype already runs the booking flow, from the home screen to a live view of the zone."],
+ [31.0, 43.2, "A shopper taps Book, picks an arrival time and confirms. Members have the fee credited to their parking bill; non-members pay it on top. Their number plate is the pass."],
+ [44.6, 53.15, "Behind it, a controller links KLGCC's existing cameras, barrier, membership and payments. Members pay the fee or the bill, whichever is larger."],
+ [53.3, 59.8, "Every bay has a state: grey is occupied, amber is protected for bookings, green is open to walk-ins."],
+ [60.5, 68.3, "A booking is a commitment. Every fifteen minutes, the planner looks three hours ahead and decides how many bays to protect."],
+ [69.4, 75.8, "At nine it's quiet, so a hundred spaces stay open to walk-ins."],
+ [76.4, 83.4, "By ten-thirty, bookings are building. The forecast updates, and more bays turn amber."],
+ [83.9, 87.6, "No-show after fifteen minutes? The bay goes back to walk-ins."],
+ [88.2, 94.6, "At noon, walk-in entry closes. Walk-ins go to general parking, and every booking is still honoured."],
+ [95.6, 104.6, "A booked driver arrives at the same entrance. The plate is read, the booking is verified, and the car parks in any free bay."],
+ [106.0, 113.0, "Operators get one view of capacity, plans and exceptions, with every decision logged."],
+ [114.3, 117.2, "Your parking data tells you more than you think."],
+ [117.1, 119.9, "ParkFlow. Same bays, greater value."]
+]

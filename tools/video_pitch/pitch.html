@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ParkFlow · 2-minute pitch film</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<style>
+:root{--navy:#06101f;--white:#f4f8ff;--mist:#b9c8e0;--cyan:#5fd4ff;--blue:#2f7bff;--red:#e3262f}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--navy);font-family:Inter,"Segoe UI",sans-serif;color:var(--white)}
+.abs{position:absolute;left:0;top:0}
+#bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,#0c1d3a 0%,#06101f 65%,#03070f 100%)}
+#twin,#ghosts img{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;opacity:0;z-index:1}
+#ghosts img{z-index:1}
+#slides{position:absolute;inset:0;z-index:2}
+.sl{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;opacity:0;background:#fff;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.45)}
+.sl img.base{position:absolute;left:0;top:0;width:1920px;height:1080px}
+.part{position:absolute;background-repeat:no-repeat;opacity:0;will-change:transform}
+#hl{position:absolute;z-index:4;border:4px solid var(--red);border-radius:16px;opacity:0;box-shadow:0 0 0 6px rgba(227,38,47,.16),0 0 0 3000px rgba(8,16,32,.26),0 0 34px rgba(227,38,47,.35)}
+#sweep{position:absolute;z-index:5;left:0;top:0;width:3840px;height:1080px;opacity:0;background:linear-gradient(100deg,rgba(255,255,255,0) 38%,rgba(255,255,255,.96) 50%,rgba(255,255,255,0) 62%)}
+#beam{position:absolute;z-index:5;width:10px;margin-left:-5px;border-radius:5px;opacity:0;background:linear-gradient(#ff5560,#5fd4ff);box-shadow:0 0 24px 6px rgba(95,212,255,.7)}
+#fly{position:absolute;z-index:6;opacity:0;background-repeat:no-repeat;border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.45);transform-origin:50% 50%}
+#badge{position:absolute;z-index:6;opacity:0;display:flex;align-items:center;justify-content:center;background:#fff;color:#0d1b33;border:3px solid #0d1b33;border-radius:10px;font-weight:800;letter-spacing:.05em;box-shadow:0 0 0 6px rgba(95,212,255,.35),0 18px 40px rgba(0,0,0,.4);white-space:nowrap}
+#dim{position:absolute;inset:0;z-index:7;background:rgba(4,10,22,.58);opacity:0}
+#dots{position:absolute;left:0;top:0;z-index:8}
+#tagline{position:absolute;z-index:9;left:0;right:0;top:470px;text-align:center;font-weight:800;font-size:66px;letter-spacing:-.02em;opacity:0}
+#tagline span{display:inline-block;opacity:0;margin:0 .14em}
+#tagline span.hi{color:var(--cyan)}
+#end{position:absolute;inset:0;z-index:10;opacity:0;background:radial-gradient(ellipse at 50% 45%,#0e2448 0%,#06101f 62%,#03070f 100%)}
+#endc{position:absolute;left:0;right:0;top:330px;text-align:center}
+#elogo{display:inline-flex;align-items:center;gap:26px;font-weight:800;font-size:132px;letter-spacing:-.04em}
+#elogo .mk{width:118px;height:118px;border-radius:30px;background:linear-gradient(135deg,#2f7bff,#5fd4ff);display:flex;align-items:center;justify-content:center;font-size:76px;color:#fff;box-shadow:0 0 80px rgba(95,212,255,.45)}
+#tag1{font-weight:700;font-size:56px;margin-top:30px;letter-spacing:-.01em}
+#tag2{font-weight:600;font-size:22px;letter-spacing:.32em;text-transform:uppercase;color:#8ab8ff;margin-top:22px}
+#tag3{font-size:18px;color:#7f93b3;margin-top:56px}
+#shine{position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,0) 40%,rgba(160,210,255,.18) 50%,rgba(255,255,255,0) 60%);opacity:0}
+#fade{position:absolute;inset:0;z-index:11;background:#02050b;opacity:0}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<img id="twin" alt="">
+<div id="ghosts"><img alt=""><img alt=""><img alt=""><img alt=""></div>
+<div id="slides"></div>
+<div id="hl"></div>
+<div id="sweep"></div>
+<div id="beam"></div>
+<div id="fly"></div>
+<div id="badge">VKL 8821</div>
+<div id="dim"></div>
+<canvas id="dots" width="1920" height="1080"></canvas>
+<div id="tagline"></div>
+<div id="end"><div id="endc">
+  <div id="elogo"><div class="mk">P</div>ParkFlow</div>
+  <div id="tag1">Same Bays. Greater Value.</div>
+  <div id="tag2">Intelligent Parking Capacity Optimization</div>
+  <div id="tag3">KLGCC Mall pilot proposal · Team Hexa, Universiti Malaya</div>
+</div><div id="shine"></div></div>
+<div id="fade"></div>
+<script src="pitch.js"></script>
+</body>
+</html>
