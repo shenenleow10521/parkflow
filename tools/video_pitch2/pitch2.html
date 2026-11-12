@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ParkFlow · pitch film v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<style>
+:root{--navy:#06101f;--ink:#0b1830;--white:#f4f8ff;--mist:#b9c8e0;--fog:#7f93b3;--cyan:#5fd4ff;--blue:#2f7bff;--blue2:#8ab8ff;--green:#2fdc84;--amber:#ffb21f;--red:#ff4d5e;--glass:rgba(10,22,44,.78);--line:rgba(160,196,255,.26)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:var(--navy);font-family:Inter,"Segoe UI",sans-serif;color:var(--white)}
+.L{position:absolute;inset:0}
+.o0{opacity:0}
+.grid{background:radial-gradient(ellipse at 50% 40%,#0f2448 0%,#06101f 70%),#06101f}
+.grid:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(138,184,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(138,184,255,.05) 1px,transparent 1px);background-size:64px 64px}
+.kick{font-weight:700;font-size:18px;letter-spacing:.22em;text-transform:uppercase;color:var(--cyan)}
+.h1{font-weight:800;font-size:64px;line-height:1.04;letter-spacing:-.025em}
+.h2{font-weight:800;font-size:46px;line-height:1.08;letter-spacing:-.02em}
+.card{position:absolute;background:var(--glass);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(14px);box-shadow:0 24px 70px rgba(0,0,0,.4)}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;font-weight:800;font-size:14px;letter-spacing:.12em;text-transform:uppercase}
+/* footage / twin / dashboard media */
+#foot{position:absolute;inset:0;overflow:hidden;opacity:0}
+#footbg{position:absolute;left:-60px;top:-60px;width:2040px;height:1200px;object-fit:cover;filter:blur(36px) brightness(.4)}
+#footfg{position:absolute;left:656px;top:0;width:608px;height:1080px;object-fit:cover;filter:brightness(.62)}
+#twin{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;opacity:0}
+#ghosts img{position:absolute;left:0;top:0;width:1920px;height:1080px;opacity:0}
+#cmdwrap{position:absolute;inset:0;opacity:0;overflow:hidden;background:#0a111c}
+#cmd{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+#dimL{position:absolute;inset:0;background:rgba(4,10,22,.55);opacity:0}
+/* scenes */
+.scene{position:absolute;inset:0;opacity:0;overflow:hidden;z-index:2}
+#gate{z-index:3}
+#zoombox,#rev,#vline,#four,#opcap{z-index:8}
+/* S05 service */
+#svc-photo{position:absolute;inset:-40px;background:url(img/mall.webp) center/cover;transform-origin:60% 50%}
+#svc-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,16,31,.92) 0%,rgba(6,16,31,.6) 45%,rgba(6,16,31,.25) 100%)}
+#svc-head{position:absolute;left:150px;top:150px;width:1100px}
+.step{position:absolute;top:560px;width:500px;height:250px;padding:26px 28px}
+.step .n{font-weight:800;font-size:16px;letter-spacing:.2em;color:var(--cyan)}
+.step .t{font-weight:800;font-size:34px;margin-top:8px;letter-spacing:-.01em}
+.step .s{font-size:18px;color:var(--mist);margin-top:6px}
+.step .viz{position:absolute;right:24px;top:22px;width:150px;height:110px;border-radius:14px;overflow:hidden;background:#0d1a33;border:1px solid var(--line)}
+#claim{position:absolute;left:460px;top:430px;width:1000px;height:440px}
+#claim .bay{position:absolute;width:84px;height:120px;border-radius:10px;border:2px solid rgba(255,214,90,.55)}
+#claim-cap{position:absolute;left:0;right:0;top:330px;text-align:center}
+#token{position:absolute;width:150px;height:62px;margin:-31px 0 0 -75px;border-radius:14px;background:rgba(255,178,31,.18);border:2.5px solid var(--amber);box-shadow:0 0 30px rgba(255,178,31,.45);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#ffd27a}
+#token small{font-weight:600;font-size:12px;color:#ffe2a6}
+/* phone */
+#phonebg{position:absolute;inset:0;background:rgba(4,10,22,.45)}
+#phone{position:absolute;left:740px;top:96px;width:418px;height:872px;border-radius:58px;background:#0c0f14;padding:14px;box-shadow:0 40px 120px rgba(0,0,0,.6),0 0 0 2px #2a3446 inset;transform-origin:50% 60%}
+#screen{position:relative;width:390px;height:844px;border-radius:44px;overflow:hidden;background:#fff}
+#drv{position:absolute;left:0;top:0;width:390px;height:844px}
+#tap,#ripple{position:absolute;width:66px;height:66px;margin:-33px 0 0 -33px;border-radius:50%;opacity:0;z-index:3}
+#tap{border:3px solid #fff;background:rgba(227,38,47,.3);box-shadow:0 0 0 2px rgba(0,0,0,.15)}
+#ripple{border:2px solid #e3262f}
+.vtag{position:absolute;padding:12px 16px;border-radius:14px;font-weight:800;font-size:18px;opacity:0;white-space:nowrap;background:rgba(6,16,31,.88);border:2px solid currentColor}
+.vtag small{display:block;font-weight:600;font-size:14px;color:var(--mist);margin-top:2px}
+#price{left:1240px;top:330px;width:560px;padding:26px 28px}
+.prow{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--line)}
+.prow:first-of-type{border-top:0}
+.prow .ic{flex:none;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px}
+.prow b{font-size:22px}
+.prow p{font-size:17px;color:var(--mist);margin-top:4px}
+/* S07 system */
+#sys-head{position:absolute;left:150px;top:96px}
+.node{position:absolute;width:330px;height:150px;padding:0;overflow:hidden}
+.node img{position:absolute;left:0;top:0;width:130px;height:100%;object-fit:cover}
+.node .tx{position:absolute;left:148px;right:14px;top:22px}
+.node .tx b{display:block;font-size:21px;line-height:1.15}
+.node .tx span{display:block;font-size:14px;color:var(--mist);margin-top:4px}
+.node .chip{position:absolute;left:148px;bottom:16px;padding:4px 10px;font-size:12px}
+#ctl{left:740px;top:280px;width:440px;height:470px;padding:26px 28px;border-color:rgba(95,212,255,.5)}
+.mod{display:flex;align-items:center;gap:14px;padding:14px 16px;margin-top:12px;border-radius:14px;background:rgba(138,184,255,.07);border:1.5px solid rgba(138,184,255,.18);font-weight:700;font-size:20px}
+.mod i{flex:none;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal;font-size:15px;background:rgba(95,212,255,.15);color:var(--cyan)}
+.mod.on{border-color:var(--cyan);background:rgba(95,212,255,.16);box-shadow:0 0 24px rgba(95,212,255,.25)}
+#links{position:absolute;inset:0}
+#rule{position:absolute;left:250px;right:250px;top:830px;padding:22px 30px;text-align:center;font-weight:700;font-size:28px;border-radius:18px;background:rgba(47,123,255,.12);border:1.5px solid rgba(95,212,255,.45)}
+#rule em{font-style:normal;color:var(--cyan)}
+#beam{position:absolute;width:10px;margin-left:-5px;border-radius:5px;opacity:0;background:linear-gradient(#5fd4ff,#2f7bff);box-shadow:0 0 26px 8px rgba(95,212,255,.7)}
+/* S08 plan */
+#plan-head{position:absolute;left:150px;top:96px;width:1500px}
+#chart{position:absolute;left:150px;top:300px}
+#held{position:absolute;left:1260px;top:300px;width:500px;height:470px;padding:24px 26px}
+.hrow{display:flex;align-items:center;gap:14px;margin-top:22px}
+.hrow .tm{flex:none;width:96px;font-weight:800;font-size:22px}
+.hbar{position:relative;flex:1;height:36px;border-radius:9px;background:rgba(47,220,132,.22);overflow:hidden}
+.hbar i{position:absolute;right:0;top:0;bottom:0;background:var(--amber);border-radius:0 9px 9px 0}
+.hbar span{position:absolute;right:10px;top:7px;font-weight:800;font-size:16px;color:#2a1a00}
+#layers{position:absolute;left:150px;right:150px;top:840px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.lay{padding:16px 18px;border-radius:16px;background:rgba(10,22,44,.8);border:1.5px solid var(--line);opacity:.35}
+.lay b{display:block;font-size:20px}.lay span{font-size:15px;color:var(--mist)}
+.lay.on{opacity:1;border-color:var(--cyan);box-shadow:0 0 26px rgba(95,212,255,.22)}
+#pclock{position:absolute;left:1260px;top:226px;font-weight:800;font-size:44px}
+/* entry photo */
+#gate{position:absolute;left:560px;top:120px;width:800px;height:814px;border-radius:24px;overflow:hidden;opacity:0;box-shadow:0 40px 120px rgba(0,0,0,.6)}
+#gate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#gscan{position:absolute;left:0;right:0;height:120px;background:linear-gradient(rgba(95,212,255,0),rgba(95,212,255,.5),rgba(95,212,255,0))}
+#gtag{position:absolute;left:24px;top:24px}
+/* operator overlays */
+#rev{left:1352px;top:150px;width:528px;padding:24px 26px 18px;opacity:0}
+.rs{display:flex;gap:16px;align-items:center;padding:16px 14px;margin-top:10px;border-radius:16px;border:1.5px solid rgba(138,184,255,.16);background:rgba(138,184,255,.05);opacity:.3}
+.rs .ic{flex:none;width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px}
+.rs b{display:block;font-size:21px}.rs span{font-size:15.5px;color:var(--mist)}
+.rs.on{opacity:1;border-color:currentColor;box-shadow:0 0 26px rgba(95,212,255,.15)}
+#vline{position:absolute;left:70px;bottom:96px;max-width:1040px;opacity:0;padding:20px 28px 24px;border-radius:20px;background:rgba(6,16,31,.86);border:1px solid var(--line);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#vline .t{font-weight:800;font-size:46px;line-height:1.05;letter-spacing:-.02em;margin-top:12px;text-shadow:0 4px 30px rgba(0,0,0,.7)}
+#vline .k:before{content:"";display:inline-block;width:46px;height:2px;background:var(--cyan);vertical-align:middle;margin-right:14px}
+#zoombox{position:absolute;border:3px solid var(--cyan);border-radius:16px;opacity:0;box-shadow:0 0 0 3000px rgba(4,10,22,.35),0 0 30px rgba(95,212,255,.45)}
+#four{position:absolute;left:0;right:0;top:470px;display:flex;justify-content:center;gap:22px;opacity:0}
+#four div{padding:18px 30px;border-radius:18px;font-weight:800;font-size:40px;background:rgba(6,16,31,.85);border:2px solid currentColor}
+#opcap{position:absolute;right:30px;top:1036px;font-size:14px;color:var(--fog);opacity:0}
+/* money trail */
+#trail{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;background:rgba(6,16,31,.82);border:1px solid var(--line);opacity:0;z-index:20}
+#trail .s{display:flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;font-weight:700;font-size:14px;color:var(--fog);white-space:nowrap}
+#trail .s i{width:9px;height:9px;border-radius:50%;background:#33445f}
+#trail .s.done{color:var(--mist)}#trail .s.done i{background:var(--green)}
+#trail .s.on{color:#fff;background:rgba(47,220,132,.18)}#trail .s.on i{background:var(--green);box-shadow:0 0 10px var(--green)}
+#trail .a{color:#3b4d6b;font-size:13px}
+/* brand + dots + titles */
+#brand{position:absolute;left:56px;top:44px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:26px;opacity:0;z-index:20}
+#brand .mk{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#2f7bff,#5fd4ff);display:flex;align-items:center;justify-content:center;font-size:21px;color:#fff}
+#dots{position:absolute;left:0;top:0;z-index:21}
+#tagline{position:absolute;z-index:22;left:0;right:0;top:470px;text-align:center;font-weight:800;font-size:66px;letter-spacing:-.02em;opacity:0}
+#tagline span{display:inline-block;opacity:0;margin:0 .14em}#tagline span.hi{color:var(--cyan)}
+#end{position:absolute;inset:0;z-index:23;opacity:0;background:radial-gradient(ellipse at 50% 45%,#0e2448 0%,#06101f 62%,#03070f 100%)}
+#endc{position:absolute;left:0;right:0;top:320px;text-align:center}
+#elogo{display:inline-flex;align-items:center;gap:26px;font-weight:800;font-size:132px;letter-spacing:-.04em}
+#elogo .mk{width:118px;height:118px;border-radius:30px;background:linear-gradient(135deg,#2f7bff,#5fd4ff);display:flex;align-items:center;justify-content:center;font-size:76px;color:#fff;box-shadow:0 0 80px rgba(95,212,255,.45)}
+#tag1{font-weight:700;font-size:56px;margin-top:30px}
+#tag2{font-weight:700;font-size:24px;letter-spacing:.3em;text-transform:uppercase;color:#8ab8ff;margin-top:22px}
+#tag3{font-size:18px;color:var(--fog);margin-top:52px}
+#shine{position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,0) 40%,rgba(160,210,255,.18) 50%,rgba(255,255,255,0) 60%);opacity:0}
+#fade{position:absolute;inset:0;z-index:30;background:#02050b;opacity:0}
+</style>
+</head>
+<body>
+<div class="L grid"></div>
+<div id="foot"><img id="footbg" alt=""><img id="footfg" alt=""></div>
+<img id="twin" alt="">
+<div id="ghosts"><img alt=""><img alt=""><img alt=""><img alt=""></div>
+
+<!-- S05: the service -->
+<div class="scene" id="s-svc">
+  <div id="svc-photo"></div><div id="svc-shade"></div>
+  <div id="svc-head"><div class="kick">Priority Zone · KLGCC Mall</div><div class="h1" style="margin-top:16px">Same bays.<br>Now a product shoppers can book.</div></div>
+  <div class="card step" id="st1" style="left:150px"><div class="n">01</div><div class="t">Reserve ahead</div><div class="s">Book a space in the zone<br>before leaving home</div>
+    <div class="viz"><div id="v1ph" style="position:absolute;left:52px;top:12px;width:46px;height:86px;border-radius:10px;border:3px solid #cfe0ff"><div style="margin:30px 6px 0;height:16px;border-radius:5px;background:#e3262f"></div></div><div id="v1rip" style="position:absolute;left:58px;top:36px;width:34px;height:34px;border-radius:50%;border:3px solid #fff;opacity:0"></div></div></div>
+  <div class="card step" id="st2" style="left:710px"><div class="n">02</div><div class="t">Verified at the gate</div><div class="s">The existing plate camera<br>confirms the booking</div>
+    <div class="viz"><img src="img/barrier.webp" style="width:100%;height:100%;object-fit:cover" alt=""><div id="v2scan" style="position:absolute;left:0;right:0;height:30px;background:linear-gradient(rgba(95,212,255,0),rgba(95,212,255,.8),rgba(95,212,255,0))"></div></div></div>
+  <div class="card step" id="st3" style="left:1270px"><div class="n">03</div><div class="t">Park in any free bay</div><div class="s">Not a fixed bay:<br>a space in the zone</div>
+    <div class="viz" id="v3"></div></div>
+  <div id="claim"><div id="claim-bays"></div><div id="token">BOOKING<small>WXY 8812</small></div>
+    <div id="claim-cap"><div class="h2">A booking is a claim on the zone,<br>not a fixed bay.</div></div></div>
+</div>
+
+<!-- phone scene -->
+<div class="scene" id="s-app"><div id="phonebg"></div>
+  <div id="phone"><div id="screen"><img id="drv" alt=""><div id="ripple"></div><div id="tap"></div></div></div>
+  <div class="vtag" id="tg1" style="color:var(--green);left:1210px;top:150px">BUILT<small>booking flow, in the prototype</small></div>
+  <div class="vtag" id="tg2" style="color:var(--amber);left:420px;top:470px">SIMULATED<small>plate entry at the gate</small></div>
+  <div class="vtag" id="tg3" style="color:var(--green);left:1210px;top:150px">BUILT<small>live zone view · demo data</small></div>
+  <div class="card" id="price"><div class="kick" style="color:var(--blue2)">Who pays what</div>
+    <div class="prow" id="pr1" style="margin-top:12px"><div class="ic" style="background:rgba(47,220,132,.16);color:var(--green)">+</div><div><b>Non-member</b><p>Pays the booking fee on top:<br><span style="color:#fff;font-weight:700">new income for the mall</span></p></div></div>
+    <div class="prow" id="pr2"><div class="ic" style="background:rgba(47,123,255,.2);color:var(--blue2)">★</div><div><b>Member</b><p>Fee credited to the parking bill:<br><span style="color:#fff;font-weight:700">a reason to keep coming back</span></p></div></div>
+  </div>
+</div>
+
+<!-- S07: the parts -->
+<div class="scene grid" id="s-sys">
+  <div id="sys-head"><div class="kick">How it works</div><div class="h2" style="margin-top:12px">No rebuild. Software on what KLGCC already has.</div></div>
+  <svg id="links" width="1920" height="1080"></svg>
+  <div class="card node" id="n1" style="left:150px;top:270px"><img src="img/barrier.webp" alt=""><div class="tx"><b>Plate camera<br>and barrier</b><span>reads plates, opens the gate</span></div><span class="chip" style="background:rgba(185,200,224,.14);color:var(--mist)">Existing</span></div>
+  <div class="card node" id="n2" style="left:150px;top:450px"><img src="img/cctv.webp" alt=""><div class="tx"><b>CCTV</b><span>audit and blind spots</span></div><span class="chip" style="background:rgba(185,200,224,.14);color:var(--mist)">Existing</span></div>
+  <div class="card node" id="n3" style="left:150px;top:630px"><img src="img/pay.webp" alt="" style="object-position:30% 60%"><div class="tx"><b>Payment and<br>membership</b><span>card, e-wallet, member ID</span></div><span class="chip" style="background:rgba(185,200,224,.14);color:var(--mist)">Existing</span></div>
+  <div class="card" id="ctl"><div style="display:flex;align-items:center;gap:12px"><div style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#2f7bff,#5fd4ff);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:24px">P</div><div><div style="font-weight:800;font-size:26px">ParkFlow controller</div><div style="font-size:14px;color:var(--cyan);font-weight:700;letter-spacing:.12em">NEW · SOFTWARE</div></div></div>
+    <div class="mod" id="m1"><i>1</i>Booking ledger</div><div class="mod" id="m2"><i>2</i>Forecast and planner</div><div class="mod" id="m3"><i>3</i>Safety guard</div><div class="mod" id="m4"><i>4</i>Price and member credit</div></div>
+  <div class="card node" id="n4" style="left:1440px;top:330px"><img id="n4img" alt="" style="object-position:50% 20%"><div class="tx"><b>Booking app</b><span>book, pay, plate pass</span></div><span class="chip" style="background:rgba(95,212,255,.16);color:var(--cyan)">New</span></div>
+  <div class="card node" id="n5" style="left:1440px;top:560px"><img id="n5img" alt="" style="object-position:20% 40%"><div class="tx"><b>Operator dashboard</b><span>plan, verify, report</span></div><span class="chip" style="background:rgba(95,212,255,.16);color:var(--cyan)">New</span></div>
+  <div id="beam"></div>
+  <div id="rule">A member never pays more than <em>the larger of the fee and the parking bill.</em></div>
+</div>
+
+<!-- S08: the plan -->
+<div class="scene grid" id="s-plan">
+  <div id="plan-head"><div class="kick">How capacity is planned</div><div class="h2" style="margin-top:12px">Hold only what bookings need. The rest keeps earning.</div></div>
+  <svg id="chart" width="1060" height="480"></svg>
+  <div id="pclock">9:00 AM</div>
+  <div class="card" id="held"><div class="kick" style="color:var(--amber)">Held for bookings</div>
+    <div class="hrow"><div class="tm">9:00</div><div class="hbar"><i id="hb1"></i><span id="hl1"></span></div></div>
+    <div class="hrow"><div class="tm">10:30</div><div class="hbar"><i id="hb2"></i><span id="hl2"></span></div></div>
+    <div class="hrow"><div class="tm">12:00</div><div class="hbar"><i id="hb3"></i><span id="hl3"></span></div></div>
+    <div style="display:flex;gap:18px;margin-top:26px;font-size:15px;color:var(--mist)"><span><b style="color:var(--amber)">■</b> held for bookings</span><span><b style="color:var(--green)">■</b> open to walk-ins, still earning</span></div></div>
+  <div id="layers"><div class="lay" id="ly1"><b>Booking ledger</b><span>confirmed bookings are promises</span></div><div class="lay" id="ly2"><b>Stay forecast</b><span>arrivals, departures, overstay</span></div>
+    <div class="lay" id="ly3"><b>Rolling planner</b><span>re-plans every 15 minutes</span></div><div class="lay" id="ly4"><b>Safety guard</b><span>verified free bays decide entry</span></div></div>
+</div>
+
+<!-- real entry barrier -->
+<div id="gate"><img src="img/barrier.webp" alt=""><div id="gscan"></div><div class="vtag" id="gtag" style="color:var(--cyan);opacity:1">Plate camera at the KLGCC entrance<small>site visit photo · existing equipment</small></div></div>
+
+<!-- operator dashboard -->
+<div id="cmdwrap"><img id="cmd" alt=""></div>
+<div id="zoombox"></div>
+<div class="card" id="rev"><div style="display:flex;justify-content:space-between;align-items:center"><div class="kick" style="color:var(--blue2)">Revenue view</div><span class="chip" style="background:rgba(255,178,31,.16);color:var(--amber);font-size:12px">Proposed addition</span></div>
+  <div style="font-weight:800;font-size:28px;margin-top:8px">Where the money comes from</div>
+  <div class="rs" id="r1" style="color:var(--green)"><div class="ic" style="background:rgba(47,220,132,.16)">+</div><div><b style="color:#fff">Booking fees</b><span>new income from non-members</span></div></div>
+  <div class="rs" id="r2" style="color:var(--blue2)"><div class="ic" style="background:rgba(47,123,255,.2)">★</div><div><b style="color:#fff">Member credits</b><span>your best customers keep coming back</span></div></div>
+  <div class="rs" id="r3" style="color:var(--amber)"><div class="ic" style="background:rgba(255,178,31,.16)">↻</div><div><b style="color:#fff">No-show fees kept, bays re-sold</b><span>the same bay earns twice</span></div></div>
+  <div class="rs" id="r4" style="color:var(--cyan)"><div class="ic" style="background:rgba(95,212,255,.14)">◆</div><div><b style="color:#fff">Walk-in parking protected</b><span>normal parking income keeps flowing</span></div></div>
+</div>
+<div id="vline"><div class="kick k" id="vk"></div><div class="t" id="vt"></div></div>
+<div id="four"><div style="color:var(--green)">Earn</div><div style="color:var(--blue2)">Keep</div><div style="color:var(--cyan)">Protect</div><div style="color:var(--amber)">Prove</div></div>
+<div id="opcap">Operator dashboard prototype · simulated car park</div>
+
+<div id="trail"></div>
+<div id="brand"><div class="mk">P</div>ParkFlow</div>
+<canvas id="dots" width="1920" height="1080"></canvas>
+<div id="tagline"></div>
+<div id="end"><div id="endc"><div id="elogo"><div class="mk">P</div>ParkFlow</div>
+  <div id="tag1">Same Bays. Greater Value.</div><div id="tag2">Earn · Keep · Protect · Prove</div>
+  <div id="tag3">KLGCC Mall pilot proposal · Team Hexa, Universiti Malaya</div></div><div id="shine"></div></div>
+<div id="fade"></div>
+<script src="pitch2.js"></script>
+</body>
+</html>
