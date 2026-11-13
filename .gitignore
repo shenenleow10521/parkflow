@@ -41,3 +41,22 @@ site-consulting/assets/v2-charts/
 video/ParkFlow-KLGCC-demo.mp4
 video/ParkFlow-KLGCC-demo-no-captions.mp4
 video/parking 3d modelling.MOV
+
+# --- keep the repo to what organisers and judges need ---
+# earlier drafts, old exports and deck build tooling stay local
+archive/
+presentation/
+site-consulting/
+site-consulting.zip
+site-vnext/
+submission/
+references/
+final/ParkFlow-V2.html
+docs/deck-design-analysis/
+DESIGN.md
+PRODUCT.md
+guidance.md
+# video: keep only the V3 voiceover pitch
+video/*
+!video/ParkFlow-V3-60s-voiceover.mp4
+final/*.html

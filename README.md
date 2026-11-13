@@ -13,13 +13,12 @@ Run `npm run test:priority` with Node 24+ for the driver ledger and rendering in
 
 ## Current files
 
-- [Latest HTML presentation](site-consulting/index-v2.html): ML architecture, graphical exhibits and the trimmed pilot case; [benchmark results](analysis/benchmarks/decision_value/report.md) and [revision notes](site-consulting/v2-notes.md).
-- [Previous consulting edition](site-consulting/index.html) and [existing PDF](submission/ParkFlow-Consulting-Deck.pdf).
-- [Preserved original deck](site-vnext/index.html).
-- [Presentation build guide](presentation/README.md) and [design/evidence guidance](guidance.md).
-- [Historical presentation archive](archive/2026-11-07/README.md).
+- [ParkFlow Team Hexa deck, PDF](final/ParkFlow-Team-Hexa.pdf): 10 main slides plus a clickable appendix index.
+- [Live prototype](docs/index.html): driver booking flow and operator dashboard, with simulated data.
+- [Analysis scripts and results](analysis/README.md): reproduces the numbers in the deck.
+- [60-second pitch video](video/ParkFlow-V3-60s-voiceover.mp4).
 
-Superseded drafts and exports have been archived. The prototype description below includes historical model figures; use the current presentation and shared financial model for the revised business case.
+Earlier drafts, old exports and the build scripts for earlier decks stay on the authors' machines and are ignored by git.
 
 At peak, nobody can count on a parking bay. KL drivers spend about 25 minutes a day hunting for parking, and 26% of
 surveyed drivers have given up a trip because of it. Malls reward their best customers with vouchers, not parking, and

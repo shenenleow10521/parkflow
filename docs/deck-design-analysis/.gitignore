@@ -1,9 +1,0 @@
-# Full-size renders are reproducible local inspection artefacts.
-renders/
-
-# Local extraction caches and full-slide contact sheets from supplied references.
-reference-measurements.json
-parkflow-measurements.json
-premium-layout.json
-BDR_17_AC2026-contact.jpg
-FINAL_BDR_PITCHDECK-contact.jpg
